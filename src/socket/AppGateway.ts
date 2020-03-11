@@ -39,7 +39,6 @@ export class AppGateway
               userId: 1,
               dices: [dice1, dice2, dice3],
               meanPosition: dice1 + dice2,
-              _id: 'CVD+HgfgAAo=',
               dice1,
               dice2,
               dice3,

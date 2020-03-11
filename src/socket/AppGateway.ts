@@ -24,24 +24,30 @@ export class AppGateway
 
   @SubscribeMessage('rollDices')
   handleMessage(client: Socket, payload: string): void {
-    const dice1 = random(0, 6);
-    const dice2 = random(0, 6);
-    const res = {
-      code: 0,
-      data: {
-        id: id++,
-        events: [
-          {
-            type: 'rollDices',
-            userId: 429935,
-            dices: [dice1, dice2],
-            meanPosition: dice1 + dice2,
-            _id: 'CVD+HgfgAAo=',
-          },
-        ],
-      },
-    };
-    this.server.emit('msgToClient', res);
+    try {
+      this.logger.log(`Message: ${JSON.stringify(payload)} from ${client.id}`);
+      const dice1 = random(0, 6);
+      const dice2 = random(0, 6);
+      const res = {
+        code: 0,
+        data: {
+          id: id++,
+          events: [
+            {
+              type: 'rollDices',
+              userId: 429935,
+              dices: [dice1, dice2],
+              meanPosition: dice1 + dice2,
+              _id: 'CVD+HgfgAAo=',
+              payload,
+            },
+          ],
+        },
+      };
+      this.server.emit('rollDices', res);
+    } catch (err) {
+      this.logger.error(err);
+    }
   }
 
   afterInit(server: Server) {

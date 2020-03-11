@@ -28,6 +28,7 @@ export class AppGateway
       this.logger.log(`Message: ${JSON.stringify(payload)} from ${client.id}`);
       const dice1 = random(0, 6);
       const dice2 = random(0, 6);
+      const dice3 = null;
       const res = {
         code: 0,
         data: {
@@ -35,10 +36,13 @@ export class AppGateway
           events: [
             {
               type: 'rollDices',
-              userId: 429935,
-              dices: [dice1, dice2],
+              userId: 1,
+              dices: [dice1, dice2, dice3],
               meanPosition: dice1 + dice2,
               _id: 'CVD+HgfgAAo=',
+              dice1,
+              dice2,
+              dice3,
               payload,
             },
           ],

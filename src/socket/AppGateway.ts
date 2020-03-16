@@ -28,7 +28,7 @@ export class AppGateway
       this.logger.log(`Message: ${JSON.stringify(payload)} from ${client.id}`);
       const dice1 = random(0, 6);
       const dice2 = random(0, 6);
-      const dice3 = null;
+      const dice3 = random(0, 6);
       const res = {
         code: 0,
         data: {

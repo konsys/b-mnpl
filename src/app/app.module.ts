@@ -3,6 +3,7 @@ import { AppGateway } from 'src/socket/AppGateway';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { AppController } from './app.controller';
+import { FieldModule } from 'src/field/field.module';
 
 @Module({
   imports: [
@@ -13,12 +14,12 @@ import { AppController } from './app.controller';
       username: 'game',
       password: 'game',
       database: 'mnpl',
-      entities: ['dist/**/entities/*.entity{.ts,.js}'],
+      entities: [__dirname + '/../entities/*.entity{.ts,.js}'],
       synchronize: true,
     }),
   ],
   controllers: [AppController],
-  providers: [AppGateway],
+  providers: [AppGateway, FieldModule],
 })
 export class AppModule {
   constructor(private connection: Connection) {}

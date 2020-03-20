@@ -38,23 +38,34 @@ export enum BoardFieldActions {
   MORTGAGE = 'mortgage',
 }
 
-interface Player {
+interface User {
   userId: number;
-  status: number;
+  isActive: boolean;
+  isBlocked: boolean;
   vip: boolean;
+  registrationType: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userGameStatus: UserGameStatus;
+}
+
+interface UserGameStatus {
+  gameId: string;
   doublesRolledAsCombo: number;
   jailed: boolean;
   unjailAttempts: number;
   position: number;
   money: number;
-  canUseCredit: boolean;
   creditPayRound: boolean;
-  creditToPay: number;
   creditNextTakeRound: number;
   score: number;
-  frags: number[];
+  frags: string;
   additionalTime: number;
   timeReduceLevel: number;
+  creditToPay: number;
+  canUseCredit: boolean;
+  userId: number;
 }
 
 interface BoardFIeld {
@@ -80,7 +91,7 @@ interface MoveStatus {
 }
 
 interface BoardStatus {
-  players: Player[];
+  players: User[];
   moveStatus: MoveStatus;
   fields: BoardFIeld[];
   timers: BoardTimers;

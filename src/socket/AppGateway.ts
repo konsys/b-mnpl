@@ -26,6 +26,7 @@ const boardStatus = (): BoardSocketMessage => {
   const dice2 = random(0, 6);
   const dice3 = 0;
   const moveId = nanoid();
+  const gameId = nanoid();
   return {
     code: 0,
     data: {
@@ -50,21 +51,30 @@ const boardStatus = (): BoardSocketMessage => {
         players: [
           {
             userId: userId,
-            status: 0,
+            isActive: true,
+            isBlocked: false,
             vip: true,
-            doublesRolledAsCombo: 0,
-            jailed: false,
-            unjailAttempts: 0,
-            position: 14,
-            money: 12400,
-            canUseCredit: false,
-            creditPayRound: false,
-            creditToPay: 0,
-            creditNextTakeRound: 20,
-            score: 0,
-            frags: [1],
-            additionalTime: 0,
-            timeReduceLevel: 0,
+            registrationType: 'vk',
+            name: 'Konstantin',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            userGameStatus: {
+              gameId: gameId,
+              doublesRolledAsCombo: 1,
+              jailed: false,
+              unjailAttempts: 1,
+              position: 1,
+              money: 1,
+              creditPayRound: true,
+              creditNextTakeRound: 5,
+              score: 120,
+              frags: 'frags',
+              additionalTime: 1,
+              timeReduceLevel: 1,
+              creditToPay: 1,
+              canUseCredit: true,
+              userId: userId,
+            },
           },
         ],
         moveStatus: {

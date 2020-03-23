@@ -7,6 +7,7 @@ import { FieldModule } from 'src/field/field.module';
 
 @Module({
   imports: [
+    FieldModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '172.17.0.2',
@@ -19,7 +20,7 @@ import { FieldModule } from 'src/field/field.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppGateway, FieldModule],
+  providers: [AppGateway],
 })
 export class AppModule {
   constructor(private connection: Connection) {}

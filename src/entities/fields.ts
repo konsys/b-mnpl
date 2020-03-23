@@ -1,5 +1,3 @@
-import { Field } from './field.entity';
-
 export const boardFields: any[] = [
   {
     fieldPosition: 1,

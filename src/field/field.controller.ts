@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
-import { boardFields } from 'src/entities/fields';
+import { boardFields } from '../entities/fields';
 
-@Controller('field')
+@Controller('boardField')
 export class FieldController {
   @Get()
   async getHello(): Promise<string> {

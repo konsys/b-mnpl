@@ -1,12 +1,25 @@
-import { Controller, Get } from '@nestjs/common';
-import { boardFields } from '../entities/fields';
+import { Controller, Get, Post } from '@nestjs/common';
+import { BoardField } from '../entities/board.field.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { fieldsForSave } from '../entities/fields';
 
 @Controller('boardField')
 export class FieldController {
-  @Get()
-  async getHello(): Promise<string> {
-    console.log(2424243234);
-    // const fields = await this.appService.findAll();
-    return JSON.stringify(boardFields);
+  constructor(
+    @InjectRepository(BoardField)
+    private fieldService: Repository<BoardField>,
+  ) {}
+
+  @Get('initial')
+  async getFields(): Promise<string> {
+    const fields = await this.fieldService.find({ level: 0 });
+    return JSON.stringify(fields);
+  }
+
+  @Post()
+  async saveFields(): Promise<string> {
+    const res = await this.fieldService.save(fieldsForSave);
+    return JSON.stringify(res);
   }
 }

@@ -1,8 +1,9 @@
-export const boardFields: any[] = [
+export const fieldsForSave: any[] = [
   {
     fieldPosition: 1,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/start.png',
     name: 'start',
+    mnplLine: 0,
     mnplCorner: 0,
     level: 0,
   },
@@ -89,7 +90,9 @@ export const boardFields: any[] = [
   {
     fieldPosition: 11,
     mnplCorner: 1,
+    imgSrc: '',
     isJail: true,
+    mnplLine: 0,
     name: 'jail',
     level: 0,
   },
@@ -179,6 +182,7 @@ export const boardFields: any[] = [
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/jackpot.svg',
     mnplCorner: 2,
     mnplSpecial: 1,
+    mnplLine: 2,
     name: 'jackpot',
     level: 0,
   },
@@ -268,6 +272,7 @@ export const boardFields: any[] = [
     fieldPosition: 31,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/goToJail.png',
     mnplSpecial: 1,
+    mnplLine: 2,
     mnplCorner: 3,
     name: 'goToJail',
     level: 0,
@@ -287,7 +292,7 @@ export const boardFields: any[] = [
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/7_hotels/radisson_blu.svg',
     mnplGroup: 7,
     mnplLine: 3,
-    name: 'holiday_inn',
+    name: 'radisson_blu',
     level: 0,
   },
   {
@@ -304,7 +309,7 @@ export const boardFields: any[] = [
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/7_hotels/novotel.svg',
     mnplGroup: 7,
     mnplLine: 3,
-    name: 'holiday_inn',
+    name: 'novotel',
     level: 0,
   },
   {

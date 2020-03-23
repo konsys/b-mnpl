@@ -9,7 +9,7 @@ export class BoardField {
   fieldPosition: number;
 
   @Column({ default: false })
-  mnplSpecial: boolean;
+  mnplSpecial: number;
 
   @Column({ default: null })
   price: number;

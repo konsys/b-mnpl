@@ -8,7 +8,7 @@ export class BoardField {
   @Column()
   fieldPosition: number;
 
-  @Column({ default: false })
+  @Column({ default: null })
   mnplSpecial: number;
 
   @Column({ default: null })
@@ -20,7 +20,7 @@ export class BoardField {
   @Column({ default: null })
   mnplCorner: number;
 
-  @Column()
+  @Column({ default: null })
   mnplLine: number;
 
   @Column({ default: false })

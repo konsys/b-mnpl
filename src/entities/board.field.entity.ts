@@ -9,29 +9,29 @@ export class BoardField {
   fieldPosition: number;
 
   @Column({ default: null })
-  mnplSpecial: number;
+  mnplSpecial?: number;
 
   @Column({ default: null })
-  price: number;
+  price?: number;
 
   @Column({ default: null })
-  mnplGroup: number;
+  mnplGroup?: number;
 
   @Column({ default: null })
-  mnplCorner: number;
+  mnplCorner?: number;
 
   @Column({ default: null })
-  mnplLine: number;
+  mnplLine?: number;
 
   @Column({ default: false })
   isJail?: boolean;
 
-  @Column()
-  level: number;
+  @Column({ default: null })
+  level?: number;
 
-  @Column()
-  imgSrc: string;
+  @Column({ default: null })
+  imgSrc?: string;
 
-  @Column()
-  name: string;
+  @Column({ default: null })
+  name?: string;
 }

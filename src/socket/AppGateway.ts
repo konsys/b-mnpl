@@ -30,7 +30,7 @@ const boardStatus = (): BoardSocketMessage => {
   return {
     code: 0,
     data: {
-      id: 27,
+      id: id++,
       events: [
         {
           type: BoardEventType.ROLL_DEICES,

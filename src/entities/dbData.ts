@@ -1,13 +1,16 @@
-export const fieldsForSave: any[] = [
+import { BoardFieldEntity } from './board.field.entity';
+import { UserEntity } from './user.entity';
+
+export const fieldsForSave: BoardFieldEntity[] = [
   {
-    fieldPosition: 1,
+    fieldPosition: 0,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/start.png',
     name: 'start',
     mnplCorner: 0,
     level: 0,
   },
   {
-    fieldPosition: 2,
+    fieldPosition: 1,
     price: 600,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/1_perfumery/chanel.svg',
     mnplGroup: 1,
@@ -16,7 +19,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 3,
+    fieldPosition: 2,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/tax_income.png',
     mnplLine: 0,
     name: 'tax_income',
@@ -25,7 +28,7 @@ export const fieldsForSave: any[] = [
   },
 
   {
-    fieldPosition: 4,
+    fieldPosition: 3,
     price: 600,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/1_perfumery/hugo_boss.svg',
     mnplGroup: 1,
@@ -34,7 +37,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 5,
+    fieldPosition: 4,
     price: 800,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/1_perfumery/hugo_boss.svg',
     mnplGroup: 1,
@@ -43,7 +46,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 6,
+    fieldPosition: 5,
     price: 2000,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/0_auto/mercedes.svg',
     mnplGroup: 0,
@@ -52,7 +55,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 7,
+    fieldPosition: 6,
     price: 1000,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/2_clothing/adidas.svg',
     mnplGroup: 2,
@@ -61,7 +64,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 8,
+    fieldPosition: 7,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/chance.png',
     mnplLine: 0,
     name: 'chance',
@@ -69,7 +72,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 9,
+    fieldPosition: 8,
     price: 1000,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/2_clothing/puma.svg',
     mnplGroup: 2,
@@ -78,7 +81,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 10,
+    fieldPosition: 9,
     price: 1200,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/2_clothing/lacoste.svg',
     mnplGroup: 2,
@@ -87,7 +90,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 11,
+    fieldPosition: 10,
     mnplCorner: 1,
     imgSrc: '',
     isJail: true,
@@ -95,7 +98,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 12,
+    fieldPosition: 11,
     price: 1400,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/3_web/vk.svg',
     mnplGroup: 3,
@@ -104,7 +107,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 13,
+    fieldPosition: 12,
     price: 1500,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/9_games/rockstar_games.svg',
     mnplGroup: 9,
@@ -113,7 +116,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 14,
+    fieldPosition: 13,
     price: 1400,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/3_web/facebook.svg',
     mnplGroup: 3,
@@ -122,7 +125,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 15,
+    fieldPosition: 14,
     price: 1600,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/3_web/twitter.svg',
     mnplGroup: 3,
@@ -131,7 +134,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 16,
+    fieldPosition: 15,
     price: 2000,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/0_auto/audi.svg',
     mnplGroup: 0,
@@ -140,7 +143,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 17,
+    fieldPosition: 16,
     price: 1800,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/4_drinks/coca_cola.svg',
     mnplGroup: 4,
@@ -149,7 +152,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 18,
+    fieldPosition: 17,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/chance.png',
     mnplLine: 1,
     name: 'chance',
@@ -157,7 +160,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 19,
+    fieldPosition: 18,
     price: 1800,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/4_drinks/pepsi.svg',
     mnplGroup: 4,
@@ -166,7 +169,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 20,
+    fieldPosition: 19,
     price: 2000,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/4_drinks/fanta.svg',
     mnplGroup: 4,
@@ -175,7 +178,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 21,
+    fieldPosition: 20,
     price: 2200,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/jackpot.svg',
     mnplCorner: 2,
@@ -184,7 +187,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 22,
+    fieldPosition: 21,
     price: 2200,
     imgSrc:
       'https://m1.dogecdn.wtf/fields/brands/5_airlines/american_airlines.svg',
@@ -194,7 +197,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 23,
+    fieldPosition: 22,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/chance.png',
     mnplSpecial: 1,
     mnplLine: 2,
@@ -202,7 +205,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 24,
+    fieldPosition: 23,
     price: 2200,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/5_airlines/lufthansa.svg',
     mnplGroup: 5,
@@ -211,7 +214,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 25,
+    fieldPosition: 24,
     price: 2400,
     imgSrc:
       'https://m1.dogecdn.wtf/fields/brands/5_airlines/british_airways.svg',
@@ -221,7 +224,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 26,
+    fieldPosition: 25,
     price: 2000,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/0_auto/ford.svg',
     mnplGroup: 0,
@@ -230,7 +233,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 27,
+    fieldPosition: 26,
     price: 2600,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/6_food/mcdonalds.svg',
     mnplGroup: 6,
@@ -239,7 +242,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 28,
+    fieldPosition: 27,
     price: 2600,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/6_food/burger_king.svg',
     mnplGroup: 6,
@@ -248,7 +251,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 29,
+    fieldPosition: 28,
     price: 1500,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/9_games/rovio.svg',
     mnplGroup: 9,
@@ -257,7 +260,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 30,
+    fieldPosition: 29,
     price: 2800,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/6_food/kfc.svg',
     mnplGroup: 6,
@@ -266,7 +269,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 31,
+    fieldPosition: 30,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/goToJail.png',
     mnplSpecial: 1,
     mnplCorner: 3,
@@ -274,7 +277,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 32,
+    fieldPosition: 31,
     price: 3000,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/7_hotels/holiday_inn.svg',
     mnplGroup: 7,
@@ -283,7 +286,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 33,
+    fieldPosition: 32,
     price: 3000,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/7_hotels/radisson_blu.svg',
     mnplGroup: 7,
@@ -292,7 +295,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 34,
+    fieldPosition: 33,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/chance_rotated.png',
     mnplSpecial: 1,
     mnplLine: 3,
@@ -300,7 +303,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 35,
+    fieldPosition: 34,
     price: 3200,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/7_hotels/novotel.svg',
     mnplGroup: 7,
@@ -309,7 +312,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 36,
+    fieldPosition: 35,
     price: 2000,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/0_auto/land_rover.svg',
     mnplGroup: 0,
@@ -318,7 +321,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 37,
+    fieldPosition: 36,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/tax_luxury.png',
     mnplSpecial: 1,
     mnplLine: 3,
@@ -326,7 +329,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 38,
+    fieldPosition: 37,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/8_smartphones/apple.svg',
     mnplLine: 3,
     mnplGroup: 8,
@@ -335,7 +338,7 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 39,
+    fieldPosition: 38,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/chance_rotated.png',
     mnplSpecial: 1,
     mnplLine: 3,
@@ -343,12 +346,40 @@ export const fieldsForSave: any[] = [
     level: 0,
   },
   {
-    fieldPosition: 40,
+    fieldPosition: 39,
     imgSrc: 'https://m1.dogecdn.wtf/fields/brands/8_smartphones/nokia.svg',
     mnplLine: 3,
     mnplGroup: 8,
     price: 4000,
     name: 'nokia',
     level: 0,
+  },
+];
+
+export const users: UserEntity[] = [
+  {
+    name: 'Konstantin',
+    registrationType: 'vk',
+    vip: true,
+  },
+  {
+    name: 'Diman',
+    registrationType: 'vk',
+    vip: false,
+  },
+  {
+    name: 'Feodr',
+    registrationType: 'vk',
+    vip: false,
+  },
+  {
+    name: 'Ivan',
+    registrationType: 'vk',
+    vip: false,
+  },
+  {
+    name: 'Maxim',
+    registrationType: 'vk',
+    vip: true,
   },
 ];

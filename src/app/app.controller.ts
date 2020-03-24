@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { fieldsForSave } from 'src/entities/fields';
+import { fieldsForSave } from 'src/entities/dbData';
 
 @Controller()
 export class AppController {

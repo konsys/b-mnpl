@@ -18,9 +18,11 @@ import nanoid from 'nanoid';
 const random = (min: number, max: number) => {
   return Math.ceil(min + Math.random() * (max - min));
 };
+
 let id = 0;
 const userId = 1;
 let meanPosition = 0;
+
 const boardStatus = (): BoardSocketMessage => {
   const dice1 = random(0, 6);
   const dice2 = random(0, 6);
@@ -29,7 +31,6 @@ const boardStatus = (): BoardSocketMessage => {
   const gameId = nanoid();
   const sum = meanPosition + (dice1 + dice2 + dice3);
   meanPosition = sum < 40 ? sum : sum - 40;
-  console.log('->', meanPosition, sum, dice1, dice2, dice3);
   return {
     code: 0,
     data: {
@@ -53,14 +54,16 @@ const boardStatus = (): BoardSocketMessage => {
       status: {
         players: [
           {
-            userId: userId,
-            isActive: true,
-            isBlocked: false,
-            vip: true,
-            registrationType: 'vk',
-            name: 'Konstantin',
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            userData: {
+              userId: userId,
+              isActive: true,
+              isBlocked: false,
+              vip: true,
+              registrationType: 'vk',
+              name: 'Konstantin',
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
             userGameStatus: {
               gameId: gameId,
               doublesRolledAsCombo: 1,

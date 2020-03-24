@@ -1,3 +1,5 @@
+import { UserEntity } from 'src/entities/user.entity';
+
 enum ResponceCode {
   ok = 0,
   error = 1,
@@ -38,15 +40,8 @@ export enum BoardFieldActions {
   MORTGAGE = 'mortgage',
 }
 
-interface User {
-  userId: number;
-  isActive: boolean;
-  isBlocked: boolean;
-  vip: boolean;
-  registrationType: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
+interface IUser {
+  userData: UserEntity;
   userGameStatus: UserGameStatus;
 }
 
@@ -91,7 +86,7 @@ interface MoveStatus {
 }
 
 interface BoardStatus {
-  players: User[];
+  players: IUser[];
   moveStatus: MoveStatus;
   fields: BoardFIeld[];
   timers: BoardTimers;

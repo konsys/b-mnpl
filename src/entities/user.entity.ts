@@ -1,28 +1,31 @@
 import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
 
 @Entity()
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
-  userId: number;
+  userId?: number;
 
   @Column({ default: false })
-  vip: boolean;
+  vip?: boolean;
 
-  @Column()
-  registrationType: string;
+  @Column({ default: null })
+  registrationType?: string;
 
   @Column()
   name: string;
 
-  @Column()
-  createdAt: Date;
+  @Column({ default: null })
+  avatar?: string;
 
-  @Column()
-  updatedAt: Date;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt?: Date;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt?: Date;
 
   @Column({ default: true })
-  isActive: boolean;
+  isActive?: boolean;
 
-  @Column({ default: true })
-  isBlocked: boolean;
+  @Column({ default: false })
+  isBlocked?: boolean;
 }

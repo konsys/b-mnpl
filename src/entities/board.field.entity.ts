@@ -1,9 +1,9 @@
 import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
 
 @Entity()
-export class BoardField {
+export class BoardFieldEntity {
   @PrimaryGeneratedColumn()
-  fieldId: number;
+  fieldId?: number;
 
   @Column()
   fieldPosition: number;

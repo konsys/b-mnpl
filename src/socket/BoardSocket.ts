@@ -121,12 +121,12 @@ const boardStatus = (): BoardSocketMessage => {
 };
 
 @WebSocketGateway()
-export class AppGateway
+export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  private logger: Logger = new Logger('AppGateway');
+  private logger: Logger = new Logger('BoardSocket');
 
   @SubscribeMessage('rollDices')
   handleMessage(client: Socket, payload: string): void {

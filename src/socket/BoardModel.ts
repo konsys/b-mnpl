@@ -1,4 +1,4 @@
-import { UserEntity } from 'src/entities/user.entity';
+import { UsersEntity } from 'src/entities/users.entity';
 
 enum ResponceCode {
   ok = 0,
@@ -41,7 +41,7 @@ export enum BoardFieldActions {
 }
 
 interface IUser {
-  userData: UserEntity;
+  userData: UsersEntity;
   userGameStatus: UserGameStatus;
 }
 

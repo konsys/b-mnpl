@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { BoardFieldEntity } from 'src/entities/board.field.entity';
+import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class FieldService {
   constructor(
-    @InjectRepository(BoardFieldEntity)
-    private readonly boardField: Repository<BoardFieldEntity>,
+    @InjectRepository(BoardFieldsEntity)
+    private readonly boardField: Repository<BoardFieldsEntity>,
   ) {}
 
-  async findAll(): Promise<BoardFieldEntity[]> {
+  async findAll(): Promise<BoardFieldsEntity[]> {
     return await this.boardField.find();
-    // return Promise.reWsolve(['d']);
   }
 }

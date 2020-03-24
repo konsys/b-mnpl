@@ -1,7 +1,7 @@
-import { BoardFieldEntity } from './board.field.entity';
-import { UserEntity } from './user.entity';
+import { BoardFieldsEntity } from './board.fields.entity';
+import { UsersEntity } from './users.entity';
 
-export const fieldsForSave: BoardFieldEntity[] = [
+export const fieldsForSave: BoardFieldsEntity[] = [
   {
     fieldPosition: 0,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/start.png',
@@ -356,7 +356,7 @@ export const fieldsForSave: BoardFieldEntity[] = [
   },
 ];
 
-export const users: UserEntity[] = [
+export const users: UsersEntity[] = [
   {
     name: 'Konstantin',
     registrationType: 'vk',

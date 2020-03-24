@@ -4,10 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { AppController } from './app.controller';
 import { FieldModule } from 'src/field/field.module';
+import { UsersModule } from 'src/user/users.module';
 
 @Module({
   imports: [
     FieldModule,
+    UsersModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '172.17.0.2',

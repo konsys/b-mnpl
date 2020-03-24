@@ -1,5 +1,5 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { BoardFieldEntity } from '../entities/board.field.entity';
+import { BoardFieldsEntity } from '../entities/board.fields.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { fieldsForSave } from '../entities/dbData';
@@ -7,8 +7,8 @@ import { fieldsForSave } from '../entities/dbData';
 @Controller('board-fields')
 export class FieldController {
   constructor(
-    @InjectRepository(BoardFieldEntity)
-    private fieldService: Repository<BoardFieldEntity>,
+    @InjectRepository(BoardFieldsEntity)
+    private fieldService: Repository<BoardFieldsEntity>,
   ) {}
 
   @Get('initial')

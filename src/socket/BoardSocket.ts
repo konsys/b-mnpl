@@ -20,13 +20,16 @@ const random = (min: number, max: number) => {
 };
 let id = 0;
 const userId = 1;
-
+let meanPosition = 0;
 const boardStatus = (): BoardSocketMessage => {
   const dice1 = random(0, 6);
   const dice2 = random(0, 6);
   const dice3 = 0;
   const moveId = nanoid();
   const gameId = nanoid();
+  const sum = meanPosition + (dice1 + dice2 + dice3);
+  meanPosition = sum < 40 ? sum : sum - 40;
+  console.log('->', meanPosition, sum, dice1, dice2, dice3);
   return {
     code: 0,
     data: {
@@ -36,13 +39,13 @@ const boardStatus = (): BoardSocketMessage => {
           type: BoardEventType.ROLL_DEICES,
           userId: userId,
           dices: [dice1, dice2, dice3],
-          meanPosition: 19,
+          meanPosition,
           _id: moveId,
         },
         {
           type: BoardEventType.CAN_BUY,
           userId: userId,
-          field: 19,
+          field: meanPosition,
           money: 2000,
           _id: moveId,
         },
@@ -133,6 +136,7 @@ export class BoardSocket
     try {
       this.logger.log(`Message: ${JSON.stringify(payload)} from ${client.id}`);
       const status = boardStatus();
+      // setInterval(() => this.server.emit('rollDices', status), 3000);
       this.server.emit('rollDices', status);
     } catch (err) {
       this.logger.error(err);

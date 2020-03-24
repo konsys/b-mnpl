@@ -17,7 +17,7 @@ import { FieldModule } from 'src/field/field.module';
       database: 'mnpl',
       entities: [__dirname + '/../entities/*.entity{.ts,.js}'],
       synchronize: true,
-      logging: ['query'],
+      // logging: ['query'],
     }),
   ],
   controllers: [AppController],

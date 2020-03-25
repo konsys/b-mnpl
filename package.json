@@ -30,6 +30,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "csurf": "^1.11.0",
+    "effector": "^20.13.4",
     "helmet": "^3.21.3",
     "mysql": "^2.18.1",
     "nanoid": "^2.1.11",

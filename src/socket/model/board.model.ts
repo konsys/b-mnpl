@@ -8,7 +8,39 @@ enum ResponceCode {
 export enum BoardEventType {
   ROLL_DEICES = 'rollDices',
   CAN_BUY = 'canBuy',
+  TO_JAIL = 'toJail',
+  CHANCE = 'chance',
+  RUSSIAN_ROULETTE = 'russianRoulette',
+  START = 'start',
+  NOTHING_HAPPENED = 'nothingHappened',
+  AUCTION_ACCEPT = 'auctionAccept',
+  BUY = 'buy',
+  PAY_RENT_SUCCESS = 'payRentSuccess',
+  LEVEL_UP = 'levelUp',
 }
+
+export type EventLevelUp = {
+  type: BoardEventType.LEVEL_UP;
+  userId: 293123;
+  field: number;
+  _id: 'CWRkUJTGAZk=';
+};
+export type EventPayRentSuccess = {
+  type: BoardEventType.PAY_RENT_SUCCESS;
+  userId: number;
+  field: number;
+  money: number;
+  toUserId: number;
+  _id: 'CWRjn59GARg=';
+};
+
+export type EventTypeBuy = {
+  type: BoardEventType.BUY;
+  userId: number;
+  field: number;
+  money: number;
+  _id: 'CWRjn59GARg=';
+};
 
 export type EventRollDices = {
   type: BoardEventType.ROLL_DEICES;

@@ -6,13 +6,16 @@ export class UsersEntity {
   userId?: number;
 
   @Column({ default: false })
-  vip?: boolean;
+  vip: boolean;
 
   @Column({ default: null })
   registrationType?: string;
 
   @Column()
   name: string;
+
+  @Column({ default: null })
+  team?: string;
 
   @Column({ default: null })
   avatar?: string;

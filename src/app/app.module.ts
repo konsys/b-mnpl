@@ -5,7 +5,11 @@ import { Connection } from 'typeorm';
 import { AppController } from './app.controller';
 import { FieldModule } from 'src/field/field.module';
 import { UsersModule } from 'src/user/users.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
+const rootPath = join(__dirname, '../../', 'assets/');
+console.log(1111111, rootPath);
 @Module({
   imports: [
     FieldModule,
@@ -20,6 +24,9 @@ import { UsersModule } from 'src/user/users.module';
       entities: [__dirname + '/../entities/*.entity{.ts,.js}'],
       synchronize: true,
       // logging: ['query'],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath,
     }),
   ],
   controllers: [AppController],

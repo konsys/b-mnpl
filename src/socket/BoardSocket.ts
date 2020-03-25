@@ -139,7 +139,10 @@ export class BoardSocket
     try {
       this.logger.log(`Message: ${JSON.stringify(payload)} from ${client.id}`);
       const status = boardStatus();
-      // setInterval(() => this.server.emit('rollDices', status), 3000);
+      // setInterval(() => {
+      // this.logger.log('message', JSON.stringify(status));
+      //   this.server.emit('rollDices', status);
+      // }, 3000);
       this.server.emit('rollDices', status);
     } catch (err) {
       this.logger.error(err);

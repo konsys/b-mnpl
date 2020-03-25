@@ -9,7 +9,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
 const rootPath = join(__dirname, '../../', 'assets/');
-console.log(1111111, rootPath);
 @Module({
   imports: [
     FieldModule,

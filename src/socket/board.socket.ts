@@ -12,8 +12,9 @@ import {
   BoardSocketMessage,
   BoardEventType,
   BoardFieldActions,
-} from './BoardModel';
+} from './model/board.model';
 import nanoid from 'nanoid';
+import { IGameModel } from './model/game.model';
 
 const random = (min: number, max: number) => {
   return Math.ceil(min + Math.random() * (max - min));
@@ -23,7 +24,7 @@ let id = 0;
 const userId = 1;
 let meanPosition = 0;
 
-const boardStatus = (): BoardSocketMessage => {
+const boardStatus = (game: IGameModel): BoardSocketMessage => {
   const dice1 = random(0, 6);
   const dice2 = random(0, 6);
   const dice3 = 0;
@@ -135,10 +136,11 @@ export class BoardSocket
   private logger: Logger = new Logger('BoardSocket');
 
   @SubscribeMessage('rollDices')
-  handleMessage(client: Socket, payload: string): void {
+  handleMessage(client: Socket, payload: IGameModel): void {
+    console.log(23423443, payload);
     try {
       this.logger.log(`Message: ${JSON.stringify(payload)} from ${client.id}`);
-      const status = boardStatus();
+      const status = boardStatus(payload);
       // setInterval(() => {
       // this.logger.log('message', JSON.stringify(status));
       //   this.server.emit('rollDices', status);

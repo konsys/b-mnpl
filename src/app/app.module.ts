@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BoardSocket } from 'src/socket/BoardSocket';
+import { BoardSocket } from 'src/socket/board.socket';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { AppController } from './app.controller';

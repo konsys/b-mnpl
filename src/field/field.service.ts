@@ -10,7 +10,15 @@ export class FieldService {
     private readonly boardField: Repository<BoardFieldsEntity>,
   ) {}
 
-  async findAll(): Promise<BoardFieldsEntity[]> {
-    return await this.boardField.find();
+  async findInit(): Promise<BoardFieldsEntity[]> {
+    return await this.boardField.find({ level: 0 });
+  }
+
+  async findByLevel(level: number): Promise<BoardFieldsEntity[]> {
+    return await this.boardField.find({ level });
+  }
+
+  async saveFields(fields: BoardFieldsEntity[]): Promise<BoardFieldsEntity[]> {
+    return await this.boardField.save(fields);
   }
 }

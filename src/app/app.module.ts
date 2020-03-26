@@ -7,12 +7,14 @@ import { FieldModule } from 'src/field/field.module';
 import { UsersModule } from 'src/user/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { BoardSocketModule } from 'src/socket/board.socket.modules';
 
 const rootPath = join(__dirname, '../../', 'assets/');
 @Module({
   imports: [
     FieldModule,
     UsersModule,
+    BoardSocketModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '172.17.0.2',
@@ -29,7 +31,7 @@ const rootPath = join(__dirname, '../../', 'assets/');
     }),
   ],
   controllers: [AppController],
-  providers: [BoardSocket],
+  providers: [],
 })
 export class AppModule {
   constructor(private connection: Connection) {}

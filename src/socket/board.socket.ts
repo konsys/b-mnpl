@@ -8,12 +8,17 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { BoardMessage, BoardEventType } from './model/board.model';
+import {
+  BoardMessage,
+  BoardEventType,
+  BoardFieldActions,
+} from './model/board.model';
 import nanoid from 'nanoid';
 import { IGameModel, SocketActions } from './model/game.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { Repository } from 'typeorm';
+import { FieldService } from 'src/field/field.service';
 
 const random = (min: number, max: number) => {
   return Math.ceil(min + Math.random() * (max - min));
@@ -60,17 +65,15 @@ const boardStatus = (game: IGameModel): BoardMessage => {
 export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('BoardSocket');
+  private initFields: BoardFieldsEntity[] = [];
 
-  // constructor(
-  //   @InjectRepository(BoardFieldsEntity)
-  //   private fieldService: Repository<BoardFieldsEntity>,
-  // ) {}
+  constructor(private fieldService: FieldService) {}
 
   @WebSocketServer()
   server: Server;
 
   @SubscribeMessage(BoardEventType.ROLL_DICES)
-  public rollDices(client: Socket, payload: IGameModel): void {
+  async rollDices(client: Socket, payload: IGameModel): Promise<void> {
     try {
       this.logger.log(`Message: ${JSON.stringify(payload)} from ${client.id}`);
       const status = boardStatus(payload);
@@ -79,6 +82,14 @@ export class BoardSocket
     } catch (err) {
       this.logger.error(err);
     }
+  }
+
+  async onModuleInit() {
+    console.log(244242424234);
+    this.initFields = await this.fieldService.findInit();
+    this.logger.error(
+      `fields: ${JSON.stringify(this.initFields.map(v => v.fieldId))}`,
+    );
   }
 
   afterInit(server: Server) {

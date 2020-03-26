@@ -8,27 +8,23 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import {
-  BoardMessage,
-  BoardEventType,
-  BoardFieldActions,
-} from './model/board.model';
+import { BoardMessage, BoardEventType } from './model/board.model';
 import nanoid from 'nanoid';
 import { IGameModel, SocketActions } from './model/game.model';
-import { InjectRepository } from '@nestjs/typeorm';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { Repository } from 'typeorm';
 import { FieldService } from 'src/field/field.service';
-
-const random = (min: number, max: number) => {
-  return Math.ceil(min + Math.random() * (max - min));
-};
+import { random } from 'src/lib/utils';
+import { UsersEntity } from 'src/entities/users.entity';
+import { UsersService } from 'src/user/users.service';
 
 let id = 0;
 const userId = 1;
 let meanPosition = 0;
 
-const boardStatus = (game: IGameModel): BoardMessage => {
+const boardStatus = (
+  game: IGameModel,
+  fields: BoardFieldsEntity[],
+): BoardMessage => {
   const dice1 = random(0, 6);
   const dice2 = random(0, 6);
   const dice3 = 0;
@@ -37,6 +33,8 @@ const boardStatus = (game: IGameModel): BoardMessage => {
   const sum = meanPosition + (dice1 + dice2 + dice3);
   meanPosition = sum < 40 ? sum : sum - 40;
 
+  const field = fields.find(v => v.fieldPosition === meanPosition);
+  console.log(23423434, field);
   return {
     code: 0,
     data: {
@@ -65,9 +63,13 @@ const boardStatus = (game: IGameModel): BoardMessage => {
 export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('BoardSocket');
-  private initFields: BoardFieldsEntity[] = [];
+  private fields: BoardFieldsEntity[] = [];
+  private players: UsersEntity[] = [];
 
-  constructor(private fieldService: FieldService) {}
+  constructor(
+    private fieldService: FieldService,
+    private usersService: UsersService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -76,7 +78,7 @@ export class BoardSocket
   async rollDices(client: Socket, payload: IGameModel): Promise<void> {
     try {
       this.logger.log(`Message: ${JSON.stringify(payload)} from ${client.id}`);
-      const status = boardStatus(payload);
+      const status = boardStatus(payload, this.fields);
 
       this.server.emit(SocketActions.BOARD_MESSAGE, status);
     } catch (err) {
@@ -85,10 +87,10 @@ export class BoardSocket
   }
 
   async onModuleInit() {
-    console.log(244242424234);
-    this.initFields = await this.fieldService.findInit();
-    this.logger.error(
-      `fields: ${JSON.stringify(this.initFields.map(v => v.fieldId))}`,
+    this.fields = await this.fieldService.findInit();
+    this.players = await this.usersService.findAll();
+    this.logger.warn(
+      `fields: ${JSON.stringify(this.fields.map(v => v.fieldId))}`,
     );
   }
 

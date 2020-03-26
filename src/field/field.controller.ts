@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Param } from '@nestjs/common';
 import { BoardFieldsEntity } from '../entities/board.fields.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,6 +13,12 @@ export class FieldController {
 
   @Get('initial')
   async getFields(): Promise<string> {
+    const fields = await this.fieldService.find({ level: 0 });
+    return JSON.stringify(fields);
+  }
+
+  @Get('level')
+  async getLevelFields(): Promise<string> {
     const fields = await this.fieldService.find({ level: 0 });
     return JSON.stringify(fields);
   }

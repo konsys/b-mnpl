@@ -8,7 +8,11 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { BoardMessage, BoardEventType } from './model/board.model';
+import {
+  BoardMessage,
+  BoardEventType,
+  BoardActionTypes,
+} from './model/board.model';
 import nanoid from 'nanoid';
 import { IGameModel, SocketActions } from './model/game.model';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
@@ -16,48 +20,6 @@ import { FieldService } from 'src/field/field.service';
 import { random } from 'src/lib/utils';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from 'src/user/users.service';
-
-let id = 0;
-const userId = 1;
-let meanPosition = 0;
-
-const boardStatus = (
-  game: IGameModel,
-  fields: BoardFieldsEntity[],
-): BoardMessage => {
-  const dice1 = random(0, 6);
-  const dice2 = random(0, 6);
-  const dice3 = 0;
-  const moveId = nanoid();
-  // const gameId = nanoid();
-  const sum = meanPosition + (dice1 + dice2 + dice3);
-  meanPosition = sum < 40 ? sum : sum - 40;
-
-  const field = fields.find(v => v.fieldPosition === meanPosition);
-  console.log(23423434, field);
-  return {
-    code: 0,
-    data: {
-      id: id++,
-      events: [
-        {
-          type: BoardEventType.ROLL_DICES,
-          userId: userId,
-          dices: [dice1, dice2, dice3],
-          meanPosition,
-          _id: moveId,
-        },
-        {
-          type: BoardEventType.CAN_BUY,
-          userId: userId,
-          field: meanPosition,
-          money: 2000,
-          _id: moveId,
-        },
-      ],
-    },
-  };
-};
 
 @WebSocketGateway()
 export class BoardSocket
@@ -78,11 +40,11 @@ export class BoardSocket
   async rollDices(client: Socket, payload: IGameModel): Promise<void> {
     try {
       this.logger.log(`Message: ${JSON.stringify(payload)} from ${client.id}`);
-      const status = boardStatus(payload, this.fields);
-
+      const status = this.boardStatus(payload);
+      console.log('rollDice', status);
       this.server.emit(SocketActions.BOARD_MESSAGE, status);
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error('Error' + err);
     }
   }
 
@@ -105,4 +67,53 @@ export class BoardSocket
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id} args: ${args}`);
   }
+
+  private moveId = 1;
+  private readonly userId = 1;
+  private meanPosition = 0;
+
+  private boardStatus = (game: IGameModel): BoardMessage => {
+    const dice1 = random(0, 6);
+    const dice2 = random(0, 6);
+    const dice3 = 0;
+    const moveId = nanoid();
+    const sum = this.meanPosition + (dice1 + dice2 + dice3);
+    this.meanPosition = sum < 40 ? sum : sum - 40;
+    let events: BoardActionTypes = null;
+    const meanField = this.fields.find(
+      v => v.fieldPosition === this.meanPosition,
+    );
+
+    const type: any[] = [];
+
+    if (meanField.price) {
+      type.push({
+        type: BoardEventType.CAN_BUY,
+        userId: this.userId,
+        field: this.meanPosition,
+        money: 15000,
+        _id: moveId,
+      });
+    }
+
+    type.push({
+      type: BoardEventType.ROLL_DICES,
+      userId: this.userId,
+      dices: [dice1, dice2, dice3],
+      meanPosition: this.meanPosition,
+      _id: moveId,
+    });
+
+    events = {
+      type,
+    };
+
+    return {
+      code: 0,
+      data: {
+        id: this.moveId++,
+        events,
+      },
+    };
+  };
 }

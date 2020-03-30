@@ -39,7 +39,6 @@ export class BoardSocket
   @SubscribeMessage(BoardEventType.ROLL_DICES)
   async rollDices(client: Socket, payload: IGameModel): Promise<void> {
     try {
-      this.logger.log(`Message: ${JSON.stringify(payload)} from ${client.id}`);
       const status = this.boardStatus(payload);
       console.log('rollDice', status);
       this.server.emit(SocketActions.BOARD_MESSAGE, status);

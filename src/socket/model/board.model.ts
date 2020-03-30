@@ -103,14 +103,14 @@ export type BoardActionTypes = {
 interface BoardEventData {
   id: number;
   events: BoardActionTypes;
-  // TODO Remove ? after events completed
-  boardStatus?: BoardStatus;
+  boardStatus: BoardStatus;
   contract?: Contract;
 }
 
 interface IUser {
   userData: UsersEntity;
-  userGameStatus: UserGameStatus;
+  // TODO Remove ? after events completed
+  userGameStatus?: UserGameStatus;
 }
 
 interface UserGameStatus {
@@ -154,9 +154,10 @@ interface MoveStatus {
 
 interface BoardStatus {
   players: IUser[];
-  moveStatus: MoveStatus;
-  fields: BoardFIeld[];
-  timers: BoardTimers;
+  // TODO Remove ? after events completed
+  moveStatus?: MoveStatus;
+  fields?: BoardFIeld[];
+  timers?: BoardTimers;
 }
 
 interface BoardTimers {

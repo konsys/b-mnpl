@@ -20,7 +20,6 @@ import { FieldService } from 'src/field/field.service';
 import { random } from 'src/lib/utils';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from 'src/user/users.service';
-import { access } from 'fs';
 
 @WebSocketGateway()
 export class BoardSocket

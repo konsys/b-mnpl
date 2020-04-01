@@ -40,19 +40,27 @@ export class BoardSocket
   async rollDices(client: Socket, payload: IGameModel): Promise<void> {
     try {
       const status = this.boardStatus(payload);
-      console.log('rollDice', status);
-      this.server.emit(SocketActions.BOARD_MESSAGE, status);
+      setInterval(() => {
+        this.server.emit(SocketActions.BOARD_MESSAGE, status);
+      }, 2000);
     } catch (err) {
       this.logger.error('Error' + err);
     }
   }
 
-  async onModuleInit() {
+  async onModuleInit(payload) {
     this.fields = await this.fieldService.findInit();
     this.players = await this.usersService.findAll();
-    this.logger.warn(
-      `fields: ${JSON.stringify(this.fields.map(v => v.fieldId))}`,
-    );
+
+    try {
+      const status = this.boardStatus(payload);
+      setInterval(() => {
+        console.log('emit', status.data.events);
+        this.server.emit(SocketActions.BOARD_MESSAGE, status);
+      }, 2000);
+    } catch (err) {
+      this.logger.error('Error' + err);
+    }
   }
 
   afterInit(server: Server) {
@@ -85,7 +93,7 @@ export class BoardSocket
 
     const type: any[] = [];
 
-    if (meanField.price) {
+    if (meanField.price > 0) {
       type.push({
         type: BoardEventType.CAN_BUY,
         userId: this.userId,
@@ -94,7 +102,6 @@ export class BoardSocket
         _id: moveId,
       });
     }
-
     type.push({
       type: BoardEventType.ROLL_DICES,
       userId: this.userId,
@@ -121,11 +128,6 @@ export class BoardSocket
         events,
         boardStatus: {
           players,
-          // [
-          //   {
-          //     userData: this.players[0],
-          //   },
-          // ],
         },
       },
     };

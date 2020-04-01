@@ -10,8 +10,20 @@ import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import {
   BoardMessage,
-  BoardEventType,
+  BoardActionType,
   BoardActionTypes,
+  Motrgage,
+  AuctionDecline,
+  AuctionAccept,
+  LevelUp,
+  LevelDown,
+  PayRentSuccess,
+  PayRentFail,
+  TypeBuy,
+  RollDices,
+  CanBuy,
+  ShowModal,
+  BoardModalTypes,
 } from './model/types/board.types';
 import nanoid from 'nanoid';
 import { IGameModel, SocketActions } from './model/types/game.types';
@@ -36,16 +48,9 @@ export class BoardSocket
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage(BoardEventType.ROLL_DICES)
+  @SubscribeMessage(BoardActionType.ROLL_DICES)
   async rollDices(client: Socket, payload: IGameModel): Promise<void> {
-    try {
-      const status = this.boardStatus(payload);
-      setInterval(() => {
-        this.server.emit(SocketActions.BOARD_MESSAGE, status);
-      }, 2000);
-    } catch (err) {
-      this.logger.error('Error' + err);
-    }
+    this.logger.log(`RollDices: ${client.id}`);
   }
 
   async onModuleInit(payload) {
@@ -83,7 +88,6 @@ export class BoardSocket
     const dice1 = random(0, 6);
     const dice2 = random(0, 6);
     const dice3 = 0;
-    const moveId = nanoid();
     const sum = this.meanPosition + (dice1 + dice2 + dice3);
     this.meanPosition = sum < 40 ? sum : sum - 40;
     let events: BoardActionTypes = null;
@@ -91,25 +95,46 @@ export class BoardSocket
       v => v.fieldPosition === this.meanPosition,
     );
 
-    const type: any[] = [];
+    const type: Array<
+      | Motrgage
+      | AuctionDecline
+      | AuctionAccept
+      | LevelUp
+      | LevelDown
+      | PayRentSuccess
+      | PayRentFail
+      | TypeBuy
+      | RollDices
+      | CanBuy
+      | ShowModal
+    > = [];
 
-    if (meanField.price > 0) {
-      type.push({
-        type: BoardEventType.CAN_BUY,
-        userId: this.userId,
-        field: this.meanPosition,
-        money: 15000,
-        _id: moveId,
-      });
-    } else {
-      type.push({
-        type: BoardEventType.ROLL_DICES,
-        userId: this.userId,
-        dices: [dice1, dice2, dice3],
-        meanPosition: this.meanPosition,
-        _id: moveId,
-      });
-    }
+    // if (meanField.price > 0) {
+    //   type.push({
+    //     type: BoardActionType.CAN_BUY,
+    //     userId: this.userId,
+    //     field: this.meanPosition,
+    //     money: 15000,
+    //     _id: moveId,
+    //   });
+    // } else {
+    //   type.push({
+    //     type: BoardActionType.ROLL_DICES,
+    //     userId: this.userId,
+    //     dices: [dice1, dice2, dice3],
+    //     meanPosition: this.meanPosition,
+    //     _id: moveId,
+    //   });
+    // }
+
+    type.push({
+      type: BoardActionType.SHOW_MODAL,
+      userId: this.userId,
+      title: 'Кидайте кубики',
+      text: 'Мы болеем за вас',
+      modalType: BoardModalTypes.ROLL_DICES,
+      _id: nanoid(4),
+    });
 
     events = {
       type,

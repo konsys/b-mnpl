@@ -15,7 +15,7 @@ export type Contract = {
   _id: 'CWRlgfKGAm4=';
 };
 
-export enum BoardEventType {
+export enum BoardActionType {
   ROLL_DICES = 'rollDices',
   CAN_BUY = 'canBuy',
   AUCTION_ACCEPT = 'auctionAccept',
@@ -27,61 +27,78 @@ export enum BoardEventType {
   LEVEL_DOWN = 'levelDown',
   CONTRACT_ACCEPTED = 'contractAccepted',
   MORTGAGE = 'mortgage',
+  SHOW_MODAL = 'showModal',
 }
+
+export enum BoardModalTypes {
+  ROLL_DICES = 'rollDices',
+  AUCTION_ACCEPT = 'auctionAccept',
+  AUCTION_DECLINE = 'auctionDeclne',
+  BUY = 'buy',
+}
+
 export interface BoardAction {
-  type: BoardEventType;
+  type: BoardActionType;
   userId: number;
   _id: string;
 }
 
 export interface Motrgage extends BoardAction {
-  type: BoardEventType.MORTGAGE;
+  type: BoardActionType.MORTGAGE;
   field: number;
 }
 
 export interface AuctionDecline extends BoardAction {
-  type: BoardEventType.AUCTION_DECLINE;
+  type: BoardActionType.AUCTION_DECLINE;
 }
 export interface AuctionAccept extends BoardAction {
-  type: BoardEventType.AUCTION_ACCEPT;
+  type: BoardActionType.AUCTION_ACCEPT;
   bet: number;
 }
 export interface LevelUp extends BoardAction {
-  type: BoardEventType.LEVEL_UP;
+  type: BoardActionType.LEVEL_UP;
   field: number;
 }
 export interface LevelDown extends BoardAction {
-  type: BoardEventType.LEVEL_DOWN;
+  type: BoardActionType.LEVEL_DOWN;
   field: number;
 }
 export interface PayRentSuccess extends BoardAction {
-  type: BoardEventType.PAY_RENT_SUCCESS;
+  type: BoardActionType.PAY_RENT_SUCCESS;
   field: number;
   money: number;
   toUserId: number;
 }
 
 export interface PayRentFail extends BoardAction {
-  type: BoardEventType.PAY_RENT_FAIL;
+  type: BoardActionType.PAY_RENT_FAIL;
   field: number;
   money: number;
   toUserId: number;
 }
 
+export interface ShowModal extends BoardAction {
+  type: BoardActionType.SHOW_MODAL;
+  userId: number;
+  title: string;
+  text: string;
+  modalType: BoardModalTypes;
+}
+
 export interface TypeBuy extends BoardAction {
-  type: BoardEventType.BUY;
+  type: BoardActionType.BUY;
   field: number;
   money: number;
 }
 
 export interface RollDices extends BoardAction {
-  type: BoardEventType.ROLL_DICES;
+  type: BoardActionType.ROLL_DICES;
   dices: number[];
   meanPosition: number;
 }
 
 export interface CanBuy extends BoardAction {
-  type: BoardEventType.CAN_BUY;
+  type: BoardActionType.CAN_BUY;
   field: number;
   money: number;
 }
@@ -98,6 +115,7 @@ export type BoardActionTypes = {
     | TypeBuy
     | RollDices
     | CanBuy
+    | ShowModal
   >;
 };
 interface BoardEventData {

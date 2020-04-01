@@ -12,9 +12,9 @@ import {
   BoardMessage,
   BoardEventType,
   BoardActionTypes,
-} from './model/board.model';
+} from './model/types/board.types';
 import nanoid from 'nanoid';
-import { IGameModel, SocketActions } from './model/game.model';
+import { IGameModel, SocketActions } from './model/types/game.types';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { FieldService } from 'src/field/field.service';
 import { random } from 'src/lib/utils';
@@ -101,14 +101,15 @@ export class BoardSocket
         money: 15000,
         _id: moveId,
       });
+    } else {
+      type.push({
+        type: BoardEventType.ROLL_DICES,
+        userId: this.userId,
+        dices: [dice1, dice2, dice3],
+        meanPosition: this.meanPosition,
+        _id: moveId,
+      });
     }
-    type.push({
-      type: BoardEventType.ROLL_DICES,
-      userId: this.userId,
-      dices: [dice1, dice2, dice3],
-      meanPosition: this.meanPosition,
-      _id: moveId,
-    });
 
     events = {
       type,

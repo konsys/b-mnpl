@@ -13,7 +13,7 @@ export const resetBoardActionEvent = boardActionDomain.event();
 export const setCurrentActionEvent = boardActionDomain.event<ICurrentAction | null>();
 
 export const boardActionsStore = boardActionDomain
-  .store<ICurrentAction>({ action: null, userId: 0 })
+  .store<ICurrentAction | null>(null)
   .on(setCurrentActionEvent, (_, data) => {
     console.log('setBoardActionEvent', data);
   })

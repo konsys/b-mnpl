@@ -60,7 +60,6 @@ export class BoardSocket
     try {
       const status = this.boardStatus(payload);
       setInterval(() => {
-        console.log('emit', status.data.events);
         this.server.emit(SocketActions.BOARD_MESSAGE, status);
       }, 2000);
     } catch (err) {

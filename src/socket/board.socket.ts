@@ -23,9 +23,8 @@ import {
   RollDices,
   CanBuy,
   ShowModal,
-  BoardModalTypes,
 } from './model/types/board.types';
-import nanoid from 'nanoid';
+import { rollDicesModal } from '../socket/model/actions/show.nodal.action';
 import { IGameModel, SocketActions } from './model/types/game.types';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { FieldService } from 'src/field/field.service';
@@ -33,6 +32,19 @@ import { random } from 'src/lib/utils';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from 'src/user/users.service';
 
+let type: Array<
+  | Motrgage
+  | AuctionDecline
+  | AuctionAccept
+  | LevelUp
+  | LevelDown
+  | PayRentSuccess
+  | PayRentFail
+  | TypeBuy
+  | RollDices
+  | CanBuy
+  | ShowModal
+> = [];
 @WebSocketGateway()
 export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -50,7 +62,7 @@ export class BoardSocket
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async rollDices(client: Socket, payload: IGameModel): Promise<void> {
-    this.logger.log(`RollDices: ${client.id}`);
+    this.logger.log(`RollDices: ${client.id} ${JSON.stringify(payload)}`);
   }
 
   async onModuleInit(payload) {
@@ -90,50 +102,12 @@ export class BoardSocket
     const sum = this.meanPosition + (dice1 + dice2 + dice3);
     this.meanPosition = sum < 40 ? sum : sum - 40;
     let events: BoardActionTypes = null;
+    type = [];
     const meanField = this.fields.find(
       v => v.fieldPosition === this.meanPosition,
     );
 
-    const type: Array<
-      | Motrgage
-      | AuctionDecline
-      | AuctionAccept
-      | LevelUp
-      | LevelDown
-      | PayRentSuccess
-      | PayRentFail
-      | TypeBuy
-      | RollDices
-      | CanBuy
-      | ShowModal
-    > = [];
-
-    // if (meanField.price > 0) {
-    //   type.push({
-    //     type: BoardActionType.CAN_BUY,
-    //     userId: this.userId,
-    //     field: this.meanPosition,
-    //     money: 15000,
-    //     _id: moveId,
-    //   });
-    // } else {
-    //   type.push({
-    //     type: BoardActionType.ROLL_DICES,
-    //     userId: this.userId,
-    //     dices: [dice1, dice2, dice3],
-    //     meanPosition: this.meanPosition,
-    //     _id: moveId,
-    //   });
-    // }
-
-    type.push({
-      type: BoardActionType.SHOW_MODAL,
-      userId: this.userId,
-      title: 'Кидайте кубики',
-      text: 'Мы болеем за вас',
-      modalType: BoardModalTypes.ROLL_DICES,
-      _id: nanoid(4),
-    });
+    type.push(rollDicesModal(this.userId));
 
     events = {
       type,

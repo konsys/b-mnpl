@@ -83,7 +83,6 @@ export interface ShowModal extends BoardAction {
   userId: number;
   title: string;
   text: string;
-  modalType: BoardModalTypes;
 }
 
 export interface TypeBuy extends BoardAction {

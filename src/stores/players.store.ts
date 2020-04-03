@@ -1,4 +1,4 @@
-import { GameDomain } from 'src/stores/board.action.store';
+import { GameDomain } from 'src/stores/actions.store';
 import { IPlayerStatus } from 'src/types/board.types';
 
 const PlayersDomain = GameDomain.domain('PlayersDomain');

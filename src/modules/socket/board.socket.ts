@@ -16,7 +16,7 @@ import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from 'src/modules/user/users.service';
 import { boardMessage } from 'src/actions/board.message';
 import { rollDicesHandler } from 'src/actions/handlers/board.handlers';
-import { setCurrentActionEvent } from 'src/stores/board.action.store';
+import { setCurrentActionsEvent } from 'src/stores/actions.store';
 
 @WebSocketGateway()
 export class BoardSocket
@@ -43,9 +43,10 @@ export class BoardSocket
     this.fields = await this.fieldService.findInit();
     this.players = await this.usersService.findAll();
     this.players.length &&
-      setCurrentActionEvent({
+      setCurrentActionsEvent({
         userId: this.players[0].userId,
         action: BoardActionType.ROLL_DICES,
+        srcOfChange: 'onModuleInit',
       });
     try {
       setInterval(() => {

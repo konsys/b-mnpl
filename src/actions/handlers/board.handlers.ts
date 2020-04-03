@@ -1,20 +1,18 @@
 import { ShowModal, BoardActionType } from 'src/types/board.types';
 import nanoid from 'nanoid';
-import {
-  setCurrentActionEvent,
-  boardActionsStore,
-} from 'src/stores/board.action.store';
+import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import { IGameModel } from 'src/types/game.types';
 
 export const rollDicesHandler = (payload: IGameModel): ShowModal => {
   let userId = 0;
-  boardActionsStore.watch(v => {
+  actionsStore.watch(v => {
     userId = v.userId;
   });
 
-  setCurrentActionEvent({
+  setCurrentActionsEvent({
     userId,
     action: BoardActionType.SHOW_MODAL,
+    srcOfChange: 'rollDicesHandler',
   });
 
   return {

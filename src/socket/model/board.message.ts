@@ -16,7 +16,6 @@ import {
 } from './types/board.types';
 import { rollDicesHandler } from './actions/board.handlers';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { IPlayerStatus } from 'src/socket/model/types/board.types';
 import { UsersEntity } from 'src/entities/users.entity';
 
 let type: Array<
@@ -34,6 +33,7 @@ let type: Array<
 > = [];
 
 let meanPosition = 0;
+let moveId = 0;
 
 export const boardMessage = (
   fields: BoardFieldsEntity[],
@@ -48,7 +48,8 @@ export const boardMessage = (
   type = [];
   const meanField = fields.find(v => v.fieldPosition === meanPosition);
 
-  type.push(rollDicesHandler(this.userId));
+  // TODO remove on multiplayer
+  type.push(rollDicesHandler(null));
 
   events = {
     type,
@@ -65,7 +66,7 @@ export const boardMessage = (
   return {
     code: 0,
     data: {
-      id: this.moveId++,
+      id: moveId++,
       events,
       boardStatus: {
         players,

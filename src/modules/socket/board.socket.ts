@@ -8,15 +8,15 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { BoardActionType } from './model/types/board.types';
-import { IGameModel, SocketActions } from './model/types/game.types';
+import { BoardActionType } from 'src/types/board.types';
+import { IGameModel, SocketActions } from 'src/types/game.types';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { FieldService } from 'src/field/field.service';
+import { FieldService } from 'src/modules/field/field.service';
 import { UsersEntity } from 'src/entities/users.entity';
-import { UsersService } from 'src/user/users.service';
-import { boardMessage } from './model/board.message';
-import { rollDicesHandler } from './model/actions/board.handlers';
-import { setCurrentActionEvent } from './model/actions/board.action.store';
+import { UsersService } from 'src/modules/user/users.service';
+import { boardMessage } from 'src/actions/board.message';
+import { rollDicesHandler } from 'src/actions/handlers/board.handlers';
+import { setCurrentActionEvent } from 'src/lib/board.action.store';
 
 @WebSocketGateway()
 export class BoardSocket

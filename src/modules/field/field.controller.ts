@@ -1,5 +1,5 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { fieldsForSave } from '../entities/dbData';
+import { fieldsForSave } from 'src/entities/dbData';
 import { FieldService } from './field.service';
 
 @Controller('board-fields')

@@ -1,7 +1,10 @@
-import { ShowModal, BoardActionType } from '../types/board.types';
+import { ShowModal, BoardActionType } from 'src/types/board.types';
 import nanoid from 'nanoid';
-import { setCurrentActionEvent, boardActionsStore } from './board.action.store';
-import { IGameModel } from '../types/game.types';
+import {
+  setCurrentActionEvent,
+  boardActionsStore,
+} from 'src/lib/board.action.store';
+import { IGameModel } from 'src/types/game.types';
 
 export const rollDicesHandler = (payload: IGameModel): ShowModal => {
   let userId = 0;
@@ -13,7 +16,7 @@ export const rollDicesHandler = (payload: IGameModel): ShowModal => {
     userId,
     action: BoardActionType.SHOW_MODAL,
   });
-  console.log(23423424, userId);
+
   return {
     type: BoardActionType.SHOW_MODAL,
     userId,

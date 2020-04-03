@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { BoardSocket } from 'src/socket/board.socket';
+import { BoardSocket } from 'src/modules/socket/board.socket';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { AppController } from './app.controller';
-import { FieldModule } from 'src/field/field.module';
-import { UsersModule } from 'src/user/users.module';
+import { FieldModule } from 'src/modules/field/field.module';
+import { UsersModule } from 'src/modules/user/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { BoardSocketModule } from 'src/socket/board.socket.modules';
+import { BoardSocketModule } from 'src/modules/socket/board.socket.modules';
 
 const rootPath = join(__dirname, '../../', 'assets/');
 @Module({

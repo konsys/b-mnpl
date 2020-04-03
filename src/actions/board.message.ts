@@ -13,8 +13,8 @@ import {
   RollDices,
   CanBuy,
   ShowModal,
-} from './types/board.types';
-import { rollDicesHandler } from './actions/board.handlers';
+} from '../types/board.types';
+import { rollDicesHandler } from './handlers/board.handlers';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { UsersEntity } from 'src/entities/users.entity';
 
@@ -46,7 +46,7 @@ export const boardMessage = (
   this.meanPosition = sum < 40 ? sum : sum - 40;
   let events: BoardActionTypes = null;
   type = [];
-  const meanField = fields.find(v => v.fieldPosition === meanPosition);
+  //   const meanField = fields.find(v => v.fieldPosition === meanPosition);
 
   // TODO remove on multiplayer
   type.push(rollDicesHandler(null));

@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import { AppModule } from 'src/modules/app/app.module';
 import helmet from 'helmet';
 // import csurf from 'csurf';
 import compression from 'compression';

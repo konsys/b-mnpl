@@ -22,7 +22,7 @@ const rootPath = join(__dirname, '../../', 'assets/');
       username: 'game',
       password: 'game',
       database: 'mnpl',
-      entities: [__dirname + '/../entities/*.entity{.ts,.js}'],
+      entities: [__dirname + '/../../entities/*.entity{.ts,.js}'],
       synchronize: true,
       // logging: ['query'],
     }),

@@ -16,7 +16,7 @@ import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from 'src/modules/user/users.service';
 import { boardMessage } from 'src/actions/board.message';
 import { rollDicesHandler } from 'src/actions/handlers/board.handlers';
-import { setCurrentActionEvent } from 'src/lib/board.action.store';
+import { setCurrentActionEvent } from 'src/stores/board.action.store';
 
 @WebSocketGateway()
 export class BoardSocket

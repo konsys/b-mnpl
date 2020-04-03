@@ -1,4 +1,4 @@
-import { BoardActionType } from '../types/board.types';
+import { BoardActionType } from 'src/types/board.types';
 import { createDomain } from 'effector';
 
 interface ICurrentAction {

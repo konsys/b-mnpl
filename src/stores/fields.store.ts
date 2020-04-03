@@ -1,4 +1,4 @@
-import { GameDomain } from './board.action.store';
+import { GameDomain } from 'src/stores/board.action.store';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 
 const FieldsDomain = GameDomain.domain('FieldsDomain');

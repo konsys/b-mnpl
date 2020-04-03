@@ -3,7 +3,7 @@ import nanoid from 'nanoid';
 import {
   setCurrentActionEvent,
   boardActionsStore,
-} from 'src/lib/board.action.store';
+} from 'src/stores/board.action.store';
 import { IGameModel } from 'src/types/game.types';
 
 export const rollDicesHandler = (payload: IGameModel): ShowModal => {

@@ -118,6 +118,7 @@ export type BoardActionTypes = {
     | ShowModal
   >;
 };
+
 interface BoardEventData {
   id: number;
   events: BoardActionTypes;
@@ -125,10 +126,10 @@ interface BoardEventData {
   contract?: Contract;
 }
 
-interface IUser {
-  userData: UsersEntity;
+export interface IPlayerStatus {
+  player: UsersEntity;
   // TODO Remove ? after events completed
-  userGameStatus?: UserGameStatus;
+  gameStatus?: UserGameStatus;
 }
 
 interface UserGameStatus {
@@ -171,7 +172,7 @@ interface MoveStatus {
 }
 
 interface BoardStatus {
-  players: IUser[];
+  players: UsersEntity[];
   // TODO Remove ? after events completed
   moveStatus?: MoveStatus;
   fields?: BoardFIeld[];

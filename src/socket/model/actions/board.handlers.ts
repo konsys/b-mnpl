@@ -1,7 +1,7 @@
-import { BoardActionType, ShowModal } from '../types/board.types';
+import { ShowModal, BoardActionType } from '../types/board.types';
 import nanoid from 'nanoid';
 
-export const rollDicesModal = (userId: number): ShowModal => {
+export const rollDicesHandler = (userId: number): ShowModal => {
   return {
     type: BoardActionType.SHOW_MODAL,
     userId,
@@ -15,8 +15,8 @@ export const canBuyModal = (userId: number): ShowModal => {
   return {
     type: BoardActionType.SHOW_MODAL,
     userId,
-    title: 'Кидайте кубики',
-    text: 'Мы болеем за вас',
+    title: 'Купить поле',
+    text: 'Вы можете купить поле или поставить его на аукцион',
     _id: nanoid(4),
   };
 };

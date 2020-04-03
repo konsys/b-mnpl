@@ -6,7 +6,7 @@ import { IGameModel } from 'src/types/game.types';
 export const rollDicesHandler = (payload: IGameModel): ShowModal => {
   let userId = 0;
   actionsStore.watch(v => {
-    userId = v.userId;
+    userId = v && (v.userId || null);
   });
 
   setCurrentActionsEvent({

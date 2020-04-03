@@ -10,20 +10,17 @@ import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import { BoardActionType } from 'src/types/board.types';
 import { IGameModel, SocketActions } from 'src/types/game.types';
-import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { FieldService } from 'src/modules/field/field.service';
-import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from 'src/modules/user/users.service';
 import { boardMessage } from 'src/actions/board.message';
 import { rollDicesHandler } from 'src/actions/handlers/board.handlers';
-import { setCurrentActionsEvent } from 'src/stores/actions.store';
+import { setPlayersEvent } from 'src/stores/players.store';
+import { setFieldsEvent } from 'src/stores/fields.store';
 
 @WebSocketGateway()
 export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('BoardSocket');
-  private fields: BoardFieldsEntity[] = [];
-  private players: UsersEntity[] = [];
 
   constructor(
     private fieldService: FieldService,
@@ -40,17 +37,13 @@ export class BoardSocket
   }
 
   async onModuleInit() {
-    this.fields = await this.fieldService.findInit();
-    this.players = await this.usersService.findAll();
-    this.players.length &&
-      setCurrentActionsEvent({
-        userId: this.players[0].userId,
-        action: BoardActionType.ROLL_DICES,
-        srcOfChange: 'onModuleInit',
-      });
+    const players = await this.usersService.findAll();
+    setPlayersEvent(players);
+    setFieldsEvent(await this.fieldService.findInit());
+
     try {
       setInterval(() => {
-        const status = boardMessage(this.fields, this.players);
+        const status = boardMessage();
 
         this.server.emit(SocketActions.BOARD_MESSAGE, status);
       }, 2000);

@@ -15,8 +15,6 @@ import {
   ShowModal,
 } from '../types/board.types';
 import { rollDicesHandler } from './handlers/board.handlers';
-import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { UsersEntity } from 'src/entities/users.entity';
 
 let type: Array<
   | Motrgage
@@ -35,10 +33,7 @@ let type: Array<
 let meanPosition = 0;
 let moveId = 0;
 
-export const boardMessage = (
-  fields: BoardFieldsEntity[],
-  users: UsersEntity[],
-): BoardMessage => {
+export const boardMessage = (): BoardMessage => {
   const dice1 = random(0, 6);
   const dice2 = random(0, 6);
   const dice3 = 0;
@@ -48,7 +43,6 @@ export const boardMessage = (
   type = [];
   //   const meanField = fields.find(v => v.fieldPosition === meanPosition);
 
-  // TODO remove on multiplayer
   type.push(rollDicesHandler(null));
 
   events = {
@@ -57,11 +51,11 @@ export const boardMessage = (
 
   const players = [];
 
-  users.map(v => {
-    players.push({
-      userData: v,
-    });
-  });
+  // users.map(v => {
+  //   players.push({
+  //     userData: { userId: v.userId },
+  //   });
+  // });
 
   return {
     code: 0,

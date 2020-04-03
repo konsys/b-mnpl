@@ -11,6 +11,7 @@ async function bootstrap() {
     // logger: ['error', 'warn'],
   });
   const options = new DocumentBuilder()
+    // .setBasePath('api')
     .setTitle('M Api')
     .setDescription('M API description')
     .setVersion('1.0')

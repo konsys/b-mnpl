@@ -14,13 +14,15 @@ import { FieldService } from 'src/modules/field/field.service';
 import { UsersService } from 'src/modules/user/users.service';
 import { boardMessage } from 'src/actions/board.message';
 import { rollDicesHandler } from 'src/actions/handlers/board.handlers';
-import { setPlayersEvent } from 'src/stores/players.store';
+import { setPlayersEvent, IPlayer } from 'src/stores/players.store';
 import { setFieldsEvent } from 'src/stores/fields.store';
+import nanoid from 'nanoid';
 
 @WebSocketGateway()
 export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('BoardSocket');
+  private gameId = nanoid(8)
 
   constructor(
     private fieldService: FieldService,
@@ -37,10 +39,12 @@ export class BoardSocket
   }
 
   async onModuleInit() {
-    const players = await this.usersService.findAll();
+    const players: IPlayer[] = await this.usersService.findAll();
     setPlayersEvent(players);
     setFieldsEvent(await this.fieldService.findInit());
+    players.length && players[0].isActing = true;
 
+    rollDicesHandler({gameId: this.gameId})
     try {
       setInterval(() => {
         const status = boardMessage();

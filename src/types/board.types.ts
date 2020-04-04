@@ -28,7 +28,6 @@ export enum BoardActionType {
   CONTRACT_ACCEPTED = 'contractAccepted',
   MORTGAGE = 'mortgage',
   SHOW_MODAL = 'showModal',
-  HIDE_MODAL = 'hideModal',
 }
 
 export enum BoardModalTypes {

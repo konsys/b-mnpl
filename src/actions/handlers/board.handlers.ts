@@ -3,7 +3,7 @@ import nanoid from 'nanoid';
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import { IGameModel } from 'src/types/game.types';
 
-export const rollDicesHandler = (payload: IGameModel): ShowModal => {
+export const rollDicesHandler = (payload: IGameModel): ShowModal[] => {
   let userId = 0;
   actionsStore.watch(v => {
     userId = v && (v.userId || null);
@@ -15,13 +15,15 @@ export const rollDicesHandler = (payload: IGameModel): ShowModal => {
     srcOfChange: 'rollDicesHandler',
   });
 
-  return {
-    type: BoardActionType.SHOW_MODAL,
-    userId,
-    title: 'Кидайте кубики',
-    text: 'Мы болеем за вас',
-    _id: nanoid(4),
-  };
+  return [
+    {
+      type: BoardActionType.SHOW_MODAL,
+      userId,
+      title: 'Кидайте кубики',
+      text: 'Мы болеем за вас',
+      _id: nanoid(4),
+    },
+  ];
 };
 
 export const canBuyModal = (userId: number): ShowModal => {

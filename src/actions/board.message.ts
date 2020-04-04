@@ -44,19 +44,13 @@ export const boardMessage = (): BoardMessage => {
   //   const meanField = fields.find(v => v.fieldPosition === meanPosition);
 
   type.push(dicesModalHandler(null));
-  type.push(rollDicesHandler(null));
+  // type.push(rollDicesHandler(null));
 
   events = {
     type,
   };
 
   const players = [];
-
-  // users.map(v => {
-  //   players.push({
-  //     userData: { userId: v.userId },
-  //   });
-  // });
 
   return {
     code: 0,

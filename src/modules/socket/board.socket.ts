@@ -47,7 +47,6 @@ export class BoardSocket
     }
     setPlayersEvent(players);
 
-    rollDicesHandler({ gameId: this.gameId });
     try {
       setInterval(() => {
         const status = boardMessage();

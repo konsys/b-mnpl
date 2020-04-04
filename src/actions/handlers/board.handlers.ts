@@ -1,20 +1,12 @@
-import { ShowModal, BoardActionType } from 'src/types/board.types';
+import { ShowModal, BoardActionType, RollDices } from 'src/types/board.types';
 import nanoid from 'nanoid';
-import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import { IGameModel } from 'src/types/game.types';
 import { playersStore } from 'src/stores/players.store';
 
-export const rollDicesHandler = (payload: IGameModel): ShowModal => {
+export const dicesModalHandler = (payload: IGameModel): ShowModal => {
   let userId = 0;
   playersStore.watch(v => {
-    // console.log();
     userId = v.find(v => v.isActing === true)?.userId;
-  });
-
-  setCurrentActionsEvent({
-    userId,
-    action: BoardActionType.SHOW_MODAL,
-    srcOfChange: 'rollDicesHandler',
   });
 
   return {
@@ -22,6 +14,21 @@ export const rollDicesHandler = (payload: IGameModel): ShowModal => {
     userId,
     title: 'Кидайте кубики',
     text: 'Мы болеем за вас',
+    _id: nanoid(4),
+  };
+};
+
+export const rollDicesHandler = (payload: IGameModel): RollDices => {
+  let userId = 0;
+  playersStore.watch(v => {
+    userId = v.find(v => v.isActing === true)?.userId;
+  });
+
+  return {
+    type: BoardActionType.ROLL_DICES,
+    userId,
+    dices: [1, 1, 1],
+    meanPosition: 9,
     _id: nanoid(4),
   };
 };

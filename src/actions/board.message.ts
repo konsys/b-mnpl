@@ -14,7 +14,7 @@ import {
   CanBuy,
   ShowModal,
 } from '../types/board.types';
-import { rollDicesHandler } from './handlers/board.handlers';
+import { rollDicesHandler, dicesModalHandler } from './handlers/board.handlers';
 
 let type: Array<
   | Motrgage
@@ -43,6 +43,7 @@ export const boardMessage = (): BoardMessage => {
   type = [];
   //   const meanField = fields.find(v => v.fieldPosition === meanPosition);
 
+  type.push(dicesModalHandler(null));
   type.push(rollDicesHandler(null));
 
   events = {

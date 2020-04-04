@@ -8,13 +8,13 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { BoardActionType } from 'src/types/board.types';
+import { BoardActionType, IPlayerStatus } from 'src/types/board.types';
 import { IGameModel, SocketActions } from 'src/types/game.types';
 import { FieldService } from 'src/modules/field/field.service';
 import { UsersService } from 'src/modules/user/users.service';
 import { boardMessage } from 'src/actions/board.message';
 import { rollDicesHandler } from 'src/actions/handlers/board.handlers';
-import { setPlayersEvent, IPlayer } from 'src/stores/players.store';
+import { setPlayersEvent } from 'src/stores/players.store';
 import { setFieldsEvent } from 'src/stores/fields.store';
 import nanoid from 'nanoid';
 
@@ -40,7 +40,7 @@ export class BoardSocket
 
   async onModuleInit() {
     setFieldsEvent(await this.fieldService.findInit());
-    const players: IPlayer[] = await this.usersService.findAll();
+    const players: IPlayerStatus[] = await this.usersService.findAll();
 
     if (players.length > 0) {
       players[0].isActing = true;

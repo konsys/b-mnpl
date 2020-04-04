@@ -1,16 +1,12 @@
 import { GameDomain } from 'src/stores/actions.store';
-import { UsersEntity } from 'src/entities/users.entity';
-
-export interface IPlayer extends UsersEntity {
-  isActing?: boolean;
-}
+import { IPlayerStatus } from 'src/types/board.types';
 
 const PlayersDomain = GameDomain.domain('PlayersDomain');
 export const resetPlayersEvent = PlayersDomain.event();
 
-export const setPlayersEvent = PlayersDomain.event<IPlayer[] | null>();
+export const setPlayersEvent = PlayersDomain.event<IPlayerStatus[] | null>();
 
-export const playersStore = PlayersDomain.store<IPlayer[] | null>(null)
+export const playersStore = PlayersDomain.store<IPlayerStatus[] | null>(null)
   .on(setPlayersEvent, (_, data) => data)
   .reset(resetPlayersEvent);
 

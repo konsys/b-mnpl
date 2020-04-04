@@ -125,10 +125,9 @@ interface BoardEventData {
   contract?: Contract;
 }
 
-export interface IPlayerStatus {
-  player: UsersEntity;
-  // TODO Remove ? after events completed
-  gameStatus?: UserGameStatus;
+export interface IPlayerStatus extends UsersEntity {
+  isActing?: boolean;
+  status?: UserGameStatus;
 }
 
 interface UserGameStatus {

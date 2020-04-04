@@ -10,4 +10,4 @@ export const fieldsStore = FieldsDomain.store<BoardFieldsEntity[] | null>(null)
   .on(setFieldsEvent, (_, data) => data)
   .reset(resetFieldsEvent);
 
-fieldsStore.watch(v => console.log('fieldsStore', v));
+// fieldsStore.watch(v => console.log('fieldsStore', v));

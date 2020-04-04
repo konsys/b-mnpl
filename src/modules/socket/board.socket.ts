@@ -22,7 +22,7 @@ import nanoid from 'nanoid';
 export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('BoardSocket');
-  private gameId = nanoid(8)
+  private gameId = nanoid(8);
 
   constructor(
     private fieldService: FieldService,
@@ -39,12 +39,15 @@ export class BoardSocket
   }
 
   async onModuleInit() {
-    const players: IPlayer[] = await this.usersService.findAll();
-    setPlayersEvent(players);
     setFieldsEvent(await this.fieldService.findInit());
-    players.length && players[0].isActing = true;
+    const players: IPlayer[] = await this.usersService.findAll();
 
-    rollDicesHandler({gameId: this.gameId})
+    if (players.length > 0) {
+      players[0].isActing = true;
+    }
+    setPlayersEvent(players);
+
+    rollDicesHandler({ gameId: this.gameId });
     try {
       setInterval(() => {
         const status = boardMessage();

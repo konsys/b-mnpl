@@ -13,4 +13,12 @@ export class UsersService {
   async findAll(): Promise<UsersEntity[]> {
     return await this.users.find();
   }
+
+  async findOne(): Promise<UsersEntity> {
+    return await this.users.findOne(1);
+  }
+
+  async saveAll(users: UsersEntity[]): Promise<UsersEntity[]> {
+    return await this.users.save(users);
+  }
 }

@@ -1,25 +1,26 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { UsersEntity } from 'src/entities/users.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { users } from 'src/entities/dbData';
+import { UsersService } from './users.service';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UsersController {
-  constructor(
-    @InjectRepository(UsersEntity)
-    private usersService: Repository<UsersEntity>,
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   @Get()
-  async get(): Promise<string> {
-    const fields = await this.usersService.find();
-    return JSON.stringify(fields);
+  async get(): Promise<any> {
+    return await this.usersService.findOne();
   }
 
   @Post()
-  async save(): Promise<string> {
-    const res = await this.usersService.save(users);
-    return JSON.stringify(res);
+  async save(): Promise<any> {
+    return await this.usersService.saveAll(users);
   }
 }

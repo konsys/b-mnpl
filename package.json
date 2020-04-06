@@ -37,6 +37,7 @@
     "helmet": "^3.21.3",
     "mysql": "^2.18.1",
     "nanoid": "^2.1.11",
+    "nats": "^1.4.8",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.4",

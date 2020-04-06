@@ -4,7 +4,7 @@ import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
-export class FieldService {
+export class FieldsService {
   constructor(
     @InjectRepository(BoardFieldsEntity)
     private readonly boardField: Repository<BoardFieldsEntity>,

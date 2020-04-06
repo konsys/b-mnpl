@@ -24,7 +24,8 @@ import { setPlayersEvent } from 'src/stores/players.store';
 import { setFieldsEvent } from 'src/stores/fields.store';
 import axios from 'axios';
 import nanoid from 'nanoid';
-import * as config from '../../../config/config';
+import * as config from '../../config/settings';
+import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -44,19 +45,11 @@ export class BoardSocket
 
   async onModuleInit() {
     try {
-      // TODO вынести в клиент
-      setFieldsEvent(
-        await axios.get(`${config.api.host}/board-fields/initial`, {
-          params: { id: 1 },
-        }),
-      );
+      // TODO вынести в microservice
+      let players: IPlayerStatus[] = [];
+      let fields: BoardFieldsEntity[] = [];
 
-      let players: IPlayerStatus[] = await axios.get(
-        `${config.api.host}/user`,
-        {
-          params: { id: 1 },
-        },
-      );
+      setFieldsEvent(fields);
 
       const initPlayerStatus: UserGameStatus = {
         gameId: this.gameId,
@@ -80,7 +73,7 @@ export class BoardSocket
       }
       setPlayersEvent(players);
     } catch (err) {
-      this.logger.error(config.api.host, JSON.stringify(err));
+      this.logger.error(JSON.stringify(err));
     }
     try {
       setInterval(() => {

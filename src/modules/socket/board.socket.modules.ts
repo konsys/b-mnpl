@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { FieldService } from 'src/modules/field/field.service';
+import { FieldsService } from 'src/modules/fields/fields.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { UsersEntity } from 'src/entities/users.entity';
-import { UsersService } from 'src/modules/user/users.service';
+import { UsersService } from 'src/modules/ms/users/users.service';
 import { BoardSocket } from './board.socket';
 
 @Module({
@@ -11,7 +11,7 @@ import { BoardSocket } from './board.socket';
     TypeOrmModule.forFeature([BoardFieldsEntity]),
     TypeOrmModule.forFeature([UsersEntity]),
   ],
-  providers: [BoardSocket, FieldService, UsersService],
+  providers: [BoardSocket, FieldsService, UsersService],
   controllers: [],
 })
 export class BoardSocketModule {}

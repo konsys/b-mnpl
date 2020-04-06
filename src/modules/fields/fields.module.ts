@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { FieldService } from './field.service';
-import { FieldController } from './field.controller';
+import { FieldsService } from './fields.service';
+import { FieldsController } from './fields.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([BoardFieldsEntity])],
-  providers: [FieldService],
-  controllers: [FieldController],
+  providers: [FieldsService],
+  controllers: [FieldsController],
 })
-export class FieldModule {}
+export class FieldsModule {}

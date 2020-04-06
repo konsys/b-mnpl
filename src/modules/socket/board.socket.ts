@@ -6,7 +6,11 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
+import {
+  Logger,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import {
   BoardActionType,
@@ -14,24 +18,20 @@ import {
   UserGameStatus,
 } from 'src/types/board.types';
 import { IGameModel, SocketActions } from 'src/types/game.types';
-import { FieldService } from 'src/modules/field/field.service';
-import { UsersService } from 'src/modules/user/users.service';
 import { boardMessage } from 'src/actions/board.message';
 import { rollDicesHandler } from 'src/actions/handlers/board.handlers';
 import { setPlayersEvent } from 'src/stores/players.store';
 import { setFieldsEvent } from 'src/stores/fields.store';
+import axios from 'axios';
 import nanoid from 'nanoid';
+import * as config from '../../../config/config';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
 export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('BoardSocket');
   private gameId = nanoid(8);
-
-  constructor(
-    private fieldService: FieldService,
-    private usersService: UsersService,
-  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -43,30 +43,45 @@ export class BoardSocket
   }
 
   async onModuleInit() {
-    setFieldsEvent(await this.fieldService.findInit());
-    let players: IPlayerStatus[] = await this.usersService.findAll();
-    const initPlayerStatus: UserGameStatus = {
-      gameId: this.gameId,
-      doublesRolledAsCombo: 0,
-      jailed: false,
-      unjailAttempts: 0,
-      meanPosition: 0,
-      money: 15000,
-      creditPayRound: false,
-      creditNextTakeRound: 0,
-      score: 0,
-      timeReduceLevel: 0,
-      creditToPay: 0,
-      frags: '',
-      additionalTime: 0,
-      canUseCredit: false,
-    };
-    if (players.length > 0) {
-      players[0].isActing = true;
-      players = players.map(v => ({ ...v, status: initPlayerStatus }));
-    }
-    setPlayersEvent(players);
+    try {
+      // TODO вынести в клиент
+      setFieldsEvent(
+        await axios.get(`${config.api.host}/board-fields/initial`, {
+          params: { id: 1 },
+        }),
+      );
 
+      let players: IPlayerStatus[] = await axios.get(
+        `${config.api.host}/user`,
+        {
+          params: { id: 1 },
+        },
+      );
+
+      const initPlayerStatus: UserGameStatus = {
+        gameId: this.gameId,
+        doublesRolledAsCombo: 0,
+        jailed: false,
+        unjailAttempts: 0,
+        meanPosition: 0,
+        money: 15000,
+        creditPayRound: false,
+        creditNextTakeRound: 0,
+        score: 0,
+        timeReduceLevel: 0,
+        creditToPay: 0,
+        frags: '',
+        additionalTime: 0,
+        canUseCredit: false,
+      };
+      if (players.length > 0) {
+        players[0].isActing = true;
+        players = players.map(v => ({ ...v, status: initPlayerStatus }));
+      }
+      setPlayersEvent(players);
+    } catch (err) {
+      this.logger.error(config.api.host, JSON.stringify(err));
+    }
     try {
       setInterval(() => {
         const status = boardMessage();

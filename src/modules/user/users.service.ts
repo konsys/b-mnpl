@@ -11,7 +11,7 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<UsersEntity[]> {
-    return await this.users.find();
+    return await this.users.find({ take: 2 });
   }
 
   async findOne(): Promise<UsersEntity> {

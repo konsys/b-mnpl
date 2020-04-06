@@ -15,12 +15,12 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
-  async get(): Promise<any> {
-    return await this.usersService.findOne();
+  async get(): Promise<UsersEntity[]> {
+    return await this.usersService.findAll();
   }
 
   @Post()
-  async save(): Promise<any> {
+  async save(): Promise<UsersEntity[]> {
     return await this.usersService.saveAll(users);
   }
 }

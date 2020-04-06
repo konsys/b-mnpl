@@ -1,4 +1,3 @@
-import { random } from 'src/lib/utils';
 import {
   BoardActionTypes,
   BoardMessage,
@@ -14,7 +13,12 @@ import {
   CanBuy,
   ShowModal,
 } from '../types/board.types';
-import { rollDicesHandler, dicesModalHandler } from './handlers/board.handlers';
+import {
+  rollDicesHandler,
+  dicesModalHandler,
+  canBuyModal,
+} from './handlers/board.handlers';
+import { playersStore } from 'src/stores/players.store';
 
 let type: Array<
   | Motrgage
@@ -30,28 +34,25 @@ let type: Array<
   | ShowModal
 > = [];
 
-let meanPosition = 0;
 let moveId = 0;
 
 export const boardMessage = (): BoardMessage => {
-  const dice1 = random(0, 6);
-  const dice2 = random(0, 6);
-  const dice3 = 0;
-  const sum = this.meanPosition + (dice1 + dice2 + dice3);
-  this.meanPosition = sum < 40 ? sum : sum - 40;
+  // console.log(111111, sum, meanPosition, dice1, dice2, dice3);
   let events: BoardActionTypes = null;
   type = [];
-  //   const meanField = fields.find(v => v.fieldPosition === meanPosition);
 
-  type.push(dicesModalHandler(null));
-  // type.push(rollDicesHandler(null));
+  type.push(dicesModalHandler());
+  type.push(rollDicesHandler());
+  type.push(canBuyModal());
 
   events = {
     type,
   };
 
-  const players = [];
-
+  let players = [];
+  playersStore.watch(v => {
+    players = v;
+  });
   return {
     code: 0,
     data: {

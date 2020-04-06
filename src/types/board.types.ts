@@ -130,12 +130,12 @@ export interface IPlayerStatus extends UsersEntity {
   status?: UserGameStatus;
 }
 
-interface UserGameStatus {
+export interface UserGameStatus {
   gameId: string;
   doublesRolledAsCombo: number;
   jailed: boolean;
   unjailAttempts: number;
-  position: number;
+  meanPosition: number;
   money: number;
   creditPayRound: boolean;
   creditNextTakeRound: number;
@@ -145,7 +145,6 @@ interface UserGameStatus {
   timeReduceLevel: number;
   creditToPay: number;
   canUseCredit: boolean;
-  userId: number;
 }
 
 interface BoardFIeld {

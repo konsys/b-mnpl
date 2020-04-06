@@ -9,7 +9,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { BoardSocketModule } from 'src/modules/socket/board.socket.modules';
 
-const rootPath = join(__dirname, '../../', 'assets/');
+const rootPath = join(__dirname, '../../../', 'assets/');
 @Module({
   imports: [
     FieldModule,

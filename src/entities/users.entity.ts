@@ -1,4 +1,5 @@
 import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class UsersEntity {
@@ -8,6 +9,7 @@ export class UsersEntity {
   @Column({ default: false })
   vip: boolean;
 
+  @Exclude()
   @Column({ default: null })
   registrationType?: string;
 
@@ -20,15 +22,22 @@ export class UsersEntity {
   @Column({ default: null })
   avatar?: string;
 
+  @Exclude()
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt?: Date;
 
+  @Exclude()
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt?: Date;
 
   @Column({ default: true })
   isActive?: boolean;
 
+  @Exclude()
   @Column({ default: false })
   isBlocked?: boolean;
+
+  constructor(partial: Partial<UsersEntity>) {
+    Object.assign(this, partial);
+  }
 }

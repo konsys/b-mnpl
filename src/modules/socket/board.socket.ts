@@ -8,7 +8,11 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { BoardActionType, IPlayerStatus } from 'src/types/board.types';
+import {
+  BoardActionType,
+  IPlayerStatus,
+  UserGameStatus,
+} from 'src/types/board.types';
 import { IGameModel, SocketActions } from 'src/types/game.types';
 import { FieldService } from 'src/modules/field/field.service';
 import { UsersService } from 'src/modules/user/users.service';
@@ -35,15 +39,31 @@ export class BoardSocket
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async rollDices(client: Socket, payload: IGameModel): Promise<void> {
     this.logger.log(`RollDices: ${client.id} ${JSON.stringify(payload)}`);
-    rollDicesHandler(payload);
+    rollDicesHandler();
   }
 
   async onModuleInit() {
     setFieldsEvent(await this.fieldService.findInit());
-    const players: IPlayerStatus[] = await this.usersService.findAll();
-
+    let players: IPlayerStatus[] = await this.usersService.findAll();
+    const initPlayerStatus: UserGameStatus = {
+      gameId: this.gameId,
+      doublesRolledAsCombo: 0,
+      jailed: false,
+      unjailAttempts: 0,
+      meanPosition: 0,
+      money: 15000,
+      creditPayRound: false,
+      creditNextTakeRound: 0,
+      score: 0,
+      timeReduceLevel: 0,
+      creditToPay: 0,
+      frags: '',
+      additionalTime: 0,
+      canUseCredit: false,
+    };
     if (players.length > 0) {
       players[0].isActing = true;
+      players = players.map(v => ({ ...v, status: initPlayerStatus }));
     }
     setPlayersEvent(players);
 

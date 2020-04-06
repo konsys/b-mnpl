@@ -7,6 +7,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { BoardSocketModule } from 'src/modules/socket/board.socket.modules';
 import { FieldsModule } from '../fields/fields.module';
+import { UsersMsModule } from '../ms/users/users.ms.module';
 
 const rootPath = join(__dirname, '../../../', 'assets/');
 @Module({
@@ -14,6 +15,7 @@ const rootPath = join(__dirname, '../../../', 'assets/');
     FieldsModule,
     UsersModule,
     BoardSocketModule,
+    UsersMsModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '172.17.0.2',

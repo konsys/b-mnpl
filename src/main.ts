@@ -5,7 +5,8 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { settings } from './config/settings';
+import { Transport } from '@nestjs/common/enums/transport.enum';
+import { MicroserviceOptions } from '@nestjs/common/interfaces/microservices/microservice-configuration.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -26,10 +27,8 @@ async function bootstrap() {
   app.use(compression());
   app.use(cookieParser());
   app.connectMicroservice({
-    transport: settings.useTransport,
-    options: {
-      url: 'nats://localhost:4222',
-    },
+    transport: Transport.TCP,
+    options: { retryAttempts: 5, retryDelay: 500, port: 3002 },
   });
   await app.startAllMicroservicesAsync();
 

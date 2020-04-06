@@ -28,8 +28,8 @@ export const rollDicesHandler = (): RollDices => {
   let currenPosition = 0;
   playersStore.watch(v => {
     const actingPlayer = v.find(v => v.isActing === true);
-    userId = actingPlayer.userId;
-    currenPosition = actingPlayer.status.meanPosition;
+    userId = actingPlayer?.userId;
+    currenPosition = actingPlayer?.status.meanPosition;
   });
   const meanPosition = sum < 40 ? sum : sum - 40;
   return {

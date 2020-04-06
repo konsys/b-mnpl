@@ -1,24 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Injectable, Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { MsNames, MsPatterns } from 'src/types/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsersMsService {
   constructor(
-    @InjectRepository(UsersEntity)
-    private readonly users: Repository<UsersEntity>,
+    @Inject(MsNames.users)
+    private readonly client: ClientProxy,
   ) {}
 
-  async findAll(): Promise<UsersEntity[]> {
-    return await this.users.find({ take: 2 });
-  }
-
-  async findOne(): Promise<UsersEntity> {
-    return await this.users.findOne(1);
-  }
-
-  async saveAll(users: UsersEntity[]): Promise<UsersEntity[]> {
-    return await this.users.save(users);
+  async getUsers() {
+    const users: UsersEntity[] = await this.client
+      .send<any>({ cmd: MsPatterns.getAllUsers }, [1, 2, 3, 4, 5])
+      .toPromise();
+    console.log(2123123123123, users);
+    return users;
   }
 }

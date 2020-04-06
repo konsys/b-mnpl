@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { UsersMsController } from './users.ms.controller';
-import { UsersMsService } from './users.ms.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
-import { ClientsModule } from '@nestjs/microservices';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MsNames } from 'src/types/ms.types';
-import { settings } from 'src/config/settings';
+import { Connection } from 'typeorm';
+import { UsersMsService } from './users.ms.service';
 
 @Module({
   imports: [
@@ -13,11 +13,15 @@ import { settings } from 'src/config/settings';
     ClientsModule.register([
       {
         name: MsNames.users,
-        transport: settings.useTransport,
+        transport: Transport.TCP,
+        options: { port: 3002 },
       },
     ]),
   ],
+
   controllers: [UsersMsController],
   providers: [UsersMsService],
 })
-export class UsersMsModule {}
+export class UsersMsModule {
+  constructor(private connection: Connection) {}
+}

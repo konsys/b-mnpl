@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { UsersMsController } from './users.ms.controller';
+import { UsersMsService } from './users.ms.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { ClientsModule } from '@nestjs/microservices';
@@ -17,7 +17,7 @@ import { settings } from 'src/config/settings';
       },
     ]),
   ],
-  controllers: [UsersController],
-  providers: [UsersService],
+  controllers: [UsersMsController],
+  providers: [UsersMsService],
 })
-export class UsersModule {}
+export class UsersMsModule {}

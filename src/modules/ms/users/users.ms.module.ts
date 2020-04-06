@@ -4,7 +4,7 @@ import { UsersMsService } from './users.ms.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { ClientsModule } from '@nestjs/microservices';
-import { MicroservicesNames } from 'src/types/ms.types';
+import { MsNames } from 'src/types/ms.types';
 import { settings } from 'src/config/settings';
 
 @Module({
@@ -12,7 +12,7 @@ import { settings } from 'src/config/settings';
     TypeOrmModule.forFeature([UsersEntity]),
     ClientsModule.register([
       {
-        name: MicroservicesNames.users,
+        name: MsNames.users,
         transport: settings.useTransport,
       },
     ]),

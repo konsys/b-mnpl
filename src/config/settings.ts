@@ -1,9 +1,10 @@
 import { Transport } from '@nestjs/common/enums/transport.enum';
 
 // const Transport = require('@nestjs/common/enums/transport.enum');
-export interface Config {
+interface IConfig {
   useTransport: Transport.NATS;
 }
-export const settings: Config = {
+
+export const settings: IConfig = {
   useTransport: Transport.NATS,
 };

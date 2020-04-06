@@ -1,6 +1,6 @@
-export enum MicroservicesNames {
+export enum MsNames {
   users = 'users',
 }
-export enum UsersPatterns {
+export enum MsPatterns {
   getAllUsers = 'getAllUsers',
 }

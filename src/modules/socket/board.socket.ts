@@ -27,12 +27,27 @@ import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 
+const initPlayerStatus: UserGameStatus = {
+  gameId: this.gameId,
+  doublesRolledAsCombo: 0,
+  jailed: false,
+  unjailAttempts: 0,
+  meanPosition: 0,
+  money: 15000,
+  creditPayRound: false,
+  creditNextTakeRound: 0,
+  score: 0,
+  timeReduceLevel: 0,
+  creditToPay: 0,
+  frags: '',
+  additionalTime: 0,
+  canUseCredit: false,
+};
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
 export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('BoardSocket');
-  private gameId = nanoid(8);
 
   constructor(
     private readonly usersService: UsersService,
@@ -49,37 +64,7 @@ export class BoardSocket
   }
 
   async onModuleInit() {
-    try {
-      let players: IPlayerStatus[] = await this.usersService.getAllUsers({
-        take: 2,
-      });
-      let fields: BoardFieldsEntity[] = await this.fieldsService.getInitialFields();
-      setFieldsEvent(fields);
-
-      const initPlayerStatus: UserGameStatus = {
-        gameId: this.gameId,
-        doublesRolledAsCombo: 0,
-        jailed: false,
-        unjailAttempts: 0,
-        meanPosition: 0,
-        money: 15000,
-        creditPayRound: false,
-        creditNextTakeRound: 0,
-        score: 0,
-        timeReduceLevel: 0,
-        creditToPay: 0,
-        frags: '',
-        additionalTime: 0,
-        canUseCredit: false,
-      };
-      if (players.length > 0) {
-        players[0].isActing = true;
-        players = players.map(v => ({ ...v, status: initPlayerStatus }));
-      }
-      setPlayersEvent(players);
-    } catch (err) {
-      this.logger.error(`Error: ${JSON.stringify(err)}`);
-    }
+    await this.initStores();
     try {
       setInterval(() => {
         const status = boardMessage();
@@ -101,5 +86,22 @@ export class BoardSocket
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id} args: ${args}`);
+  }
+
+  private async initStores() {
+    try {
+      let players: IPlayerStatus[] = await this.usersService.getAllUsers({
+        take: 2,
+      });
+      if (players.length > 0) {
+        players[0].isActing = true;
+        players = players.map(v => ({ ...v, status: initPlayerStatus }));
+      }
+      setPlayersEvent(players);
+
+      setFieldsEvent(await this.fieldsService.getInitialFields());
+    } catch (err) {
+      this.logger.error(`Error: ${JSON.stringify(err)}`);
+    }
   }
 }

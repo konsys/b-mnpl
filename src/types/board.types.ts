@@ -161,7 +161,7 @@ interface CurrentMove {
 }
 
 interface MoveStatus {
-  moveId: string;
+  moveId: number;
   playerOwnerOfMove: number;
   round: number;
   actionPlayer: number;

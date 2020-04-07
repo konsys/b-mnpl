@@ -19,6 +19,7 @@ import {
   canBuyModal,
 } from './handlers/board.handlers';
 import { playersStore } from 'src/stores/players.store';
+import { moveStore } from 'src/stores/move.store';
 
 let type: Array<
   | Motrgage
@@ -34,9 +35,8 @@ let type: Array<
   | ShowModal
 > = [];
 
-let moveId = 0;
-
 export const boardMessage = (): BoardMessage => {
+  const moveState = moveStore.getState();
   let events: BoardActionTypes = null;
   type = [];
 
@@ -55,7 +55,7 @@ export const boardMessage = (): BoardMessage => {
   return {
     code: 0,
     data: {
-      id: moveId++,
+      id: moveState.moveId,
       events,
       boardStatus: {
         players,

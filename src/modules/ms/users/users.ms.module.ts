@@ -3,13 +3,14 @@ import { UsersMsController } from './users.ms.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { MsNames } from 'src/types/ms.types';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UsersEntity]),
     ClientsModule.register([
       {
-        name: 'users',
+        name: MsNames.users,
         transport: Transport.NATS,
       },
     ]),

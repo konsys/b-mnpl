@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { UsersModule } from 'src/modules/users/users.module';
+import { UsersModule } from 'src/modules/http.gateway/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { BoardSocketModule } from 'src/modules/socket/board.socket.modules';

@@ -22,11 +22,9 @@ import { boardMessage } from 'src/actions/board.message';
 import { rollDicesHandler } from 'src/actions/handlers/board.handlers';
 import { setPlayersEvent } from 'src/stores/players.store';
 import { setFieldsEvent } from 'src/stores/fields.store';
-import axios from 'axios';
 import nanoid from 'nanoid';
-import * as config from '../../config/settings';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { BoardSocketService } from './board.socket.service';
+import { UsersService } from '../api.gateway/users/users.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -35,7 +33,7 @@ export class BoardSocket
   private logger: Logger = new Logger('BoardSocket');
   private gameId = nanoid(8);
 
-  constructor(private readonly service: BoardSocketService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @WebSocketServer()
   server: Server;
@@ -46,10 +44,12 @@ export class BoardSocket
     rollDicesHandler();
   }
 
-  async onModuleInit() {
+  // async onModuleInit() {
+  async onApplicationBootstrap() {
     try {
       // TODO вынести в microservice
-      let players: IPlayerStatus[] = await this.service.allUsers();
+      let players: IPlayerStatus[] = await this.usersService.getAllUsers();
+      console.log(12313123123, players);
 
       let fields: BoardFieldsEntity[] = [];
 
@@ -77,7 +77,7 @@ export class BoardSocket
       }
       setPlayersEvent(players);
     } catch (err) {
-      this.logger.error(JSON.stringify(err));
+      this.logger.error(`Error: ${JSON.stringify(err)}`);
     }
     try {
       setInterval(() => {

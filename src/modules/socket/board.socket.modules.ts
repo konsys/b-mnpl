@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { BoardSocket } from './board.socket';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MsNames } from 'src/types/ms.types';
-import { BoardSocketService } from './board.socket.service';
+import { UsersService } from '../api.gateway/users/users.service';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { BoardSocketService } from './board.socket.service';
       },
     ]),
   ],
-  providers: [BoardSocket, BoardSocketService],
+  providers: [BoardSocket, UsersService],
   controllers: [],
 })
 export class BoardSocketModule {}

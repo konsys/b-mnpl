@@ -21,10 +21,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
 
-  app.enableCors();
-  app.use(helmet());
-  app.use(compression());
-  app.use(cookieParser());
   app.connectMicroservice({
     transport: Transport.NATS,
     options: {
@@ -32,6 +28,11 @@ async function bootstrap() {
     },
   });
   await app.startAllMicroservicesAsync();
+
+  app.enableCors();
+  app.use(helmet());
+  app.use(compression());
+  app.use(cookieParser());
 
   await app.listen(3001);
 }

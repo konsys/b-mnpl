@@ -25,6 +25,7 @@ import { setFieldsEvent } from 'src/stores/fields.store';
 import nanoid from 'nanoid';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { UsersService } from '../api.gateway/users/users.service';
+import { FieldsService } from '../api.gateway/fields/fields.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -33,7 +34,10 @@ export class BoardSocket
   private logger: Logger = new Logger('BoardSocket');
   private gameId = nanoid(8);
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly fieldsService: FieldsService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -44,14 +48,15 @@ export class BoardSocket
     rollDicesHandler();
   }
 
-  // async onModuleInit() {
-  async onApplicationBootstrap() {
+  async onModuleInit() {
     try {
       // TODO вынести в microservice
-      let players: IPlayerStatus[] = await this.usersService.getAllUsers();
-      console.log(12313123123, players);
+      let players: IPlayerStatus[] = await this.usersService.getAllUsers({
+        take: 2,
+      });
 
-      let fields: BoardFieldsEntity[] = [];
+      console.log(234243234, players);
+      let fields: BoardFieldsEntity[] = await this.fieldsService.getInitialFields();
 
       setFieldsEvent(fields);
 

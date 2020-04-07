@@ -4,17 +4,17 @@ import { FindManyOptions } from 'typeorm';
 import { MsPatterns, MsNames } from 'src/types/ms.types';
 
 @Controller()
-export class UsersService {
-  private logger: Logger = new Logger('UsersService');
+export class FieldsService {
+  private logger: Logger = new Logger('FieldsService');
   constructor(
-    @Inject(MsNames.users)
-    private readonly usersClient: ClientProxy,
+    @Inject(MsNames.fields)
+    private readonly fieldsClient: ClientProxy,
   ) {}
 
-  async getAllUsers(filter?: FindManyOptions) {
+  async getInitialFields(filter?: FindManyOptions) {
     try {
-      const res = await this.usersClient
-        .send<any>({ cmd: MsPatterns.getAllUsers }, filter || {})
+      const res = await this.fieldsClient
+        .send<any>({ cmd: MsPatterns.getInitFields }, filter || {})
         .toPromise();
 
       return res;

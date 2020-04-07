@@ -50,14 +50,10 @@ export class BoardSocket
 
   async onModuleInit() {
     try {
-      // TODO вынести в microservice
       let players: IPlayerStatus[] = await this.usersService.getAllUsers({
         take: 2,
       });
-
-      console.log(234243234, players);
       let fields: BoardFieldsEntity[] = await this.fieldsService.getInitialFields();
-
       setFieldsEvent(fields);
 
       const initPlayerStatus: UserGameStatus = {

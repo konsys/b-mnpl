@@ -27,8 +27,10 @@ async function bootstrap() {
   app.use(compression());
   app.use(cookieParser());
   app.connectMicroservice({
-    transport: Transport.TCP,
-    options: { retryAttempts: 5, retryDelay: 3000, port: 3002 },
+    transport: Transport.NATS,
+    options: {
+      url: 'nats://localhost:4222',
+    },
   });
   await app.startAllMicroservicesAsync();
 

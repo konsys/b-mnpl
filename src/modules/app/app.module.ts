@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { AppController } from './app.controller';
 import { UsersModule } from 'src/modules/users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -13,8 +12,8 @@ const rootPath = join(__dirname, '../../../', 'assets/');
 @Module({
   imports: [
     FieldsModule,
-    UsersModule,
     BoardSocketModule,
+    UsersModule,
     UsersMsModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -31,7 +30,7 @@ const rootPath = join(__dirname, '../../../', 'assets/');
       rootPath,
     }),
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {

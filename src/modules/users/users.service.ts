@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { MsPatterns } from 'src/types/ms.types';
 
 @Injectable()
 export class UsersService {
@@ -10,7 +11,7 @@ export class UsersService {
 
   async allUsers() {
     const users: any = await this.client
-      .send<any>({ cmd: 'ping' }, { test: 'test' })
+      .send<any>({ cmd: MsPatterns.getAllUsers }, { test: 'test' })
       .toPromise();
     return users;
   }

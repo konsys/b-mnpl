@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { MsPatterns } from 'src/types/ms.types';
 
 @Controller('init')
 export class UsersMsController {
@@ -13,8 +14,8 @@ export class UsersMsController {
     private readonly users: Repository<UsersEntity>,
   ) {}
 
-  @MessagePattern({ cmd: 'ping' })
+  @MessagePattern({ cmd: MsPatterns.getAllUsers })
   async ping() {
-    return of('pong').pipe(delay(1000));
+    return of(await this.users.find()).pipe(delay(100));
   }
 }

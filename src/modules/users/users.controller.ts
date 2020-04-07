@@ -6,11 +6,6 @@ export class UsersController {
 
   @Get()
   async get(): Promise<any> {
-    let res = await this.service.allUsers();
-    //  res = await this.client
-    //   .send<number>(MsPatterns.getAllUsers, [1, 2, 3, 4, 5])
-    //   .toPromise();
-    console.log(222222, res);
-    return res;
+    return await this.service.allUsers();
   }
 }

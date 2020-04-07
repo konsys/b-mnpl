@@ -37,7 +37,6 @@ let type: Array<
 let moveId = 0;
 
 export const boardMessage = (): BoardMessage => {
-  // console.log(111111, sum, meanPosition, dice1, dice2, dice3);
   let events: BoardActionTypes = null;
   type = [];
 

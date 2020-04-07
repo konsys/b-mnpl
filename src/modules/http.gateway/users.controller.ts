@@ -1,12 +1,12 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { MsPatterns } from 'src/types/ms.types';
+import { MsPatterns, MsNames } from 'src/types/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { FindManyOptions } from 'typeorm';
 @Controller('users')
 export class UsersController {
   constructor(
-    @Inject('users')
+    @Inject(MsNames.users)
     private readonly client: ClientProxy,
   ) {}
 

@@ -1,12 +1,18 @@
 import { Module } from '@nestjs/common';
-import { FieldsService } from './fields.service';
 import { FieldsController } from './fields.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { MsNames } from 'src/types/ms.types';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BoardFieldsEntity])],
-  providers: [FieldsService],
+  imports: [
+    ClientsModule.register([
+      {
+        name: MsNames.fields,
+        transport: Transport.NATS,
+      },
+    ]),
+  ],
+  providers: [],
   controllers: [FieldsController],
 })
 export class FieldsModule {}

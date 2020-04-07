@@ -28,7 +28,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.connectMicroservice({
     transport: Transport.TCP,
-    options: { retryAttempts: 5, retryDelay: 500, port: 3002 },
+    options: { retryAttempts: 5, retryDelay: 3000, port: 3002 },
   });
   await app.startAllMicroservicesAsync();
 

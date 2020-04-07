@@ -8,9 +8,10 @@ export class UsersController {
 
   @Get()
   async get(): Promise<any> {
-    const res = await this.client
-      .send<number>(MsPatterns.getAllUsers, [1, 2, 3, 4, 5])
-      .toPromise();
+    let res = [1, 2, 3];
+    //  res = await this.client
+    //   .send<number>(MsPatterns.getAllUsers, [1, 2, 3, 4, 5])
+    //   .toPromise();
     console.log(222222, res);
     return res;
   }

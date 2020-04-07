@@ -13,7 +13,7 @@ export class UsersMsController {
     private readonly users: Repository<UsersEntity>,
   ) {}
 
-  // @MessagePattern({ cmd: 'ping' })
+  @MessagePattern({ cmd: 'ping' })
   async ping() {
     return of('pong').pipe(delay(1000));
   }

@@ -1,6 +1,5 @@
-import { Transport } from '@nestjs/common/enums/transport.enum';
+import { Transport } from '@nestjs/microservices';
 
-// const Transport = require('@nestjs/common/enums/transport.enum');
 interface IConfig {
   useTransport: Transport.TCP;
 }

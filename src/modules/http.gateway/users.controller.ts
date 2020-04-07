@@ -3,7 +3,8 @@ import { ClientProxy } from '@nestjs/microservices';
 import { MsPatterns, MsNames } from 'src/types/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { FindManyOptions } from 'typeorm';
-@Controller('users')
+
+@Controller(MsNames.users)
 export class UsersController {
   constructor(
     @Inject(MsNames.users)

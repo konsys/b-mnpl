@@ -6,7 +6,7 @@ import { random } from 'src/lib/utils';
 export const dicesModalHandler = (): ShowModal => {
   let userId = 0;
   playersStore.watch(v => {
-    userId = v.find(v => v.isActing === true)?.userId;
+    userId = v && v.find(v => v.isActing === true)?.userId;
   });
 
   return {
@@ -27,7 +27,7 @@ export const rollDicesHandler = (): RollDices => {
   let userId = 0;
   let currenPosition = 0;
   playersStore.watch(v => {
-    const actingPlayer = v.find(v => v.isActing === true);
+    const actingPlayer = v && v.find(v => v.isActing === true);
     userId = actingPlayer?.userId;
     currenPosition = actingPlayer?.status.meanPosition;
   });
@@ -44,7 +44,7 @@ export const rollDicesHandler = (): RollDices => {
 export const canBuyModal = (): ShowModal => {
   let userId = 0;
   playersStore.watch(v => {
-    userId = v.find(v => v.isActing === true)?.userId;
+    userId = v && v.find(v => v.isActing === true)?.userId;
   });
   return {
     type: BoardActionType.SHOW_MODAL,

@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { UsersEntity } from 'src/entities/users.entity';
 import { BoardSocket } from './board.socket';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { MsNames } from 'src/types/ms.types';
+import { BoardSocketService } from './board.socket.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([BoardFieldsEntity]),
-    TypeOrmModule.forFeature([UsersEntity]),
+    ClientsModule.register([
+      {
+        name: MsNames.users,
+        transport: Transport.NATS,
+      },
+    ]),
   ],
-  providers: [BoardSocket],
+  providers: [BoardSocket, BoardSocketService],
   controllers: [],
 })
 export class BoardSocketModule {}

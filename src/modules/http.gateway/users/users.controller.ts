@@ -1,21 +1,16 @@
-import { Controller, Get, Inject } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Controller, Get } from '@nestjs/common';
 import { MsPatterns, MsNames } from 'src/types/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { FindManyOptions } from 'typeorm';
+import { UsersService } from './users.service';
 
 @Controller(MsNames.users)
 export class UsersController {
-  constructor(
-    @Inject(MsNames.users)
-    private readonly client: ClientProxy,
-  ) {}
+  constructor(private readonly service: UsersService) {}
 
   @Get()
   async get(): Promise<UsersEntity[]> {
     const filter: FindManyOptions = { take: 2 };
-    return await this.client
-      .send<any>({ cmd: MsPatterns.getAllUsers }, filter)
-      .toPromise();
+    return await this.service.getAllUsers(filter);
   }
 }

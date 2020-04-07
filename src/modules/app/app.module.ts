@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { UsersModule } from 'src/modules/http.gateway/users.module';
+import { UsersModule } from 'src/modules/http.gateway/users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { BoardSocketModule } from 'src/modules/socket/board.socket.modules';
-import { FieldsModule } from '../fields/fields.module';
+import { FieldsModule } from '../http.gateway/fields/fields.module';
 import { UsersMsModule } from '../ms/users/users.ms.module';
 import { FieldsMsModule } from '../ms/fields/fields.ms.module';
 

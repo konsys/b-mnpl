@@ -26,6 +26,7 @@ import axios from 'axios';
 import nanoid from 'nanoid';
 import * as config from '../../config/settings';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
+import { BoardSocketService } from './board.socket.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -33,6 +34,8 @@ export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('BoardSocket');
   private gameId = nanoid(8);
+
+  constructor(private readonly service: BoardSocketService) {}
 
   @WebSocketServer()
   server: Server;
@@ -46,7 +49,8 @@ export class BoardSocket
   async onModuleInit() {
     try {
       // TODO вынести в microservice
-      let players: IPlayerStatus[] = [];
+      let players: IPlayerStatus[] = await this.service.allUsers();
+
       let fields: BoardFieldsEntity[] = [];
 
       setFieldsEvent(fields);

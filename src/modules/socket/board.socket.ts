@@ -24,8 +24,8 @@ import { setPlayersEvent } from 'src/stores/players.store';
 import { setFieldsEvent } from 'src/stores/fields.store';
 import nanoid from 'nanoid';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { UsersService } from '../api.gateway/users/users.service';
-import { FieldsService } from '../api.gateway/fields/fields.service';
+import { UsersService } from '../../api.gateway/users/users.service';
+import { FieldsService } from '../../api.gateway/fields/fields.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()

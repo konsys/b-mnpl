@@ -8,3 +8,5 @@ docker run --name my-own-nats -d -p 4222:4222 nats:2.1.6
 # docker ps -a
 
 # http://localhost:8081
+
+# netstat -ntlp | grep LISTEN

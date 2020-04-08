@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from 'src/modules/app/app.module';
+import { App } from 'src/app';
 import helmet from 'helmet';
 // import csurf from 'csurf';
 import compression from 'compression';
@@ -8,7 +8,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create(App, {
     // logger: ['error', 'warn'],
   });
   const options = new DocumentBuilder()

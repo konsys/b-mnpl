@@ -18,12 +18,12 @@ const rootPath = join(__dirname, '../../../', 'assets/');
     UsersMsModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '172.17.0.2',
+      host: '0.0.0.0',
       port: 3306,
       username: 'game',
       password: 'game',
       database: 'mnpl',
-      entities: [__dirname + '/../../entities/*.entity{.ts,.js}'],
+      entities: [__dirname + '/entities/*.entity{.ts,.js}'],
       synchronize: true,
       // logging: ['query'],
     }),
@@ -35,6 +35,6 @@ const rootPath = join(__dirname, '../../../', 'assets/');
   controllers: [],
   providers: [],
 })
-export class AppModule {
+export class App {
   constructor(private connection: Connection) {}
 }

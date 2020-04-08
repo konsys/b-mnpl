@@ -93,6 +93,8 @@ export interface TypeBuy extends BoardAction {
 export interface RollDices extends BoardAction {
   type: BoardActionType.ROLL_DICES;
   dices: number[];
+  isDouble: boolean;
+  isTriple: boolean;
   meanPosition: number;
 }
 

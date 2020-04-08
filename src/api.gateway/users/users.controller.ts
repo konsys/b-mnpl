@@ -10,7 +10,6 @@ export class UsersController {
 
   @Get()
   async get(): Promise<UsersEntity[]> {
-    const filter: FindManyOptions = { take: 2 };
-    return await this.service.getAllUsers(filter);
+    return await this.service.getAllUsers();
   }
 }

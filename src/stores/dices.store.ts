@@ -5,6 +5,7 @@ export interface IDicesStore {
   moveId: number;
   dices: number[];
   sum: number;
+  meanPosition: number;
   isDouble: boolean;
   isTriple: boolean;
 }
@@ -13,7 +14,7 @@ export const resetDicesEvent = DicesDomain.event();
 
 export const setDicesEvent = DicesDomain.event<IDicesStore | null>();
 
-export const dicesStore = DicesDomain.store<IDicesStore | null>(null)
+export const dicesStore = DicesDomain.store<IDicesStore>(null)
   .on(setDicesEvent, (_, data) => data)
   .reset(resetDicesEvent);
 

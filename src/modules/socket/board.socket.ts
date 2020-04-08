@@ -90,9 +90,7 @@ export class BoardSocket
 
   private async initStores() {
     try {
-      let players: IPlayerStatus[] = await this.usersService.getAllUsers({
-        take: 2,
-      });
+      let players: IPlayerStatus[] = await this.usersService.getAllUsers();
       if (players.length > 0) {
         players[0].isActing = true;
         players = players.map(v => ({ ...v, status: initPlayerStatus }));

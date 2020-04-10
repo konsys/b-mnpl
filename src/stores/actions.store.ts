@@ -13,8 +13,8 @@ export const resetActionsEvent = ActionsDomain.event();
 
 export const setCurrentActionsEvent = ActionsDomain.event<ICurrentAction | null>();
 
-export const actionsStore = ActionsDomain.store<ICurrentAction | null>(null)
+export const actionsStore = ActionsDomain.store<ICurrentAction>(null)
   .on(setCurrentActionsEvent, (_, data) => data)
   .reset(resetActionsEvent);
 
-// actionsStore.watch(v => console.log('actionsStore', v));
+actionsStore.watch(v => console.log('actionsStore', v));

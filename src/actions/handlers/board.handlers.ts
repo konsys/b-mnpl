@@ -5,10 +5,17 @@ import { random } from 'src/lib/utils';
 import { dicesStore, setDicesEvent } from 'src/stores/dices.store';
 import { moveStore } from 'src/stores/move.store';
 import { IDicesStore } from 'src/stores/dices.store';
+import { setCurrentActionsEvent } from 'src/stores/actions.store';
 
 export const dicesModalHandler = (): ShowModal => {
   const state = playersStore.getState();
   let userId = state && state.find(v => v.isActing).userId;
+
+  setCurrentActionsEvent({
+    action: BoardActionType.SHOW_MODAL,
+    userId,
+    srcOfChange: 'rollDicesHandler',
+  });
 
   return {
     type: BoardActionType.SHOW_MODAL,
@@ -20,15 +27,19 @@ export const dicesModalHandler = (): ShowModal => {
 };
 
 export const rollDicesHandler = (): RollDices => {
-  let dices: IDicesStore = null;
-  dicesStore.watch(v => {
-    console.log(2222, v);
-    dices = v;
-  });
+  const dices: IDicesStore = dicesStore.getState();
   const move = moveStore.getState();
   const user = playersStore.getState();
-  let userId = user && user.find(v => v.isActing).userId;
-  let currenPosition = user && user.find(v => v.isActing).status?.meanPosition;
+  const userId = user && user.find(v => v.isActing).userId;
+
+  setCurrentActionsEvent({
+    action: BoardActionType.ROLL_DICES,
+    userId,
+    srcOfChange: 'rollDicesHandler',
+  });
+
+  const currenPosition =
+    user && user.find(v => v.isActing).status?.meanPosition;
 
   if (!dices || dices.moveId !== move.moveId) {
     const dice1 = random(0, 6);

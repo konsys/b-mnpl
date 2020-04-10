@@ -68,7 +68,6 @@ export class BoardSocket
     try {
       setInterval(() => {
         const status = boardMessage();
-
         this.server.emit(SocketActions.BOARD_MESSAGE, status);
       }, 2000);
     } catch (err) {

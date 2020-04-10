@@ -7,7 +7,11 @@ import { moveStore } from 'src/stores/move.store';
 import { IDicesStore } from 'src/stores/dices.store';
 
 export const rollDicesHandler = (): RollDices => {
-  const dices: IDicesStore = dicesStore.getState();
+  let dicesState: IDicesStore = null;
+  dicesStore.watch(v => {
+    dicesState = v;
+  });
+
   const move = moveStore.getState();
   const user = playersStore.getState();
   const userId = user && user.find(v => v.isActing).userId;
@@ -15,7 +19,7 @@ export const rollDicesHandler = (): RollDices => {
   const currenPosition =
     user && user.find(v => v.isActing).status?.meanPosition;
 
-  if (!dices || dices.moveId !== move.moveId) {
+  if (!dicesState || dicesState.moveId !== move.moveId) {
     const dice1 = random(0, 6);
     const dice2 = random(0, 6);
     const dice3 = 0;
@@ -36,10 +40,10 @@ export const rollDicesHandler = (): RollDices => {
   return {
     type: BoardActionType.ROLL_DICES,
     userId,
-    dices: dices.dices,
-    meanPosition: dices.sum,
-    isDouble: dices.isDouble,
-    isTriple: dices.isTriple,
+    dices: dicesState.dices,
+    meanPosition: dicesState.meanPosition,
+    isDouble: dicesState.isDouble,
+    isTriple: dicesState.isTriple,
     _id: nanoid(4),
   };
 };

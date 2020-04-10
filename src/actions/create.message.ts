@@ -4,7 +4,7 @@ import { moveStore } from 'src/stores/move.store';
 import { actionsStore } from 'src/stores/actions.store';
 import { adaptAction } from './handlers/action.adapter';
 
-export const boardMessage = (): BoardMessage => {
+export const createMessage = (): BoardMessage => {
   const moveState = moveStore.getState();
   const actionState = actionsStore.getState();
 

@@ -19,7 +19,7 @@ export class BoardMessage {
     setCurrentActionsEvent({
       action: BoardActionType.ROLL_DICES,
       userId: user.userId,
-      srcOfChange: 'rollDices',
+      srcOfChange: 'rollDicesMessage',
     });
   }
 }

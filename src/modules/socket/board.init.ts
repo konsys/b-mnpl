@@ -18,7 +18,7 @@ import {
   UserGameStatus,
 } from 'src/types/board.types';
 import { SocketActions } from 'src/types/game.types';
-import { boardMessage } from 'src/actions/board.message';
+import { createMessage } from 'src/actions/create.message';
 import { setPlayersEvent } from 'src/stores/players.store';
 import { setFieldsEvent } from 'src/stores/fields.store';
 import { UsersService } from '../../api.gateway/users/users.service';
@@ -59,8 +59,7 @@ export class BoardSocketInit
     await this.initStores();
     try {
       setInterval(() => {
-        const status = boardMessage();
-        this.server.emit(SocketActions.BOARD_MESSAGE, status);
+        this.server.emit(SocketActions.BOARD_MESSAGE, createMessage());
       }, 2000);
     } catch (err) {
       this.logger.error('Error' + err);

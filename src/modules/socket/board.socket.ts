@@ -26,6 +26,7 @@ import nanoid from 'nanoid';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
+import { setCurrentActionsEvent } from 'src/stores/actions.store';
 
 const initPlayerStatus: UserGameStatus = {
   gameId: this.gameId,
@@ -93,9 +94,13 @@ export class BoardSocket
       if (players.length > 0) {
         players[0].isActing = true;
         players = players.map(v => ({ ...v, status: initPlayerStatus }));
+        setCurrentActionsEvent({
+          action: BoardActionType.SHOW_MODAL,
+          userId: players[0].userId,
+          srcOfChange: 'initStores',
+        });
       }
       setPlayersEvent(players);
-
       setFieldsEvent(await this.fieldsService.getInitialFields());
     } catch (err) {
       this.logger.error(`Error: ${JSON.stringify(err)}`);

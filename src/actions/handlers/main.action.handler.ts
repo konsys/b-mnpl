@@ -1,9 +1,9 @@
 import { BoardActionType } from 'src/types/board.types';
-import { dicesModalHandler } from './board.handlers';
+import { dicesModalHandler } from './modals.content';
 
 export const mainActionHandler = (type: BoardActionType) => {
   switch (type) {
-    case BoardActionType.ROLL_DICES:
+    case BoardActionType.SHOW_MODAL:
       return dicesModalHandler();
   }
 };

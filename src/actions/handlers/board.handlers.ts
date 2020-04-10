@@ -7,25 +7,6 @@ import { moveStore } from 'src/stores/move.store';
 import { IDicesStore } from 'src/stores/dices.store';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
 
-export const dicesModalHandler = (): ShowModal => {
-  const state = playersStore.getState();
-  let userId = state && state.find(v => v.isActing).userId;
-
-  setCurrentActionsEvent({
-    action: BoardActionType.SHOW_MODAL,
-    userId,
-    srcOfChange: 'rollDicesHandler',
-  });
-
-  return {
-    type: BoardActionType.SHOW_MODAL,
-    userId,
-    title: 'Кидайте кубики',
-    text: 'Мы болеем за вас',
-    _id: nanoid(4),
-  };
-};
-
 export const rollDicesHandler = (): RollDices => {
   const dices: IDicesStore = dicesStore.getState();
   const move = moveStore.getState();

@@ -1,17 +1,15 @@
-import {
-  BoardMessage,
-  IBoardEvent,
-  BoardActionType,
-} from '../types/board.types';
+import { BoardMessage, IBoardEvent } from '../types/board.types';
 import { playersStore } from 'src/stores/players.store';
 import { moveStore } from 'src/stores/move.store';
+import { actionsStore } from 'src/stores/actions.store';
 import { mainActionHandler } from './handlers/main.action.handler';
 
 export const boardMessage = (): BoardMessage => {
   const moveState = moveStore.getState();
+  const actionState = actionsStore.getState();
 
   let event: IBoardEvent = {
-    action: mainActionHandler(BoardActionType.ROLL_DICES),
+    action: actionState && mainActionHandler(actionState.action),
   };
 
   let players = [];

@@ -46,7 +46,7 @@ const initPlayerStatus: UserGameStatus = {
 };
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
-export class BoardSocket
+export class BoardSocketInit
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('BoardSocket');
 
@@ -57,12 +57,6 @@ export class BoardSocket
 
   @WebSocketServer()
   server: Server;
-
-  @SubscribeMessage(BoardActionType.ROLL_DICES)
-  async rollDices(client: Socket, payload: IGameModel): Promise<void> {
-    this.logger.log(`RollDices: ${client.id} ${JSON.stringify(payload)}`);
-    rollDicesHandler();
-  }
 
   async onModuleInit() {
     await this.initStores();
@@ -76,24 +70,13 @@ export class BoardSocket
     }
   }
 
-  afterInit(server: Server) {
-    this.logger.log('Init: ' + server);
-  }
-
-  handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
-  }
-
-  handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log(`Client connected: ${client.id} args: ${args}`);
-  }
-
   private async initStores() {
     try {
       let players: IPlayerStatus[] = await this.usersService.getAllUsers();
       if (players.length > 0) {
         players[0].isActing = true;
         players = players.map(v => ({ ...v, status: initPlayerStatus }));
+
         setCurrentActionsEvent({
           action: BoardActionType.SHOW_MODAL,
           userId: players[0].userId,
@@ -105,5 +88,17 @@ export class BoardSocket
     } catch (err) {
       this.logger.error(`Error: ${JSON.stringify(err)}`);
     }
+  }
+
+  afterInit(server: Server) {
+    this.logger.log('Init: ' + server);
+  }
+
+  handleDisconnect(client: Socket) {
+    this.logger.log(`Client disconnected: ${client.id}`);
+  }
+
+  handleConnection(client: Socket, ...args: any[]) {
+    this.logger.log(`Client connected: ${client.id} args: ${args}`);
   }
 }

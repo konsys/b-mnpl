@@ -7,12 +7,6 @@ export const dicesModalHandler = (): ShowModal => {
   const state = playersStore.getState();
   let userId = state && state.find(v => v.isActing).userId;
 
-  setCurrentActionsEvent({
-    action: BoardActionType.SHOW_MODAL,
-    userId,
-    srcOfChange: 'rollDicesHandler',
-  });
-
   return {
     type: BoardActionType.SHOW_MODAL,
     userId,

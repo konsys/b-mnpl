@@ -9,7 +9,7 @@ import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(App, {
-    // logger: ['error', 'warn'],
+    logger: ['error', 'warn'],
   });
   const options = new DocumentBuilder()
     // .setBasePath('api')

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { BoardSocket } from './board.socket';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MsNames } from 'src/types/ms.types';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
+import { BoardSocketInit } from './board.init';
+import { BoardMessage } from './board.message';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { FieldsService } from '../../api.gateway/fields/fields.service';
       },
     ]),
   ],
-  providers: [BoardSocket, UsersService, FieldsService],
+  providers: [BoardSocketInit, BoardMessage, UsersService, FieldsService],
   controllers: [],
 })
 export class BoardSocketModule {}

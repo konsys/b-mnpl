@@ -17,13 +17,10 @@ import {
   IPlayerStatus,
   UserGameStatus,
 } from 'src/types/board.types';
-import { IGameModel, SocketActions } from 'src/types/game.types';
+import { SocketActions } from 'src/types/game.types';
 import { boardMessage } from 'src/actions/board.message';
-import { rollDicesHandler } from 'src/actions/handlers/board.handlers';
 import { setPlayersEvent } from 'src/stores/players.store';
 import { setFieldsEvent } from 'src/stores/fields.store';
-import nanoid from 'nanoid';
-import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';

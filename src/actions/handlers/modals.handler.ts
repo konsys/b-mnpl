@@ -1,6 +1,5 @@
 import { ShowModal, BoardActionType } from 'src/types/board.types';
 import { playersStore } from 'src/stores/players.store';
-import { setCurrentActionsEvent } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 
 export const dicesModalHandler = (): ShowModal => {

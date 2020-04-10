@@ -12,10 +12,7 @@ export const createMessage = (): BoardMessage => {
     action: actionState && adaptAction(actionState.action),
   };
 
-  let players = [];
-  playersStore.watch(v => {
-    players = v;
-  });
+  let players = playersStore.getState();
   return {
     code: 0,
     data: {

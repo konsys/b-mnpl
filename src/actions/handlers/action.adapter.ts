@@ -1,5 +1,6 @@
 import { BoardActionType } from 'src/types/board.types';
 import { dicesModalHandler } from './modals.handler';
+import { rollDicesHandler } from './dices.handler';
 
 export const adaptAction = (type: BoardActionType) => {
   switch (type) {
@@ -7,6 +8,6 @@ export const adaptAction = (type: BoardActionType) => {
       return dicesModalHandler();
 
     case BoardActionType.ROLL_DICES:
-      return dicesModalHandler();
+      return rollDicesHandler();
   }
 };

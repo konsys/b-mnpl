@@ -104,8 +104,8 @@ export interface CanBuy extends BoardAction {
   money: number;
 }
 
-export type BoardActionTypes = {
-  type: Array<
+export interface IBoardEvent {
+  action:
     | Motrgage
     | AuctionDecline
     | AuctionAccept
@@ -116,13 +116,12 @@ export type BoardActionTypes = {
     | TypeBuy
     | RollDices
     | CanBuy
-    | ShowModal
-  >;
-};
+    | ShowModal;
+}
 
 interface BoardEventData {
   id: number;
-  events: BoardActionTypes;
+  event: IBoardEvent;
   boardStatus: BoardStatus;
   contract?: Contract;
 }

@@ -9,7 +9,7 @@ export const dicesModalHandler = (): ShowModal => {
   let userId = state && state.find(v => v.isActing).userId;
 
   return {
-    type: BoardActionType.SHOW_MODAL,
+    type: BoardActionType.SHOW_DICES_MODAL,
     userId,
     title: 'Кидайте кубики',
     text: 'Мы болеем за вас',
@@ -21,7 +21,7 @@ export const canBuyModal = (): ShowModal => {
   const state = playersStore.getState();
   let userId = state && state.find(v => v.isActing).userId;
   return {
-    type: BoardActionType.SHOW_MODAL,
+    type: BoardActionType.SHOW_DICES_MODAL,
     userId,
     title: 'Купить поле',
     text: 'Вы можете купить поле или поставить его на аукцион',

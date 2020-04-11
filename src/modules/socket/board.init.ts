@@ -75,7 +75,7 @@ export class BoardSocketInit
         players = players.map(v => ({ ...v, status: initPlayerStatus }));
 
         setCurrentActionsEvent({
-          action: BoardActionType.SHOW_MODAL,
+          action: BoardActionType.SHOW_DICES_MODAL,
           userId: players[0].userId,
           actionId: nanoid(4),
           srcOfChange: 'initStores',

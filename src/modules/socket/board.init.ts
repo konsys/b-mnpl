@@ -18,12 +18,13 @@ import {
   UserGameStatus,
 } from 'src/types/board.types';
 import { SocketActions } from 'src/types/game.types';
-import { createMessage } from 'src/actions/create.message';
+import { createBoardMessage } from 'src/actions/create.message';
 import { setPlayersEvent } from 'src/stores/players.store';
 import { setFieldsEvent } from 'src/stores/fields.store';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
+import nanoid from 'nanoid';
 
 const initPlayerStatus: UserGameStatus = {
   gameId: this.gameId,
@@ -59,7 +60,7 @@ export class BoardSocketInit
     await this.initStores();
     try {
       setInterval(() => {
-        this.server.emit(SocketActions.BOARD_MESSAGE, createMessage());
+        this.server.emit(SocketActions.BOARD_MESSAGE, createBoardMessage());
       }, 2000);
     } catch (err) {
       this.logger.error('Error' + err);
@@ -76,6 +77,7 @@ export class BoardSocketInit
         setCurrentActionsEvent({
           action: BoardActionType.SHOW_MODAL,
           userId: players[0].userId,
+          actionId: nanoid(4),
           srcOfChange: 'initStores',
         });
       }

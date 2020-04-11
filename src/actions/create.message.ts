@@ -4,7 +4,7 @@ import { moveStore } from 'src/stores/move.store';
 import { actionsStore } from 'src/stores/actions.store';
 import { adaptAction } from './handlers/action.adapter';
 
-export const createMessage = (): HandleMessage => {
+export const createBoardMessage = (): HandleMessage => {
   const moveState = moveStore.getState();
   const actionState = actionsStore.getState();
 
@@ -12,6 +12,7 @@ export const createMessage = (): HandleMessage => {
     action: actionState && adaptAction(actionState.action),
   };
 
+  console.log(111, event);
   let players = playersStore.getState();
   return {
     code: 0,

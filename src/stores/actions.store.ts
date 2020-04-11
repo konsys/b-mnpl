@@ -1,9 +1,10 @@
 import { BoardActionType } from 'src/types/board.types';
 import { createDomain } from 'effector';
 
-interface ICurrentAction {
+export interface ICurrentAction {
   action: BoardActionType;
   userId: number;
+  actionId: string;
   srcOfChange: string;
 }
 

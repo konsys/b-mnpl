@@ -191,7 +191,7 @@ interface PauseData {
   inactive: number;
 }
 
-export interface BoardMessage {
+export interface HandleMessage {
   code: ResponceCode;
   data: BoardEventData;
 }

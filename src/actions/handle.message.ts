@@ -7,8 +7,8 @@ import { setCurrentActionsEvent } from 'src/stores/actions.store';
 import { playersStore } from 'src/stores/players.store';
 
 @WebSocketGateway()
-export class BoardMessage {
-  private logger: Logger = new Logger('BoardMessage');
+export class HandleMessage {
+  private logger: Logger = new Logger('HandleMessage');
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async rollDices(client: Socket, payload: IGameModel): Promise<void> {

@@ -1,10 +1,10 @@
-import { BoardMessage, IBoardEvent } from '../types/board.types';
+import { HandleMessage, IBoardEvent } from '../types/board.types';
 import { playersStore } from 'src/stores/players.store';
 import { moveStore } from 'src/stores/move.store';
 import { actionsStore } from 'src/stores/actions.store';
 import { adaptAction } from './handlers/action.adapter';
 
-export const createMessage = (): BoardMessage => {
+export const createMessage = (): HandleMessage => {
   const moveState = moveStore.getState();
   const actionState = actionsStore.getState();
 

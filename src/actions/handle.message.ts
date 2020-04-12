@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { BoardActionType } from 'src/types/board.types';
 import { IGameModel } from 'src/types/game.types';
@@ -9,8 +8,6 @@ import nanoid from 'nanoid';
 
 @WebSocketGateway()
 export class HandleMessage {
-  private logger: Logger = new Logger('HandleMessage');
-
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async rollDices(client: Socket, payload: IGameModel): Promise<void> {
     const userStore = playersStore.map(v => v).getState();

@@ -44,6 +44,6 @@ export const rollDicesHandler = (): RollDices => {
     meanPosition: dicesState.meanPosition,
     isDouble: dicesState.isDouble,
     isTriple: dicesState.isTriple,
-    _id: nanoid(4),
+    _id: action.actionId,
   };
 };

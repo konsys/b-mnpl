@@ -4,6 +4,9 @@ enum ResponceCode {
   ok = 0,
   error = 1,
 }
+export interface IActionId {
+  actionId: string;
+}
 
 export type Contract = {
   fromUserId: number;

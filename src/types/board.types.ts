@@ -12,7 +12,7 @@ export type Contract = {
   outMoney: number;
   inFields: number[];
   inMoney: number;
-  _id: 'CWRlgfKGAm4=';
+  _id: string;
 };
 
 export enum BoardActionType {
@@ -27,7 +27,7 @@ export enum BoardActionType {
   LEVEL_DOWN = 'levelDown',
   CONTRACT_ACCEPTED = 'contractAccepted',
   MORTGAGE = 'mortgage',
-  SHOW_DICES_MODAL = 'showDIcesModal',
+  SHOW_DICES_MODAL = 'showDicesModal',
 }
 
 export enum BoardModalTypes {

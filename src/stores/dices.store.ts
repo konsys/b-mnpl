@@ -2,7 +2,7 @@ import { GameDomain } from 'src/stores/actions.store';
 
 export interface IDicesStore {
   userId: number;
-  moveId: number;
+  _id: string;
   dices: number[];
   sum: number;
   meanPosition: number;

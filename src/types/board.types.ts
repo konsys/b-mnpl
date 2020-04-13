@@ -130,11 +130,7 @@ interface BoardEventData {
 }
 
 export interface IPlayerStatus extends UsersEntity {
-  isActing?: boolean;
-  status?: UserGameStatus;
-}
-
-export interface UserGameStatus {
+  isActing: boolean;
   gameId: string;
   doublesRolledAsCombo: number;
   jailed: boolean;

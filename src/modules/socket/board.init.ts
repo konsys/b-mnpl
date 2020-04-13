@@ -12,11 +12,7 @@ import {
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import {
-  BoardActionType,
-  IPlayerStatus,
-  UserGameStatus,
-} from 'src/types/board.types';
+import { BoardActionType, IPlayerStatus } from 'src/types/board.types';
 import { SocketActions } from 'src/types/game.types';
 import { createBoardMessage } from 'src/actions/create.message';
 import { setPlayersEvent } from 'src/stores/players.store';
@@ -26,22 +22,22 @@ import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 
-const initPlayerStatus: UserGameStatus = {
-  gameId: this.gameId,
-  doublesRolledAsCombo: 0,
-  jailed: false,
-  unjailAttempts: 0,
-  meanPosition: 0,
-  money: 15000,
-  creditPayRound: false,
-  creditNextTakeRound: 0,
-  score: 0,
-  timeReduceLevel: 0,
-  creditToPay: 0,
-  frags: '',
-  additionalTime: 0,
-  canUseCredit: false,
-};
+// const initPlayerStatus: UserGameStatus = {
+//   gameId: this.gameId,
+//   doublesRolledAsCombo: 0,
+//   jailed: false,
+//   unjailAttempts: 0,
+//   meanPosition: 0,
+//   money: 15000,
+//   creditPayRound: false,
+//   creditNextTakeRound: 0,
+//   score: 0,
+//   timeReduceLevel: 0,
+//   creditToPay: 0,
+//   frags: '',
+//   additionalTime: 0,
+//   canUseCredit: false,
+// };
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
 export class BoardSocketInit
@@ -72,7 +68,23 @@ export class BoardSocketInit
       let players: IPlayerStatus[] = await this.usersService.getAllUsers();
       if (players.length > 0) {
         players[0].isActing = true;
-        players = players.map(v => ({ ...v, status: initPlayerStatus }));
+        players = players.map(v => ({
+          ...v,
+          gameId: 'gameId',
+          doublesRolledAsCombo: 0,
+          jailed: false,
+          unjailAttempts: 0,
+          meanPosition: 0,
+          money: 15000,
+          creditPayRound: false,
+          creditNextTakeRound: 0,
+          score: 0,
+          timeReduceLevel: 0,
+          creditToPay: 0,
+          frags: '',
+          additionalTime: 0,
+          canUseCredit: false,
+        }));
 
         setCurrentActionsEvent({
           action: BoardActionType.SHOW_DICES_MODAL,
@@ -82,6 +94,7 @@ export class BoardSocketInit
           srcOfChange: 'initStores',
         });
       }
+      // console.log(1111111, players);
       setPlayersEvent(players);
       setFieldsEvent(await this.fieldsService.getInitialFields());
     } catch (err) {

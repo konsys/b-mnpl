@@ -17,6 +17,6 @@ export class UsersMsController {
   @MessagePattern({ cmd: MsPatterns.getAllUsers })
   async allUsers(filter: FindManyOptions) {
     const users: any = await this.users.find(filter);
-    return of(users).pipe(delay(100));
+    return of(users).pipe(delay(1));
   }
 }

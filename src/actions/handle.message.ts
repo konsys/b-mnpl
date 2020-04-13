@@ -13,6 +13,7 @@ export class HandleMessage {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
       const user = getActingUser();
+
       setCurrentActionsEvent({
         action: BoardActionType.ROLL_DICES,
         userId: user.userId,
@@ -27,6 +28,7 @@ export class HandleMessage {
   async dices(client: Socket, payload: IActionId): Promise<void> {
     const user = getActingUser();
     const action = actionsStore.getState();
+
     setCurrentActionsEvent({
       action: BoardActionType.SHOW_DICES_MODAL,
       userId: user.userId,

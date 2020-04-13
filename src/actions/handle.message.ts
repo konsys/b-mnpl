@@ -26,7 +26,7 @@ export class HandleMessage {
   }
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
-  async rollDices(client: Socket, payload: IActionId): Promise<void> {
+  async dices(client: Socket, payload: IActionId): Promise<void> {
     console.log(234234234, payload);
   }
 }

@@ -61,7 +61,7 @@ export class BoardSocketInit
     try {
       setInterval(() => {
         this.server.emit(SocketActions.BOARD_MESSAGE, createBoardMessage());
-      }, 1000);
+      }, 500);
     } catch (err) {
       this.logger.error('Error' + err);
     }

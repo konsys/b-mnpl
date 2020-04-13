@@ -7,6 +7,7 @@ export const createBoardMessage = (): HandleMessage => {
   const actionState = actionsStore.getState();
 
   let event: IBoardEvent = {
+    // Adapt from actionStore
     action: actionState && adaptAction(actionState.action),
   };
   let players = playersStore.getState();

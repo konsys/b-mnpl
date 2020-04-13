@@ -4,7 +4,7 @@ import { Socket } from 'socket.io';
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { IActionId } from 'src/types/board.types';
-import { getActingUser } from 'src/utils/users';
+import { getActingPlayer } from 'src/utils/users';
 
 @WebSocketGateway()
 export class HandleMessage {
@@ -12,7 +12,7 @@ export class HandleMessage {
   async modal(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
-      const user = getActingUser();
+      const user = getActingPlayer();
 
       setCurrentActionsEvent({
         action: BoardActionType.ROLL_DICES,
@@ -26,7 +26,7 @@ export class HandleMessage {
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async dices(client: Socket, payload: IActionId): Promise<void> {
-    const user = getActingUser();
+    const user = getActingPlayer();
     const action = actionsStore.getState();
 
     setCurrentActionsEvent({

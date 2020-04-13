@@ -1,11 +1,11 @@
 import { ShowModal, BoardActionType } from 'src/types/board.types';
 import nanoid from 'nanoid';
 import { actionsStore } from 'src/stores/actions.store';
-import { getActingUser } from 'src/utils/users';
+import { getActingPlayer } from 'src/utils/users';
 
 export const dicesModalHandler = (): ShowModal => {
   const action = actionsStore.getState();
-  const user = getActingUser();
+  const user = getActingPlayer();
 
   return {
     type: BoardActionType.SHOW_DICES_MODAL,
@@ -17,7 +17,7 @@ export const dicesModalHandler = (): ShowModal => {
 };
 
 export const canBuyModal = (): ShowModal => {
-  const user = getActingUser();
+  const user = getActingPlayer();
   return {
     type: BoardActionType.SHOW_DICES_MODAL,
     userId: user.userId,

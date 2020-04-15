@@ -168,7 +168,7 @@ interface BoardStatus {
   players: UsersEntity[];
   // TODO Remove ? after events completed
   moveStatus?: MoveStatus;
-  fields?: BoardFIeld[];
+  fields: BoardFIeld[];
   timers?: BoardTimers;
 }
 

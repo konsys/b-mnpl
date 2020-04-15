@@ -3,8 +3,9 @@ import {
   BoardActionType,
   CanBuyModal,
 } from 'src/types/board.types';
-import { getActingPlayer, getField } from 'src/utils/users';
+import { getActingPlayer } from 'src/utils/users';
 import { actionsStore } from 'src/stores/actions.store';
+import { findFieldByPosition } from 'src/utils/fields.utis.';
 
 export const dicesModalHandler = (): DicesModal => {
   const user = getActingPlayer();
@@ -26,7 +27,7 @@ export const buyModalHandler = (): CanBuyModal => {
     userId: user.userId,
     title: 'Купить поле',
     text: 'Вы можете купить поле или поставить его на аукцион',
-    field: getField(user.meanPosition),
+    field: findFieldByPosition(user.meanPosition),
     money: user.money,
     _id: action.actionId,
   };

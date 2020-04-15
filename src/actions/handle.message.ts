@@ -4,8 +4,9 @@ import { Socket } from 'socket.io';
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { IActionId } from 'src/types/board.types';
-import { getActingPlayer, getField } from 'src/utils/users';
+import { getActingPlayer } from 'src/utils/users';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
+import { findFieldByPosition } from 'src/utils/fields.utis.';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -33,7 +34,7 @@ export class BoardMessage {
     const action = actionsStore.getState();
 
     if (payload.actionId === action.actionId) {
-      const currentField = getField(user.meanPosition);
+      const currentField = findFieldByPosition(user.meanPosition);
       if (
         currentField &&
         currentField.price &&
@@ -61,7 +62,7 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async buy(client: Socket, payload: IActionId): Promise<void> {
     const user = getActingPlayer();
-    const currentField = getField(user.meanPosition);
+    const currentField = findFieldByPosition(user.meanPosition);
     const fields = fieldsStore.getState();
     const action = actionsStore.getState();
     if (

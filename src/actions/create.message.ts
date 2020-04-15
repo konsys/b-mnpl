@@ -18,6 +18,7 @@ export const createBoardMessage = (): BoardMessage => {
       event,
       boardStatus: {
         players,
+        fields: [],
       },
     },
   };

@@ -4,7 +4,7 @@ import { MsNames } from 'src/types/ms.types';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { BoardSocketInit } from './board.init';
-import { HandleMessage } from '../../actions/handle.message';
+import { BoardMessage } from '../../actions/handle.message';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { HandleMessage } from '../../actions/handle.message';
       },
     ]),
   ],
-  providers: [BoardSocketInit, HandleMessage, UsersService, FieldsService],
+  providers: [BoardSocketInit, BoardMessage, UsersService, FieldsService],
   controllers: [],
 })
 export class BoardSocketModule {}

@@ -8,7 +8,7 @@ import { getActingPlayer, getField } from 'src/utils/users';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 
 @WebSocketGateway()
-export class HandleMessage {
+export class BoardMessage {
   @SubscribeMessage(BoardActionType.ROLL_DICES_MODAL)
   async modal(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();

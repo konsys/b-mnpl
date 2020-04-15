@@ -5,7 +5,7 @@ import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { IActionId } from 'src/types/board.types';
 import { getActingPlayer, getField } from 'src/utils/users';
-import { fieldsStore } from 'src/stores/fields.store';
+import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 
 @WebSocketGateway()
 export class HandleMessage {
@@ -62,19 +62,27 @@ export class HandleMessage {
   async buy(client: Socket, payload: IActionId): Promise<void> {
     const user = getActingPlayer();
     const currentField = getField(user.meanPosition);
+    const fields = fieldsStore.getState();
     const action = actionsStore.getState();
     if (
       currentField &&
       currentField.price &&
-      currentField.price <= user.money
+      currentField.price <= user.money &&
+      !currentField.owner
     ) {
-      setCurrentActionsEvent({
-        action: BoardActionType.ROLL_DICES_MODAL,
-        userId: user.userId,
-        actionId: nanoid(4),
-        moveId: action.moveId + 1,
-        srcOfChange: 'rollDicesMessage dices roll',
-      });
+      const index = fields.findIndex(
+        v => v.fieldPosition === currentField.fieldPosition,
+      );
+      currentField.owner = user.userId;
+      fields[index] = currentField;
+      setFieldsEvent(fields);
     }
+    setCurrentActionsEvent({
+      action: BoardActionType.ROLL_DICES_MODAL,
+      userId: user.userId,
+      actionId: nanoid(4),
+      moveId: action.moveId + 1,
+      srcOfChange: 'rollDicesMessage dices roll',
+    });
   }
 }

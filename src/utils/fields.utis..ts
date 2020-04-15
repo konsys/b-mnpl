@@ -6,5 +6,14 @@ export const findFieldByPosition = (fieldPosition: number) => {
 };
 
 export const findBoughtFields = () => {
-  return fieldsStore.getState().filter(v => v.owner > 0);
+  const f = fieldsStore
+    .getState()
+    .filter(v => v.owner && v.owner.userId > 0)
+    .map(v => v.owner);
+  console.log(234242234242, f);
+  return f;
 };
+
+// owner: number;
+// level: number;
+// stars: number;

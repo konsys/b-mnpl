@@ -74,7 +74,11 @@ export class BoardMessage {
       const index = fields.findIndex(
         v => v.fieldPosition === currentField.fieldPosition,
       );
-      currentField.owner = user.userId;
+      currentField.owner = {
+        userId: user.userId,
+        level: 0,
+        stars: 0,
+      };
       fields[index] = currentField;
       setFieldsEvent(fields);
     }

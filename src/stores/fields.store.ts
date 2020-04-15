@@ -1,9 +1,9 @@
 import { GameDomain } from 'src/stores/actions.store';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { IPlayerStatus } from 'src/types/board.types';
+import { IFieldsStatus } from 'src/types/board.types';
 
 export interface IFields extends BoardFieldsEntity {
-  owner?: number;
+  owner?: IFieldsStatus;
 }
 
 const FieldsDomain = GameDomain.domain('FieldsDomain');

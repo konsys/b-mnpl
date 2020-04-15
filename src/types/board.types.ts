@@ -1,6 +1,5 @@
 import { UsersEntity } from 'src/entities/users.entity';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { IFields } from 'src/stores/fields.store';
 
 enum ResponceCode {
   ok = 0,
@@ -169,8 +168,14 @@ interface BoardStatus {
   players: UsersEntity[];
   // TODO Remove ? after events completed
   moveStatus?: MoveStatus;
-  fields: IFields[];
+  fields: IFieldsStatus[];
   timers?: BoardTimers;
+}
+
+export interface IFieldsStatus {
+  userId: number;
+  level: number;
+  stars: number;
 }
 
 interface BoardTimers {

@@ -1,4 +1,5 @@
 import { UsersEntity } from 'src/entities/users.entity';
+import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 
 enum ResponceCode {
   ok = 0,
@@ -48,7 +49,7 @@ export interface BoardAction {
 
 export interface Motrgage extends BoardAction {
   type: BoardActionType.MORTGAGE;
-  field: number;
+  field: BoardFieldsEntity;
 }
 
 export interface AuctionDecline extends BoardAction {
@@ -60,22 +61,22 @@ export interface AuctionAccept extends BoardAction {
 }
 export interface LevelUp extends BoardAction {
   type: BoardActionType.LEVEL_UP;
-  field: number;
+  field: BoardFieldsEntity;
 }
 export interface LevelDown extends BoardAction {
   type: BoardActionType.LEVEL_DOWN;
-  field: number;
+  field: BoardFieldsEntity;
 }
 export interface PayRentSuccess extends BoardAction {
   type: BoardActionType.PAY_RENT_SUCCESS;
-  field: number;
+  field: BoardFieldsEntity;
   money: number;
   toUserId: number;
 }
 
 export interface PayRentFail extends BoardAction {
   type: BoardActionType.PAY_RENT_FAIL;
-  field: number;
+  field: BoardFieldsEntity;
   money: number;
   toUserId: number;
 }
@@ -97,7 +98,7 @@ export interface RollDices extends BoardAction {
 
 export interface CanBuyModal extends BoardAction {
   type: BoardActionType.CAN_BUY;
-  field: number;
+  field: BoardFieldsEntity;
   money: number;
   title: string;
   text: string;

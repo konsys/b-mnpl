@@ -22,13 +22,13 @@ export const dicesModalHandler = (): DicesModal => {
 export const buyModalHandler = (): CanBuyModal => {
   const user = getActingPlayer();
   const action = actionsStore.getState();
-  const field = fieldsStore.getState();
   return {
     type: BoardActionType.CAN_BUY,
     userId: user.userId,
     title: 'Купить поле',
     text: 'Вы можете купить поле или поставить его на аукцион',
     field: getField(user.meanPosition),
+    money: user.money,
     _id: action.actionId,
   };
 };

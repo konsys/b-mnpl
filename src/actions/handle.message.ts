@@ -9,7 +9,7 @@ import { fieldsStore } from 'src/stores/fields.store';
 
 @WebSocketGateway()
 export class HandleMessage {
-  @SubscribeMessage(BoardActionType.SHOW_DICES_MODAL)
+  @SubscribeMessage(BoardActionType.ROLL_DICES_MODAL)
   async modal(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
@@ -48,13 +48,33 @@ export class HandleMessage {
         });
       } else {
         setCurrentActionsEvent({
-          action: BoardActionType.SHOW_DICES_MODAL,
+          action: BoardActionType.ROLL_DICES_MODAL,
           userId: user.userId,
           actionId: nanoid(4),
           moveId: action.moveId + 1,
           srcOfChange: 'rollDicesMessage dices roll',
         });
       }
+    }
+  }
+  @SubscribeMessage(BoardActionType.CAN_BUY)
+  async buy(client: Socket, payload: IActionId): Promise<void> {
+    const user = getActingPlayer();
+    const currentField = getField(user.meanPosition);
+    const action = actionsStore.getState();
+    if (
+      currentField &&
+      currentField.price &&
+      currentField.price <= user.money
+    ) {
+      console.log(234234234);
+      setCurrentActionsEvent({
+        action: BoardActionType.ROLL_DICES_MODAL,
+        userId: user.userId,
+        actionId: nanoid(4),
+        moveId: action.moveId + 1,
+        srcOfChange: 'rollDicesMessage dices roll',
+      });
     }
   }
 }

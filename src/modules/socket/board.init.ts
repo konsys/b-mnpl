@@ -87,7 +87,7 @@ export class BoardSocketInit
         }));
 
         setCurrentActionsEvent({
-          action: BoardActionType.SHOW_DICES_MODAL,
+          action: BoardActionType.ROLL_DICES_MODAL,
           userId: players[0].userId,
           moveId: 0,
           actionId: nanoid(4),

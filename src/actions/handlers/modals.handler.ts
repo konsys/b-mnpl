@@ -5,13 +5,12 @@ import {
 } from 'src/types/board.types';
 import { getActingPlayer, getField } from 'src/utils/users';
 import { actionsStore } from 'src/stores/actions.store';
-import { fieldsStore } from 'src/stores/fields.store';
 
 export const dicesModalHandler = (): DicesModal => {
   const user = getActingPlayer();
   const action = actionsStore.getState();
   return {
-    type: BoardActionType.SHOW_DICES_MODAL,
+    type: BoardActionType.ROLL_DICES_MODAL,
     userId: user.userId,
     title: 'Кидайте кубики',
     text: 'Мы болеем за вас',

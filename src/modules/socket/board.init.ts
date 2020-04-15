@@ -94,7 +94,6 @@ export class BoardSocketInit
           srcOfChange: 'initStores',
         });
       }
-      // console.log(1111111, players);
       setPlayersEvent(players);
       setFieldsEvent(await this.fieldsService.getInitialFields());
     } catch (err) {

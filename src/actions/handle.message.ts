@@ -39,7 +39,6 @@ export class HandleMessage {
         currentField.price &&
         currentField.price <= user.money
       ) {
-        console.log(currentField);
         setCurrentActionsEvent({
           action: BoardActionType.CAN_BUY,
           userId: user.userId,

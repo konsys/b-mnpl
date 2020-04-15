@@ -3,7 +3,7 @@ import {
   BoardActionType,
   CanBuyModal,
 } from 'src/types/board.types';
-import { getActingPlayer } from 'src/utils/users';
+import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
 import { findFieldByPosition } from 'src/utils/fields.utis.';
 

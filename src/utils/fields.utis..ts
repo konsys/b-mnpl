@@ -6,6 +6,5 @@ export const findFieldByPosition = (fieldPosition: number) => {
 };
 
 export const findBoughtFields = () => {
-  const fields = fieldsStore.getState();
-  return fields.find(v => v.fieldPosition === fieldPosition);
+  return fieldsStore.getState().filter(v => v.owner > 0);
 };

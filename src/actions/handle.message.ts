@@ -4,7 +4,7 @@ import { Socket } from 'socket.io';
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { IActionId } from 'src/types/board.types';
-import { getActingPlayer } from 'src/utils/users';
+import { getActingPlayer } from 'src/utils/users.utils';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { findFieldByPosition } from 'src/utils/fields.utis.';
 

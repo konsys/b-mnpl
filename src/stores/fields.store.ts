@@ -2,7 +2,7 @@ import { GameDomain } from 'src/stores/actions.store';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { IPlayerStatus } from 'src/types/board.types';
 
-interface IFields extends BoardFieldsEntity {
+export interface IFields extends BoardFieldsEntity {
   owner?: number;
 }
 

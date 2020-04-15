@@ -3,7 +3,7 @@ import { random } from 'src/lib/utils';
 import { dicesStore, setDicesEvent } from 'src/stores/dices.store';
 import { IDicesStore } from 'src/stores/dices.store';
 import { actionsStore } from 'src/stores/actions.store';
-import { getActingPlayer, getActingPlayerIndex } from 'src/utils/users';
+import { getActingPlayer, getActingPlayerIndex } from 'src/utils/users.utils';
 import { playersStore, setPlayersEvent } from 'src/stores/players.store';
 
 export const rollDicesHandler = (): RollDices => {

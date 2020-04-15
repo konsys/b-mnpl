@@ -57,6 +57,7 @@ export class HandleMessage {
       }
     }
   }
+
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async buy(client: Socket, payload: IActionId): Promise<void> {
     const user = getActingPlayer();
@@ -67,7 +68,6 @@ export class HandleMessage {
       currentField.price &&
       currentField.price <= user.money
     ) {
-      console.log(234234234);
       setCurrentActionsEvent({
         action: BoardActionType.ROLL_DICES_MODAL,
         userId: user.userId,

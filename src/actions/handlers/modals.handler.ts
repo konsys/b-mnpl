@@ -1,12 +1,10 @@
 import { ShowModal, BoardActionType } from 'src/types/board.types';
-import nanoid from 'nanoid';
-import { actionsStore } from 'src/stores/actions.store';
 import { getActingPlayer } from 'src/utils/users';
+import { actionsStore } from 'src/stores/actions.store';
 
 export const dicesModalHandler = (): ShowModal => {
-  const action = actionsStore.getState();
   const user = getActingPlayer();
-
+  const action = actionsStore.getState();
   return {
     type: BoardActionType.SHOW_DICES_MODAL,
     userId: user.userId,
@@ -18,11 +16,12 @@ export const dicesModalHandler = (): ShowModal => {
 
 export const buyModalHandler = (): ShowModal => {
   const user = getActingPlayer();
+  const action = actionsStore.getState();
   return {
     type: BoardActionType.SHOW_DICES_MODAL,
     userId: user.userId,
     title: 'Купить поле',
     text: 'Вы можете купить поле или поставить его на аукцион',
-    _id: nanoid(4),
+    _id: action.actionId,
   };
 };

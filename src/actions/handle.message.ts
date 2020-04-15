@@ -4,7 +4,7 @@ import { Socket } from 'socket.io';
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { IActionId } from 'src/types/board.types';
-import { getActingPlayer } from 'src/utils/users';
+import { getActingPlayer, getField } from 'src/utils/users';
 import { fieldsStore } from 'src/stores/fields.store';
 
 @WebSocketGateway()
@@ -31,12 +31,9 @@ export class HandleMessage {
   async dices(client: Socket, payload: IActionId): Promise<void> {
     const user = getActingPlayer();
     const action = actionsStore.getState();
-    const fields = fieldsStore.getState();
 
     if (payload.actionId === action.actionId) {
-      const currentField = fields.find(
-        v => v.fieldPosition === user.meanPosition,
-      );
+      const currentField = getField(user.meanPosition);
       if (
         currentField &&
         currentField.price &&

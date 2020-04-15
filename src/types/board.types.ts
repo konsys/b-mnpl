@@ -80,17 +80,11 @@ export interface PayRentFail extends BoardAction {
   toUserId: number;
 }
 
-export interface ShowModal extends BoardAction {
+export interface DicesModal extends BoardAction {
   type: BoardActionType.SHOW_DICES_MODAL;
   userId: number;
   title: string;
   text: string;
-}
-
-export interface TypeBuy extends BoardAction {
-  type: BoardActionType.BUY;
-  field: number;
-  money: number;
 }
 
 export interface RollDices extends BoardAction {
@@ -101,10 +95,12 @@ export interface RollDices extends BoardAction {
   meanPosition: number;
 }
 
-export interface CanBuy extends BoardAction {
+export interface CanBuyModal extends BoardAction {
   type: BoardActionType.CAN_BUY;
   field: number;
   money: number;
+  title: string;
+  text: string;
 }
 
 export interface IBoardEvent {
@@ -116,10 +112,9 @@ export interface IBoardEvent {
     | LevelDown
     | PayRentSuccess
     | PayRentFail
-    | TypeBuy
     | RollDices
-    | CanBuy
-    | ShowModal;
+    | CanBuyModal
+    | DicesModal;
 }
 
 interface BoardEventData {

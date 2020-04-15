@@ -16,7 +16,7 @@ export const dicesModalHandler = (): ShowModal => {
   };
 };
 
-export const canBuyModal = (): ShowModal => {
+export const buyModalHandler = (): ShowModal => {
   const user = getActingPlayer();
   return {
     type: BoardActionType.SHOW_DICES_MODAL,

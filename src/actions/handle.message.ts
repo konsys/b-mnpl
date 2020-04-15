@@ -14,13 +14,15 @@ export class HandleMessage {
     if (payload.actionId === action.actionId) {
       const user = getActingPlayer();
 
-      setCurrentActionsEvent({
-        action: BoardActionType.ROLL_DICES,
-        userId: user.userId,
-        actionId: nanoid(4),
-        moveId: action.moveId + 1,
-        srcOfChange: 'rollDicesMessage modal',
-      });
+      if (payload.actionId === action.actionId) {
+        setCurrentActionsEvent({
+          action: BoardActionType.ROLL_DICES,
+          userId: user.userId,
+          actionId: nanoid(4),
+          moveId: action.moveId + 1,
+          srcOfChange: 'rollDicesMessage modal',
+        });
+      }
     }
   }
 
@@ -29,12 +31,14 @@ export class HandleMessage {
     const user = getActingPlayer();
     const action = actionsStore.getState();
 
-    setCurrentActionsEvent({
-      action: BoardActionType.SHOW_DICES_MODAL,
-      userId: user.userId,
-      actionId: nanoid(4),
-      moveId: action.moveId + 1,
-      srcOfChange: 'rollDicesMessage dices',
-    });
+    if (payload.actionId === action.actionId) {
+      setCurrentActionsEvent({
+        action: BoardActionType.SHOW_DICES_MODAL,
+        userId: user.userId,
+        actionId: nanoid(4),
+        moveId: action.moveId + 1,
+        srcOfChange: 'rollDicesMessage dices',
+      });
+    }
   }
 }

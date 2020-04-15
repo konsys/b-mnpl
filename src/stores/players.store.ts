@@ -10,4 +10,4 @@ export const playersStore = PlayersDomain.store<IPlayerStatus[] | null>(null)
   .on(setPlayersEvent, (_, data) => data)
   .reset(resetPlayersEvent);
 
-// playersStore.watch(v => console.log('playersStore', v));
+// playersStore.watch(v => console.log('playersStoreWatch', v));

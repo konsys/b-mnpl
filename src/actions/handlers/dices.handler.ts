@@ -34,8 +34,9 @@ export const rollDicesHandler = (): RollDices => {
       isTriple: dice1 === dice2 && dice2 === dice3,
     });
     const players = playersStore.getState();
-    console.log(22222, player);
+
     players[getActingPlayerIndex()].meanPosition = meanPosition;
+    // console.log(23424234, players);
     setPlayersEvent(players);
   }
 

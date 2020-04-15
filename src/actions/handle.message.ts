@@ -19,7 +19,7 @@ export class HandleMessage {
         userId: user.userId,
         actionId: nanoid(4),
         moveId: action.moveId + 1,
-        srcOfChange: 'rollDicesMessage',
+        srcOfChange: 'rollDicesMessage modal',
       });
     }
   }
@@ -34,7 +34,7 @@ export class HandleMessage {
       userId: user.userId,
       actionId: nanoid(4),
       moveId: action.moveId + 1,
-      srcOfChange: 'rollDicesMessage',
+      srcOfChange: 'rollDicesMessage dices',
     });
   }
 }

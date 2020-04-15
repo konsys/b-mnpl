@@ -18,4 +18,4 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
   .on(setDicesEvent, (_, data) => data)
   .reset(resetDicesEvent);
 
-// dicesStore.watch(v => console.log('dicesStore', v));
+// dicesStore.watch(v => console.log('dicesStoreWatch', v));

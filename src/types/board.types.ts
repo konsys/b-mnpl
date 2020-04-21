@@ -143,12 +143,6 @@ export interface IPlayerStatus extends UsersEntity {
   canUseCredit: boolean;
 }
 
-interface BoardFIeld {
-  owner: number;
-  level: number;
-  mortgaged: boolean;
-}
-
 interface CurrentMove {
   dices: number[];
   dicesSum: number;
@@ -176,7 +170,7 @@ export interface IFieldsStatus {
   fieldId: number;
   userId: number;
   level: number;
-  stars: number;
+  mortgaged: boolean;
 }
 
 interface BoardTimers {

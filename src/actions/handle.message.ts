@@ -78,7 +78,7 @@ export class BoardMessage {
         fieldId: currentField.fieldId,
         userId: user.userId,
         level: 0,
-        stars: 0,
+        mortgaged: false,
       };
       fields[index] = currentField;
       setFieldsEvent(fields);

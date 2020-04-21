@@ -33,11 +33,11 @@ docker run --name my-own-pgadmin -d --link testsql:db -p 5050:5050 -e PGADMIN_DE
 # PG_PRIMARY_PORT=5432
 # EOF
 
-# cat << EOF > pgadmin-env.list
-# PGADMIN_SETUP_EMAIL=youremail@yourdomain.com
-# PGADMIN_SETUP_PASSWORD=yoursecurepassword
-# SERVER_PORT=5050
-# EOF
+cat << EOF > pgadmin-env.list
+PGADMIN_SETUP_EMAIL=youremail@yourdomain.com
+PGADMIN_SETUP_PASSWORD=yoursecurepassword
+SERVER_PORT=5050
+EOF
 
 # docker run --publish 5432:5432 \
 #   --volume=pgvolume:/pgdata \
@@ -48,9 +48,10 @@ docker run --name my-own-pgadmin -d --link testsql:db -p 5050:5050 -e PGADMIN_DE
 #   --detach \
 # crunchydata/crunchy-postgres:centos7-10.9-2.4.1
 
+  # --env-file=pgadmin-env.list \
 docker run --publish 5050:5050 \
-  --volume=pga4volume:/var/lib/pgadmin \
   --env-file=pgadmin-env.list \
+  --volume=pga4volume:/var/lib/pgadmin \
   --name="pgadmin4" \
   --hostname="pgadmin4" \
   --network="pgnetwork" \

@@ -173,6 +173,7 @@ interface BoardStatus {
 }
 
 export interface IFieldsStatus {
+  fieldId: number;
   userId: number;
   level: number;
   stars: number;

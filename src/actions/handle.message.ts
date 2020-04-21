@@ -75,6 +75,7 @@ export class BoardMessage {
         v => v.fieldPosition === currentField.fieldPosition,
       );
       currentField.owner = {
+        fieldId: currentField.fieldId,
         userId: user.userId,
         level: 0,
         stars: 0,

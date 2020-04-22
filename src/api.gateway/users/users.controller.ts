@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
-import { MsPatterns, MsNames } from 'src/types/ms.types';
+import { MsNames } from 'src/types/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
-import { FindManyOptions } from 'typeorm';
 import { UsersService } from './users.service';
+import { playersStore } from 'src/stores/players.store';
 
 @Controller(MsNames.users)
 export class UsersController {
@@ -10,6 +10,7 @@ export class UsersController {
 
   @Get()
   async get(): Promise<UsersEntity[]> {
-    return await this.service.getAllUsers();
+    const players = playersStore.getState();
+    return Promise.resolve(players);
   }
 }

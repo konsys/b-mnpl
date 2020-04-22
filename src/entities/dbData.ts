@@ -179,7 +179,6 @@ export const fieldsForSave: BoardFieldsEntity[] = [
   },
   {
     fieldPosition: 20,
-    price: 2200,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/jackpot.svg',
     mnplCorner: 2,
     mnplSpecial: 1,

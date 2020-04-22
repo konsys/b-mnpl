@@ -38,7 +38,8 @@ export class BoardMessage {
       if (
         currentField &&
         currentField.price &&
-        currentField.price <= user.money
+        currentField.price <= user.money &&
+        !currentField.owner
       ) {
         setCurrentActionsEvent({
           action: BoardActionType.CAN_BUY,
@@ -65,9 +66,10 @@ export class BoardMessage {
     const currentField = findFieldByPosition(user.meanPosition);
     const fields = fieldsStore.getState();
     const action = actionsStore.getState();
+
     if (
       currentField &&
-      currentField.price &&
+      currentField.price > 0 &&
       currentField.price <= user.money &&
       !currentField.owner
     ) {

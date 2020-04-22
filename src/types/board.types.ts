@@ -141,7 +141,7 @@ export interface IPlayer extends UsersEntity {
   timeReduceLevel: number;
   creditToPay: number;
   canUseCredit: boolean;
-  playerOrder: 0 | 1 | 2 | 3 | 4;
+  moveOrder: number;
 }
 
 interface CurrentMove {

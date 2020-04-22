@@ -50,9 +50,13 @@ export class BoardSocketInit
   private async initStores() {
     try {
       let players: IPlayer[] = await this.usersService.getAllUsers();
+      const resultPlayers = [];
       if (players.length > 0) {
-        players[0].isActing = true;
-        players = players.map(v => ({
+        // Случайная очередь ходов
+        const ids = players.map(v => v.userId).sort(() => Math.random() - 0.5);
+
+        // Заполняем статус
+        players = players.map((v, k) => ({
           ...v,
           gameId: 'gameId',
           doublesRolledAsCombo: 0,
@@ -68,17 +72,25 @@ export class BoardSocketInit
           frags: '',
           additionalTime: 0,
           canUseCredit: false,
+          moveOrder: ids.findIndex(id => id === v.userId),
+          isActing: ids[0] === v.userId,
         }));
+
+        // Заполняем массив в порядке очереди ходов
+        ids.map(id => {
+          resultPlayers.push(players.find(v => v.userId === id));
+        });
 
         setCurrentActionsEvent({
           action: BoardActionType.ROLL_DICES_MODAL,
-          userId: players[0].userId,
+          userId: resultPlayers.find(v => v.moveOrder === 0).userId,
           moveId: 0,
           actionId: nanoid(4),
           srcOfChange: 'initStores',
         });
       }
-      setPlayersEvent(players);
+
+      setPlayersEvent(resultPlayers);
       setFieldsEvent(await this.fieldsService.getInitialFields());
     } catch (err) {
       this.logger.error(`Error: ${JSON.stringify(err)}`);

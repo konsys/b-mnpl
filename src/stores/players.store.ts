@@ -1,13 +1,13 @@
 import { GameDomain } from 'src/stores/actions.store';
-import { IPlayerStatus } from 'src/types/board.types';
+import { IPlayer } from 'src/types/board.types';
 
 const PlayersDomain = GameDomain.domain('PlayersDomain');
 export const resetPlayersEvent = PlayersDomain.event();
 
-export const setPlayersEvent = PlayersDomain.event<IPlayerStatus[]>();
+export const setPlayersEvent = PlayersDomain.event<IPlayer[]>();
 
-export const playersStore = PlayersDomain.store<IPlayerStatus[] | null>(null)
+export const playersStore = PlayersDomain.store<IPlayer[] | null>(null)
   .on(setPlayersEvent, (_, data) => data)
   .reset(resetPlayersEvent);
 
-// playersStore.watch(v => console.log('playersStoreWatch', v));
+playersStore.watch(v => console.log('playersStoreWatch', v));

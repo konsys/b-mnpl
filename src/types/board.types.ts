@@ -125,7 +125,7 @@ interface BoardEventData {
   contract?: Contract;
 }
 
-export interface IPlayerStatus extends UsersEntity {
+export interface IPlayer extends UsersEntity {
   isActing: boolean;
   gameId: string;
   doublesRolledAsCombo: number;
@@ -141,6 +141,7 @@ export interface IPlayerStatus extends UsersEntity {
   timeReduceLevel: number;
   creditToPay: number;
   canUseCredit: boolean;
+  playerOrder: 0 | 1 | 2 | 3 | 4;
 }
 
 interface CurrentMove {

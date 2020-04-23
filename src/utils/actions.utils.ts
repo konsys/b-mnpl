@@ -65,5 +65,13 @@ export const rollDicesAction = (): void => {
 };
 
 export const startAuctionAction = (): void => {
-  console.log('startAuctionAction');
+  const action = actionsStore.getState();
+  const player = getActingPlayer();
+  setCurrentActionsEvent({
+    action: BoardActionType.AUCTION_START,
+    userId: player.userId,
+    actionId: nanoid(4),
+    moveId: action.moveId + 1,
+    srcOfChange: 'startAuctionAction',
+  });
 };

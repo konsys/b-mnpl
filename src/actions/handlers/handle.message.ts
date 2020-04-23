@@ -41,6 +41,7 @@ export class BoardMessage {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
       startAuctionAction();
+      rollDicesModalAction();
     }
   }
 }

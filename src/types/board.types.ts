@@ -49,9 +49,11 @@ export interface Motrgage extends BoardAction {
 
 export interface AuctionStart extends BoardAction {
   type: BoardActionType.AUCTION_START;
+  field: BoardFieldsEntity;
 }
 export interface AuctionDecline extends BoardAction {
   type: BoardActionType.AUCTION_DECLINE;
+  field: BoardFieldsEntity;
 }
 export interface AuctionAccept extends BoardAction {
   type: BoardActionType.AUCTION_ACCEPT;

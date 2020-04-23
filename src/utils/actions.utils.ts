@@ -3,14 +3,15 @@ import { BoardActionType, IPlayer, IField } from 'src/types/board.types';
 import nanoid from 'nanoid';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { getFieldIndex, findFieldByPosition } from './fields.utis.';
-import { getActingPlayer } from './users.utils';
+import { getActingPlayer, getActingPlayerIndex } from './users.utils';
 import { playersStore, setPlayersEvent } from 'src/stores/players.store';
 
-export const buyFieldModalAction = (user: IPlayer): void => {
+export const buyFieldModalAction = (): void => {
+  const player = getActingPlayer();
   const action = actionsStore.getState();
   setCurrentActionsEvent({
     action: BoardActionType.CAN_BUY,
-    userId: user.userId,
+    userId: player.userId,
     actionId: nanoid(4),
     moveId: action.moveId + 1,
     srcOfChange: 'rollDicesMessage dices buy',
@@ -39,11 +40,12 @@ export const buyFieldAction = (): void => {
   setPlayersEvent(players);
 };
 
-export const rollDicesAction = (user: IPlayer): void => {
+export const rollDicesAction = (): void => {
   const action = actionsStore.getState();
+  const player = getActingPlayer();
   setCurrentActionsEvent({
     action: BoardActionType.ROLL_DICES_MODAL,
-    userId: user.userId,
+    userId: player.userId,
     actionId: nanoid(4),
     moveId: action.moveId + 1,
     srcOfChange: 'rollDicesMessage dices roll',

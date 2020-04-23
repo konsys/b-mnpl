@@ -18,7 +18,7 @@ export const findBoughtFields = () => {
 export const canBuyField = (): boolean => {
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
-  return field && field.price && !field.owner;
+  return field && field.price && !field.owner && user.money >= field.price;
 };
 
 export const getFieldIndex = (field: IField): number => {

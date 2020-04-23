@@ -14,7 +14,7 @@ export const buyFieldModalAction = (): void => {
     userId: player.userId,
     actionId: nanoid(4),
     moveId: action.moveId + 1,
-    srcOfChange: 'rollDicesMessage dices buy',
+    srcOfChange: 'buyFieldModalAction',
   });
 };
 
@@ -48,7 +48,7 @@ export const rollDicesModalAction = (): void => {
     userId: player.userId,
     actionId: nanoid(4),
     moveId: action.moveId + 1,
-    srcOfChange: 'rollDicesMessage dices roll',
+    srcOfChange: 'rollDicesModalAction',
   });
 };
 
@@ -60,6 +60,10 @@ export const rollDicesAction = (): void => {
     userId: player.userId,
     actionId: nanoid(4),
     moveId: action.moveId + 1,
-    srcOfChange: 'rollDicesMessage modal',
+    srcOfChange: 'rollDicesAction',
   });
+};
+
+export const startAuctionAction = (): void => {
+  console.log('startAuctionAction');
 };

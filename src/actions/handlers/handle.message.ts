@@ -9,33 +9,38 @@ import {
   rollDicesAction,
   buyFieldAction,
   rollDicesModalAction,
+  startAuctionAction,
 } from 'src/utils/actions.utils';
 
 @WebSocketGateway()
 export class BoardMessage {
   @SubscribeMessage(BoardActionType.ROLL_DICES_MODAL)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
-    console.log(11111111111);
     const action = actionsStore.getState();
     payload.actionId === action.actionId && rollDicesAction();
   }
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async dicesRolled(client: Socket, payload: IActionId): Promise<void> {
-    console.log(22222222222);
     const action = actionsStore.getState();
-    payload.actionId === action.actionId && isFieldEmpty()
-      ? buyFieldModalAction()
-      : rollDicesModalAction();
+    if (payload.actionId === action.actionId) {
+      isFieldEmpty() ? buyFieldModalAction() : rollDicesModalAction();
+    }
   }
 
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    console.log(3333333333333);
     if (isFieldEmpty() && canBuyField()) {
       buyFieldAction();
-    } else {
       rollDicesModalAction();
+    }
+  }
+
+  @SubscribeMessage(BoardActionType.AUCTION_START)
+  async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
+    const action = actionsStore.getState();
+    if (payload.actionId === action.actionId) {
+      startAuctionAction();
     }
   }
 }

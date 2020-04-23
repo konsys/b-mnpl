@@ -22,6 +22,7 @@ export type Contract = {
 export enum BoardActionType {
   ROLL_DICES = 'rollDices',
   CAN_BUY = 'canBuy',
+  AUCTION_START = 'auctionStart',
   AUCTION_ACCEPT = 'auctionAccept',
   AUCTION_DECLINE = 'auctionDeclne',
   BUY = 'buy',
@@ -29,16 +30,10 @@ export enum BoardActionType {
   PAY_RENT_FAIL = 'payRentFail',
   LEVEL_UP = 'levelUp',
   LEVEL_DOWN = 'levelDown',
-  CONTRACT_ACCEPTED = 'contractAccepted',
+  CONTRACT_ACCEPT = 'contractAccept',
+  CONTRACT_DECLINE = 'contractDeclinr',
   MORTGAGE = 'mortgage',
   ROLL_DICES_MODAL = 'showDicesModal',
-}
-
-export enum BoardModalTypes {
-  ROLL_DICES = 'rollDices',
-  AUCTION_ACCEPT = 'auctionAccept',
-  AUCTION_DECLINE = 'auctionDeclne',
-  BUY = 'buy',
 }
 
 export interface BoardAction {
@@ -52,6 +47,9 @@ export interface Motrgage extends BoardAction {
   field: BoardFieldsEntity;
 }
 
+export interface AuctionStart extends BoardAction {
+  type: BoardActionType.AUCTION_START;
+}
 export interface AuctionDecline extends BoardAction {
   type: BoardActionType.AUCTION_DECLINE;
 }

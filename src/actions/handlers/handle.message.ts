@@ -37,9 +37,9 @@ export class BoardMessage {
     const user = getActingPlayer();
     const action = actionsStore.getState();
 
-    if (payload.actionId === action.actionId) {
-      canBuyField() ? buyFieldModalAction(user) : rollDicesAction(user);
-    }
+    payload.actionId === action.actionId &&
+      canBuyField() &&
+      buyFieldModalAction(user);
   }
 
   @SubscribeMessage(BoardActionType.CAN_BUY)

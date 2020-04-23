@@ -1,5 +1,5 @@
 import { fieldsStore } from 'src/stores/fields.store';
-import { IPlayer, IField } from 'src/types/board.types';
+import { IField } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
 
 export const findFieldByPosition = (fieldPosition: number) => {

@@ -1,12 +1,17 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { BoardActionType } from 'src/types/board.types';
+import { BoardActionType, IPlayer, IField } from 'src/types/board.types';
 import { Socket } from 'socket.io';
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { IActionId } from 'src/types/board.types';
 import { getActingPlayer } from 'src/utils/users.utils';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
-import { findFieldByPosition } from 'src/utils/fields.utis.';
+import { findFieldByPosition, canBuyField } from 'src/utils/fields.utis.';
+import {
+  buyFieldModalAction,
+  rollDicesAction,
+  buyFieldAction,
+} from 'src/utils/actions.utils';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -29,61 +34,30 @@ export class BoardMessage {
   }
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
-  async dices(client: Socket, payload: IActionId): Promise<void> {
+  async dicesRolled(client: Socket, payload: IActionId): Promise<void> {
     const user = getActingPlayer();
     const action = actionsStore.getState();
 
     if (payload.actionId === action.actionId) {
       const currentField = findFieldByPosition(user.meanPosition);
-      if (
-        currentField &&
-        currentField.price &&
-        currentField.price <= user.money &&
-        !currentField.owner
-      ) {
-        setCurrentActionsEvent({
-          action: BoardActionType.CAN_BUY,
-          userId: user.userId,
-          actionId: nanoid(4),
-          moveId: action.moveId + 1,
-          srcOfChange: 'rollDicesMessage dices buy',
-        });
+
+      if (canBuyField(user, currentField)) {
+        buyFieldModalAction(user);
       } else {
-        setCurrentActionsEvent({
-          action: BoardActionType.ROLL_DICES_MODAL,
-          userId: user.userId,
-          actionId: nanoid(4),
-          moveId: action.moveId + 1,
-          srcOfChange: 'rollDicesMessage dices roll',
-        });
+        rollDicesAction(user);
       }
     }
   }
 
   @SubscribeMessage(BoardActionType.CAN_BUY)
-  async buy(client: Socket, payload: IActionId): Promise<void> {
+  async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     const user = getActingPlayer();
     const currentField = findFieldByPosition(user.meanPosition);
-    const fields = fieldsStore.getState();
+
     const action = actionsStore.getState();
 
-    if (
-      currentField &&
-      currentField.price > 0 &&
-      currentField.price <= user.money &&
-      !currentField.owner
-    ) {
-      const index = fields.findIndex(
-        v => v.fieldPosition === currentField.fieldPosition,
-      );
-      currentField.owner = {
-        fieldId: currentField.fieldId,
-        userId: user.userId,
-        level: 0,
-        mortgaged: false,
-      };
-      fields[index] = currentField;
-      setFieldsEvent(fields);
+    if (canBuyField(user, currentField)) {
+      buyFieldAction(user, currentField);
     }
     setCurrentActionsEvent({
       action: BoardActionType.ROLL_DICES_MODAL,

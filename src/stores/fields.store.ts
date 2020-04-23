@@ -1,17 +1,13 @@
 import { GameDomain } from 'src/stores/actions.store';
-import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { IFieldsStatus } from 'src/types/board.types';
-
-export interface IFields extends BoardFieldsEntity {
-  owner?: IFieldsStatus;
-}
+import {} from 'src/entities/board.fields.entity';
+import { IField } from 'src/types/board.types';
 
 const FieldsDomain = GameDomain.domain('FieldsDomain');
 export const resetFieldsEvent = FieldsDomain.event();
 
-export const setFieldsEvent = FieldsDomain.event<IFields[] | null>();
+export const setFieldsEvent = FieldsDomain.event<IField[] | null>();
 
-export const fieldsStore = FieldsDomain.store<IFields[] | null>(null)
+export const fieldsStore = FieldsDomain.store<IField[] | null>(null)
   .on(setFieldsEvent, (_, data) => data)
   .reset(resetFieldsEvent);
 

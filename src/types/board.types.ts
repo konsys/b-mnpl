@@ -163,11 +163,11 @@ interface BoardStatus {
   players: UsersEntity[];
   // TODO Remove ? after events completed
   moveStatus?: MoveStatus;
-  fields: IFieldsStatus[];
+  fields: IFieldStatus[];
   timers?: BoardTimers;
 }
 
-export interface IFieldsStatus {
+export interface IFieldStatus {
   fieldId: number;
   userId: number;
   level: number;
@@ -191,4 +191,8 @@ interface PauseData {
 export interface BoardMessage {
   code: ResponceCode;
   data: BoardEventData;
+}
+
+export interface IField extends BoardFieldsEntity {
+  owner?: IFieldStatus;
 }

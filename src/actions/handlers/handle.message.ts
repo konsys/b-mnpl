@@ -34,18 +34,13 @@ export class BoardMessage {
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async dicesRolled(client: Socket, payload: IActionId): Promise<void> {
-    const user = getActingPlayer();
     const action = actionsStore.getState();
-
-    payload.actionId === action.actionId &&
-      canBuyField() &&
-      buyFieldModalAction(user);
+    payload.actionId === action.actionId && buyFieldModalAction();
   }
 
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    canBuyField() && buyFieldAction();
-    const user = getActingPlayer();
-    rollDicesAction(user);
+    canBuyField() ? buyFieldAction() : buyFieldModalAction();
+    rollDicesAction();
   }
 }

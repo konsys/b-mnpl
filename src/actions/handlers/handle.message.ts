@@ -53,17 +53,9 @@ export class BoardMessage {
     const user = getActingPlayer();
     const currentField = findFieldByPosition(user.meanPosition);
 
-    const action = actionsStore.getState();
-
     if (canBuyField(user, currentField)) {
       buyFieldAction(user, currentField);
     }
-    setCurrentActionsEvent({
-      action: BoardActionType.ROLL_DICES_MODAL,
-      userId: user.userId,
-      actionId: nanoid(4),
-      moveId: action.moveId + 1,
-      srcOfChange: 'rollDicesMessage dices roll',
-    });
+    rollDicesAction(user);
   }
 }

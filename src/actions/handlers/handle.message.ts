@@ -38,24 +38,14 @@ export class BoardMessage {
     const action = actionsStore.getState();
 
     if (payload.actionId === action.actionId) {
-      const currentField = findFieldByPosition(user.meanPosition);
-
-      if (canBuyField(user, currentField)) {
-        buyFieldModalAction(user);
-      } else {
-        rollDicesAction(user);
-      }
+      canBuyField() ? buyFieldModalAction(user) : rollDicesAction(user);
     }
   }
 
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
+    canBuyField() && buyFieldAction();
     const user = getActingPlayer();
-    const currentField = findFieldByPosition(user.meanPosition);
-
-    if (canBuyField(user, currentField)) {
-      buyFieldAction(user, currentField);
-    }
     rollDicesAction(user);
   }
 }

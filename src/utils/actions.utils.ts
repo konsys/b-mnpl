@@ -43,7 +43,6 @@ export const buyFieldAction = (): void => {
 export const rollDicesModalAction = (): void => {
   const action = actionsStore.getState();
   const player = getActingPlayer();
-  console.log(111111111111111111, action, player);
   setCurrentActionsEvent({
     action: BoardActionType.ROLL_DICES_MODAL,
     userId: player.userId,
@@ -56,7 +55,6 @@ export const rollDicesModalAction = (): void => {
 export const rollDicesAction = (): void => {
   const action = actionsStore.getState();
   const player = getActingPlayer();
-  console.log(111111111111111111, action, player);
   setCurrentActionsEvent({
     action: BoardActionType.ROLL_DICES,
     userId: player.userId,

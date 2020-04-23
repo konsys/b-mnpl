@@ -15,13 +15,17 @@ export const findBoughtFields = () => {
   return f;
 };
 
-export const canBuyField = (isMoneyCheck = false): boolean => {
+export const isFieldEmpty = (): boolean => {
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
-  if (isMoneyCheck) {
-    return field && field.price && !field.owner && user.money >= field.price;
-  }
+  // console.log(111111, user, field);
   return field && field.price && !field.owner;
+};
+
+export const canBuyField = (): boolean => {
+  const user = getActingPlayer();
+  const field = findFieldByPosition(user.meanPosition);
+  return field && field.price <= user.money;
 };
 
 export const getFieldIndex = (field: IField): number => {

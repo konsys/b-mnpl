@@ -3,7 +3,7 @@ import { BoardActionType } from 'src/types/board.types';
 import { Socket } from 'socket.io';
 import { actionsStore } from 'src/stores/actions.store';
 import { IActionId } from 'src/types/board.types';
-import { canBuyField } from 'src/utils/fields.utis.';
+import { isFieldEmpty, canBuyField } from 'src/utils/fields.utis.';
 import {
   buyFieldModalAction,
   rollDicesAction,
@@ -14,22 +14,28 @@ import {
 @WebSocketGateway()
 export class BoardMessage {
   @SubscribeMessage(BoardActionType.ROLL_DICES_MODAL)
-  async modal(client: Socket, payload: IActionId): Promise<void> {
+  async dicesModal(client: Socket, payload: IActionId): Promise<void> {
+    console.log(11111111111);
     const action = actionsStore.getState();
     payload.actionId === action.actionId && rollDicesAction();
   }
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async dicesRolled(client: Socket, payload: IActionId): Promise<void> {
+    console.log(22222222222);
     const action = actionsStore.getState();
-    payload.actionId === action.actionId &&
-      canBuyField() &&
-      buyFieldModalAction();
+    payload.actionId === action.actionId && isFieldEmpty()
+      ? buyFieldModalAction()
+      : rollDicesModalAction();
   }
 
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    canBuyField(true) ? buyFieldAction() : buyFieldModalAction();
-    rollDicesModalAction();
+    console.log(3333333333333);
+    if (isFieldEmpty() && canBuyField()) {
+      buyFieldAction();
+    } else {
+      rollDicesModalAction();
+    }
   }
 }

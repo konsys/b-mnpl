@@ -40,14 +40,28 @@ export const buyFieldAction = (): void => {
   setPlayersEvent(players);
 };
 
-export const rollDicesAction = (): void => {
+export const rollDicesModalAction = (): void => {
   const action = actionsStore.getState();
   const player = getActingPlayer();
+  console.log(111111111111111111, action, player);
   setCurrentActionsEvent({
     action: BoardActionType.ROLL_DICES_MODAL,
     userId: player.userId,
     actionId: nanoid(4),
     moveId: action.moveId + 1,
     srcOfChange: 'rollDicesMessage dices roll',
+  });
+};
+
+export const rollDicesAction = (): void => {
+  const action = actionsStore.getState();
+  const player = getActingPlayer();
+  console.log(111111111111111111, action, player);
+  setCurrentActionsEvent({
+    action: BoardActionType.ROLL_DICES,
+    userId: player.userId,
+    actionId: nanoid(4),
+    moveId: action.moveId + 1,
+    srcOfChange: 'rollDicesMessage modal',
   });
 };

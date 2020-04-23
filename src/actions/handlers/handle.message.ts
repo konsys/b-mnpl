@@ -1,11 +1,10 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { BoardActionType, IPlayer, IField } from 'src/types/board.types';
+import { BoardActionType } from 'src/types/board.types';
 import { Socket } from 'socket.io';
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { IActionId } from 'src/types/board.types';
 import { getActingPlayer } from 'src/utils/users.utils';
-import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { findFieldByPosition, canBuyField } from 'src/utils/fields.utis.';
 import {
   buyFieldModalAction,

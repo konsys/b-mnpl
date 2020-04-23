@@ -1,12 +1,10 @@
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import { BoardActionType, IPlayer, IField } from 'src/types/board.types';
 import nanoid from 'nanoid';
-import { findFieldByPosition } from './fields.utis.';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 
 export const buyFieldModalAction = (user: IPlayer): void => {
   const action = actionsStore.getState();
-  const currentField = findFieldByPosition(user.meanPosition);
   setCurrentActionsEvent({
     action: BoardActionType.CAN_BUY,
     userId: user.userId,
@@ -15,6 +13,7 @@ export const buyFieldModalAction = (user: IPlayer): void => {
     srcOfChange: 'rollDicesMessage dices buy',
   });
 };
+
 export const buyFieldAction = (user: IPlayer, field: IField): void => {
   const fields = fieldsStore.getState();
   const index = fields.findIndex(v => v.fieldPosition === field.fieldPosition);

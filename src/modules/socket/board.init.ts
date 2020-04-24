@@ -21,6 +21,7 @@ import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
+import { errorStore, IErrorMessage } from 'src/stores/error.store';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -45,6 +46,10 @@ export class BoardSocketInit
     } catch (err) {
       this.logger.error('Error' + err);
     }
+  }
+
+  public emitError(error: IErrorMessage) {
+    this.server.emit(SocketActions.ERROR_MESSAGE, error);
   }
 
   private async initStores() {
@@ -93,6 +98,8 @@ export class BoardSocketInit
 
       setPlayersEvent(resultPlayers);
       setFieldsEvent(await this.fieldsService.getInitialFields());
+
+      errorStore.updates.watch(error => this.emitError(error));
     } catch (err) {
       this.logger.error(`Error: ${JSON.stringify(err)}`);
     }

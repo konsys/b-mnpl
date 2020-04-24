@@ -11,6 +11,7 @@ import {
   rollDicesModalAction,
   startAuctionAction,
 } from 'src/utils/actions.utils';
+import { setError } from 'src/stores/error.store';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -34,6 +35,8 @@ export class BoardMessage {
     if (isFieldEmpty() && canBuyField()) {
       buyFieldAction();
       rollDicesModalAction();
+    } else {
+      setError({ code: 0, message: 'Cannot buy this field' });
     }
   }
 

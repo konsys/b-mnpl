@@ -35,7 +35,12 @@ export const rollDicesHandler = (): RollDices => {
     });
     const players = playersStore.getState();
 
-    players[getActingPlayerIndex()].meanPosition = meanPosition;
+    /**
+     * Set Position to player store
+     */
+    const actIndex = getActingPlayerIndex();
+    players[actIndex].prevPosition = players[actIndex].meanPosition;
+    players[actIndex].meanPosition = meanPosition;
     setPlayersEvent(players);
   }
 

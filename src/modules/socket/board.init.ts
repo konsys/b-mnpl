@@ -50,6 +50,7 @@ export class BoardSocketInit
 
   public emitError(error: IErrorMessage) {
     this.server.emit(SocketActions.ERROR_MESSAGE, error);
+    errorStore.reset();
   }
 
   private async initStores() {

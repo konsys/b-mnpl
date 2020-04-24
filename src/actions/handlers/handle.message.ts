@@ -19,6 +19,7 @@ export class BoardMessage {
     const action = actionsStore.getState();
     payload.actionId === action.actionId && rollDicesAction();
   }
+  W;
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async dicesRolled(client: Socket, payload: IActionId): Promise<void> {

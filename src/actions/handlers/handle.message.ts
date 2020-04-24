@@ -12,6 +12,7 @@ import {
   startAuctionAction,
 } from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
+import { ErrorCode } from 'src/utils/error.code';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -36,7 +37,10 @@ export class BoardMessage {
       buyFieldAction();
       rollDicesModalAction();
     } else {
-      setError({ code: 0, message: 'Cannot buy this field' });
+      setError({
+        code: ErrorCode.NotEnoughMoney,
+        message: 'You don`t have anough money to buy this field',
+      });
     }
   }
 

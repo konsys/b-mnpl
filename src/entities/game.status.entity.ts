@@ -8,8 +8,8 @@ export class UserGameStatusEntity {
   @Column()
   doublesRolledAsCombo: number;
 
-  @Column()
-  jailed: boolean;
+  @Column({ default: 0 })
+  jailed: number;
 
   @Column()
   unjailAttempts: number;

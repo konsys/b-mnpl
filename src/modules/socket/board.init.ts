@@ -60,7 +60,7 @@ export class BoardSocketInit
           ...v,
           gameId: 'gameId',
           doublesRolledAsCombo: 0,
-          jailed: false,
+          jailed: 0,
           unjailAttempts: 0,
           meanPosition: 0,
           money: 15000,

@@ -21,7 +21,6 @@ export class BoardMessage {
     const action = actionsStore.getState();
     payload.actionId === action.actionId && rollDicesAction();
   }
-  W;
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async dicesRolled(client: Socket, payload: IActionId): Promise<void> {
@@ -39,9 +38,10 @@ export class BoardMessage {
     } else {
       setError({
         code: ErrorCode.NotEnoughMoney,
-        message: 'You don`t have anough money to buy this field',
+        message: 'You don`t have enough money to buy this field',
       });
     }
+    // nexPlayerAction();
   }
 
   @SubscribeMessage(BoardActionType.AUCTION_START)

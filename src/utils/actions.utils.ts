@@ -75,3 +75,12 @@ export const startAuctionAction = (): void => {
     srcOfChange: 'startAuctionAction',
   });
 };
+
+export const nexPlayerAction = (): void => {
+  const players = playersStore.getState();
+  const index = getActingPlayerIndex();
+  const nextIndex = index < players.length - 1 ? index + 1 : 0;
+  players.map((v, k) =>
+    k === nextIndex ? { ...v, isActing: true } : { ...v, isActing: false },
+  );
+};

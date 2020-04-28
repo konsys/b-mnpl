@@ -6,7 +6,7 @@ import { getFieldIndex, findFieldByPosition } from './fields.utis.';
 import {
   getActingPlayer,
   getActingPlayerIndex,
-  updatePlayers,
+  updateAllPLayers,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
 
@@ -41,7 +41,7 @@ export const buyFieldAction = (): void => {
   const players = playersStore.getState();
   const playerIndex = players.findIndex(v => v.userId === user.userId);
   players[playerIndex] = { ...user, money: user.money - field.price };
-  updatePlayers(players);
+  updateAllPLayers(players);
 };
 
 export const rollDicesModalAction = (): void => {
@@ -87,5 +87,5 @@ export const switchPlayerTurn = (): void => {
   const res = players.map((v, k) =>
     k === nextIndex ? { ...v, isActing: true } : { ...v, isActing: false },
   );
-  updatePlayers(res);
+  updateAllPLayers(res);
 };

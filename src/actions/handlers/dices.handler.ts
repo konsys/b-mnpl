@@ -6,7 +6,7 @@ import { actionsStore } from 'src/stores/actions.store';
 import {
   getActingPlayer,
   getActingPlayerIndex,
-  updatePlayers,
+  updateAllPLayers,
 } from 'src/utils/users.utils';
 import { playersStore } from 'src/stores/players.store';
 
@@ -45,7 +45,7 @@ export const rollDicesHandler = (): RollDices => {
     const actIndex = getActingPlayerIndex();
     players[actIndex].prevPosition = players[actIndex].meanPosition;
     players[actIndex].meanPosition = meanPosition;
-    updatePlayers(players);
+    updateAllPLayers(players);
   }
 
   return {

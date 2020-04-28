@@ -29,3 +29,8 @@ export const updatePlayer = (player: IPlayer): boolean => {
   setPlayersEvent(playersState);
   return true;
 };
+
+export const updatePlayers = (players: IPlayer[]): boolean => {
+  setPlayersEvent(players);
+  return true;
+};

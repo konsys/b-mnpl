@@ -1,10 +1,14 @@
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
-import { BoardActionType, IPlayer, IField } from 'src/types/board.types';
+import { BoardActionType } from 'src/types/board.types';
 import nanoid from 'nanoid';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { getFieldIndex, findFieldByPosition } from './fields.utis.';
-import { getActingPlayer, getActingPlayerIndex } from './users.utils';
-import { playersStore, setPlayersEvent } from 'src/stores/players.store';
+import {
+  getActingPlayer,
+  getActingPlayerIndex,
+  updatePlayers,
+} from './users.utils';
+import { playersStore } from 'src/stores/players.store';
 
 export const buyFieldModalAction = (): void => {
   const player = getActingPlayer();
@@ -37,7 +41,7 @@ export const buyFieldAction = (): void => {
   const players = playersStore.getState();
   const playerIndex = players.findIndex(v => v.userId === user.userId);
   players[playerIndex] = { ...user, money: user.money - field.price };
-  setPlayersEvent(players);
+  updatePlayers(players);
 };
 
 export const rollDicesModalAction = (): void => {
@@ -83,5 +87,5 @@ export const switchPlayerTurn = (): void => {
   const res = players.map((v, k) =>
     k === nextIndex ? { ...v, isActing: true } : { ...v, isActing: false },
   );
-  setPlayersEvent(res);
+  updatePlayers(res);
 };

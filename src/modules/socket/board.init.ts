@@ -15,13 +15,13 @@ import { Socket, Server } from 'socket.io';
 import { BoardActionType, IPlayer } from 'src/types/board.types';
 import { SocketActions } from 'src/types/game.types';
 import { createBoardMessage } from 'src/actions/create.message';
-import { setPlayersEvent } from 'src/stores/players.store';
 import { setFieldsEvent } from 'src/stores/fields.store';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';
+import { updatePlayers } from 'src/utils/users.utils';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -97,7 +97,7 @@ export class BoardSocketInit
         });
       }
 
-      setPlayersEvent(resultPlayers);
+      updatePlayers(resultPlayers);
       setFieldsEvent(await this.fieldsService.getInitialFields());
 
       errorStore.updates.watch(error => this.emitError(error));

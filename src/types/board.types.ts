@@ -144,6 +144,7 @@ export interface IPlayer extends UsersEntity {
   canUseCredit: boolean;
   moveOrder: number;
   isAlive: boolean;
+  movesLeft: number;
 }
 
 interface CurrentMove {

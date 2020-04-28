@@ -10,7 +10,6 @@ import {
   buyFieldAction,
   rollDicesModalAction,
   startAuctionAction,
-  switchPlayerTurn,
 } from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';

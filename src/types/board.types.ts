@@ -26,6 +26,7 @@ export enum BoardActionType {
   AUCTION_ACCEPT = 'auctionAccept',
   AUCTION_DECLINE = 'auctionDeclne',
   BUY = 'buy',
+  PAY_RENT_START = 'payRentStart',
   PAY_RENT_SUCCESS = 'payRentSuccess',
   PAY_RENT_FAIL = 'payRentFail',
   LEVEL_UP = 'levelUp',
@@ -67,6 +68,14 @@ export interface LevelDown extends BoardAction {
   type: BoardActionType.LEVEL_DOWN;
   field: BoardFieldsEntity;
 }
+
+export interface PayRentStart extends BoardAction {
+  type: BoardActionType.PAY_RENT_START;
+  field: BoardFieldsEntity;
+  money: number;
+  toUserId: number;
+}
+
 export interface PayRentSuccess extends BoardAction {
   type: BoardActionType.PAY_RENT_SUCCESS;
   field: BoardFieldsEntity;

@@ -12,16 +12,22 @@ export const findBoughtFields = () =>
     .filter(v => v.owner && v.owner.userId > 0)
     .map(v => v.owner);
 
+export const isTax = (): boolean => {
+  const user = getActingPlayer();
+  const field = findFieldByPosition(user.meanPosition);
+  return field.type === FieldType.TAX || field.type === FieldType.CHANCE;
+};
+
 export const isFieldEmpty = (): boolean => {
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
-  return field && field.type === FieldType.COMPANY && !field.owner;
+  return field.type === FieldType.COMPANY && !field.owner;
 };
 
 export const canBuyField = (): boolean => {
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
-  return field && field.type === FieldType.COMPANY && field.price <= user.money;
+  return field.type === FieldType.COMPANY && field.price <= user.money;
 };
 
 export const getFieldIndex = (field: IField): number =>

@@ -3,15 +3,8 @@ import { BoardActionType } from 'src/types/board.types';
 import { Socket } from 'socket.io';
 import { actionsStore } from 'src/stores/actions.store';
 import { IActionId } from 'src/types/board.types';
-import { isFieldEmpty, canBuyField } from 'src/utils/fields.utis.';
-import {
-  buyFieldModalAction,
-  rollDicesAction,
-  buyFieldAction,
-  rollDicesModalAction,
-  startAuctionAction,
-  switchPlayerTurn,
-} from 'src/utils/actions.utils';
+import { isFieldEmpty, canBuyField, isTax } from 'src/utils/fields.utis.';
+import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
 
@@ -20,7 +13,7 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.ROLL_DICES_MODAL)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
-    payload.actionId === action.actionId && rollDicesAction();
+    payload.actionId === action.actionId && Action.rollDicesAction();
   }
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
@@ -28,11 +21,11 @@ export class BoardMessage {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
       if (isFieldEmpty()) {
-        buyFieldModalAction();
+        Action.buyFieldModalAction();
       } else {
         // TODO Добавить обработчики для остальных полей
-        switchPlayerTurn();
-        rollDicesModalAction();
+        Action.switchPlayerTurn();
+        Action.rollDicesModalAction();
       }
     }
   }
@@ -40,8 +33,10 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     if (isFieldEmpty() && canBuyField()) {
-      buyFieldAction();
-      rollDicesModalAction();
+      Action.buyFieldAction();
+      Action.rollDicesModalAction();
+    } else if (isTax()) {
+      Action.payTaxModalAction();
     } else {
       !isFieldEmpty() &&
         setError({
@@ -54,16 +49,16 @@ export class BoardMessage {
           message: 'Oop!',
         });
     }
-    switchPlayerTurn();
+    Action.switchPlayerTurn();
   }
 
   @SubscribeMessage(BoardActionType.AUCTION_START)
   async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
-      startAuctionAction();
-      switchPlayerTurn();
-      rollDicesModalAction();
+      Action.startAuctionAction();
+      Action.switchPlayerTurn();
+      Action.rollDicesModalAction();
     }
   }
 }

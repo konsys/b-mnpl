@@ -57,6 +57,18 @@ export const rollDicesModalAction = (): void => {
   });
 };
 
+export const payTaxModalAction = (): void => {
+  const action = actionsStore.getState();
+  const player = getActingPlayer();
+  setCurrentActionsEvent({
+    action: BoardActionType.PAY_RENT_START,
+    userId: player.userId,
+    actionId: nanoid(4),
+    moveId: action.moveId + 1,
+    srcOfChange: 'payTaxModalAction',
+  });
+};
+
 export const rollDicesAction = (): void => {
   const action = actionsStore.getState();
   const player = getActingPlayer();

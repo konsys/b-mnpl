@@ -37,10 +37,16 @@ export class BoardMessage {
       buyFieldAction();
       rollDicesModalAction();
     } else {
-      setError({
-        code: ErrorCode.NotEnoughMoney,
-        message: 'You don`t have enough money to buy this field',
-      });
+      !isFieldEmpty() &&
+        setError({
+          code: ErrorCode.CompanyHasOwner,
+          message: 'Oop!',
+        });
+      !canBuyField() &&
+        setError({
+          code: ErrorCode.NotEnoughMoney,
+          message: 'Oop!',
+        });
     }
     switchPlayerTurn();
   }

@@ -22,6 +22,8 @@ export class BoardMessage {
     if (payload.actionId === action.actionId) {
       if (isFieldEmpty()) {
         Action.buyFieldModalAction();
+      } else if (isTax()) {
+        Action.payTaxModalAction();
       } else {
         // TODO Добавить обработчики для остальных полей
         Action.switchPlayerTurn();
@@ -35,8 +37,6 @@ export class BoardMessage {
     if (isFieldEmpty() && canBuyField()) {
       Action.buyFieldAction();
       Action.rollDicesModalAction();
-    } else if (isTax()) {
-      Action.payTaxModalAction();
     } else {
       !isFieldEmpty() &&
         setError({

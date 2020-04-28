@@ -12,5 +12,8 @@ export const adaptAction = (type: BoardActionType) => {
 
     case BoardActionType.CAN_BUY:
       return buyModalHandler();
+
+    case BoardActionType.PAY_RENT_START:
+      return buyModalHandler();
   }
 };

@@ -74,6 +74,8 @@ export interface PayRentStart extends BoardAction {
   field: BoardFieldsEntity;
   money: number;
   toUserId: number;
+  title: string;
+  text: string;
 }
 
 export interface PayRentSuccess extends BoardAction {

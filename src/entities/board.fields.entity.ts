@@ -1,5 +1,16 @@
 import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
 
+export enum FieldType {
+  CHANCE = 'chance',
+  COMPANY = 'company',
+  JAIL = 'jail',
+  ROULETTE = 'roulette',
+  CASION = 'casino',
+  START = 'start',
+  TAX = 'tax',
+  TAKE_REST = 'takeRest',
+}
+
 @Entity()
 export class BoardFieldsEntity {
   @PrimaryGeneratedColumn()
@@ -34,4 +45,7 @@ export class BoardFieldsEntity {
 
   @Column({ default: null })
   name?: string;
+
+  @Column('enum', { name: 'fieldsType', enum: FieldType })
+  type?: string;
 }

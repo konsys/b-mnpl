@@ -1,4 +1,4 @@
-import { BoardFieldsEntity } from './board.fields.entity';
+import { BoardFieldsEntity, FieldType } from './board.fields.entity';
 import { UsersEntity } from './users.entity';
 
 export const fieldsForSave: BoardFieldsEntity[] = [
@@ -8,6 +8,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'start',
     mnplCorner: 0,
     level: 0,
+    type: FieldType.START,
   },
   {
     fieldPosition: 1,
@@ -17,6 +18,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 0,
     name: 'chanel',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 2,
@@ -25,6 +27,8 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'tax_income',
     mnplSpecial: 1,
     level: 0,
+    price: -2000,
+    type: FieldType.TAX,
   },
 
   {
@@ -35,6 +39,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 0,
     name: 'hugo_boss',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 4,
@@ -44,6 +49,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 0,
     name: 'iv_roche',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 5,
@@ -53,6 +59,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 0,
     name: 'mercedes',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 6,
@@ -62,6 +69,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 0,
     name: 'adidas',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 7,
@@ -70,6 +78,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'chance',
     mnplSpecial: 1,
     level: 0,
+    type: FieldType.CHANCE,
   },
   {
     fieldPosition: 8,
@@ -79,6 +88,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 0,
     name: 'puma',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 9,
@@ -88,6 +98,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 0,
     name: 'lacoste',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 10,
@@ -96,6 +107,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     isJail: true,
     name: 'jail',
     level: 0,
+    type: FieldType.TAKE_REST,
   },
   {
     fieldPosition: 11,
@@ -105,6 +117,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 1,
     name: 'vk',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 12,
@@ -114,6 +127,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 1,
     name: 'rockstar_games',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 13,
@@ -123,6 +137,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 1,
     name: 'facebook',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 14,
@@ -132,6 +147,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 1,
     name: 'twitter',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 15,
@@ -141,6 +157,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 1,
     name: 'audi',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 16,
@@ -150,6 +167,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 1,
     name: 'coca_cola',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 17,
@@ -158,6 +176,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'chance',
     mnplSpecial: 1,
     level: 0,
+    type: FieldType.CHANCE,
   },
   {
     fieldPosition: 18,
@@ -167,6 +186,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 1,
     name: 'pepsi',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 19,
@@ -176,14 +196,16 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 1,
     name: 'fanta',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 20,
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/jackpot.svg',
     mnplCorner: 2,
     mnplSpecial: 1,
-    name: 'jackpot',
+    name: 'casino',
     level: 0,
+    type: FieldType.CASION,
   },
   {
     fieldPosition: 21,
@@ -194,6 +216,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplGroup: 5,
     name: 'american_airlines',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 22,
@@ -202,6 +225,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 2,
     name: 'chance',
     level: 0,
+    type: FieldType.CHANCE,
   },
   {
     fieldPosition: 23,
@@ -211,6 +235,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 2,
     name: 'lufthansa',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 24,
@@ -219,8 +244,9 @@ export const fieldsForSave: BoardFieldsEntity[] = [
       'https://m1.dogecdn.wtf/fields/brands/5_airlines/british_airways.svg',
     mnplGroup: 5,
     mnplLine: 2,
-    name: 'lufthansa',
+    name: 'british_airways',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 25,
@@ -230,6 +256,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 2,
     name: 'ford',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 26,
@@ -239,6 +266,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 2,
     name: 'mcdonalds',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 27,
@@ -248,6 +276,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 2,
     name: 'burger_king',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 28,
@@ -257,6 +286,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 2,
     name: 'rovio',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 29,
@@ -266,6 +296,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 2,
     name: 'kfc',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 30,
@@ -274,6 +305,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplCorner: 3,
     name: 'goToJail',
     level: 0,
+    type: FieldType.JAIL,
   },
   {
     fieldPosition: 31,
@@ -283,6 +315,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 3,
     name: 'holiday_inn',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 32,
@@ -292,6 +325,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 3,
     name: 'radisson_blu',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 33,
@@ -300,6 +334,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 3,
     name: 'chance_rotated',
     level: 0,
+    type: FieldType.CHANCE,
   },
   {
     fieldPosition: 34,
@@ -309,6 +344,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 3,
     name: 'novotel',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 35,
@@ -318,6 +354,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 3,
     name: 'land_rover',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 36,
@@ -326,6 +363,8 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 3,
     name: 'tax_luxury',
     level: 0,
+    price: -1000,
+    type: FieldType.TAX,
   },
   {
     fieldPosition: 37,
@@ -335,6 +374,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     price: 3500,
     name: 'apple',
     level: 0,
+    type: FieldType.COMPANY,
   },
   {
     fieldPosition: 38,
@@ -343,6 +383,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 3,
     name: 'chance_rotated',
     level: 0,
+    type: FieldType.CHANCE,
   },
   {
     fieldPosition: 39,
@@ -352,6 +393,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     price: 4000,
     name: 'nokia',
     level: 0,
+    type: FieldType.COMPANY,
   },
 ];
 

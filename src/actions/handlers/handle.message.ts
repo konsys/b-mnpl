@@ -27,7 +27,13 @@ export class BoardMessage {
   async dicesRolled(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
-      isFieldEmpty() ? buyFieldModalAction() : rollDicesModalAction();
+      if (isFieldEmpty()) {
+        buyFieldModalAction();
+      } else {
+        // TODO Добавить обработчики для остальных полей
+        switchPlayerTurn();
+        rollDicesModalAction();
+      }
     }
   }
 
@@ -56,8 +62,8 @@ export class BoardMessage {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
       startAuctionAction();
+      switchPlayerTurn();
       rollDicesModalAction();
     }
-    switchPlayerTurn();
   }
 }

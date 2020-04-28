@@ -80,12 +80,25 @@ export const startAuctionAction = (): void => {
   });
 };
 
+const getNextIndex = (index: number, array: any[]) =>
+  index < array.length - 1 ? index + 1 : 0;
+
 export const switchPlayerTurn = (): void => {
   const players = playersStore.getState();
   const index = getActingPlayerIndex();
-  const nextIndex = index < players.length - 1 ? index + 1 : 0;
-  const res = players.map((v, k) =>
-    k === nextIndex ? { ...v, isActing: true } : { ...v, isActing: false },
-  );
+  const player = players[index];
+  let nextIndex = getNextIndex(index, players);
+  if (player.movesLeft > 0) {
+    nextIndex = index;
+  }
+
+  const res = players.map((v, k) => {
+    if (k === nextIndex) {
+      return { ...v, isActing: true, movesLeft: --v.movesLeft };
+    } else {
+      return { ...v, isActing: false, movesLeft: 0 };
+    }
+  });
+  console.log(res);
   updateAllPLayers(res);
 };

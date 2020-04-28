@@ -10,6 +10,7 @@ import {
   buyFieldAction,
   rollDicesModalAction,
   startAuctionAction,
+  switchPlayerTurn,
 } from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
@@ -41,6 +42,7 @@ export class BoardMessage {
         message: 'You don`t have enough money to buy this field',
       });
     }
+    switchPlayerTurn();
   }
 
   @SubscribeMessage(BoardActionType.AUCTION_START)

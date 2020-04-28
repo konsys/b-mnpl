@@ -26,8 +26,7 @@ export const updatePlayer = (player: IPlayer): boolean => {
 
   playersState[currentPLayerIndex] = player;
 
-  setPlayersEvent(playersState);
-  return true;
+  return updatePlayers(playersState);
 };
 
 export const updatePlayers = (players: IPlayer[]): boolean => {

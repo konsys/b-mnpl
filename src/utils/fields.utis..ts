@@ -18,7 +18,7 @@ export const findBoughtFields = () => {
 export const isFieldEmpty = (): boolean => {
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
-  // console.log(111111, user, field);
+  console.log(111111, field.price, field);
   return field && field.price && !field.owner;
 };
 

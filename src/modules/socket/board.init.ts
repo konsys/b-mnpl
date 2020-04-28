@@ -81,7 +81,7 @@ export class BoardSocketInit
           canUseCredit: false,
           moveOrder: ids.findIndex(id => id === v.userId),
           isActing: ids[0] === v.userId,
-          movesLeft: ids[0] === v.userId ? 1 : 0,
+          movesLeft: 0,
         }));
 
         // Заполняем массив в порядке очереди ходов

@@ -33,6 +33,7 @@ export class BoardMessage {
 
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
+    // console.log(1111111111, isFieldEmpty(), canBuyField());
     if (isFieldEmpty() && canBuyField()) {
       buyFieldAction();
       rollDicesModalAction();
@@ -52,5 +53,6 @@ export class BoardMessage {
       startAuctionAction();
       rollDicesModalAction();
     }
+    switchPlayerTurn();
   }
 }

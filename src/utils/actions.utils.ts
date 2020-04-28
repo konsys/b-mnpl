@@ -7,6 +7,7 @@ import {
   getActingPlayer,
   getActingPlayerIndex,
   updateAllPLayers,
+  updatePlayer,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
 
@@ -86,19 +87,21 @@ const getNextIndex = (index: number, array: any[]) =>
 export const switchPlayerTurn = (): void => {
   const players = playersStore.getState();
   const index = getActingPlayerIndex();
-  const player = players[index];
-  let nextIndex = getNextIndex(index, players);
-  if (player.movesLeft > 0) {
-    nextIndex = index;
-  }
 
+  let nextIndex = getNextIndex(index, players);
+  let player = players[nextIndex];
+
+  while (player.movesLeft > 0) {
+    nextIndex = getNextIndex(index, players);
+    player = players[nextIndex];
+    updatePlayer({ ...player, movesLeft: --player.movesLeft });
+  }
   const res = players.map((v, k) => {
     if (k === nextIndex) {
-      return { ...v, isActing: true, movesLeft: --v.movesLeft };
+      return { ...v, isActing: true };
     } else {
-      return { ...v, isActing: false, movesLeft: 0 };
+      return { ...v, isActing: false };
     }
   });
-  console.log(res);
   updateAllPLayers(res);
 };

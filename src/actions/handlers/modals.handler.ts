@@ -21,6 +21,7 @@ export const dicesModalHandler = (): DicesModal => {
 
 export const buyModalHandler = (): CanBuyModal => {
   const user = getActingPlayer();
+
   const action = actionsStore.getState();
   return {
     type: BoardActionType.CAN_BUY,

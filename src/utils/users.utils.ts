@@ -4,6 +4,7 @@ import { IPlayer } from 'src/types/board.types';
 export const getActingPlayer = (): IPlayer => {
   const state = playersStore.getState();
   const user = state && state.find(v => v.isActing);
+
   return user;
 };
 

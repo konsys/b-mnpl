@@ -21,7 +21,8 @@ export class BoardMessage {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
       if (isFieldEmpty()) {
-        Action.buyFieldModalAction();
+        // Action.buyFieldModalAction();
+        Action.payTaxModalAction();
       } else if (isTax()) {
         Action.payTaxModalAction();
       } else {

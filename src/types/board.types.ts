@@ -23,17 +23,8 @@ export enum BoardActionType {
   ROLL_DICES = 'rollDices',
   CAN_BUY = 'canBuy',
   AUCTION_START = 'auctionStart',
-  AUCTION_ACCEPT = 'auctionAccept',
-  AUCTION_DECLINE = 'auctionDeclne',
   BUY = 'buy',
   PAY_RENT_START = 'payRentStart',
-  PAY_RENT_SUCCESS = 'payRentSuccess',
-  PAY_RENT_FAIL = 'payRentFail',
-  LEVEL_UP = 'levelUp',
-  LEVEL_DOWN = 'levelDown',
-  CONTRACT_ACCEPT = 'contractAccept',
-  CONTRACT_DECLINE = 'contractDeclinr',
-  MORTGAGE = 'mortgage',
   ROLL_DICES_MODAL = 'showDicesModal',
 }
 
@@ -43,32 +34,10 @@ export interface BoardAction {
   _id: string;
 }
 
-export interface Motrgage extends BoardAction {
-  type: BoardActionType.MORTGAGE;
-  field: BoardFieldsEntity;
-}
-
 export interface AuctionStart extends BoardAction {
   type: BoardActionType.AUCTION_START;
   field: BoardFieldsEntity;
 }
-export interface AuctionDecline extends BoardAction {
-  type: BoardActionType.AUCTION_DECLINE;
-  field: BoardFieldsEntity;
-}
-export interface AuctionAccept extends BoardAction {
-  type: BoardActionType.AUCTION_ACCEPT;
-  bet: number;
-}
-export interface LevelUp extends BoardAction {
-  type: BoardActionType.LEVEL_UP;
-  field: BoardFieldsEntity;
-}
-export interface LevelDown extends BoardAction {
-  type: BoardActionType.LEVEL_DOWN;
-  field: BoardFieldsEntity;
-}
-
 export interface PayRentStart extends BoardAction {
   type: BoardActionType.PAY_RENT_START;
   field: BoardFieldsEntity;
@@ -76,20 +45,6 @@ export interface PayRentStart extends BoardAction {
   toUserId: number;
   title: string;
   text: string;
-}
-
-export interface PayRentSuccess extends BoardAction {
-  type: BoardActionType.PAY_RENT_SUCCESS;
-  field: BoardFieldsEntity;
-  money: number;
-  toUserId: number;
-}
-
-export interface PayRentFail extends BoardAction {
-  type: BoardActionType.PAY_RENT_FAIL;
-  field: BoardFieldsEntity;
-  money: number;
-  toUserId: number;
 }
 
 export interface DicesModal extends BoardAction {
@@ -116,17 +71,7 @@ export interface CanBuyModal extends BoardAction {
 }
 
 export interface IBoardEvent {
-  action:
-    | Motrgage
-    | AuctionDecline
-    | AuctionAccept
-    | LevelUp
-    | LevelDown
-    | PayRentSuccess
-    | PayRentFail
-    | RollDices
-    | CanBuyModal
-    | DicesModal;
+  action: RollDices | CanBuyModal | DicesModal | PayRentStart;
 }
 
 interface BoardEventData {

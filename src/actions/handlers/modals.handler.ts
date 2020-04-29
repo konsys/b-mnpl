@@ -46,6 +46,7 @@ export const payModalHandler = (): PayRentStart => {
     text: 'Вы долюны заплатить по счетам',
     field: findFieldByPosition(user.meanPosition),
     money: user.money,
+
     // TODO доделать платеж игроку
     toUserId: 0,
     _id: action.actionId,

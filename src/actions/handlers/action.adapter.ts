@@ -1,5 +1,9 @@
 import { BoardActionType } from 'src/types/board.types';
-import { dicesModalHandler, buyModalHandler } from './modals.handler';
+import {
+  dicesModalHandler,
+  buyModalHandler,
+  payModalHandler,
+} from './modals.handler';
 import { rollDicesHandler } from './dices.handler';
 
 export const adaptAction = (type: BoardActionType) => {
@@ -14,6 +18,6 @@ export const adaptAction = (type: BoardActionType) => {
       return buyModalHandler();
 
     case BoardActionType.PAY_RENT_START:
-      return buyModalHandler();
+      return payModalHandler();
   }
 };

@@ -1,5 +1,5 @@
 import { fieldsStore } from 'src/stores/fields.store';
-import { IField } from 'src/types/board.types';
+import { IField, IPaymentTransaction } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
 import { FieldType } from 'src/entities/board.fields.entity';
 
@@ -16,6 +16,18 @@ export const isTax = (): boolean => {
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
   return field.type === FieldType.TAX || field.type === FieldType.CHANCE;
+};
+
+export const payTaxData = (): IPaymentTransaction => {
+  const user = getActingPlayer();
+  console.log('user', user);
+  const field = findFieldByPosition(user.meanPosition);
+  console.log('field', field);
+  return {
+    sum: field.price,
+    userId: user.userId,
+    toUserId: (field.owner && field.owner.userId) || 0,
+  };
 };
 
 export const isFieldEmpty = (): boolean => {

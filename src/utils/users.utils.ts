@@ -1,6 +1,10 @@
 import { playersStore, setPlayersEvent } from 'src/stores/players.store';
 import { IPlayer } from 'src/types/board.types';
 
+export const getPlayerById = (userId: number): IPlayer => {
+  return playersStore.getState().find(v => v.userId === userId);
+};
+
 export const getActingPlayer = (): IPlayer => {
   const state = playersStore.getState();
   const user = state && state.find(v => v.isActing);
@@ -23,7 +27,8 @@ export const updatePlayer = (player: IPlayer): boolean => {
   const playersState = playersStore.getState();
   const currentPLayerIndex = getPlayerIndexById(player.userId);
 
-  if (currentPLayerIndex === -1) return false;
+  // TODO error handler
+  if (currentPLayerIndex === -1) throw Error('Not found');
 
   playersState[currentPLayerIndex] = player;
 
@@ -33,4 +38,20 @@ export const updatePlayer = (player: IPlayer): boolean => {
 export const updateAllPLayers = (players: IPlayer[]): boolean => {
   setPlayersEvent(players);
   return true;
+};
+
+export const moneyTransaction = (
+  sum: number,
+  userId1: number,
+  userId2: number,
+): boolean => {
+  const player1 = getPlayerById(userId1);
+  const player2 = getPlayerById(userId2);
+  // TODO error handler
+  if (player1.money < sum) throw Error('No money');
+
+  return !player2
+    ? updatePlayer({ ...player1, money: player1.money + sum })
+    : updatePlayer({ ...player1, money: player1.money + sum }) &&
+        updatePlayer({ ...player2, money: player2.money - sum });
 };

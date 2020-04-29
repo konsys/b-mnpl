@@ -3,10 +3,16 @@ import { BoardActionType } from 'src/types/board.types';
 import { Socket } from 'socket.io';
 import { actionsStore } from 'src/stores/actions.store';
 import { IActionId } from 'src/types/board.types';
-import { isFieldEmpty, canBuyField, isTax } from 'src/utils/fields.utis.';
+import {
+  isFieldEmpty,
+  canBuyField,
+  isTax,
+  payTaxData,
+} from 'src/utils/fields.utis.';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
+import { moneyTransaction } from 'src/utils/users.utils';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -21,7 +27,9 @@ export class BoardMessage {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
       if (isFieldEmpty()) {
-        // Action.buyFieldModalAction();
+        Action.buyFieldModalAction();
+        // Action.payTaxModalAction();
+      } else if (!isFieldEmpty()) {
         Action.payTaxModalAction();
       } else if (isTax()) {
         Action.payTaxModalAction();
@@ -61,5 +69,16 @@ export class BoardMessage {
       Action.switchPlayerTurn();
       Action.rollDicesModalAction();
     }
+  }
+
+  @SubscribeMessage(BoardActionType.TAX_PAID)
+  async payment(client: Socket, payload: IActionId): Promise<void> {
+    console.log(33333333333);
+    const payData = payTaxData();
+    console.log(11111111111, payData);
+    isTax() && moneyTransaction(payData.sum, payData.userId, payData.toUserId);
+
+    Action.switchPlayerTurn();
+    Action.rollDicesModalAction();
   }
 }

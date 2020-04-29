@@ -24,7 +24,8 @@ export enum BoardActionType {
   CAN_BUY = 'canBuy',
   AUCTION_START = 'auctionStart',
   BUY = 'buy',
-  TAX_PAYING_MODAL = 'rentPainfStart',
+  TAX_PAYING_MODAL = 'taxPayingModal',
+  TAX_PAID = 'taxPaid',
   ROLL_DICES_MODAL = 'showDicesModal',
 }
 
@@ -154,4 +155,10 @@ export interface BoardMessage {
 
 export interface IField extends BoardFieldsEntity {
   owner?: IFieldStatus;
+}
+
+export interface IPaymentTransaction {
+  sum: number;
+  userId: number;
+  toUserId: number;
 }

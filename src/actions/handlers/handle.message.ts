@@ -29,7 +29,6 @@ export class BoardMessage {
     if (payload.actionId === action.actionId) {
       if (isFieldEmpty()) {
         Action.buyFieldModalAction();
-        // Action.payTaxModalAction();
       } else if (!isFieldEmpty() && !isMyField()) {
         Action.payTaxModalAction();
       } else if (isTax()) {

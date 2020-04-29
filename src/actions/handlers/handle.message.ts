@@ -76,7 +76,7 @@ export class BoardMessage {
   async payment(client: Socket, payload: IActionId): Promise<void> {
     const payData = payTaxData();
     console.log(11111111111, payData);
-    moneyTransaction(-payData.sum, payData.userId, payData.toUserId);
+    moneyTransaction(payData.sum, payData.userId, payData.toUserId);
 
     Action.switchPlayerTurn();
     Action.rollDicesModalAction();

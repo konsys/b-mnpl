@@ -19,10 +19,7 @@ export const findBoughtFields = () =>
     .filter(v => v.owner && v.owner.userId > 0)
     .map(v => v.owner);
 
-export const isTax = (): boolean => {
-  const field = getActingField();
-  return field.type === FieldType.TAX || field.type === FieldType.CHANCE;
-};
+export const isTax = (): boolean => getActingField().type === FieldType.TAX;
 
 export const isChance = (): boolean =>
   getActingField().type === FieldType.CHANCE;

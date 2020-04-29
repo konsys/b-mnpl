@@ -44,7 +44,7 @@ export const userChance = (sum: number): boolean => {
   const player = getActingPlayer();
   return updatePlayer({
     ...player,
-    money: player.money + sum > 0 ? sum : -sum,
+    money: player.money + (sum > 0 ? sum : -sum),
   });
 };
 

@@ -31,12 +31,18 @@ export class BoardMessage {
     if (payload.actionId === action.actionId) {
       if (isFieldEmpty()) {
         Action.buyFieldModalAction();
-      } else if (!isFieldEmpty() && !isMyField()) {
+      } else if (!isFieldEmpty() && !isMyField() && !isTax() && !isChance()) {
         Action.payTaxModalAction();
       } else if (isTax()) {
         Action.payTaxModalAction();
       } else if (isChance()) {
-        userChance(randChance());
+        const chanceSum = randChance();
+        console.log(1111111111, chanceSum);
+        chanceSum < 0 && Action.payTaxModalAction();
+        userChance(chanceSum);
+        // TODO оптимизировать
+        Action.switchPlayerTurn();
+        Action.rollDicesModalAction();
       } else {
         // TODO Добавить обработчики для остальных полей
         Action.switchPlayerTurn();
@@ -78,7 +84,6 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.TAX_PAID)
   async payment(client: Socket, payload: IActionId): Promise<void> {
     const payData = payTaxData();
-    console.log(11111111111, payData);
     moneyTransaction(payData.sum, payData.userId, payData.toUserId);
 
     Action.switchPlayerTurn();

@@ -24,7 +24,7 @@ export enum BoardActionType {
   CAN_BUY = 'canBuy',
   AUCTION_START = 'auctionStart',
   BUY = 'buy',
-  RENT_PAYING_START = 'rentPainfStart',
+  TAX_PAYING_MODAL = 'rentPainfStart',
   ROLL_DICES_MODAL = 'showDicesModal',
 }
 
@@ -39,7 +39,7 @@ export interface AuctionStart extends BoardAction {
   field: BoardFieldsEntity;
 }
 export interface PayRentStart extends BoardAction {
-  type: BoardActionType.RENT_PAYING_START;
+  type: BoardActionType.TAX_PAYING_MODAL;
   field: BoardFieldsEntity;
   money: number;
   toUserId: number;

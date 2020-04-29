@@ -40,7 +40,7 @@ export const payModalHandler = (): PayRentStart => {
 
   const action = actionsStore.getState();
   return {
-    type: BoardActionType.RENT_PAYING_START,
+    type: BoardActionType.TAX_PAYING_MODAL,
     userId: user.userId,
     title: 'Заплатить',
     text: 'Вы долюны заплатить по счетам',

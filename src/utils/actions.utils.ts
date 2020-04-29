@@ -61,7 +61,7 @@ export const payTaxModalAction = (): void => {
   const action = actionsStore.getState();
   const player = getActingPlayer();
   setCurrentActionsEvent({
-    action: BoardActionType.RENT_PAYING_START,
+    action: BoardActionType.TAX_PAYING_MODAL,
     userId: player.userId,
     actionId: nanoid(4),
     moveId: action.moveId + 1,

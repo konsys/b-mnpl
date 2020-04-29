@@ -6,6 +6,13 @@ import { FieldType } from 'src/entities/board.fields.entity';
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsStore.getState().find(v => v.fieldPosition === fieldPosition);
 
+export const getActingField = (): IField => {
+  const user = getActingPlayer();
+  const field = findFieldByPosition(user.meanPosition);
+  if (!field) throw Error('Field not found');
+  return field;
+};
+
 export const findBoughtFields = () =>
   fieldsStore
     .getState()
@@ -13,10 +20,12 @@ export const findBoughtFields = () =>
     .map(v => v.owner);
 
 export const isTax = (): boolean => {
-  const user = getActingPlayer();
-  const field = findFieldByPosition(user.meanPosition);
+  const field = getActingField();
   return field.type === FieldType.TAX || field.type === FieldType.CHANCE;
 };
+
+export const isChance = (): boolean =>
+  getActingField().type === FieldType.CHANCE;
 
 export const payTaxData = (): IPaymentTransaction => {
   const user = getActingPlayer();

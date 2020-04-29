@@ -40,6 +40,14 @@ export const updateAllPLayers = (players: IPlayer[]): boolean => {
   return true;
 };
 
+export const userChance = (sum: number): boolean => {
+  const player = getActingPlayer();
+  return updatePlayer({
+    ...player,
+    money: player.money + sum > 0 ? sum : -sum,
+  });
+};
+
 export const moneyTransaction = (
   sum: number,
   userId1: number,

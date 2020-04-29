@@ -9,11 +9,13 @@ import {
   isTax,
   payTaxData,
   isMyField,
+  isChance,
 } from 'src/utils/fields.utis.';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
-import { moneyTransaction } from 'src/utils/users.utils';
+import { moneyTransaction, userChance } from 'src/utils/users.utils';
+import { randChance } from 'src/utils/chance.utils';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -33,6 +35,8 @@ export class BoardMessage {
         Action.payTaxModalAction();
       } else if (isTax()) {
         Action.payTaxModalAction();
+      } else if (isChance()) {
+        userChance(randChance());
       } else {
         // TODO Добавить обработчики для остальных полей
         Action.switchPlayerTurn();

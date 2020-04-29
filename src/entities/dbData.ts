@@ -27,7 +27,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'tax_income',
     mnplSpecial: 1,
     level: 0,
-    price: -2000,
+    price: 2000,
     type: FieldType.TAX,
   },
 
@@ -363,7 +363,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplLine: 3,
     name: 'tax_luxury',
     level: 0,
-    price: -1000,
+    price: 1000,
     type: FieldType.TAX,
   },
   {

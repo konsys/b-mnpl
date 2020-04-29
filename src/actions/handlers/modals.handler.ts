@@ -37,14 +37,15 @@ export const buyModalHandler = (): CanBuyModal => {
 
 export const payModalHandler = (): PayRentStart => {
   const user = getActingPlayer();
+  const field = findFieldByPosition(user.meanPosition);
 
   const action = actionsStore.getState();
   return {
     type: BoardActionType.TAX_PAYING_MODAL,
     userId: user.userId,
     title: 'Заплатить',
-    text: 'Вы долюны заплатить по счетам',
-    field: findFieldByPosition(user.meanPosition),
+    text: `Вы долны заплатить ${field.price}k`,
+    field: field,
     money: user.money,
 
     // TODO доделать платеж игроку

@@ -8,6 +8,7 @@ import {
   canBuyField,
   isTax,
   payTaxData,
+  isMyField,
 } from 'src/utils/fields.utis.';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -29,7 +30,7 @@ export class BoardMessage {
       if (isFieldEmpty()) {
         Action.buyFieldModalAction();
         // Action.payTaxModalAction();
-      } else if (!isFieldEmpty()) {
+      } else if (!isFieldEmpty() && !isMyField()) {
         Action.payTaxModalAction();
       } else if (isTax()) {
         Action.payTaxModalAction();
@@ -73,10 +74,9 @@ export class BoardMessage {
 
   @SubscribeMessage(BoardActionType.TAX_PAID)
   async payment(client: Socket, payload: IActionId): Promise<void> {
-    console.log(33333333333);
     const payData = payTaxData();
     console.log(11111111111, payData);
-    isTax() && moneyTransaction(payData.sum, payData.userId, payData.toUserId);
+    moneyTransaction(-payData.sum, payData.userId, payData.toUserId);
 
     Action.switchPlayerTurn();
     Action.rollDicesModalAction();

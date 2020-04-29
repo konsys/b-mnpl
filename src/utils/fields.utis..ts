@@ -20,11 +20,9 @@ export const isTax = (): boolean => {
 
 export const payTaxData = (): IPaymentTransaction => {
   const user = getActingPlayer();
-  console.log('user', user);
   const field = findFieldByPosition(user.meanPosition);
-  console.log('field', field);
   return {
-    sum: field.price,
+    sum: -field.price,
     userId: user.userId,
     toUserId: (field.owner && field.owner.userId) || 0,
   };
@@ -34,6 +32,16 @@ export const isFieldEmpty = (): boolean => {
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
   return field.type === FieldType.COMPANY && !field.owner;
+};
+
+export const isMyField = (): boolean => {
+  const user = getActingPlayer();
+  const field = findFieldByPosition(user.meanPosition);
+  return (
+    field.type === FieldType.COMPANY &&
+    field.owner &&
+    field.owner.userId === user.userId
+  );
 };
 
 export const canBuyField = (): boolean => {

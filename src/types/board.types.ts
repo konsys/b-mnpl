@@ -158,7 +158,7 @@ export interface IField extends BoardFieldsEntity {
 }
 
 export interface IPaymentTransaction {
-  sum: number;
+  sum: number | null;
   userId: number;
   toUserId: number;
 }

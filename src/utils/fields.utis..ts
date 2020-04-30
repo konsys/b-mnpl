@@ -26,7 +26,7 @@ export const isChance = (): boolean =>
 
 export const payTaxData = (): IPaymentTransaction => {
   const user = getActingPlayer();
-  const field = findFieldByPosition(user.meanPosition);
+  const field = getActingField();
   return {
     sum: -field.price,
     userId: user.userId,
@@ -34,15 +34,23 @@ export const payTaxData = (): IPaymentTransaction => {
   };
 };
 
+export const noActionField = (): boolean => {
+  const field = getActingField();
+  return (
+    field.type === FieldType.TAKE_REST ||
+    field.type === FieldType.CASION ||
+    field.type === FieldType.START
+  );
+};
+
 export const isFieldEmpty = (): boolean => {
-  const user = getActingPlayer();
-  const field = findFieldByPosition(user.meanPosition);
+  const field = getActingField();
   return field.type === FieldType.COMPANY && !field.owner;
 };
 
 export const isMyField = (): boolean => {
   const user = getActingPlayer();
-  const field = findFieldByPosition(user.meanPosition);
+  const field = getActingField();
   return (
     field.type === FieldType.COMPANY &&
     field.owner &&

@@ -10,6 +10,7 @@ import {
   payTaxData,
   isMyField,
   isChance,
+  noActionField,
 } from 'src/utils/fields.utis.';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -29,7 +30,10 @@ export class BoardMessage {
   async dicesRolled(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
-      if (isFieldEmpty()) {
+      if (noActionField()) {
+        Action.switchPlayerTurn();
+        Action.rollDicesModalAction();
+      } else if (isFieldEmpty()) {
         Action.buyFieldModalAction();
       } else if (!isFieldEmpty() && !isMyField() && !isTax() && !isChance()) {
         Action.payTaxModalAction();
@@ -37,7 +41,6 @@ export class BoardMessage {
         Action.payTaxModalAction();
       } else if (isChance()) {
         const chanceSum = randChance();
-        console.log(1111111111, chanceSum);
         chanceSum < 0 && Action.payTaxModalAction();
         userChance(chanceSum);
         // TODO оптимизировать

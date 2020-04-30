@@ -35,6 +35,7 @@ export const buyFieldAction = (): void => {
     level: 0,
     mortgaged: false,
   };
+  field.price = Math.floor((field.price / 100 / 11) * 100);
   fields[fieldIndex] = field;
   setFieldsEvent(fields);
 

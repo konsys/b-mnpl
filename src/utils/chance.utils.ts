@@ -1,1 +1,1 @@
-export const randChance = () => 1000;
+export const randChance = () => 1111;

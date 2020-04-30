@@ -29,13 +29,15 @@ export const buyFieldAction = (): void => {
   const field = findFieldByPosition(user.meanPosition);
   const fieldIndex = getFieldIndex(field);
   const fields = fieldsStore.getState();
+  field.price = Math.floor(field.price / 110) * 10;
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,
     level: 0,
     mortgaged: false,
+    updatedPrice: field.price,
   };
-  field.price = Math.floor((field.price / 100 / 11) * 100);
+
   fields[fieldIndex] = field;
   setFieldsEvent(fields);
 
@@ -100,15 +102,24 @@ const getNextIndex = (index: number, array: any[]) =>
 export const switchPlayerTurn = (): void => {
   const players = playersStore.getState();
   const index = getActingPlayerIndex();
+  let player = getActingPlayer();
+  let nextIndex = index;
 
-  let nextIndex = getNextIndex(index, players);
-  let player = players[nextIndex];
-
-  while (player.movesLeft > 0) {
+  // Doubled dices and jail
+  if (player.movesLeft > 0) {
+    nextIndex = index;
+    player.movesLeft = --player.movesLeft;
+    player.doublesRolledAsCombo = ++player.doublesRolledAsCombo;
+    if (player.doublesRolledAsCombo >= 3) {
+      player.doublesRolledAsCombo = 0;
+      player.jailed = 3;
+      nextIndex = getNextIndex(index, players);
+    }
+    updatePlayer(player);
+  } else {
     nextIndex = getNextIndex(index, players);
-    player = players[nextIndex];
-    updatePlayer({ ...player, movesLeft: --player.movesLeft });
   }
+
   const res = players.map((v, k) => {
     if (k === nextIndex) {
       return { ...v, isActing: true };

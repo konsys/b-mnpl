@@ -23,7 +23,8 @@ export const rollDicesHandler = (): RollDices => {
 
   if (!dicesState || dicesState._id !== action.actionId) {
     const dice1 = random(0, 6);
-    const dice2 = random(0, 6);
+    // const dice2 = random(0, 6);
+    const dice2 = dice1;
     const dice3 = 0;
     const sum = dice1 + dice2 + dice3 + currenPosition;
     const meanPosition = sum < 40 ? sum : sum - 40;

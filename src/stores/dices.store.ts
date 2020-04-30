@@ -1,4 +1,5 @@
 import { GameDomain } from 'src/stores/actions.store';
+import { getActingPlayer, updatePlayer } from 'src/utils/users.utils';
 
 export interface IDicesStore {
   userId: number;
@@ -18,4 +19,7 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
   .on(setDicesEvent, (_, data) => data)
   .reset(resetDicesEvent);
 
-// dicesStore.watch(v => console.log('dicesStoreWatch', v));
+dicesStore.updates.watch(v => {
+  const player = getActingPlayer();
+  v && v.isDouble && updatePlayer({ ...player, movesLeft: ++player.movesLeft });
+});

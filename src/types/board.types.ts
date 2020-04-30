@@ -94,7 +94,6 @@ export interface IPlayer extends UsersEntity {
   creditPayRound: boolean;
   creditNextTakeRound: number;
   score: number;
-  frags: string;
   additionalTime: number;
   timeReduceLevel: number;
   creditToPay: number;
@@ -132,6 +131,7 @@ export interface IFieldStatus {
   userId: number;
   level: number;
   mortgaged: boolean;
+  updatedPrice: number;
 }
 
 interface BoardTimers {

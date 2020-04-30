@@ -10,6 +10,7 @@ import {
   updatePlayer,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
+import { JAIL_TURNS, JAIL_POSITION } from './board.params.util';
 
 export const buyFieldModalAction = (): void => {
   const player = getActingPlayer();
@@ -109,12 +110,6 @@ export const switchPlayerTurn = (): void => {
   if (player.movesLeft > 0) {
     nextIndex = index;
     player.movesLeft = --player.movesLeft;
-    player.doublesRolledAsCombo = ++player.doublesRolledAsCombo;
-    if (player.doublesRolledAsCombo >= 3) {
-      player.doublesRolledAsCombo = 0;
-      player.jailed = 3;
-      nextIndex = getNextIndex(index, players);
-    }
     updatePlayer(player);
   } else {
     nextIndex = getNextIndex(index, players);

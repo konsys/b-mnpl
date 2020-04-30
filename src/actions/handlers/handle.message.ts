@@ -15,8 +15,13 @@ import {
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
-import { moneyTransaction, userChance } from 'src/utils/users.utils';
+import {
+  moneyTransaction,
+  userChance,
+  getActingPlayer,
+} from 'src/utils/users.utils';
 import { randChance } from 'src/utils/chance.utils';
+import { playersStore } from 'src/stores/players.store';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -29,27 +34,34 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.ROLL_DICES)
   async dicesRolled(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
+    const player = getActingPlayer();
+
     if (payload.actionId === action.actionId) {
-      if (noActionField()) {
-        Action.switchPlayerTurn();
-        Action.rollDicesModalAction();
-      } else if (isFieldEmpty()) {
-        Action.buyFieldModalAction();
-      } else if (!isFieldEmpty() && !isMyField() && !isTax() && !isChance()) {
-        Action.payTaxModalAction();
-      } else if (isTax()) {
-        Action.payTaxModalAction();
-      } else if (isChance()) {
-        const chanceSum = randChance();
-        chanceSum < 0 && Action.payTaxModalAction();
-        userChance(chanceSum);
-        // TODO оптимизировать
-        Action.switchPlayerTurn();
-        Action.rollDicesModalAction();
+      console.log(1111111, player.jailed);
+      if (!player.jailed) {
+        if (noActionField()) {
+          Action.switchPlayerTurn();
+          Action.rollDicesModalAction();
+        } else if (isFieldEmpty()) {
+          Action.buyFieldModalAction();
+        } else if (!isFieldEmpty() && !isMyField() && !isTax() && !isChance()) {
+          Action.payTaxModalAction();
+        } else if (isTax()) {
+          Action.payTaxModalAction();
+        } else if (isChance()) {
+          const chanceSum = randChance();
+          chanceSum < 0 && Action.payTaxModalAction();
+          userChance(chanceSum);
+          // TODO оптимизировать
+          Action.switchPlayerTurn();
+          Action.rollDicesModalAction();
+        } else {
+          // TODO Добавить обработчики для остальных полей
+          Action.switchPlayerTurn();
+          Action.rollDicesModalAction();
+        }
       } else {
-        // TODO Добавить обработчики для остальных полей
         Action.switchPlayerTurn();
-        Action.rollDicesModalAction();
       }
     }
   }

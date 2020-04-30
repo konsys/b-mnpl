@@ -43,6 +43,7 @@ dicesStore.updates.watch(v => {
     if (doublesRolledAsCombo > JAIL_TURNS) {
       jailed = 3;
       doublesRolledAsCombo = 0;
+      movesLeft = 0;
     }
 
     updatePlayer({

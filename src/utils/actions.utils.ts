@@ -10,7 +10,6 @@ import {
   updatePlayer,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
-import { JAIL_TURNS, JAIL_POSITION } from './board.params.util';
 
 export const buyFieldModalAction = (): void => {
   const player = getActingPlayer();

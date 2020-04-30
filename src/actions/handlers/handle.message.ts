@@ -21,7 +21,6 @@ import {
   getActingPlayer,
 } from 'src/utils/users.utils';
 import { randChance } from 'src/utils/chance.utils';
-import { playersStore } from 'src/stores/players.store';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -37,7 +36,6 @@ export class BoardMessage {
     const player = getActingPlayer();
 
     if (payload.actionId === action.actionId) {
-      console.log(1111111, player.jailed);
       if (!player.jailed) {
         if (noActionField()) {
           Action.switchPlayerTurn();
@@ -62,6 +60,7 @@ export class BoardMessage {
         }
       } else {
         Action.switchPlayerTurn();
+        Action.rollDicesModalAction();
       }
     }
   }

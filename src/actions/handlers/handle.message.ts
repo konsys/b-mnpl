@@ -39,7 +39,6 @@ export class BoardMessage {
       if (!player.jailed) {
         if (noActionField()) {
           Action.switchPlayerTurn();
-          Action.rollDicesModalAction();
         } else if (isFieldEmpty()) {
           Action.buyFieldModalAction();
         } else if (!isFieldEmpty() && !isMyField() && !isTax() && !isChance()) {
@@ -50,17 +49,13 @@ export class BoardMessage {
           const chanceSum = randChance();
           chanceSum < 0 && Action.payTaxModalAction();
           userChance(chanceSum);
-          // TODO оптимизировать
           Action.switchPlayerTurn();
-          Action.rollDicesModalAction();
         } else {
           // TODO Добавить обработчики для остальных полей
           Action.switchPlayerTurn();
-          Action.rollDicesModalAction();
         }
       } else {
         Action.switchPlayerTurn();
-        Action.rollDicesModalAction();
       }
     }
   }
@@ -69,7 +64,6 @@ export class BoardMessage {
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     if (isFieldEmpty() && canBuyField()) {
       Action.buyFieldAction();
-      Action.rollDicesModalAction();
     } else {
       !isFieldEmpty() &&
         setError({
@@ -91,7 +85,6 @@ export class BoardMessage {
     if (payload.actionId === action.actionId) {
       Action.startAuctionAction();
       Action.switchPlayerTurn();
-      Action.rollDicesModalAction();
     }
   }
 
@@ -101,6 +94,5 @@ export class BoardMessage {
     moneyTransaction(payData.sum, payData.userId, payData.toUserId);
 
     Action.switchPlayerTurn();
-    Action.rollDicesModalAction();
   }
 }

@@ -24,7 +24,10 @@ export const rollDicesHandler = (): RollDices => {
   if (!dicesState || dicesState._id !== action.actionId) {
     const dice1 = random(0, 6);
     // const dice2 = random(0, 6);
-    const dice2 = dice1;
+    let dice2 = dice1;
+    if (player.userId === 3) {
+      dice2 = random(0, 6);
+    }
     const dice3 = 0;
     const sum = dice1 + dice2 + dice3 + currenPosition;
     const meanPosition = sum < 40 ? sum : sum - 40;
@@ -38,15 +41,6 @@ export const rollDicesHandler = (): RollDices => {
       isDouble: dice1 === dice2,
       isTriple: dice1 === dice2 && dice2 === dice3,
     });
-    const players = playersStore.getState();
-
-    /**
-     * Set Position to player store
-     */
-    const actIndex = getActingPlayerIndex();
-    players[actIndex].prevPosition = players[actIndex].meanPosition;
-    players[actIndex].meanPosition = meanPosition;
-    updateAllPLayers(players);
   }
 
   return {

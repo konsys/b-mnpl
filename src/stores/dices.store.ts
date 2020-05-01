@@ -1,6 +1,6 @@
 import { GameDomain } from 'src/stores/actions.store';
 import { getActingPlayer, updatePlayer } from 'src/utils/users.utils';
-import { JAIL_TURNS } from 'src/utils/board.params.util';
+import { JAIL_TURNS, JAIL_POSITION } from 'src/utils/board.params.util';
 
 export interface IDicesStore {
   userId: number;
@@ -27,8 +27,11 @@ dicesStore.updates.watch(v => {
 
     let jailed = 0;
     let movesLeft = 0;
+    let meanPosition = v.meanPosition;
+    let prevPosition = player.meanPosition;
     let doublesRolledAsCombo = player.doublesRolledAsCombo;
 
+    player.prevPosition = meanPosition;
     if (v.isDouble) {
       doublesRolledAsCombo++;
       movesLeft++;
@@ -41,9 +44,10 @@ dicesStore.updates.watch(v => {
     }
 
     if (doublesRolledAsCombo > JAIL_TURNS) {
-      jailed = 3;
+      jailed = JAIL_TURNS;
       doublesRolledAsCombo = 0;
       movesLeft = 0;
+      prevPosition = JAIL_POSITION;
     }
 
     updatePlayer({
@@ -51,6 +55,8 @@ dicesStore.updates.watch(v => {
       movesLeft,
       doublesRolledAsCombo,
       jailed,
+      meanPosition,
+      prevPosition,
     });
   }
 });

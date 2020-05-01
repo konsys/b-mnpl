@@ -122,4 +122,5 @@ export const switchPlayerTurn = (): void => {
     }
   });
   updateAllPLayers(res);
+  rollDicesModalAction();
 };

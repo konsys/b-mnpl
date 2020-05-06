@@ -1,5 +1,5 @@
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
-import { BoardActionType } from 'src/types/board.types';
+import { BoardActionType, IPlayer } from 'src/types/board.types';
 import nanoid from 'nanoid';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { getFieldIndex, findFieldByPosition } from './fields.utis.';
@@ -10,6 +10,7 @@ import {
   updatePlayer,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
+import { unJailModalHandler } from 'src/actions/handlers/modals.handler';
 
 export const buyFieldModalAction = (): void => {
   const player = getActingPlayer();
@@ -102,7 +103,7 @@ export const startAuctionAction = (): void => {
 export const getNextArrayIndex = (index: number, array: any[]) =>
   index < array.length - 1 ? index + 1 : 0;
 
-export const switchPlayerTurn = (): void => {
+export const switchPlayerTurn = (unJail: boolean = false): void => {
   const players = playersStore.getState();
   const index = getActingPlayerIndex();
   let player = getActingPlayer();
@@ -113,13 +114,20 @@ export const switchPlayerTurn = (): void => {
     nextIndex = index;
     player.movesLeft = --player.movesLeft;
     updatePlayer(player);
-  } else {
+  } else if (!unJail) {
     nextIndex = getNextArrayIndex(index, players);
   }
 
-  const res = players.map((v, k) =>
-    k === nextIndex ? { ...v, isActing: true } : { ...v, isActing: false },
-  );
+  const res = players.map((v, k) => {
+    if (k === nextIndex) {
+      if (unJail) {
+        v.jailed = 0;
+      }
+      return { ...v, isActing: true };
+    } else {
+      return { ...v, isActing: false };
+    }
+  });
 
   updateAllPLayers(res);
   player = getActingPlayer();

@@ -19,6 +19,7 @@ import {
   moneyTransaction,
   userChance,
   getActingPlayer,
+  unJailPlayer,
 } from 'src/utils/users.utils';
 import { randChance } from 'src/utils/chance.utils';
 
@@ -94,5 +95,11 @@ export class BoardMessage {
     moneyTransaction(payData.sum, payData.userId, payData.toUserId);
 
     Action.switchPlayerTurn();
+  }
+
+  @SubscribeMessage(BoardActionType.UN_JAIL_PAID)
+  async unjailPayment(client: Socket, payload: IActionId): Promise<void> {
+    unJailPlayer();
+    Action.switchPlayerTurn(true);
   }
 }

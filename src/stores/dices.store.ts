@@ -30,6 +30,7 @@ dicesStore.updates.watch(v => {
     let meanPosition = v.meanPosition;
     let prevPosition = player.meanPosition;
     let doublesRolledAsCombo = player.doublesRolledAsCombo;
+    let unjailAttempts = player.unjailAttempts;
 
     player.prevPosition = meanPosition;
     if (v.isDouble) {
@@ -45,6 +46,7 @@ dicesStore.updates.watch(v => {
 
     if (doublesRolledAsCombo > JAIL_TURNS) {
       jailed = JAIL_TURNS;
+      unjailAttempts = JAIL_TURNS;
       doublesRolledAsCombo = 0;
       movesLeft = 0;
       meanPosition = JAIL_POSITION + 1;
@@ -55,6 +57,7 @@ dicesStore.updates.watch(v => {
       movesLeft,
       doublesRolledAsCombo,
       jailed,
+      unjailAttempts,
       meanPosition,
       prevPosition,
     });

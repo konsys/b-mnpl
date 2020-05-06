@@ -22,6 +22,7 @@ import { setCurrentActionsEvent } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import { updateAllPLayers } from 'src/utils/users.utils';
+import { updateAllFields } from 'src/utils/fields.utis.';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -99,8 +100,8 @@ export class BoardSocketInit
       }
 
       updateAllPLayers(resultPlayers);
-      setFieldsEvent(await this.fieldsService.getInitialFields());
-
+      const fields = await this.fieldsService.getInitialFields();
+      updateAllFields(fields);
       errorStore.updates.watch(error => this.emitError(error));
     } catch (err) {
       this.logger.error(`Error: ${JSON.stringify(err)}`);

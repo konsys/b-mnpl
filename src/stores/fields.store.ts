@@ -5,9 +5,16 @@ import { IField } from 'src/types/board.types';
 const FieldsDomain = GameDomain.domain('FieldsDomain');
 export const resetFieldsEvent = FieldsDomain.event();
 
-export const setFieldsEvent = FieldsDomain.event<IField[] | null>();
+export interface IFieldsStore {
+  version: number;
+  fields: IField[];
+}
+export const setFieldsEvent = FieldsDomain.event<IFieldsStore>();
 
-export const fieldsStore = FieldsDomain.store<IField[] | null>(null)
+export const fieldsStore = FieldsDomain.store<IFieldsStore>({
+  version: 0,
+  fields: [],
+})
   .on(setFieldsEvent, (_, data) => data)
   .reset(resetFieldsEvent);
 

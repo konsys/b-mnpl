@@ -1,10 +1,10 @@
-import { fieldsStore } from 'src/stores/fields.store';
+import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { IField, IPaymentTransaction } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
 import { FieldType } from 'src/entities/board.fields.entity';
 
 export const findFieldByPosition = (fieldPosition: number) =>
-  fieldsStore.getState().find(v => v.fieldPosition === fieldPosition);
+  fieldsStore.getState().fields.find(v => v.fieldPosition === fieldPosition);
 
 export const getActingField = (): IField => {
   const user = getActingPlayer();
@@ -16,7 +16,7 @@ export const getActingField = (): IField => {
 export const findBoughtFields = () =>
   fieldsStore
     .getState()
-    .filter(v => v.owner && v.owner.userId > 0)
+    .fields.filter(v => v.owner && v.owner.userId > 0)
     .map(v => v.owner);
 
 export const isTax = (): boolean => getActingField().type === FieldType.TAX;
@@ -65,4 +65,12 @@ export const canBuyField = (): boolean => {
 };
 
 export const getFieldIndex = (field: IField): number =>
-  fieldsStore.getState().findIndex(v => v.fieldId === field.fieldId);
+  fieldsStore.getState().fields.findIndex(v => v.fieldId === field.fieldId);
+
+export const updateAllFields = (fields: IField[]) => {
+  const version = fieldsStore.getState().version + 1;
+  setFieldsEvent({
+    version,
+    fields,
+  });
+};

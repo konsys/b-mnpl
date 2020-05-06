@@ -29,7 +29,8 @@ export const buyFieldAction = (): void => {
   const field = findFieldByPosition(user.meanPosition);
   const fieldIndex = getFieldIndex(field);
   const fields = fieldsStore.getState();
-  field.price = Math.floor(field.price / 110) * 10;
+  const price = field.price;
+  field.price = Math.floor(price / 110) * 10;
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,
@@ -44,7 +45,7 @@ export const buyFieldAction = (): void => {
   // Decrease player`s money
   const players = playersStore.getState();
   const playerIndex = players.findIndex(v => v.userId === user.userId);
-  players[playerIndex] = { ...user, money: user.money - field.price };
+  players[playerIndex] = { ...user, money: user.money - price };
   updateAllPLayers(players);
 };
 

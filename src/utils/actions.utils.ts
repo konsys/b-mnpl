@@ -49,49 +49,52 @@ export const buyFieldAction = (): void => {
 };
 
 export const rollDicesModalAction = (): void => {
-  const action = actionsStore.getState();
-  const player = getActingPlayer();
   setCurrentActionsEvent({
     action: BoardActionType.ROLL_DICES_MODAL,
-    userId: player.userId,
+    userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    moveId: action.moveId + 1,
+    moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'rollDicesModalAction',
   });
 };
 
+export const unJailModalAction = (): void => {
+  console.log(2222222222222, 'unjail');
+  setCurrentActionsEvent({
+    action: BoardActionType.UN_JAIL_MODAL,
+    userId: getActingPlayer().userId,
+    actionId: nanoid(4),
+    moveId: actionsStore.getState().moveId + 1,
+    srcOfChange: 'unJailModalAction',
+  });
+};
+
 export const payTaxModalAction = (): void => {
-  const action = actionsStore.getState();
-  const player = getActingPlayer();
   setCurrentActionsEvent({
     action: BoardActionType.TAX_PAYING_MODAL,
-    userId: player.userId,
+    userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    moveId: action.moveId + 1,
+    moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'payTaxModalAction',
   });
 };
 
 export const rollDicesAction = (): void => {
-  const action = actionsStore.getState();
-  const player = getActingPlayer();
   setCurrentActionsEvent({
     action: BoardActionType.ROLL_DICES,
-    userId: player.userId,
+    userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    moveId: action.moveId + 1,
+    moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'rollDicesAction',
   });
 };
 
 export const startAuctionAction = (): void => {
-  const action = actionsStore.getState();
-  const player = getActingPlayer();
   setCurrentActionsEvent({
     action: BoardActionType.AUCTION_START,
-    userId: player.userId,
+    userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    moveId: action.moveId + 1,
+    moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'startAuctionAction',
   });
 };
@@ -114,13 +117,11 @@ export const switchPlayerTurn = (): void => {
     nextIndex = getNextIndex(index, players);
   }
 
-  const res = players.map((v, k) => {
-    if (k === nextIndex) {
-      return { ...v, isActing: true };
-    } else {
-      return { ...v, isActing: false };
-    }
-  });
+  const res = players.map((v, k) =>
+    k === nextIndex ? { ...v, isActing: true } : { ...v, isActing: false },
+  );
+
   updateAllPLayers(res);
-  rollDicesModalAction();
+  player = getActingPlayer();
+  !player.jailed ? rollDicesModalAction() : rollDicesModalAction();
 };

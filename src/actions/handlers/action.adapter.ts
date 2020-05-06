@@ -3,6 +3,7 @@ import {
   dicesModalHandler,
   buyModalHandler,
   payModalHandler,
+  unJailModalHandler,
 } from './modals.handler';
 import { rollDicesHandler } from './dices.handler';
 
@@ -19,5 +20,8 @@ export const adaptAction = (type: BoardActionType) => {
 
     case BoardActionType.TAX_PAYING_MODAL:
       return payModalHandler();
+
+    case BoardActionType.UN_JAIL_MODAL:
+      return unJailModalHandler();
   }
 };

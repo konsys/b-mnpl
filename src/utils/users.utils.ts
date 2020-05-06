@@ -32,7 +32,6 @@ export const updatePlayer = (player: IPlayer): boolean => {
 
   playersState[currentPLayerIndex] = player;
 
-  console.log(1111111, player);
   return updateAllPLayers(playersState);
 };
 

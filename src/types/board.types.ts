@@ -27,6 +27,7 @@ export enum BoardActionType {
   TAX_PAYING_MODAL = 'taxPayingModal',
   TAX_PAID = 'taxPaid',
   ROLL_DICES_MODAL = 'showDicesModal',
+  UN_JAIL_MODAL = 'unJailModal',
 }
 
 export interface BoardAction {
@@ -50,7 +51,12 @@ export interface PayRentStart extends BoardAction {
 
 export interface DicesModal extends BoardAction {
   type: BoardActionType.ROLL_DICES_MODAL;
-  userId: number;
+  title: string;
+  text: string;
+}
+
+export interface UnJailModal extends BoardAction {
+  type: BoardActionType.UN_JAIL_MODAL;
   title: string;
   text: string;
 }
@@ -72,7 +78,7 @@ export interface CanBuyModal extends BoardAction {
 }
 
 export interface IBoardEvent {
-  action: RollDices | CanBuyModal | DicesModal | PayRentStart;
+  action: RollDices | CanBuyModal | DicesModal | PayRentStart | UnJailModal;
 }
 
 interface BoardEventData {

@@ -3,27 +3,31 @@ import {
   BoardActionType,
   CanBuyModal,
   PayRentStart,
+  UnJailModal,
 } from 'src/types/board.types';
 import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
 import { findFieldByPosition } from 'src/utils/fields.utis.';
 
-export const dicesModalHandler = (): DicesModal => {
-  const user = getActingPlayer();
-  const action = actionsStore.getState();
-  return {
-    type: BoardActionType.ROLL_DICES_MODAL,
-    userId: user.userId,
-    title: 'Кидайте кубики',
-    text: 'Мы болеем за вас',
-    _id: action.actionId,
-  };
-};
+export const dicesModalHandler = (): DicesModal => ({
+  type: BoardActionType.ROLL_DICES_MODAL,
+  userId: getActingPlayer().userId,
+  title: 'Кидайте кубики',
+  text: 'Мы болеем за вас',
+  _id: actionsStore.getState().actionId,
+});
+
+export const unJailModalHandler = (): UnJailModal => ({
+  type: BoardActionType.UN_JAIL_MODAL,
+  userId: getActingPlayer().userId,
+  title: 'Выйти из тюрьмы',
+  text: 'Можете выйти, заплатив залог или кинуть кубики на удачу',
+  _id: actionsStore.getState().actionId,
+});
 
 export const buyModalHandler = (): CanBuyModal => {
   const user = getActingPlayer();
 
-  const action = actionsStore.getState();
   return {
     type: BoardActionType.CAN_BUY,
     userId: user.userId,
@@ -31,7 +35,7 @@ export const buyModalHandler = (): CanBuyModal => {
     text: 'Вы можете купить поле или поставить его на аукцион',
     field: findFieldByPosition(user.meanPosition),
     money: user.money,
-    _id: action.actionId,
+    _id: actionsStore.getState().actionId,
   };
 };
 
@@ -44,7 +48,7 @@ export const payModalHandler = (): PayRentStart => {
     type: BoardActionType.TAX_PAYING_MODAL,
     userId: user.userId,
     title: 'Заплатить',
-    text: `Вы долны заплатить ${field.price}k`,
+    text: `Вы должны заплатить ${field.price}k`,
     field: field,
     money: user.money,
 

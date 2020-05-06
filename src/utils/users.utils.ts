@@ -3,25 +3,34 @@ import { IPlayer } from 'src/types/board.types';
 import { JAIL_POSITION } from './board.params.util';
 
 export const getPlayerById = (userId: number): IPlayer => {
-  return playersStore.getState().find(v => v.userId === userId);
+  return playersStore.getState().players.find(v => v.userId === userId);
 };
 
 export const getActingPlayer = (): IPlayer => {
   const state = playersStore.getState();
-  const user = state && state.find(v => v.isActing);
-
+  const user =
+    state.players &&
+    state.players.length &&
+    state.players.find(v => v.isActing);
   return user;
 };
 
 export const getActingPlayerIndex = (): number => {
   const state = playersStore.getState();
-  const index = state && state.findIndex(v => v.isActing);
+  const index =
+    state.players &&
+    state.players.length &&
+    state.players.findIndex(v => v.isActing);
   return index;
 };
 
 export const getPlayerIndexById = (userId: number) => {
-  const pStore = playersStore.getState();
-  return pStore.findIndex(v => v.userId === userId);
+  const state = playersStore.getState();
+  return (
+    state.players &&
+    state.players.length &&
+    state.players.findIndex(v => v.userId === userId)
+  );
 };
 
 export const updatePlayer = (player: IPlayer): boolean => {
@@ -31,13 +40,17 @@ export const updatePlayer = (player: IPlayer): boolean => {
   // TODO error handler
   if (currentPLayerIndex === -1) throw Error('Not found');
 
-  playersState[currentPLayerIndex] = player;
+  playersState.players[currentPLayerIndex] = player;
 
-  return updateAllPLayers(playersState);
+  return updateAllPLayers(playersState.players);
 };
 
 export const updateAllPLayers = (players: IPlayer[]): boolean => {
-  setPlayersEvent(players);
+  let version = playersStore.getState().version;
+  setPlayersEvent({
+    version: ++version,
+    players,
+  });
   return true;
 };
 

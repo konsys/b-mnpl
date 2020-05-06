@@ -10,7 +10,7 @@ export class UsersController {
 
   @Get()
   async get(): Promise<UsersEntity[]> {
-    const players = playersStore.getState();
+    const players = playersStore.getState().players;
     return Promise.resolve(players);
   }
 }

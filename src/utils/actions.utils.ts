@@ -44,7 +44,7 @@ export const buyFieldAction = (): void => {
   setFieldsEvent(fields);
 
   // Decrease player`s money
-  const players = playersStore.getState();
+  const players = playersStore.getState().players;
   const playerIndex = players.findIndex(v => v.userId === user.userId);
   players[playerIndex] = { ...user, money: user.money - price };
   updateAllPLayers(players);
@@ -104,7 +104,7 @@ export const getNextArrayIndex = (index: number, array: any[]) =>
   index < array.length - 1 ? index + 1 : 0;
 
 export const switchPlayerTurn = (unJail: boolean = false): void => {
-  const players = playersStore.getState();
+  const players = playersStore.getState().players;
   const index = getActingPlayerIndex();
   let player = getActingPlayer();
   let nextIndex = index;

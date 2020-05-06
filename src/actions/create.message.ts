@@ -11,14 +11,14 @@ export const createBoardMessage = (): BoardMessage => {
     // Adapt from actionStore
     action: actionState && adaptAction(actionState.action),
   };
-  let players = playersStore.getState();
+  const players = playersStore.getState();
   return {
     code: 0,
     data: {
       id: actionState.moveId,
       event,
       boardStatus: {
-        players,
+        players: players.players,
         fields: findBoughtFields(),
       },
     },

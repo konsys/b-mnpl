@@ -55,6 +55,7 @@ export class BoardMessage {
           Action.switchPlayerTurn();
         }
       } else {
+        Action.rollDicesModalAction();
         Action.switchPlayerTurn();
       }
     }

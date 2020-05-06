@@ -47,8 +47,7 @@ dicesStore.updates.watch(v => {
       jailed = JAIL_TURNS;
       doublesRolledAsCombo = 0;
       movesLeft = 0;
-      // prevPosition = JAIL_POSITION - 1;
-      meanPosition = JAIL_POSITION;
+      meanPosition = JAIL_POSITION + 1;
     }
 
     updatePlayer({

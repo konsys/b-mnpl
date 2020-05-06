@@ -124,5 +124,5 @@ export const switchPlayerTurn = (): void => {
 
   updateAllPLayers(res);
   player = getActingPlayer();
-  !player.jailed ? rollDicesModalAction() : rollDicesModalAction();
+  rollDicesModalAction();
 };

@@ -60,7 +60,6 @@ export const rollDicesModalAction = (): void => {
 };
 
 export const unJailModalAction = (): void => {
-  console.log(2222222222222, 'unjail');
   setCurrentActionsEvent({
     action: BoardActionType.UN_JAIL_MODAL,
     userId: getActingPlayer().userId,
@@ -100,7 +99,7 @@ export const startAuctionAction = (): void => {
   });
 };
 
-const getNextIndex = (index: number, array: any[]) =>
+export const getNextArrayIndex = (index: number, array: any[]) =>
   index < array.length - 1 ? index + 1 : 0;
 
 export const switchPlayerTurn = (): void => {
@@ -115,7 +114,7 @@ export const switchPlayerTurn = (): void => {
     player.movesLeft = --player.movesLeft;
     updatePlayer(player);
   } else {
-    nextIndex = getNextIndex(index, players);
+    nextIndex = getNextArrayIndex(index, players);
   }
 
   const res = players.map((v, k) =>
@@ -124,5 +123,5 @@ export const switchPlayerTurn = (): void => {
 
   updateAllPLayers(res);
   player = getActingPlayer();
-  rollDicesModalAction();
+  player.jailed ? unJailModalAction() : rollDicesModalAction();
 };

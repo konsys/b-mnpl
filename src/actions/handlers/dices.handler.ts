@@ -3,13 +3,7 @@ import { random } from 'src/lib/utils';
 import { dicesStore, setDicesEvent } from 'src/stores/dices.store';
 import { IDicesStore } from 'src/stores/dices.store';
 import { actionsStore } from 'src/stores/actions.store';
-import {
-  getActingPlayer,
-  getActingPlayerIndex,
-  updateAllPLayers,
-} from 'src/utils/users.utils';
-import { playersStore } from 'src/stores/players.store';
-
+import { getActingPlayer } from 'src/utils/users.utils';
 export const rollDicesHandler = (): RollDices => {
   let dicesState: IDicesStore = null;
   dicesStore.watch(v => {
@@ -22,9 +16,9 @@ export const rollDicesHandler = (): RollDices => {
   const currenPosition = player.meanPosition;
 
   if (!dicesState || dicesState._id !== action.actionId) {
-    const dice1 = random(0, 6);
+    const dice1 = 2;
     // const dice2 = random(0, 6);
-    let dice2 = dice1;
+    let dice2 = 3;
     if (player.userId === 3) {
       dice2 = random(0, 6);
     }
@@ -39,7 +33,8 @@ export const rollDicesHandler = (): RollDices => {
       sum,
       meanPosition,
       isDouble: dice1 === dice2,
-      isTriple: dice1 === dice2 && dice2 === dice3,
+      // isTriple: dice1 === dice2 && dice2 === dice3,
+      isTriple: false,
     });
   }
 

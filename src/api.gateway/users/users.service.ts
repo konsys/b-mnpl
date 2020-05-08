@@ -14,7 +14,7 @@ export class UsersService {
   async getAllUsers(filter?: FindManyOptions) {
     try {
       const res = await this.usersClient
-        .send<any>({ cmd: MsPatterns.getAllUsers }, filter || { take: 2 })
+        .send<any>({ cmd: MsPatterns.getAllUsers }, filter || { take: 1 })
         .toPromise();
 
       return res;

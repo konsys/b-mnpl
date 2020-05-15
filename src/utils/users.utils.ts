@@ -80,8 +80,6 @@ export const moneyTransaction = (
 
 export const unJailPlayer = () => {
   const player = getActingPlayer();
-
-  console.log(2222, player, JAIL_POSITION);
   return updatePlayer({
     ...player,
     money: player.money - UN_JAIL_PRICE,

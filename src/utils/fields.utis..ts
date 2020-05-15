@@ -67,6 +67,12 @@ export const canBuyField = (): boolean => {
 export const getFieldIndex = (field: IField): number =>
   fieldsStore.getState().fields.findIndex(v => v.fieldId === field.fieldId);
 
+export const updateField = (field: IField) => {
+  const fields = fieldsStore.getState().fields;
+  fields[getFieldIndex(field)] = field;
+  updateAllFields(fields);
+};
+
 export const updateAllFields = (fields: IField[]) => {
   const version = fieldsStore.getState().version + 1;
   setFieldsEvent({

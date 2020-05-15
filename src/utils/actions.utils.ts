@@ -2,7 +2,11 @@ import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import { BoardActionType, FieldType } from 'src/types/board.types';
 import nanoid from 'nanoid';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
-import { getFieldIndex, findFieldByPosition } from './fields.utis.';
+import {
+  getFieldIndex,
+  findFieldByPosition,
+  updateAllFields,
+} from './fields.utis.';
 import {
   getActingPlayer,
   getActingPlayerIndex,
@@ -29,7 +33,7 @@ export const buyFieldAction = (): void => {
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
   const fieldIndex = getFieldIndex(field);
-  const fieldsState = fieldsStore.getState();
+  const fieldsState = fieldsStore.getState().fields;
   const price = field.price;
 
   field.price =
@@ -37,7 +41,7 @@ export const buyFieldAction = (): void => {
       ? getPercentPart(price, ONE_AUTO_PERCENT)
       : getPercentPart(price, ONE_FIELD_PERCENT);
 
-  const sameGroupFieilds = fieldsState.fields.filter(
+  const sameGroupFieilds = fieldsState.filter(
     v => v.fieldGroup === field.fieldGroup,
   );
 
@@ -50,7 +54,7 @@ export const buyFieldAction = (): void => {
   };
 
   fieldsState[fieldIndex] = field;
-  setFieldsEvent(fieldsState);
+  updateAllFields(fieldsState);
 
   // Decrease player`s money
   const players = playersStore.getState().players;

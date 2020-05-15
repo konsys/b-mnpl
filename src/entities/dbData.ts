@@ -60,6 +60,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'mercedes',
     level: 0,
     type: FieldType.COMPANY,
+    isAuto: true,
   },
   {
     fieldPosition: 6,
@@ -128,6 +129,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'rockstar_games',
     level: 0,
     type: FieldType.COMPANY,
+    isIT: true,
   },
   {
     fieldPosition: 13,
@@ -158,6 +160,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'audi',
     level: 0,
     type: FieldType.COMPANY,
+    isAuto: true,
   },
   {
     fieldPosition: 16,
@@ -257,6 +260,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'ford',
     level: 0,
     type: FieldType.COMPANY,
+    isAuto: true,
   },
   {
     fieldPosition: 26,
@@ -287,6 +291,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'rovio',
     level: 0,
     type: FieldType.COMPANY,
+    isIT: true,
   },
   {
     fieldPosition: 29,
@@ -355,6 +360,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'land_rover',
     level: 0,
     type: FieldType.COMPANY,
+    isAuto: true,
   },
   {
     fieldPosition: 36,

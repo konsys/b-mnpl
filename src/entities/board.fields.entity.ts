@@ -25,6 +25,12 @@ export class BoardFieldsEntity {
   @Column({ default: null })
   price?: number;
 
+  @Column({ default: false })
+  isAuto?: boolean;
+
+  @Column({ default: false })
+  isIT?: boolean;
+
   @Column({ default: null })
   fieldGroup?: number;
 
@@ -46,6 +52,6 @@ export class BoardFieldsEntity {
   @Column({ default: null })
   name?: string;
 
-  @Column('enum', { name: 'fieldType', enum: FieldType })
+  @Column('enum', { name: 'fieldsType', enum: FieldType })
   type?: string;
 }

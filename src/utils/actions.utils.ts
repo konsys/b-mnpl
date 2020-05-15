@@ -1,5 +1,5 @@
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
-import { BoardActionType, IPlayer } from 'src/types/board.types';
+import { BoardActionType } from 'src/types/board.types';
 import nanoid from 'nanoid';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { getFieldIndex, findFieldByPosition } from './fields.utis.';
@@ -10,7 +10,7 @@ import {
   updatePlayer,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
-import { unJailModalHandler } from 'src/actions/handlers/modals.handler';
+import { ONE_FIELD_PERCENT } from './board.params.util';
 
 export const buyFieldModalAction = (): void => {
   const player = getActingPlayer();
@@ -24,17 +24,23 @@ export const buyFieldModalAction = (): void => {
   });
 };
 
+const getPercentPart = (price: number, percent: number) =>
+  Math.floor((price / 1000) * percent) * 10;
+
 export const buyFieldAction = (): void => {
   // Field set to player
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
   const fieldIndex = getFieldIndex(field);
-  const fields = fieldsStore.getState();
+  const fieldsState = fieldsStore.getState();
   const price = field.price;
 
-  field.price = Math.floor(price / 110) * 10;
+  field.price = getPercentPart(price, ONE_FIELD_PERCENT);
 
-  const sameGroupFieilds = fields.fields.filter(v => v.fieldGroup);
+  const sameGroupFieilds = fieldsState.fields.filter(
+    v => v.fieldGroup === field.fieldGroup,
+  );
+
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,
@@ -43,8 +49,8 @@ export const buyFieldAction = (): void => {
     updatedPrice: field.price,
   };
 
-  fields[fieldIndex] = field;
-  setFieldsEvent(fields);
+  fieldsState[fieldIndex] = field;
+  setFieldsEvent(fieldsState);
 
   // Decrease player`s money
   const players = playersStore.getState().players;

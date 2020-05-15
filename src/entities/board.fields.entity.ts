@@ -1,15 +1,5 @@
 import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
-
-export enum FieldType {
-  CHANCE = 'chance',
-  COMPANY = 'company',
-  JAIL = 'jail',
-  ROULETTE = 'roulette',
-  CASION = 'casino',
-  START = 'start',
-  TAX = 'tax',
-  TAKE_REST = 'takeRest',
-}
+import { FieldType } from 'src/types/board.types';
 
 @Entity()
 export class BoardFieldsEntity {
@@ -24,12 +14,6 @@ export class BoardFieldsEntity {
 
   @Column({ default: null })
   price?: number;
-
-  @Column({ default: false })
-  isAuto?: boolean;
-
-  @Column({ default: false })
-  isIT?: boolean;
 
   @Column({ default: null })
   fieldGroup?: number;

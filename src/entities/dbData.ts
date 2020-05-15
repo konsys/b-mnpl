@@ -1,5 +1,6 @@
-import { BoardFieldsEntity, FieldType } from './board.fields.entity';
+import { BoardFieldsEntity } from './board.fields.entity';
 import { UsersEntity } from './users.entity';
+import { FieldType } from 'src/types/board.types';
 
 export const fieldsForSave: BoardFieldsEntity[] = [
   {
@@ -59,8 +60,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     fieldLine: 0,
     name: 'mercedes',
     level: 0,
-    type: FieldType.COMPANY,
-    isAuto: true,
+    type: FieldType.AUTO,
   },
   {
     fieldPosition: 6,
@@ -128,8 +128,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     fieldLine: 1,
     name: 'rockstar_games',
     level: 0,
-    type: FieldType.COMPANY,
-    isIT: true,
+    type: FieldType.IT,
   },
   {
     fieldPosition: 13,
@@ -159,8 +158,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     fieldLine: 1,
     name: 'audi',
     level: 0,
-    type: FieldType.COMPANY,
-    isAuto: true,
+    type: FieldType.AUTO,
   },
   {
     fieldPosition: 16,
@@ -259,8 +257,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     fieldLine: 2,
     name: 'ford',
     level: 0,
-    type: FieldType.COMPANY,
-    isAuto: true,
+    type: FieldType.AUTO,
   },
   {
     fieldPosition: 26,
@@ -290,8 +287,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     fieldLine: 2,
     name: 'rovio',
     level: 0,
-    type: FieldType.COMPANY,
-    isIT: true,
+    type: FieldType.IT,
   },
   {
     fieldPosition: 29,
@@ -359,8 +355,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     fieldLine: 3,
     name: 'land_rover',
     level: 0,
-    type: FieldType.COMPANY,
-    isAuto: true,
+    type: FieldType.AUTO,
   },
   {
     fieldPosition: 36,

@@ -1,5 +1,5 @@
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
-import { BoardActionType } from 'src/types/board.types';
+import { BoardActionType, FieldType } from 'src/types/board.types';
 import nanoid from 'nanoid';
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { getFieldIndex, findFieldByPosition } from './fields.utis.';
@@ -10,7 +10,7 @@ import {
   updatePlayer,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
-import { ONE_FIELD_PERCENT } from './board.params.util';
+import { ONE_FIELD_PERCENT, ONE_AUTO_PERCENT } from './board.params.util';
 
 export const buyFieldModalAction = (): void => {
   const player = getActingPlayer();
@@ -24,9 +24,6 @@ export const buyFieldModalAction = (): void => {
   });
 };
 
-const getPercentPart = (price: number, percent: number) =>
-  Math.floor((price / 1000) * percent) * 10;
-
 export const buyFieldAction = (): void => {
   // Field set to player
   const user = getActingPlayer();
@@ -35,7 +32,10 @@ export const buyFieldAction = (): void => {
   const fieldsState = fieldsStore.getState();
   const price = field.price;
 
-  field.price = getPercentPart(price, ONE_FIELD_PERCENT);
+  field.price =
+    field.type === FieldType.AUTO
+      ? getPercentPart(price, ONE_AUTO_PERCENT)
+      : getPercentPart(price, ONE_FIELD_PERCENT);
 
   const sameGroupFieilds = fieldsState.fields.filter(
     v => v.fieldGroup === field.fieldGroup,
@@ -142,3 +142,6 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   player = getActingPlayer();
   player.jailed ? unJailModalAction() : rollDicesModalAction();
 };
+
+export const getPercentPart = (price: number, percent: number) =>
+  Math.floor((price / 1000) * percent) * 10;

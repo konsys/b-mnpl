@@ -1,7 +1,6 @@
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
-import { IField, IPaymentTransaction } from 'src/types/board.types';
+import { IField, IPaymentTransaction, FieldType } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
-import { FieldType } from 'src/entities/board.fields.entity';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsStore.getState().fields.find(v => v.fieldPosition === fieldPosition);
@@ -20,6 +19,11 @@ export const findBoughtFields = () =>
     .map(v => v.owner);
 
 export const isTax = (): boolean => getActingField().type === FieldType.TAX;
+
+export const isCompany = (field): boolean =>
+  field.type === FieldType.COMPANY ||
+  field.type === FieldType.AUTO ||
+  field.type === FieldType.IT;
 
 export const isChance = (): boolean =>
   getActingField().type === FieldType.CHANCE;
@@ -45,23 +49,19 @@ export const noActionField = (): boolean => {
 
 export const isFieldEmpty = (): boolean => {
   const field = getActingField();
-  return field.type === FieldType.COMPANY && !field.owner;
+  return isCompany(field) && !field.owner;
 };
 
 export const isMyField = (): boolean => {
   const user = getActingPlayer();
   const field = getActingField();
-  return (
-    field.type === FieldType.COMPANY &&
-    field.owner &&
-    field.owner.userId === user.userId
-  );
+  return isCompany(field) && field.owner && field.owner.userId === user.userId;
 };
 
 export const canBuyField = (): boolean => {
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
-  return field.type === FieldType.COMPANY && field.price <= user.money;
+  return isCompany(field) && field.price <= user.money;
 };
 
 export const getFieldIndex = (field: IField): number =>

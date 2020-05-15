@@ -1,4 +1,4 @@
-import { GameDomain, actionsStore } from 'src/stores/actions.store';
+import { GameDomain } from 'src/stores/actions.store';
 import { getActingPlayer, updatePlayer } from 'src/utils/users.utils';
 import { JAIL_TURNS, JAIL_POSITION } from 'src/utils/board.params.util';
 import { random } from 'src/lib/utils';
@@ -24,7 +24,7 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
 
     const dice1 = 2;
     // const dice2 = random(0, 6);
-    let dice2 = 1;
+    let dice2 = 3;
     if (player.userId === 3) {
       dice2 = random(0, 6);
     }
@@ -32,7 +32,7 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
     const sum = dice1 + dice2 + dice3 + currenPosition;
     const meanPosition = sum < 40 ? sum : sum - 40;
 
-    const t = {
+    return {
       userId: player.userId,
       dices: [dice1, dice2, dice3],
       _id: actionId,
@@ -42,7 +42,6 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
       // isTriple: dice1 === dice2 && dice2 === dice3,
       isTriple: false,
     };
-    return t;
   })
   .reset(resetDicesEvent);
 

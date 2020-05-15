@@ -31,7 +31,10 @@ export const buyFieldAction = (): void => {
   const fieldIndex = getFieldIndex(field);
   const fields = fieldsStore.getState();
   const price = field.price;
+
   field.price = Math.floor(price / 110) * 10;
+
+  const sameGroupFieilds = fields.fields.filter(v => v.fieldGroup);
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,

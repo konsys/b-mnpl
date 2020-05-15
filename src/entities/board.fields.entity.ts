@@ -26,13 +26,13 @@ export class BoardFieldsEntity {
   price?: number;
 
   @Column({ default: null })
-  mnplGroup?: number;
+  fieldGroup?: number;
 
   @Column({ default: null })
-  mnplCorner?: number;
+  fieldCorner?: number;
 
   @Column({ default: null })
-  mnplLine?: number;
+  fieldLine?: number;
 
   @Column({ default: false })
   isJail?: boolean;
@@ -46,6 +46,6 @@ export class BoardFieldsEntity {
   @Column({ default: null })
   name?: string;
 
-  @Column('enum', { name: 'fieldsType', enum: FieldType })
+  @Column('enum', { name: 'fieldType', enum: FieldType })
   type?: string;
 }

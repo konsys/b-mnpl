@@ -1,6 +1,7 @@
-import { GameDomain } from 'src/stores/actions.store';
+import { GameDomain, actionsStore } from 'src/stores/actions.store';
 import { getActingPlayer, updatePlayer } from 'src/utils/users.utils';
 import { JAIL_TURNS, JAIL_POSITION } from 'src/utils/board.params.util';
+import { random } from 'src/lib/utils';
 
 export interface IDicesStore {
   userId: number;
@@ -14,10 +15,35 @@ export interface IDicesStore {
 const DicesDomain = GameDomain.domain('DicesDomain');
 export const resetDicesEvent = DicesDomain.event();
 
-export const setDicesEvent = DicesDomain.event<IDicesStore | null>();
+export const setRandomDicesEvent = DicesDomain.event<string>();
 
 export const dicesStore = DicesDomain.store<IDicesStore>(null)
-  .on(setDicesEvent, (_, data) => data)
+  .on(setRandomDicesEvent, (_, actionId) => {
+    const player = getActingPlayer();
+    const currenPosition = player.meanPosition;
+
+    const dice1 = 2;
+    // const dice2 = random(0, 6);
+    let dice2 = dice1;
+    if (player.userId === 3) {
+      dice2 = random(0, 6);
+    }
+    const dice3 = 0;
+    const sum = dice1 + dice2 + dice3 + currenPosition;
+    const meanPosition = sum < 40 ? sum : sum - 40;
+
+    const t = {
+      userId: player.userId,
+      dices: [dice1, dice2, dice3],
+      _id: actionId,
+      sum,
+      meanPosition,
+      isDouble: dice1 === dice2,
+      // isTriple: dice1 === dice2 && dice2 === dice3,
+      isTriple: false,
+    };
+    return t;
+  })
   .reset(resetDicesEvent);
 
 dicesStore.updates.watch(v => {

@@ -1,6 +1,5 @@
 import { BoardActionType, RollDices } from 'src/types/board.types';
-import { random } from 'src/lib/utils';
-import { dicesStore, setDicesEvent } from 'src/stores/dices.store';
+import { dicesStore, setRandomDicesEvent } from 'src/stores/dices.store';
 import { IDicesStore } from 'src/stores/dices.store';
 import { actionsStore } from 'src/stores/actions.store';
 import { getActingPlayer } from 'src/utils/users.utils';
@@ -11,33 +10,10 @@ export const rollDicesHandler = (): RollDices => {
   });
 
   const action = actionsStore.getState();
-  const player = getActingPlayer();
-
-  const currenPosition = player.meanPosition;
-
   if (!dicesState || dicesState._id !== action.actionId) {
-    const dice1 = 2;
-    // const dice2 = random(0, 6);
-    let dice2 = dice1;
-    if (player.userId === 3) {
-      dice2 = random(0, 6);
-    }
-    const dice3 = 0;
-    const sum = dice1 + dice2 + dice3 + currenPosition;
-    const meanPosition = sum < 40 ? sum : sum - 40;
-
-    setDicesEvent({
-      userId: player.userId,
-      dices: [dice1, dice2, dice3],
-      _id: action.actionId,
-      sum,
-      meanPosition,
-      isDouble: dice1 === dice2,
-      // isTriple: dice1 === dice2 && dice2 === dice3,
-      isTriple: false,
-    });
+    setRandomDicesEvent(action.actionId);
   }
-
+  const player = getActingPlayer();
   return {
     type: BoardActionType.ROLL_DICES,
     userId: player.userId,

@@ -14,7 +14,13 @@ import {
   updatePlayer,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
-import { ONE_FIELD_PERCENT, ONE_AUTO_PERCENT } from './board.params.util';
+import {
+  ONE_FIELD_PERCENT,
+  ONE_AUTO_PERCENT,
+  FOUR_AUTO_PERCENT,
+  FREE_AUTO_PERCENT,
+  TWO_AUTO_PERCENT,
+} from './board.params.util';
 
 export const buyFieldModalAction = (): void => {
   const player = getActingPlayer();
@@ -34,23 +40,39 @@ export const buyFieldAction = (): void => {
   const field = findFieldByPosition(user.meanPosition);
   const fieldIndex = getFieldIndex(field);
   const fieldsState = fieldsStore.getState().fields;
-  const price = field.price;
-
-  field.price =
-    field.type === FieldType.AUTO
-      ? getPercentPart(price, ONE_AUTO_PERCENT)
-      : getPercentPart(price, ONE_FIELD_PERCENT);
+  let price = field.price;
 
   const sameGroupFieilds = fieldsState.filter(
-    v => v.fieldGroup === field.fieldGroup,
+    v =>
+      v.fieldGroup === field.fieldGroup &&
+      v.owner &&
+      v.owner.userId === user.userId,
   );
+  if (field.type === FieldType.AUTO && !sameGroupFieilds.length) {
+    price = getPercentPart(price, ONE_AUTO_PERCENT);
+    console.log(sameGroupFieilds, field.fieldGroup, field.owner);
+  } else if (field.type === FieldType.AUTO && sameGroupFieilds.length === 1) {
+    price = getPercentPart(price, TWO_AUTO_PERCENT);
+    console.log(22222);
+  } else if (field.type === FieldType.AUTO && sameGroupFieilds.length === 2) {
+    price = getPercentPart(price, FREE_AUTO_PERCENT);
+    console.log(33333);
+  } else if (field.type === FieldType.AUTO && sameGroupFieilds.length === 3) {
+    price = getPercentPart(price, FOUR_AUTO_PERCENT);
+    console.log(44444);
+  } else {
+    price = getPercentPart(price, ONE_FIELD_PERCENT);
+    console.log(55555);
+  }
+
+  console.log(7777, sameGroupFieilds.length);
 
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,
     level: 0,
     mortgaged: false,
-    updatedPrice: field.price,
+    updatedPrice: price,
   };
 
   fieldsState[fieldIndex] = field;

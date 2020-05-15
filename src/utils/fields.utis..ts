@@ -75,6 +75,7 @@ export const updateField = (field: IField) => {
 
 export const updateAllFields = (fields: IField[]) => {
   const version = fieldsStore.getState().version + 1;
+  console.log(111111, version);
   setFieldsEvent({
     version,
     fields,

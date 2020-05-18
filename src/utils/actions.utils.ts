@@ -7,6 +7,7 @@ import {
   findFieldByPosition,
   updateAllFields,
   buyAuto,
+  buyCompany,
 } from './fields.utis.';
 import {
   getActingPlayer,
@@ -45,18 +46,8 @@ export const buyFieldAction = (): void => {
 
   if (field.type === FieldType.AUTO) {
     price = buyAuto(field);
-  } else {
-    price = getPercentPart(price, ONE_FIELD_PERCENT);
-    field.owner = {
-      fieldId: field.fieldId,
-      userId: user.userId,
-      level: 0,
-      mortgaged: false,
-      updatedPrice: price,
-    };
-    fieldsState[fieldIndex] = field;
-
-    updateAllFields(fieldsState);
+  } else if (field.type === FieldType.COMPANY) {
+    price = buyCompany(field);
   }
 
   // Decrease player`s money

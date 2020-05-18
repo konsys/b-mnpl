@@ -8,6 +8,8 @@ import {
   FREE_AUTO_PERCENT,
   FOUR_AUTO_PERCENT,
   ONE_FIELD_PERCENT,
+  TWO_FIELD_PERCENT,
+  FREE_FIELD_PERCENT,
 } from './board.params.util';
 
 export const findFieldByPosition = (fieldPosition: number) =>
@@ -89,6 +91,17 @@ export const updateAllFields = (fields: IField[]) => {
   });
 };
 
+const getSameGroupFields = (field: IField) => {
+  const fieldsState = fieldsStore.getState().fields;
+  const user = getActingPlayer();
+  return fieldsState.filter(
+    v =>
+      v.fieldGroup === field.fieldGroup &&
+      v.owner &&
+      v.owner.userId === user.userId,
+  );
+};
+
 export const buyAuto = (field: IField): number => {
   const user = getActingPlayer();
   const fieldsState = fieldsStore.getState().fields;
@@ -96,12 +109,8 @@ export const buyAuto = (field: IField): number => {
 
   let price = field.price;
   const fieldPrice = price;
-  const sameGroupFieilds = fieldsState.filter(
-    v =>
-      v.fieldGroup === field.fieldGroup &&
-      v.owner &&
-      v.owner.userId === user.userId,
-  );
+  const sameGroupFieilds = getSameGroupFields(field);
+
   if (!sameGroupFieilds.length) {
     price = getPercentPart(price, ONE_AUTO_PERCENT);
   } else if (sameGroupFieilds.length === 1) {
@@ -142,7 +151,16 @@ export const buyCompany = (field: IField): number => {
   let price = field.price;
   const fieldPrice = price;
 
-  price = getPercentPart(price, ONE_FIELD_PERCENT);
+  const sameGroupFieilds = getSameGroupFields(field);
+
+  if (!sameGroupFieilds.length) {
+    price = getPercentPart(price, ONE_FIELD_PERCENT);
+  } else if (sameGroupFieilds.length === 1) {
+    price = getPercentPart(price, TWO_FIELD_PERCENT);
+  } else if (sameGroupFieilds.length === 1) {
+    price = getPercentPart(price, FREE_FIELD_PERCENT);
+  }
+
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,
@@ -150,6 +168,13 @@ export const buyCompany = (field: IField): number => {
     mortgaged: false,
     updatedPrice: price,
   };
+
+  sameGroupFieilds.map((v: IField) => {
+    const index = getFieldIndex(v);
+
+    fieldsState[index] = { ...v, owner: { ...v.owner, updatedPrice: price } };
+  });
+
   fieldsState[fieldIndex] = field;
 
   updateAllFields(fieldsState);

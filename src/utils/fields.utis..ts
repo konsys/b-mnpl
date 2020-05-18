@@ -1,6 +1,14 @@
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { IField, IPaymentTransaction, FieldType } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
+import { getPercentPart } from './actions.utils';
+import {
+  ONE_AUTO_PERCENT,
+  TWO_AUTO_PERCENT,
+  FREE_AUTO_PERCENT,
+  FOUR_AUTO_PERCENT,
+  ONE_FIELD_PERCENT,
+} from './board.params.util';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsStore.getState().fields.find(v => v.fieldPosition === fieldPosition);
@@ -80,4 +88,49 @@ export const updateAllFields = (fields: IField[]) => {
     version,
     fields,
   });
+};
+
+export const buyAuto = (field: IField): number => {
+  const user = getActingPlayer();
+  const fieldsState = fieldsStore.getState().fields;
+  const fieldIndex = getFieldIndex(field);
+
+  let price = field.price;
+  const fieldPrice = price;
+  const sameGroupFieilds = fieldsState.filter(
+    v =>
+      v.fieldGroup === field.fieldGroup &&
+      v.owner &&
+      v.owner.userId === user.userId,
+  );
+  if (!sameGroupFieilds.length) {
+    price = getPercentPart(price, ONE_AUTO_PERCENT);
+  } else if (sameGroupFieilds.length === 1) {
+    price = getPercentPart(price, TWO_AUTO_PERCENT);
+  } else if (sameGroupFieilds.length === 2) {
+    price = getPercentPart(price, FREE_AUTO_PERCENT);
+  } else if (sameGroupFieilds.length === 3) {
+    price = getPercentPart(price, FOUR_AUTO_PERCENT);
+  } else {
+    price = getPercentPart(price, ONE_FIELD_PERCENT);
+  }
+
+  field.owner = {
+    fieldId: field.fieldId,
+    userId: user.userId,
+    level: 0,
+    mortgaged: false,
+    updatedPrice: price,
+  };
+
+  sameGroupFieilds.map((v: IField) => {
+    const index = getFieldIndex(v);
+
+    fieldsState[index] = { ...v, owner: { ...v.owner, updatedPrice: price } };
+  });
+
+  fieldsState[fieldIndex] = field;
+
+  updateAllFields(fieldsState);
+  return fieldPrice;
 };

@@ -6,6 +6,7 @@ import {
   getFieldIndex,
   findFieldByPosition,
   updateAllFields,
+  buyAuto,
 } from './fields.utis.';
 import {
   getActingPlayer,
@@ -42,41 +43,21 @@ export const buyFieldAction = (): void => {
   const fieldsState = fieldsStore.getState().fields;
   let price = field.price;
 
-  const sameGroupFieilds = fieldsState.filter(
-    v =>
-      v.fieldGroup === field.fieldGroup &&
-      v.owner &&
-      v.owner.userId === user.userId,
-  );
-  if (field.type === FieldType.AUTO && !sameGroupFieilds.length) {
-    price = getPercentPart(price, ONE_AUTO_PERCENT);
-    console.log(sameGroupFieilds, field.fieldGroup, field.owner);
-  } else if (field.type === FieldType.AUTO && sameGroupFieilds.length === 1) {
-    price = getPercentPart(price, TWO_AUTO_PERCENT);
-    console.log(22222);
-  } else if (field.type === FieldType.AUTO && sameGroupFieilds.length === 2) {
-    price = getPercentPart(price, FREE_AUTO_PERCENT);
-    console.log(33333);
-  } else if (field.type === FieldType.AUTO && sameGroupFieilds.length === 3) {
-    price = getPercentPart(price, FOUR_AUTO_PERCENT);
-    console.log(44444);
+  if (field.type === FieldType.AUTO) {
+    price = buyAuto(field);
   } else {
     price = getPercentPart(price, ONE_FIELD_PERCENT);
-    console.log(55555);
+    field.owner = {
+      fieldId: field.fieldId,
+      userId: user.userId,
+      level: 0,
+      mortgaged: false,
+      updatedPrice: price,
+    };
+    fieldsState[fieldIndex] = field;
+
+    updateAllFields(fieldsState);
   }
-
-  console.log(7777, sameGroupFieilds.length);
-
-  field.owner = {
-    fieldId: field.fieldId,
-    userId: user.userId,
-    level: 0,
-    mortgaged: false,
-    updatedPrice: price,
-  };
-
-  fieldsState[fieldIndex] = field;
-  updateAllFields(fieldsState);
 
   // Decrease player`s money
   const players = playersStore.getState().players;

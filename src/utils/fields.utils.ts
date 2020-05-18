@@ -52,7 +52,7 @@ export const payTaxData = (): IPaymentTransaction => {
 
 export const noActionField = (): boolean => {
   const field = getActingField();
-  return field.type === FieldType.TAKE_REST || field.type === FieldType.CASION;
+  return field.type === FieldType.TAKE_REST || field.type === FieldType.CASINO;
 };
 
 export const isCompanyForSale = (): boolean => {

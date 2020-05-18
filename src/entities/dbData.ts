@@ -206,7 +206,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     mnplSpecial: 1,
     name: 'casino',
     level: 0,
-    type: FieldType.CASION,
+    type: FieldType.CASINO,
   },
   {
     fieldPosition: 21,

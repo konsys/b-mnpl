@@ -41,7 +41,7 @@ export class BoardMessage {
 
     if (!player.jailed) {
       if (!noActionField()) {
-        console.log(1111111, getActingField().type);
+        console.log(1111111, getActingField());
         if (payload.actionId === action.actionId) {
           Action.switchPlayerTurn();
         } else if (isCompanyForSale()) {
@@ -61,7 +61,7 @@ export class BoardMessage {
           Action.switchPlayerTurn();
         } else if (isChance()) {
           //TODO Sum of chance
-          userBalanceChange(111111);
+          userBalanceChange(7500);
           Action.switchPlayerTurn();
         } else if (isStart()) {
           console.log('isStart');

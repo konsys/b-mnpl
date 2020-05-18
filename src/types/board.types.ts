@@ -175,7 +175,7 @@ export enum FieldType {
   COMPANY = 'company',
   JAIL = 'jail',
   ROULETTE = 'roulette',
-  CASION = 'casino',
+  CASINO = 'casino',
   START = 'start',
   TAX = 'tax',
   IT = 'IT',

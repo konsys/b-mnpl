@@ -7,7 +7,7 @@ import {
 } from 'src/types/board.types';
 import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
-import { findFieldByPosition } from 'src/utils/fields.utis.';
+import { findFieldByPosition } from 'src/utils/fields.utils';
 
 export const dicesModalHandler = (): DicesModal => ({
   type: BoardActionType.ROLL_DICES_MODAL,

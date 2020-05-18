@@ -22,7 +22,7 @@ import { setCurrentActionsEvent } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import { updateAllPLayers } from 'src/utils/users.utils';
-import { updateAllFields } from 'src/utils/fields.utis.';
+import { updateAllFields } from 'src/utils/fields.utils';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()

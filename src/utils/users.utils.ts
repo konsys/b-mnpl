@@ -1,6 +1,6 @@
 import { playersStore, setPlayersEvent } from 'src/stores/players.store';
 import { IPlayer } from 'src/types/board.types';
-import { JAIL_POSITION, UN_JAIL_PRICE } from './board.params.util';
+import { JAIL_POSITION, UN_JAIL_PRICE } from './board.params.utils';
 
 export const getPlayerById = (userId: number): IPlayer => {
   return playersStore.getState().players.find(v => v.userId === userId);

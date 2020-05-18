@@ -1,7 +1,7 @@
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import { BoardActionType, FieldType } from 'src/types/board.types';
 import nanoid from 'nanoid';
-import { findFieldByPosition, buyAuto, buyCompany } from './fields.utis.';
+import { findFieldByPosition, buyAuto, buyCompany } from './fields.utils';
 import {
   getActingPlayer,
   getActingPlayerIndex,

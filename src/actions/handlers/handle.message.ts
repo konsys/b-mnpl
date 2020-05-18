@@ -13,7 +13,7 @@ import {
   isChance,
   noActionField,
   isJail,
-} from 'src/utils/fields.utis.';
+} from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
@@ -23,8 +23,8 @@ import {
   getActingPlayer,
   unJailPlayer,
 } from 'src/utils/users.utils';
-import { randChance } from 'src/utils/chance.utils';
-import { START_BONUS } from 'src/utils/board.params.util';
+import { START_BONUS } from 'src/utils/board.params.utils';
+import { getActingField } from 'src/utils/fields.utils';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -41,6 +41,7 @@ export class BoardMessage {
 
     if (!player.jailed) {
       if (!noActionField()) {
+        console.log(1111111, getActingField().type);
         if (payload.actionId === action.actionId) {
           Action.switchPlayerTurn();
         } else if (isCompanyForSale()) {

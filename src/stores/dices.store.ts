@@ -1,6 +1,6 @@
 import { GameDomain } from 'src/stores/actions.store';
 import { getActingPlayer, updatePlayer } from 'src/utils/users.utils';
-import { JAIL_TURNS, JAIL_POSITION } from 'src/utils/board.params.util';
+import { JAIL_TURNS, JAIL_POSITION } from 'src/utils/board.params.utils';
 import { random } from 'src/lib/utils';
 
 export interface IDicesStore {

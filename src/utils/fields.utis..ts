@@ -83,7 +83,6 @@ export const updateField = (field: IField) => {
 
 export const updateAllFields = (fields: IField[]) => {
   const version = fieldsStore.getState().version + 1;
-  console.log(111111, version);
   setFieldsEvent({
     version,
     fields,
@@ -129,6 +128,28 @@ export const buyAuto = (field: IField): number => {
     fieldsState[index] = { ...v, owner: { ...v.owner, updatedPrice: price } };
   });
 
+  fieldsState[fieldIndex] = field;
+
+  updateAllFields(fieldsState);
+  return fieldPrice;
+};
+
+export const buyCompany = (field: IField): number => {
+  const user = getActingPlayer();
+  const fieldsState = fieldsStore.getState().fields;
+  const fieldIndex = getFieldIndex(field);
+
+  let price = field.price;
+  const fieldPrice = price;
+
+  price = getPercentPart(price, ONE_FIELD_PERCENT);
+  field.owner = {
+    fieldId: field.fieldId,
+    userId: user.userId,
+    level: 0,
+    mortgaged: false,
+    updatedPrice: price,
+  };
   fieldsState[fieldIndex] = field;
 
   updateAllFields(fieldsState);

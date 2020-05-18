@@ -4,24 +4,27 @@ import { Socket } from 'socket.io';
 import { actionsStore } from 'src/stores/actions.store';
 import { IActionId } from 'src/types/board.types';
 import {
-  isFieldEmpty,
+  isCompanyForSale,
   canBuyField,
   isTax,
+  isStart,
   payTaxData,
   isMyField,
   isChance,
   noActionField,
+  isJail,
 } from 'src/utils/fields.utis.';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
 import {
   moneyTransaction,
-  userChance,
+  userBalanceChange,
   getActingPlayer,
   unJailPlayer,
 } from 'src/utils/users.utils';
 import { randChance } from 'src/utils/chance.utils';
+import { START_BONUS } from 'src/utils/board.params.util';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -36,20 +39,39 @@ export class BoardMessage {
     const action = actionsStore.getState();
     const player = getActingPlayer();
 
-    if (payload.actionId === action.actionId) {
-      if (!player.jailed) {
-        if (noActionField()) {
+    if (!player.jailed) {
+      if (!noActionField()) {
+        if (payload.actionId === action.actionId) {
           Action.switchPlayerTurn();
-        } else if (isFieldEmpty()) {
+        } else if (isCompanyForSale()) {
+          console.log('isFieldEmpty');
           Action.buyFieldModalAction();
-        } else if (!isFieldEmpty() && !isMyField() && !isTax() && !isChance()) {
-          Action.payTaxModalAction();
+        } else if (isStart()) {
+          console.log('isStart');
+          userBalanceChange(START_BONUS);
+          Action.switchPlayerTurn();
         } else if (isTax()) {
+          console.log('isTax');
           Action.payTaxModalAction();
+        } else if (isJail()) {
+          console.log('isJail');
+          //TODO JAIL
+          userBalanceChange(50000);
+          Action.switchPlayerTurn();
         } else if (isChance()) {
-          const chanceSum = randChance();
-          chanceSum < 0 && Action.payTaxModalAction();
-          userChance(chanceSum);
+          //TODO Sum of chance
+          userBalanceChange(111111);
+          Action.switchPlayerTurn();
+        } else if (isStart()) {
+          console.log('isStart');
+          userBalanceChange(START_BONUS);
+          Action.switchPlayerTurn();
+        } else if (isTax()) {
+          console.log('isTax');
+          Action.payTaxModalAction();
+        } else if (isJail()) {
+          console.log('isJail');
+          userBalanceChange(50000);
           Action.switchPlayerTurn();
         } else {
           // TODO Добавить обработчики для остальных полей
@@ -63,10 +85,10 @@ export class BoardMessage {
 
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    if (isFieldEmpty() && canBuyField()) {
+    if (isCompanyForSale() && canBuyField()) {
       Action.buyFieldAction();
     } else {
-      !isFieldEmpty() &&
+      !isCompanyForSale() &&
         setError({
           code: ErrorCode.CompanyHasOwner,
           message: 'Oop!',

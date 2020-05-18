@@ -29,6 +29,8 @@ export const findBoughtFields = () =>
     .map(v => v.owner);
 
 export const isTax = (): boolean => getActingField().type === FieldType.TAX;
+export const isStart = (): boolean => getActingField().type === FieldType.START;
+export const isJail = (): boolean => getActingField().type === FieldType.JAIL;
 
 export const isCompany = (field): boolean =>
   field.type === FieldType.COMPANY ||
@@ -50,14 +52,10 @@ export const payTaxData = (): IPaymentTransaction => {
 
 export const noActionField = (): boolean => {
   const field = getActingField();
-  return (
-    field.type === FieldType.TAKE_REST ||
-    field.type === FieldType.CASION ||
-    field.type === FieldType.START
-  );
+  return field.type === FieldType.TAKE_REST || field.type === FieldType.CASION;
 };
 
-export const isFieldEmpty = (): boolean => {
+export const isCompanyForSale = (): boolean => {
   const field = getActingField();
   return isCompany(field) && !field.owner;
 };

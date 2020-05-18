@@ -1,14 +1,7 @@
 import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
 import { BoardActionType, FieldType } from 'src/types/board.types';
 import nanoid from 'nanoid';
-import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
-import {
-  getFieldIndex,
-  findFieldByPosition,
-  updateAllFields,
-  buyAuto,
-  buyCompany,
-} from './fields.utis.';
+import { findFieldByPosition, buyAuto, buyCompany } from './fields.utis.';
 import {
   getActingPlayer,
   getActingPlayerIndex,
@@ -16,13 +9,6 @@ import {
   updatePlayer,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
-import {
-  ONE_FIELD_PERCENT,
-  ONE_AUTO_PERCENT,
-  FOUR_AUTO_PERCENT,
-  FREE_AUTO_PERCENT,
-  TWO_AUTO_PERCENT,
-} from './board.params.util';
 
 export const buyFieldModalAction = (): void => {
   const player = getActingPlayer();
@@ -40,8 +26,6 @@ export const buyFieldAction = (): void => {
   // Field set to player
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
-  const fieldIndex = getFieldIndex(field);
-  const fieldsState = fieldsStore.getState().fields;
   let price = field.price;
 
   if (field.type === FieldType.AUTO) {

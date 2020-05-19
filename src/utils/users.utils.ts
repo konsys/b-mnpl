@@ -1,6 +1,6 @@
 import { playersStore, setPlayersEvent } from 'src/stores/players.store';
 import { IPlayer } from 'src/types/board.types';
-import { JAIL_POSITION, UN_JAIL_PRICE } from './board.params.utils';
+import { JAIL_POSITION, UN_JAIL_PRICE, JAIL_TURNS } from './board.params.utils';
 
 export const getPlayerById = (userId: number): IPlayer => {
   return playersStore.getState().players.find(v => v.userId === userId);
@@ -54,11 +54,11 @@ export const updateAllPLayers = (players: IPlayer[]): boolean => {
   return true;
 };
 
-export const userBalanceChange = (sum: number): boolean => {
+export const updateUserBalance = (sum: number): boolean => {
   const player = getActingPlayer();
   return updatePlayer({
     ...player,
-    money: player.money + (sum > 0 ? sum : -sum),
+    money: player.money + sum,
   });
 };
 
@@ -85,5 +85,17 @@ export const unJailPlayer = () => {
     money: player.money - UN_JAIL_PRICE,
     prevPosition: JAIL_POSITION - 1,
     meanPosition: JAIL_POSITION,
+  });
+};
+
+export const goToJail = () => {
+  const player = getActingPlayer();
+  updatePlayer({
+    ...player,
+    jailed: JAIL_TURNS,
+    unjailAttempts: JAIL_TURNS,
+    doublesRolledAsCombo: 0,
+    movesLeft: 0,
+    meanPosition: JAIL_POSITION + 1,
   });
 };

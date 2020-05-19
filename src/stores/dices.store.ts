@@ -1,5 +1,5 @@
 import { GameDomain } from 'src/stores/actions.store';
-import { getActingPlayer, updatePlayer } from 'src/utils/users.utils';
+import { getActingPlayer, updatePlayer, goToJail } from 'src/utils/users.utils';
 import { JAIL_TURNS, JAIL_POSITION } from 'src/utils/board.params.utils';
 import { random } from 'src/lib/utils';
 
@@ -58,23 +58,27 @@ dicesStore.updates.watch(v => {
     let unjailAttempts = player.unjailAttempts;
 
     player.prevPosition = meanPosition;
+
     if (v.isDouble) {
       doublesRolledAsCombo++;
       movesLeft++;
+    } else {
+      doublesRolledAsCombo = 0;
     }
 
     if (player.jailed && v.isDouble) {
       jailed = 0;
       movesLeft = 0;
       doublesRolledAsCombo = 0;
+    } else if (player.jailed && !v.isDouble) {
+      unjailAttempts++;
+      prevPosition = JAIL_POSITION - 1;
+      meanPosition = JAIL_POSITION;
     }
 
     if (doublesRolledAsCombo > JAIL_TURNS) {
-      jailed = JAIL_TURNS;
-      unjailAttempts = JAIL_TURNS;
-      doublesRolledAsCombo = 0;
-      movesLeft = 0;
-      meanPosition = JAIL_POSITION + 1;
+      goToJail();
+      return;
     }
 
     updatePlayer({

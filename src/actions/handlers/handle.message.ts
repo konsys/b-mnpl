@@ -19,12 +19,12 @@ import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
 import {
   moneyTransaction,
-  userBalanceChange,
+  updateUserBalance,
   getActingPlayer,
   unJailPlayer,
+  goToJail,
 } from 'src/utils/users.utils';
 import { START_BONUS } from 'src/utils/board.params.utils';
-import { getActingField } from 'src/utils/fields.utils';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -39,47 +39,39 @@ export class BoardMessage {
     const action = actionsStore.getState();
     const player = getActingPlayer();
 
-    if (!player.jailed) {
-      if (!noActionField()) {
-        console.log(1111111, getActingField());
-        if (payload.actionId === action.actionId) {
-          Action.switchPlayerTurn();
-        } else if (isCompanyForSale()) {
-          console.log('isFieldEmpty');
-          Action.buyFieldModalAction();
-        } else if (isStart()) {
-          console.log('isStart');
-          userBalanceChange(START_BONUS);
-          Action.switchPlayerTurn();
-        } else if (isTax()) {
-          console.log('isTax');
-          Action.payTaxModalAction();
-        } else if (isJail()) {
-          console.log('isJail');
-          //TODO JAIL
-          userBalanceChange(50000);
-          Action.switchPlayerTurn();
-        } else if (isChance()) {
-          //TODO Sum of chance
-          userBalanceChange(7500);
-          Action.switchPlayerTurn();
-        } else if (isStart()) {
-          console.log('isStart');
-          userBalanceChange(START_BONUS);
-          Action.switchPlayerTurn();
-        } else if (isTax()) {
-          console.log('isTax');
-          Action.payTaxModalAction();
-        } else if (isJail()) {
-          console.log('isJail');
-          userBalanceChange(50000);
-          Action.switchPlayerTurn();
+    if (payload.actionId === action.actionId) {
+      if (!player.jailed) {
+        if (!noActionField()) {
+          if (isCompanyForSale()) {
+            // console.log('2');
+            Action.buyFieldModalAction();
+          } else if (isStart()) {
+            // console.log('3');
+            updateUserBalance(START_BONUS);
+            Action.switchPlayerTurn();
+          } else if (isTax()) {
+            // console.log('4');
+            Action.payTaxModalAction();
+          } else if (isJail()) {
+            // console.log('5');
+            //TODO JAIL
+            goToJail();
+            Action.switchPlayerTurn();
+          } else if (isChance()) {
+            // console.log('6');
+            //TODO Sum of chance
+            updateUserBalance(-500);
+            Action.switchPlayerTurn();
+          } else {
+            // console.log('7');
+            // TODO Добавить обработчики для остальных полей
+            Action.switchPlayerTurn();
+          }
         } else {
-          // TODO Добавить обработчики для остальных полей
+          // console.log('8');
           Action.switchPlayerTurn();
         }
       } else {
-        Action.switchPlayerTurn();
       }
     }
   }

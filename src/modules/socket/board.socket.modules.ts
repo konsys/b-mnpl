@@ -3,7 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MsNames } from 'src/types/ms.types';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
-import { BoardSocketInit } from './board.init';
+import { BoardSocket } from './board.init';
 import { BoardMessage } from '../../actions/socket.message.handler';
 
 @Module({
@@ -19,7 +19,7 @@ import { BoardMessage } from '../../actions/socket.message.handler';
       },
     ]),
   ],
-  providers: [BoardSocketInit, BoardMessage, UsersService, FieldsService],
+  providers: [BoardSocket, BoardMessage, UsersService, FieldsService],
   controllers: [],
 })
 export class BoardSocketModule {}

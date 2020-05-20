@@ -26,7 +26,7 @@ import { updateAllFields } from 'src/utils/fields.utils';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
-export class BoardSocketInit
+export class BoardSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('BoardSocket');
 
@@ -36,21 +36,28 @@ export class BoardSocketInit
   ) {}
 
   @WebSocketServer()
-  server: Server;
+  public static socketServer: Server;
 
   async onModuleInit() {
     await this.initStores();
     try {
-      setInterval(() => {
-        this.server.emit(SocketActions.BOARD_MESSAGE, createBoardMessage());
-      }, 300);
+      BoardSocket.emitMessage();
+      // setInterval(() => {
+      //   BoardSocket.emitMessage();
+      // }, 300);
     } catch (err) {
       this.logger.error('Error' + err);
     }
   }
 
+  public static emitMessage() {
+    BoardSocket.socketServer.emit(
+      SocketActions.BOARD_MESSAGE,
+      createBoardMessage(),
+    );
+  }
   public emitError(error: IErrorMessage) {
-    this.server.emit(SocketActions.ERROR_MESSAGE, error);
+    BoardSocket.socketServer.emit(SocketActions.ERROR_MESSAGE, error);
     errorStore.reset();
   }
 
@@ -109,6 +116,7 @@ export class BoardSocketInit
   }
 
   afterInit(server: Server) {
+    BoardSocket.socketServer = server;
     this.logger.log('Init: ' + server);
   }
 

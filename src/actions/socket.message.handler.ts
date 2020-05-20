@@ -25,6 +25,7 @@ import {
   goToJail,
 } from 'src/utils/users.utils';
 import { START_BONUS } from 'src/utils/board.params.utils';
+import { BoardSocket } from 'src/modules/socket/board.init';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -32,6 +33,7 @@ export class BoardMessage {
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     payload.actionId === action.actionId && Action.rollDicesAction();
+    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
@@ -73,6 +75,7 @@ export class BoardMessage {
         }
       }
     }
+    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(BoardActionType.CAN_BUY)
@@ -92,6 +95,7 @@ export class BoardMessage {
         });
     }
     Action.switchPlayerTurn();
+    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(BoardActionType.AUCTION_START)
@@ -101,6 +105,7 @@ export class BoardMessage {
       Action.startAuctionAction();
       Action.switchPlayerTurn();
     }
+    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(BoardActionType.TAX_PAID)
@@ -109,11 +114,13 @@ export class BoardMessage {
     moneyTransaction(payData.sum, payData.userId, payData.toUserId);
 
     Action.switchPlayerTurn();
+    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(BoardActionType.UN_JAIL_PAID)
   async unjailPayment(client: Socket, payload: IActionId): Promise<void> {
     unJailPlayer();
     Action.rollDicesAction();
+    BoardSocket.emitMessage();
   }
 }

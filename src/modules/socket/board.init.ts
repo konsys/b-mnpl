@@ -1,5 +1,4 @@
 import {
-  SubscribeMessage,
   WebSocketGateway,
   OnGatewayInit,
   WebSocketServer,
@@ -15,7 +14,6 @@ import { Socket, Server } from 'socket.io';
 import { BoardActionType, IPlayer } from 'src/types/board.types';
 import { SocketActions } from 'src/types/game.types';
 import { createBoardMessage } from 'src/actions/create.message';
-import { setFieldsEvent } from 'src/stores/fields.store';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
@@ -41,10 +39,10 @@ export class BoardSocket
   async onModuleInit() {
     await this.initStores();
     try {
-      BoardSocket.emitMessage();
-      // setInterval(() => {
-      //   BoardSocket.emitMessage();
-      // }, 300);
+      // BoardSocket.emitMessage();
+      setInterval(() => {
+        // BoardSocket.emitMessage();
+      }, 8000);
     } catch (err) {
       this.logger.error('Error' + err);
     }

@@ -22,7 +22,7 @@ export const getActingField = (): IField => {
   return field;
 };
 
-export const findBoughtFields = () =>
+export const getBoughtFields = () =>
   fieldsStore
     .getState()
     .fields.filter(v => v.owner && v.owner.userId > 0)

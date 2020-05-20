@@ -15,7 +15,7 @@ export const createBoardMessage = (): BoardMessage => {
   const actionState = actionsStore.getState();
 
   let event: IBoardEvent = {
-    // Adapt from actionStore
+    // Adapt from actionStore to send to client
     action: actionState && adaptAction(actionState.action),
   };
   const players = playersStore.getState();

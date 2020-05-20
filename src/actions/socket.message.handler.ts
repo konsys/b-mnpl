@@ -9,7 +9,6 @@ import {
   isTax,
   isStart,
   payTaxData,
-  isMyField,
   isChance,
   noActionField,
   isJail,

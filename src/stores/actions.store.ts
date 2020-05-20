@@ -3,6 +3,7 @@ import { createDomain } from 'effector';
 
 export interface ICurrentAction {
   action: BoardActionType;
+  isCompleted: boolean;
   userId: number;
   actionId: string;
   moveId: number;

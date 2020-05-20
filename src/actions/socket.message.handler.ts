@@ -34,7 +34,7 @@ export class BoardMessage {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
       Action.rollDicesAction();
-      Action.completesAction(action.actionId);
+
       BoardSocket.emitMessage();
     }
   }
@@ -82,7 +82,7 @@ export class BoardMessage {
         //   Action.switchPlayerTurn();
         // }
       }
-      Action.completesAction(action.actionId);
+
       BoardSocket.emitMessage();
     }
   }
@@ -105,7 +105,7 @@ export class BoardMessage {
             message: 'Oop!',
           });
       }
-      Action.completesAction(action.actionId);
+
       Action.switchPlayerTurn();
       BoardSocket.emitMessage();
     }
@@ -119,7 +119,7 @@ export class BoardMessage {
         Action.startAuctionAction();
         Action.switchPlayerTurn();
       }
-      Action.completesAction(action.actionId);
+
       BoardSocket.emitMessage();
     }
   }
@@ -130,7 +130,7 @@ export class BoardMessage {
     if (payload.actionId === action.actionId) {
       const payData = payTaxData();
       moneyTransaction(payData.sum, payData.userId, payData.toUserId);
-      Action.completesAction(action.actionId);
+
       Action.switchPlayerTurn();
       BoardSocket.emitMessage();
     }
@@ -142,7 +142,7 @@ export class BoardMessage {
     if (payload.actionId === action.actionId) {
       unJailPlayer();
       Action.rollDicesAction();
-      Action.completesAction(action.actionId);
+
       BoardSocket.emitMessage();
     }
   }

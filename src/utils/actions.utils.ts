@@ -71,13 +71,6 @@ export const rollDicesAction = (): void => {
   });
 };
 
-export const completesAction = (actionId: string): void => {
-  const action = actionsStore.getState();
-
-  action.actionId === actionId &&
-    setCurrentActionsEvent({ ...action, isCompleted: true });
-};
-
 export const startAuctionAction = (): void => {
   setCurrentActionsEvent({
     action: BoardActionType.AUCTION_START,

@@ -32,7 +32,7 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.ROLL_DICES_MODAL)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
-    if (payload.actionId === action.actionId && !action.isCompleted) {
+    if (payload.actionId === action.actionId) {
       Action.rollDicesAction();
       Action.completesAction(action.actionId);
       BoardSocket.emitMessage();
@@ -44,7 +44,7 @@ export class BoardMessage {
     const action = actionsStore.getState();
     const player = getActingPlayer();
 
-    if (payload.actionId === action.actionId && !action.isCompleted) {
+    if (payload.actionId === action.actionId) {
       if (!player.jailed) {
         noActionField() && Action.switchPlayerTurn();
 
@@ -90,7 +90,7 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
-    if (payload.actionId === action.actionId && !action.isCompleted) {
+    if (payload.actionId === action.actionId) {
       if (isCompanyForSale() && canBuyField()) {
         Action.buyFieldAction();
       } else {
@@ -114,7 +114,7 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.AUCTION_START)
   async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
-    if (payload.actionId === action.actionId && !action.isCompleted) {
+    if (payload.actionId === action.actionId) {
       if (payload.actionId === action.actionId) {
         Action.startAuctionAction();
         Action.switchPlayerTurn();
@@ -127,7 +127,7 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.TAX_PAID)
   async payment(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
-    if (payload.actionId === action.actionId && !action.isCompleted) {
+    if (payload.actionId === action.actionId) {
       const payData = payTaxData();
       moneyTransaction(payData.sum, payData.userId, payData.toUserId);
       Action.completesAction(action.actionId);
@@ -139,7 +139,7 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.UN_JAIL_PAID)
   async unjailPayment(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
-    if (payload.actionId === action.actionId && !action.isCompleted) {
+    if (payload.actionId === action.actionId) {
       unJailPlayer();
       Action.rollDicesAction();
       Action.completesAction(action.actionId);

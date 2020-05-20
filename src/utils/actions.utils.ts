@@ -16,7 +16,6 @@ export const buyFieldModalAction = (): void => {
   setCurrentActionsEvent({
     action: BoardActionType.CAN_BUY,
     userId: player.userId,
-    isCompleted: false,
     actionId: nanoid(4),
     moveId: action.moveId + 1,
     srcOfChange: 'buyFieldModalAction',
@@ -47,7 +46,6 @@ export const unJailModalAction = (): void => {
     action: BoardActionType.UN_JAIL_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'unJailModalAction',
   });
@@ -58,7 +56,6 @@ export const payTaxModalAction = (): void => {
     action: BoardActionType.TAX_PAYING_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'payTaxModalAction',
   });
@@ -69,7 +66,6 @@ export const rollDicesAction = (): void => {
     action: BoardActionType.ROLL_DICES,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'rollDicesAction',
   });
@@ -87,7 +83,6 @@ export const startAuctionAction = (): void => {
     action: BoardActionType.AUCTION_START,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'startAuctionAction',
   });
@@ -137,7 +132,6 @@ export const rollDicesModalAction = (): void => {
   setCurrentActionsEvent({
     action: BoardActionType.ROLL_DICES_MODAL,
     userId: getActingPlayer().userId,
-    isCompleted: false,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'rollDicesModalAction',

@@ -97,7 +97,6 @@ export class BoardSocket
         setCurrentActionsEvent({
           action: BoardActionType.ROLL_DICES_MODAL,
           userId: resultPlayers.find(v => v.moveOrder === 0).userId,
-          isCompleted: false,
           moveId: 0,
           actionId: nanoid(4),
           srcOfChange: 'initStores',

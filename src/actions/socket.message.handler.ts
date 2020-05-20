@@ -58,17 +58,17 @@ export class BoardMessage {
             goToJail();
             Action.switchPlayerTurn();
           } else if (isChance()) {
-            // console.log('6');
+            console.log('6');
             //TODO Sum of chance
             updateUserBalance(-500);
             Action.switchPlayerTurn();
           } else {
-            // console.log('7');
+            console.log('7');
             // TODO Добавить обработчики для остальных полей
             Action.switchPlayerTurn();
           }
         } else {
-          // console.log('8');
+          console.log('8');
           Action.switchPlayerTurn();
         }
       }
@@ -114,6 +114,6 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.UN_JAIL_PAID)
   async unjailPayment(client: Socket, payload: IActionId): Promise<void> {
     unJailPlayer();
-    Action.switchPlayerTurn();
+    Action.rollDicesAction();
   }
 }

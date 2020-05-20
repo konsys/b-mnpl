@@ -39,7 +39,6 @@ export class BoardSocket
   async onModuleInit() {
     await this.initStores();
     try {
-      // BoardSocket.emitMessage();
       setInterval(() => {
         // BoardSocket.emitMessage();
       }, 8000);
@@ -124,5 +123,6 @@ export class BoardSocket
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id} args: ${args}`);
+    BoardSocket.emitMessage();
   }
 }

@@ -26,7 +26,7 @@ export enum BoardActionType {
   BUY = 'buy',
   TAX_PAYING_MODAL = 'taxPayingModal',
   TAX_PAID = 'taxPaid',
-  ROLL_DICES_MODAL = 'showDicesModal',
+  ROLL_DICES_MODAL = 'rollDicesModal',
   UN_JAIL_MODAL = 'unJailModal',
   UN_JAIL_PAID = 'unJailPaid',
 }

@@ -43,17 +43,17 @@ export class BoardMessage {
       if (!player.jailed) {
         if (!noActionField()) {
           if (isCompanyForSale()) {
-            // console.log('2');
+            console.log('2');
             Action.buyFieldModalAction();
           } else if (isStart()) {
-            // console.log('3');
+            console.log('3');
             updateUserBalance(START_BONUS);
             Action.switchPlayerTurn();
           } else if (isTax()) {
-            // console.log('4');
+            console.log('4');
             Action.payTaxModalAction();
           } else if (isJail()) {
-            // console.log('5');
+            console.log('5');
             //TODO JAIL
             goToJail();
             Action.switchPlayerTurn();
@@ -71,7 +71,6 @@ export class BoardMessage {
           // console.log('8');
           Action.switchPlayerTurn();
         }
-      } else {
       }
     }
   }
@@ -115,6 +114,6 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.UN_JAIL_PAID)
   async unjailPayment(client: Socket, payload: IActionId): Promise<void> {
     unJailPlayer();
-    Action.switchPlayerTurn(true);
+    Action.switchPlayerTurn();
   }
 }

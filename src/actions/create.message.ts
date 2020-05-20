@@ -8,8 +8,8 @@ import {
   buyModalHandler,
   payModalHandler,
   unJailModalHandler,
-} from './handlers/modals.handler';
-import { rollDicesHandler } from './handlers/dices.handler';
+} from './client/modals.actions';
+import { rollDicesHandler } from './client/dices.actions';
 
 export const createBoardMessage = (): BoardMessage => {
   const actionState = actionsStore.getState();
@@ -32,6 +32,7 @@ export const createBoardMessage = (): BoardMessage => {
   };
 };
 
+// Adaptsaction store action or message
 const adaptAction = (type: BoardActionType) => {
   switch (type) {
     case BoardActionType.ROLL_DICES_MODAL:

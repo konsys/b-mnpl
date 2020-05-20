@@ -9,14 +9,14 @@ export const rollDicesHandler = (): RollDices => {
     dicesState = v;
   });
 
+  // Send message to roll dices and waits for css transition is complete
   const action = actionsStore.getState();
   if (!dicesState || dicesState._id !== action.actionId) {
     setRandomDicesEvent(action.actionId);
   }
-  const player = getActingPlayer();
   return {
     type: BoardActionType.ROLL_DICES,
-    userId: player.userId,
+    userId: getActingPlayer().userId,
     dices: dicesState.dices,
     meanPosition: dicesState.meanPosition,
     isDouble: dicesState.isDouble,

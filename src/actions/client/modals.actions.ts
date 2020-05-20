@@ -9,6 +9,9 @@ import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
 import { findFieldByPosition } from 'src/utils/fields.utils';
 
+/**
+ * Shows modals
+ */
 export const dicesModalHandler = (): DicesModal => ({
   type: BoardActionType.ROLL_DICES_MODAL,
   userId: getActingPlayer().userId,

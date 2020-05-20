@@ -32,8 +32,11 @@ export class BoardMessage {
   @SubscribeMessage(BoardActionType.ROLL_DICES_MODAL)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
-    payload.actionId === action.actionId && Action.rollDicesAction();
-    BoardSocket.emitMessage();
+    if (payload.actionId === action.actionId && !action.isCompleted) {
+      Action.rollDicesAction();
+      Action.completesAction(action.actionId);
+      BoardSocket.emitMessage();
+    }
   }
 
   @SubscribeMessage(BoardActionType.ROLL_DICES)
@@ -41,83 +44,106 @@ export class BoardMessage {
     const action = actionsStore.getState();
     const player = getActingPlayer();
 
-    if (payload.actionId === action.actionId) {
+    if (payload.actionId === action.actionId && !action.isCompleted) {
       if (!player.jailed) {
-        const field = getActingField();
-        // console.log(34343434, player.name, field.name);
+        noActionField() && Action.switchPlayerTurn();
 
-        if (noActionField()) {
-          // console.log('8', player);
-          !player.jailed && Action.switchPlayerTurn();
-        } else if (isCompanyForSale()) {
-          // console.log('isCompanyForSale', player.name);
-          Action.buyFieldModalAction();
-        } else if (isStart()) {
-          // console.log('isStart', player.name);
-          updateUserBalance(START_BONUS);
+        isCompanyForSale() && Action.buyFieldModalAction();
+
+        isJail() && goToJail() && Action.switchPlayerTurn();
+
+        isStart() &&
+          updateUserBalance(START_BONUS) &&
           Action.switchPlayerTurn();
-        } else if (isTax()) {
-          // console.log('isTax', player.name);
-          Action.payTaxModalAction();
-        } else if (isJail()) {
-          console.log('isJail', player.name);
-          //TODO JAIL
-          goToJail();
-          Action.switchPlayerTurn();
-        } else if (isChance()) {
-          // console.log('isChance', player.name);
-          //TODO Sum of chance
-          updateUserBalance(-500);
-          Action.switchPlayerTurn();
-        }
+        // if (noActionField()) {
+        //   // console.log('8', player);
+
+        //   !player.jailed && Action.switchPlayerTurn();
+        // } else if (isCompanyForSale()) {
+        //   // console.log('isCompanyForSale', player.name);
+        //   Action.buyFieldModalAction();
+        // } else if (isStart()) {
+        //   // console.log('isStart', player.name);
+        //   updateUserBalance(START_BONUS);
+        //   Action.switchPlayerTurn();
+        // } else if (isTax()) {
+        //   // console.log('isTax', player.name);
+        //   Action.payTaxModalAction();
+        // } else if (isJail()) {
+        //   // console.log('isJail', player.name);
+        //   //TODO JAIL
+        //   goToJail();
+        //   Action.switchPlayerTurn();
+        // } else if (isChance()) {
+        //   // console.log('isChance', player.name);
+        //   //TODO Sum of chance
+        //   updateUserBalance(-500);
+
+        //   Action.switchPlayerTurn();
+        // }
       }
+      Action.completesAction(action.actionId);
+      BoardSocket.emitMessage();
     }
-    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(BoardActionType.CAN_BUY)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    if (isCompanyForSale() && canBuyField()) {
-      Action.buyFieldAction();
-    } else {
-      !isCompanyForSale() &&
-        setError({
-          code: ErrorCode.CompanyHasOwner,
-          message: 'Oop!',
-        });
-      !canBuyField() &&
-        setError({
-          code: ErrorCode.NotEnoughMoney,
-          message: 'Oop!',
-        });
+    const action = actionsStore.getState();
+    if (payload.actionId === action.actionId && !action.isCompleted) {
+      if (isCompanyForSale() && canBuyField()) {
+        Action.buyFieldAction();
+      } else {
+        !isCompanyForSale() &&
+          setError({
+            code: ErrorCode.CompanyHasOwner,
+            message: 'Oop!',
+          });
+        !canBuyField() &&
+          setError({
+            code: ErrorCode.NotEnoughMoney,
+            message: 'Oop!',
+          });
+      }
+      Action.completesAction(action.actionId);
+      Action.switchPlayerTurn();
+      BoardSocket.emitMessage();
     }
-    Action.switchPlayerTurn();
-    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(BoardActionType.AUCTION_START)
   async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
-    if (payload.actionId === action.actionId) {
-      Action.startAuctionAction();
-      Action.switchPlayerTurn();
+    if (payload.actionId === action.actionId && !action.isCompleted) {
+      if (payload.actionId === action.actionId) {
+        Action.startAuctionAction();
+        Action.switchPlayerTurn();
+      }
+      Action.completesAction(action.actionId);
+      BoardSocket.emitMessage();
     }
-    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(BoardActionType.TAX_PAID)
   async payment(client: Socket, payload: IActionId): Promise<void> {
-    const payData = payTaxData();
-    moneyTransaction(payData.sum, payData.userId, payData.toUserId);
-
-    Action.switchPlayerTurn();
-    BoardSocket.emitMessage();
+    const action = actionsStore.getState();
+    if (payload.actionId === action.actionId && !action.isCompleted) {
+      const payData = payTaxData();
+      moneyTransaction(payData.sum, payData.userId, payData.toUserId);
+      Action.completesAction(action.actionId);
+      Action.switchPlayerTurn();
+      BoardSocket.emitMessage();
+    }
   }
 
   @SubscribeMessage(BoardActionType.UN_JAIL_PAID)
   async unjailPayment(client: Socket, payload: IActionId): Promise<void> {
-    unJailPlayer();
-    Action.rollDicesAction();
-    BoardSocket.emitMessage();
+    const action = actionsStore.getState();
+    if (payload.actionId === action.actionId && !action.isCompleted) {
+      unJailPlayer();
+      Action.rollDicesAction();
+      Action.completesAction(action.actionId);
+      BoardSocket.emitMessage();
+    }
   }
 }

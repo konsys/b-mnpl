@@ -89,9 +89,9 @@ export const unJailPlayer = () => {
   });
 };
 
-export const goToJail = () => {
+export const goToJail = (): boolean => {
   const player = getActingPlayer();
-  updatePlayer({
+  return updatePlayer({
     ...player,
     jailed: JAIL_TURNS,
     unjailAttempts: JAIL_TURNS,

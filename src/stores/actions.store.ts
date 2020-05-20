@@ -20,4 +20,4 @@ export const actionsStore = ActionsDomain.store<ICurrentAction>(null)
   .on(setCurrentActionsEvent, (_, data) => data)
   .reset(resetActionsEvent);
 
-// actionsStore.watch(v => console.log('actionsStore', v));
+// actionsStore.updates.watch(v => console.log('actionsStore', v));

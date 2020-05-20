@@ -42,17 +42,6 @@ export const buyFieldAction = (): void => {
   updateAllPLayers(players);
 };
 
-export const rollDicesModalAction = (): void => {
-  setCurrentActionsEvent({
-    action: BoardActionType.ROLL_DICES_MODAL,
-    userId: getActingPlayer().userId,
-    isCompleted: false,
-    actionId: nanoid(4),
-    moveId: actionsStore.getState().moveId + 1,
-    srcOfChange: 'rollDicesModalAction',
-  });
-};
-
 export const unJailModalAction = (): void => {
   setCurrentActionsEvent({
     action: BoardActionType.UN_JAIL_MODAL,
@@ -84,6 +73,13 @@ export const rollDicesAction = (): void => {
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'rollDicesAction',
   });
+};
+
+export const completesAction = (actionId: string): void => {
+  const action = actionsStore.getState();
+
+  action.actionId === actionId &&
+    setCurrentActionsEvent({ ...action, isCompleted: true });
 };
 
 export const startAuctionAction = (): void => {
@@ -133,15 +129,19 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   updateAllPLayers(res);
   player = getActingPlayer();
 
-  if (player.jailed) {
-    unJailModalAction();
-    console.log(1, player.name);
-    console.log();
-  } else {
-    console.log(2, player.name);
-    console.log();
-    rollDicesModalAction();
-  }
+  player.jailed ? unJailModalAction() : rollDicesModalAction();
+};
+
+export const rollDicesModalAction = (): void => {
+  console.log(22222, getActingPlayer().name);
+  setCurrentActionsEvent({
+    action: BoardActionType.ROLL_DICES_MODAL,
+    userId: getActingPlayer().userId,
+    isCompleted: false,
+    actionId: nanoid(4),
+    moveId: actionsStore.getState().moveId + 1,
+    srcOfChange: 'rollDicesModalAction',
+  });
 };
 
 export const getPercentPart = (price: number, percent: number) =>

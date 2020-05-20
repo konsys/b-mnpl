@@ -1,8 +1,15 @@
 import { BoardMessage, IBoardEvent } from '../types/board.types';
 import { playersStore } from 'src/stores/players.store';
 import { actionsStore } from 'src/stores/actions.store';
-import { adaptAction } from './handlers/action.adapter';
 import { getBoughtFields } from 'src/utils/fields.utils';
+import { BoardActionType } from 'src/types/board.types';
+import {
+  dicesModalHandler,
+  buyModalHandler,
+  payModalHandler,
+  unJailModalHandler,
+} from './handlers/modals.handler';
+import { rollDicesHandler } from './handlers/dices.handler';
 
 export const createBoardMessage = (): BoardMessage => {
   const actionState = actionsStore.getState();
@@ -23,4 +30,23 @@ export const createBoardMessage = (): BoardMessage => {
       },
     },
   };
+};
+
+const adaptAction = (type: BoardActionType) => {
+  switch (type) {
+    case BoardActionType.ROLL_DICES_MODAL:
+      return dicesModalHandler();
+
+    case BoardActionType.ROLL_DICES:
+      return rollDicesHandler();
+
+    case BoardActionType.CAN_BUY:
+      return buyModalHandler();
+
+    case BoardActionType.TAX_PAYING_MODAL:
+      return payModalHandler();
+
+    case BoardActionType.UN_JAIL_MODAL:
+      return unJailModalHandler();
+  }
 };

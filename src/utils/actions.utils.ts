@@ -102,10 +102,12 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
 
   // Doubled dices and jail
   if (player.movesLeft > 0) {
+    // console.log(1, player.name);
     nextIndex = index;
     player.movesLeft = --player.movesLeft;
     updatePlayer(player);
   } else if (!player.justUnailed) {
+    // console.log(2, player.name);
     nextIndex = getNextArrayIndex(index, players);
   }
 
@@ -124,7 +126,16 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
 
   updateAllPLayers(res);
   player = getActingPlayer();
-  player.jailed ? unJailModalAction() : rollDicesModalAction();
+
+  if (player.jailed) {
+    unJailModalAction();
+    console.log(1, player.name);
+    console.log();
+  } else {
+    console.log(2, player.name);
+    console.log();
+    rollDicesModalAction();
+  }
 };
 
 export const getPercentPart = (price: number, percent: number) =>

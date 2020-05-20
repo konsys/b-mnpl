@@ -13,6 +13,7 @@ import {
   isChance,
   noActionField,
   isJail,
+  getActingField,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -43,34 +44,31 @@ export class BoardMessage {
 
     if (payload.actionId === action.actionId) {
       if (!player.jailed) {
-        if (!noActionField()) {
-          if (isCompanyForSale()) {
-            console.log('2');
-            Action.buyFieldModalAction();
-          } else if (isStart()) {
-            console.log('3');
-            updateUserBalance(START_BONUS);
-            Action.switchPlayerTurn();
-          } else if (isTax()) {
-            console.log('4');
-            Action.payTaxModalAction();
-          } else if (isJail()) {
-            console.log('5');
-            //TODO JAIL
-            goToJail();
-            Action.switchPlayerTurn();
-          } else if (isChance()) {
-            console.log('6');
-            //TODO Sum of chance
-            updateUserBalance(-500);
-            Action.switchPlayerTurn();
-          } else {
-            console.log('7');
-            // TODO Добавить обработчики для остальных полей
-            Action.switchPlayerTurn();
-          }
-        } else {
-          console.log('8');
+        const field = getActingField();
+        // console.log(34343434, player.name, field.name);
+
+        if (noActionField()) {
+          // console.log('8', player);
+          !player.jailed && Action.switchPlayerTurn();
+        } else if (isCompanyForSale()) {
+          // console.log('isCompanyForSale', player.name);
+          Action.buyFieldModalAction();
+        } else if (isStart()) {
+          // console.log('isStart', player.name);
+          updateUserBalance(START_BONUS);
+          Action.switchPlayerTurn();
+        } else if (isTax()) {
+          // console.log('isTax', player.name);
+          Action.payTaxModalAction();
+        } else if (isJail()) {
+          console.log('isJail', player.name);
+          //TODO JAIL
+          goToJail();
+          Action.switchPlayerTurn();
+        } else if (isChance()) {
+          // console.log('isChance', player.name);
+          //TODO Sum of chance
+          updateUserBalance(-500);
           Action.switchPlayerTurn();
         }
       }

@@ -16,7 +16,7 @@ import { SocketActions } from 'src/types/game.types';
 import { createBoardMessage } from 'src/actions/create.message';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
-import { setCurrentActionsEvent } from 'src/stores/actions.store';
+import { updateAction } from 'src/stores/actions.store';
 import nanoid from 'nanoid';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import { updateAllPLayers } from 'src/utils/users.utils';
@@ -94,10 +94,11 @@ export class BoardSocket
           resultPlayers.push(players.find(v => v.userId === id));
         });
 
-        setCurrentActionsEvent({
+        updateAction({
           action: BoardActionType.ROLL_DICES_MODAL,
           userId: resultPlayers.find(v => v.moveOrder === 0).userId,
           moveId: 0,
+          isCompleted: false,
           actionId: nanoid(4),
           srcOfChange: 'initStores',
         });

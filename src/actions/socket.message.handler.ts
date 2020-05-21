@@ -1,5 +1,5 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { BoardActionType } from 'src/types/board.types';
+import { BoardActionType, IPlayerMove } from 'src/types/board.types';
 import { Socket } from 'socket.io';
 import { actionsStore } from 'src/stores/actions.store';
 import { IActionId } from 'src/types/board.types';
@@ -9,10 +9,8 @@ import {
   isTax,
   isStart,
   payTaxData,
-  isChance,
   noActionField,
   isJail,
-  getActingField,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -40,11 +38,15 @@ export class BoardMessage {
   }
 
   @SubscribeMessage(BoardActionType.PLAYER_ROLL_DICES)
-  async dicesRolled(client: Socket, payload: IActionId): Promise<void> {
+  async dicesRolled(client: Socket, payload: IPlayerMove): Promise<void> {
     const action = actionsStore.getState();
     const player = getActingPlayer();
 
-    if (payload.actionId === action.actionId) {
+    console.log(11111111, payload);
+    if (
+      payload.actionId === action.actionId &&
+      player.userId === payload.userId
+    ) {
       if (!player.jailed) {
         noActionField() && Action.switchPlayerTurn();
 
@@ -55,6 +57,8 @@ export class BoardMessage {
         isStart() &&
           updateUserBalance(START_BONUS) &&
           Action.switchPlayerTurn();
+
+        isTax() && Action.payTaxModalAction();
         // if (noActionField()) {
         //   // console.log('8', player);
 

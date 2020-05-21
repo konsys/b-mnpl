@@ -9,6 +9,10 @@ export interface IActionId {
   actionId: string;
 }
 
+export interface IPlayerMove extends IActionId {
+  userId: number;
+}
+
 export type Contract = {
   fromUserId: number;
   toUserId: number;

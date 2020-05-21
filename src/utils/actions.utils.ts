@@ -1,4 +1,4 @@
-import { setCurrentActionsEvent, actionsStore } from 'src/stores/actions.store';
+import { actionsStore, updateAction } from 'src/stores/actions.store';
 import { BoardActionType, FieldType } from 'src/types/board.types';
 import nanoid from 'nanoid';
 import { findFieldByPosition, buyAuto, buyCompany } from './fields.utils';
@@ -13,10 +13,11 @@ import { playersStore } from 'src/stores/players.store';
 export const buyFieldModalAction = (): void => {
   const player = getActingPlayer();
   const action = actionsStore.getState();
-  setCurrentActionsEvent({
+  updateAction({
     action: BoardActionType.CAN_BUY,
     userId: player.userId,
     actionId: nanoid(4),
+    isCompleted: false,
     moveId: action.moveId + 1,
     srcOfChange: 'buyFieldModalAction',
   });
@@ -42,40 +43,44 @@ export const buyFieldAction = (): void => {
 };
 
 export const unJailModalAction = (): void => {
-  setCurrentActionsEvent({
+  updateAction({
     action: BoardActionType.UN_JAIL_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
+    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'unJailModalAction',
   });
 };
 
 export const payTaxModalAction = (): void => {
-  setCurrentActionsEvent({
+  updateAction({
     action: BoardActionType.TAX_PAYING_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
+    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'payTaxModalAction',
   });
 };
 
 export const rollDicesAction = (): void => {
-  setCurrentActionsEvent({
+  updateAction({
     action: BoardActionType.PLAYER_ROLL_DICES,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
+    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'rollDicesAction',
   });
 };
 
 export const startAuctionAction = (): void => {
-  setCurrentActionsEvent({
+  updateAction({
     action: BoardActionType.AUCTION_START,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
+    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'startAuctionAction',
   });
@@ -89,6 +94,8 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   const index = getActingPlayerIndex();
   let player = getActingPlayer();
   let nextIndex = index;
+
+  //
 
   // Doubled dices and jail
   if (player.movesLeft > 0) {
@@ -121,10 +128,11 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
 };
 
 export const rollDicesModalAction = (): void => {
-  setCurrentActionsEvent({
+  updateAction({
     action: BoardActionType.ROLL_DICES_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
+    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
     srcOfChange: 'rollDicesModalAction',
   });

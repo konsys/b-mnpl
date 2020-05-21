@@ -11,6 +11,7 @@ import {
   payTaxData,
   noActionField,
   isJail,
+  isChance,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -58,32 +59,7 @@ export class BoardMessage {
           Action.switchPlayerTurn();
 
         isTax() && Action.payTaxModalAction();
-        // if (noActionField()) {
-        //   // console.log('8', player);
-
-        //   !player.jailed && Action.switchPlayerTurn();
-        // } else if (isCompanyForSale()) {
-        //   // console.log('isCompanyForSale', player.name);
-        //   Action.buyFieldModalAction();
-        // } else if (isStart()) {
-        //   // console.log('isStart', player.name);
-        //   updateUserBalance(START_BONUS);
-        //   Action.switchPlayerTurn();
-        // } else if (isTax()) {
-        //   // console.log('isTax', player.name);
-        //   Action.payTaxModalAction();
-        // } else if (isJail()) {
-        //   // console.log('isJail', player.name);
-        //   //TODO JAIL
-        //   goToJail();
-        //   Action.switchPlayerTurn();
-        // } else if (isChance()) {
-        //   // console.log('isChance', player.name);
-        //   //TODO Sum of chance
-        //   updateUserBalance(-500);
-
-        //   Action.switchPlayerTurn();
-        // }
+        isChance() && updateUserBalance(-500) && Action.payTaxModalAction();
       }
 
       BoardSocket.emitMessage();

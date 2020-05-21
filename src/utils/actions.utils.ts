@@ -121,7 +121,6 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
 };
 
 export const rollDicesModalAction = (): void => {
-  console.log(22222, getActingPlayer().name);
   setCurrentActionsEvent({
     action: BoardActionType.ROLL_DICES_MODAL,
     userId: getActingPlayer().userId,

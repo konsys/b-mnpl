@@ -31,7 +31,6 @@ import { BoardSocket } from 'src/modules/socket/board.init';
 export class BoardMessage {
   @SubscribeMessage(BoardActionType.ROLL_DICES_MODAL)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
-    console.log(111111111111, 'ROLL_DICES_MODAL');
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
       Action.rollDicesAction();
@@ -42,8 +41,6 @@ export class BoardMessage {
 
   @SubscribeMessage(BoardActionType.PLAYER_ROLL_DICES)
   async dicesRolled(client: Socket, payload: IActionId): Promise<void> {
-    console.log(22222222222, 'PLAYER_ROLL_DICES');
-
     const action = actionsStore.getState();
     const player = getActingPlayer();
 

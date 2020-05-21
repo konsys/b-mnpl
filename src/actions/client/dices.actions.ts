@@ -15,7 +15,7 @@ export const rollDicesHandler = (): RollDices => {
     setRandomDicesEvent(action.actionId);
   }
   return {
-    type: BoardActionType.PLAYER_ROLL_DICES,
+    type: BoardActionType.PLAYER_TOKEN_MOVED,
     userId: getActingPlayer().userId,
     dices: dicesState.dices,
     meanPosition: dicesState.meanPosition,

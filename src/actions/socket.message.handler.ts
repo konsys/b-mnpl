@@ -37,7 +37,7 @@ export class BoardMessage {
     }
   }
 
-  @SubscribeMessage(BoardActionType.PLAYER_ROLL_DICES)
+  @SubscribeMessage(BoardActionType.PLAYER_TOKEN_MOVED)
   async dicesRolled(client: Socket, payload: IPlayerMove): Promise<void> {
     const action = actionsStore.getState();
     const player = getActingPlayer();

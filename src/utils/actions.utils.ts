@@ -66,7 +66,7 @@ export const payTaxModalAction = (): void => {
 
 export const rollDicesAction = (): void => {
   updateAction({
-    action: BoardActionType.PLAYER_ROLL_DICES,
+    action: BoardActionType.PLAYER_TOKEN_MOVED,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
     isCompleted: false,

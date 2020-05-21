@@ -38,7 +38,7 @@ const adaptAction = (type: BoardActionType) => {
     case BoardActionType.ROLL_DICES_MODAL:
       return dicesModalHandler();
 
-    case BoardActionType.PLAYER_ROLL_DICES:
+    case BoardActionType.PLAYER_TOKEN_MOVED:
       return rollDicesHandler();
 
     case BoardActionType.CAN_BUY:

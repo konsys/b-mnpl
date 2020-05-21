@@ -20,7 +20,7 @@ export type Contract = {
 };
 
 export enum BoardActionType {
-  ROLL_DICES = 'rollDices',
+  PLAYER_ROLL_DICES = 'playerRollDices',
   CAN_BUY = 'canBuy',
   AUCTION_START = 'auctionStart',
   BUY = 'buy',
@@ -63,7 +63,7 @@ export interface UnJailModal extends BoardAction {
 }
 
 export interface RollDices extends BoardAction {
-  type: BoardActionType.ROLL_DICES;
+  type: BoardActionType.PLAYER_ROLL_DICES;
   dices: number[];
   isDouble: boolean;
   isTriple: boolean;

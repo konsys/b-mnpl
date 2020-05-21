@@ -100,7 +100,6 @@ export interface IPlayer extends UsersEntity {
   jailed: number;
   unjailAttempts: number;
   justUnailed: boolean;
-  prevPosition: number;
   meanPosition: number;
   money: number;
   creditPayRound: boolean;

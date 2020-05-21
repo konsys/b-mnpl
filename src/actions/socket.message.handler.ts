@@ -42,7 +42,6 @@ export class BoardMessage {
     const action = actionsStore.getState();
     const player = getActingPlayer();
 
-    console.log(11111111, payload);
     if (
       payload.actionId === action.actionId &&
       player.userId === payload.userId

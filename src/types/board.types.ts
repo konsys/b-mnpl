@@ -99,7 +99,6 @@ export interface IPlayer extends UsersEntity {
   doublesRolledAsCombo: number;
   jailed: number;
   unjailAttempts: number;
-  justUnailed: boolean;
   meanPosition: number;
   money: number;
   creditPayRound: boolean;

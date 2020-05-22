@@ -103,17 +103,16 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
     nextIndex = index;
     player.movesLeft = --player.movesLeft;
     updatePlayer(player);
-  } else if (!player.justUnailed) {
+  } else {
     // console.log(2, player.name);
     nextIndex = getNextArrayIndex(index, players);
   }
 
   const res = players.map((v, k) => {
     if (k === nextIndex) {
-      if (player.justUnailed) {
+      if (unJail) {
         v.jailed = 0;
         v.unjailAttempts = 0;
-        v.justUnailed = false;
       }
       return { ...v, isActing: true };
     } else {

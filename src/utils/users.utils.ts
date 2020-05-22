@@ -82,7 +82,6 @@ export const unJailPlayer = () => {
   const player = getActingPlayer();
   return updatePlayer({
     ...player,
-    justUnailed: true,
     money: player.money - UN_JAIL_PRICE,
     meanPosition: JAIL_POSITION,
   });

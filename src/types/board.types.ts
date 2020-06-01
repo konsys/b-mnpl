@@ -24,7 +24,7 @@ export type Contract = {
 };
 
 export enum IncomeMessageType {
-  INCOME_PLAYER_TOKEN_TRANSITION_COMPLETED = 'changeTokenPositionCompleted',
+  INCOME_TOKEN_TRANSITION_COMPLETED = 'changeTokenPositionCompleted',
   INCOME_AUCTION_START_CLICKED = 'auctionStartClicked',
   INCOME_BUY_FIELD_CLICKED = 'buyFieldClicked',
   INCOME_TAX_PAID_CLICKED = 'taxPaidCLicked',
@@ -33,11 +33,12 @@ export enum IncomeMessageType {
 }
 
 export enum OutcomeMessageType {
-  OUTCOME_PLAYER_TOKEN_POSITION_ACTION = 'changeTokenPosition',
+  OUTCOME_PLAYER_TOKEN_POSITION_ACTION = 'changeTokenAction',
   OUTCOME_CAN_BUY_MODAL = 'canBuyModal',
   OUTCOME_TAX_PAYING_MODAL = 'taxPayingModal',
   OUTCOME_ROLL_DICES_MODAL = 'rollDicesModal',
   OUTCOME_UN_JAIL_MODAL = 'unJailModal',
+  OUTCOME_UN_JAIL_ACTION = 'unJailAction',
   OUTCOME_AUCTION_MODAL = 'auctionModal',
   OUTCOME_ROLL_DICES_ACTION = 'rollDicesAction',
 }

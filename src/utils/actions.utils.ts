@@ -11,7 +11,7 @@ import {
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
 
-export const buyFieldModalAction = (): void => {
+export const buyFieldModal = (): void => {
   const player = getActingPlayer();
   const action = actionsStore.getState();
   updateAction({
@@ -22,7 +22,7 @@ export const buyFieldModalAction = (): void => {
   });
 };
 
-export const buyFieldAction = (): void => {
+export const buyField = (): void => {
   // Field set to player
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
@@ -39,7 +39,16 @@ export const buyFieldAction = (): void => {
   updatePlayer({ ...pl, money: user.money - price });
 };
 
-export const unJailModalAction = (): void => {
+export const unJailAction = (): void => {
+  updateAction({
+    action: OutcomeMessageType.OUTCOME_UN_JAIL_ACTION,
+    userId: getActingPlayer().userId,
+    actionId: nanoid(4),
+    moveId: actionsStore.getState().moveId + 1,
+  });
+};
+
+export const unJailModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
     userId: getActingPlayer().userId,
@@ -48,7 +57,7 @@ export const unJailModalAction = (): void => {
   });
 };
 
-export const payTaxModalAction = (): void => {
+export const payTaxModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
     userId: getActingPlayer().userId,
@@ -66,7 +75,7 @@ export const rollDicesAction = (): void => {
   });
 };
 
-export const rollDicesModalAction = (): void => {
+export const rollDicesModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
     userId: getActingPlayer().userId,
@@ -75,7 +84,7 @@ export const rollDicesModalAction = (): void => {
   });
 };
 
-export const startAuctionAction = (): void => {
+export const startAuctionModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
     userId: getActingPlayer().userId,
@@ -116,7 +125,7 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
 
   updateAllPLayers(res);
   player = getActingPlayer();
-  player.jailed ? unJailModalAction() : rollDicesModalAction();
+  player.jailed ? unJailModal() : rollDicesModal();
 };
 
 export const calcPercentPart = (price: number, percent: number) =>

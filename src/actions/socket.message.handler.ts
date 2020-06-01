@@ -32,14 +32,14 @@ export class BoardMessage {
     BoardSocket.emitMessage();
   }
 
-  @SubscribeMessage(IncomeMessageType.INCOME_PLAYER_TOKEN_TRANSITION_COMPLETED)
+  @SubscribeMessage(IncomeMessageType.INCOME_TOKEN_TRANSITION_COMPLETED)
   async dicesRolled(client: Socket, payload: IPlayerMove): Promise<void> {
     const player = getActingPlayer();
 
     if (!player.jailed) {
       noActionField() && Action.switchPlayerTurn();
 
-      isCompanyForSale() && Action.buyFieldModalAction();
+      isCompanyForSale() && Action.buyFieldModal();
 
       isJail() && goToJail() && Action.switchPlayerTurn();
 
@@ -51,7 +51,7 @@ export class BoardMessage {
         }) &&
         Action.switchPlayerTurn();
 
-      isTax() && Action.payTaxModalAction();
+      isTax() && Action.payTaxModal();
 
       isChance() &&
         moneyTransaction({
@@ -59,7 +59,7 @@ export class BoardMessage {
           userId: player.userId,
           toUserId: 0,
         }) &&
-        Action.payTaxModalAction();
+        Action.payTaxModal();
     }
 
     BoardSocket.emitMessage();
@@ -68,7 +68,7 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     if (isCompanyForSale() && canBuyField()) {
-      Action.buyFieldAction();
+      Action.buyField();
     } else {
       !isCompanyForSale() &&
         setError({
@@ -88,7 +88,7 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_START_CLICKED)
   async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
-    Action.startAuctionAction();
+    Action.startAuctionModal();
     Action.switchPlayerTurn();
 
     BoardSocket.emitMessage();
@@ -103,9 +103,9 @@ export class BoardMessage {
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED)
-  async unjailPayment(client: Socket, payload: IActionId): Promise<void> {
+  async unJailPayment(client: Socket, payload: IActionId): Promise<void> {
     unJailPlayer();
-    Action.rollDicesModalAction();
+    Action.unJailAction();
     BoardSocket.emitMessage();
   }
 }

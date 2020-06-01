@@ -8,7 +8,7 @@ import {
   canBuyField,
   isTax,
   isStart,
-  payTaxData,
+  moneyTransactionParams,
   noActionField,
   isJail,
   isChance,
@@ -18,7 +18,6 @@ import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
 import {
   moneyTransaction,
-  updateUserBalance,
   getActingPlayer,
   unJailPlayer,
   goToJail,
@@ -30,11 +29,8 @@ import { BoardSocket } from 'src/modules/socket/board.init';
 export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
-    const action = actionsStore.getState();
-    if (payload.actionId === action.actionId) {
-      Action.rollDicesAction();
-      BoardSocket.emitMessage();
-    }
+    Action.rollDicesAction();
+    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_PLAYER_TOKEN_TRANSITION_COMPLETED)
@@ -42,86 +38,76 @@ export class BoardMessage {
     const action = actionsStore.getState();
     const player = getActingPlayer();
 
-    if (
-      payload.actionId === action.actionId &&
-      player.userId === payload.userId
-    ) {
-      if (!player.jailed) {
-        noActionField() && Action.switchPlayerTurn();
+    if (!player.jailed) {
+      noActionField() && Action.switchPlayerTurn();
 
-        isCompanyForSale() && Action.buyFieldModalAction();
+      isCompanyForSale() && Action.buyFieldModalAction();
 
-        isJail() && goToJail() && Action.switchPlayerTurn();
+      isJail() && goToJail() && Action.switchPlayerTurn();
 
-        isStart() &&
-          updateUserBalance(START_BONUS) &&
-          Action.switchPlayerTurn();
+      isStart() &&
+        moneyTransaction({
+          sum: START_BONUS,
+          userId: player.userId,
+          toUserId: 0,
+        }) &&
+        Action.switchPlayerTurn();
 
-        isTax() && Action.payTaxModalAction();
-        isChance() && updateUserBalance(-500) && Action.payTaxModalAction();
-      }
+      isTax() && Action.payTaxModalAction();
 
-      BoardSocket.emitMessage();
+      isChance() &&
+        moneyTransaction({
+          sum: 50000,
+          userId: player.userId,
+          toUserId: 0,
+        }) &&
+        Action.payTaxModalAction();
     }
+
+    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
-    if (payload.actionId === action.actionId) {
-      if (isCompanyForSale() && canBuyField()) {
-        Action.buyFieldAction();
-      } else {
-        !isCompanyForSale() &&
-          setError({
-            code: ErrorCode.CompanyHasOwner,
-            message: 'Oop!',
-          });
-        !canBuyField() &&
-          setError({
-            code: ErrorCode.NotEnoughMoney,
-            message: 'Oop!',
-          });
-      }
-
-      Action.switchPlayerTurn();
-      BoardSocket.emitMessage();
+    if (isCompanyForSale() && canBuyField()) {
+      Action.buyFieldAction();
+    } else {
+      !isCompanyForSale() &&
+        setError({
+          code: ErrorCode.CompanyHasOwner,
+          message: 'Oop!',
+        });
+      !canBuyField() &&
+        setError({
+          code: ErrorCode.NotEnoughMoney,
+          message: 'Oop!',
+        });
     }
+
+    Action.switchPlayerTurn();
+    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_START_CLICKED)
   async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
-    const action = actionsStore.getState();
-    if (payload.actionId === action.actionId) {
-      if (payload.actionId === action.actionId) {
-        Action.startAuctionAction();
-        Action.switchPlayerTurn();
-      }
+    Action.startAuctionAction();
+    Action.switchPlayerTurn();
 
-      BoardSocket.emitMessage();
-    }
+    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
-    const action = actionsStore.getState();
-    if (payload.actionId === action.actionId) {
-      const payData = payTaxData();
-      moneyTransaction(payData.sum, payData.userId, payData.toUserId);
-
-      Action.switchPlayerTurn();
-      BoardSocket.emitMessage();
-    }
+    moneyTransaction(moneyTransactionParams());
+    Action.switchPlayerTurn();
+    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED)
   async unjailPayment(client: Socket, payload: IActionId): Promise<void> {
-    const action = actionsStore.getState();
-    if (payload.actionId === action.actionId) {
-      unJailPlayer();
-      console.log('unjail', getActingPlayer().name);
-      Action.rollDicesModalAction();
-      BoardSocket.emitMessage();
-    }
+    unJailPlayer();
+    Action.rollDicesModalAction();
+    BoardSocket.emitMessage();
   }
 }

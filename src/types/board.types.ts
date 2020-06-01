@@ -181,7 +181,7 @@ export interface IField extends BoardFieldsEntity {
   owner?: IFieldStatus;
 }
 
-export interface IPaymentTransaction {
+export interface IMoneyTransaction {
   sum: number | null;
   userId: number;
   toUserId: number;

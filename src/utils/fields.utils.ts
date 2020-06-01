@@ -1,5 +1,5 @@
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
-import { IField, IPaymentTransaction, FieldType } from 'src/types/board.types';
+import { IField, IMoneyTransaction, FieldType } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
 import { calcPercentPart } from './actions.utils';
 import {
@@ -40,7 +40,7 @@ export const isCompany = (field): boolean =>
 export const isChance = (): boolean =>
   getActingField().type === FieldType.CHANCE;
 
-export const payTaxData = (): IPaymentTransaction => {
+export const moneyTransactionParams = (): IMoneyTransaction => {
   const user = getActingPlayer();
   const field = getActingField();
   return {

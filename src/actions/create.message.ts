@@ -20,7 +20,7 @@ export const createBoardMessage = (): BoardMessage => {
 
   let event: IBoardEvent = {
     // Adapt from actionStore to send to client
-    action: actionState && adaptAction(actionState.action),
+    action: actionState && actionTypeToEventAdapter(actionState.action),
   };
   const players = playersStore.getState();
   return {
@@ -37,8 +37,9 @@ export const createBoardMessage = (): BoardMessage => {
 };
 
 // When emit message action is sent from action store
-const adaptAction = (type: OutcomeMessageType | IncomeMessageType) => {
-  console.log('typetypetype', type);
+const actionTypeToEventAdapter = (
+  type: OutcomeMessageType | IncomeMessageType,
+) => {
   switch (type) {
     case OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL:
       return rollDicesModalMessage();

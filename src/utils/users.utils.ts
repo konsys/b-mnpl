@@ -1,5 +1,5 @@
 import { playersStore, setPlayersEvent } from 'src/stores/players.store';
-import { IPlayer } from 'src/types/board.types';
+import { IPlayer, IMoneyTransaction } from 'src/types/board.types';
 import { JAIL_POSITION, UN_JAIL_PRICE, JAIL_TURNS } from './board.params.utils';
 
 export const getPlayerById = (userId: number): IPlayer => {
@@ -54,28 +54,19 @@ export const updateAllPLayers = (players: IPlayer[]): boolean => {
   return true;
 };
 
-export const updateUserBalance = (sum: number): boolean => {
-  const player = getActingPlayer();
-  return updatePlayer({
-    ...player,
-    money: player.money + sum,
-  });
-};
-
-export const moneyTransaction = (
-  sum: number,
-  userId1: number,
-  userId2: number,
-): boolean => {
-  const player1 = getPlayerById(userId1);
-  const player2 = getPlayerById(userId2);
+export const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
+  const player1 = getPlayerById(transaction.userId);
+  const player2 = transaction.toUserId
+    ? getPlayerById(transaction.toUserId)
+    : 0;
   // TODO error handler
-  if (player1.money < sum) throw Error('No money');
+  if (player1.money < transaction.sum) throw Error('No money');
 
-  return !player2
-    ? updatePlayer({ ...player1, money: player1.money + sum })
-    : updatePlayer({ ...player1, money: player1.money + sum }) &&
-        updatePlayer({ ...player2, money: player2.money - sum });
+  return (
+    updatePlayer({ ...player1, money: player1.money + transaction.sum }) &&
+    player2 &&
+    updatePlayer({ ...player2, money: player2.money - transaction.sum })
+  );
 };
 
 export const unJailPlayer = () => {

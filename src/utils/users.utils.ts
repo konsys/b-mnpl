@@ -77,6 +77,14 @@ export const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
 
 export const unJailPlayer = () => {
   const player = getActingPlayer();
+  // After clicking unjail for manoey till show roll dices modal
+  setCurrentActionsEvent({
+    action: OutcomeMessageType.DO_NOTHING,
+    actionId: nanoid(4),
+    moveId: 1,
+    userId: getActingPlayer().userId,
+  });
+
   return updatePlayer({
     ...player,
     money: player.money - UN_JAIL_PRICE,
@@ -88,12 +96,6 @@ export const unJailPlayer = () => {
 
 export const goToJail = (): boolean => {
   const player = getActingPlayer();
-  setCurrentActionsEvent({
-    action: OutcomeMessageType.DO_NOTHING,
-    actionId: nanoid(4),
-    moveId: 1,
-    userId: getActingPlayer().userId,
-  });
   return updatePlayer({
     ...player,
     jailed: JAIL_TURNS,

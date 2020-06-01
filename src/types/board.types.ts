@@ -39,7 +39,7 @@ export enum OutcomeMessageType {
   OUTCOME_ROLL_DICES_MODAL = 'rollDicesModal',
   OUTCOME_UN_JAIL_MODAL = 'unJailModal',
   OUTCOME_AUCTION_MODAL = 'auctionModal',
-  OUTCOME_ROLL_DICES_ACTION = 'rollDices',
+  OUTCOME_ROLL_DICES_ACTION = 'rollDicesAction',
 }
 
 export interface IBoardAction {

@@ -1,9 +1,5 @@
 import { actionsStore, updateAction } from 'src/stores/actions.store';
-import {
-  FieldType,
-  OutcomeMessageType,
-  IncomeMessageType,
-} from 'src/types/board.types';
+import { FieldType, OutcomeMessageType } from 'src/types/board.types';
 import nanoid from 'nanoid';
 import { findFieldByPosition, buyAuto, buyCompany } from './fields.utils';
 import {
@@ -69,9 +65,8 @@ export const payTaxModalAction = (): void => {
 };
 
 export const rollDicesAction = (): void => {
-  console.log('rollDicesAction', getActingPlayer().name);
   updateAction({
-    action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
+    action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
     isCompleted: false,

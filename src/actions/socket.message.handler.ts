@@ -105,6 +105,7 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED)
   async unJailPayment(client: Socket, payload: IActionId): Promise<void> {
     unJailPlayer();
+
     BoardSocket.emitMessage();
   }
 }

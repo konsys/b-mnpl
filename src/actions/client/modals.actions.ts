@@ -4,10 +4,12 @@ import {
   IUnJailModal,
   IShowCanBuyModal,
   IPayRentStart,
+  IDoNothing,
 } from 'src/types/board.types';
 import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
 import { findFieldByPosition } from 'src/utils/fields.utils';
+import nanoid from 'nanoid';
 
 /**
  * Shows modals
@@ -26,6 +28,17 @@ export const unJailModalMesage = (): IUnJailModal => ({
   title: 'Выйти из тюрьмы',
   text: 'Можете выйти, заплатив залог или кинуть кубики на удачу',
   _id: actionsStore.getState().actionId,
+});
+
+export const doNothing = (): IDoNothing => ({
+  type: OutcomeMessageType.DO_NOTHING,
+  _id: nanoid(),
+  userId: getActingPlayer().userId,
+  // userId: getActingPlayer().userId,
+  // action: OutcomeMessageType.DO_NOTHING,
+  // userId: getActingPlayer().userId,
+  // actionId: nanoid(4),
+  // moveId: actionsStore.getState().moveId + 1,
 });
 
 export const buyModalHandler = (): IShowCanBuyModal => {

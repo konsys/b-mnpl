@@ -12,6 +12,7 @@ import {
   buyModalHandler,
   payModalHandler,
   unJailModalMesage,
+  doNothing,
 } from './client/modals.actions';
 import { rollDicesMessage } from './client/dices.actions';
 
@@ -55,5 +56,8 @@ const actionTypeToEventAdapter = (
 
     case OutcomeMessageType.OUTCOME_UN_JAIL_MODAL:
       return unJailModalMesage();
+
+    case OutcomeMessageType.DO_NOTHING:
+      return doNothing();
   }
 };

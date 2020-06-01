@@ -33,6 +33,7 @@ export enum IncomeMessageType {
 }
 
 export enum OutcomeMessageType {
+  DO_NOTHING = 'doNothing',
   OUTCOME_PLAYER_TOKEN_POSITION_ACTION = 'changeTokenAction',
   OUTCOME_CAN_BUY_MODAL = 'canBuyModal',
   OUTCOME_TAX_PAYING_MODAL = 'taxPayingModal',
@@ -90,6 +91,9 @@ export interface IShowCanBuyModal extends IBoardAction {
   text: string;
 }
 
+export interface IDoNothing extends IBoardAction {
+  type: OutcomeMessageType.DO_NOTHING;
+}
 export interface IBoardEvent {
   action:
     | IDicesModal
@@ -97,7 +101,8 @@ export interface IBoardEvent {
     | IDicesModal
     | IPayRentStart
     | IUnJailModal
-    | IRollDicesMessage;
+    | IRollDicesMessage
+    | IDoNothing;
 }
 
 interface IBoardEventData {

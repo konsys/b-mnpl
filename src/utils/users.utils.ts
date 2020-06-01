@@ -1,6 +1,12 @@
 import { playersStore, setPlayersEvent } from 'src/stores/players.store';
-import { IPlayer, IMoneyTransaction } from 'src/types/board.types';
+import {
+  IPlayer,
+  IMoneyTransaction,
+  OutcomeMessageType,
+} from 'src/types/board.types';
 import { JAIL_POSITION, UN_JAIL_PRICE, JAIL_TURNS } from './board.params.utils';
+import nanoid from 'nanoid';
+import { setCurrentActionsEvent } from 'src/stores/actions.store';
 
 export const getPlayerById = (userId: number): IPlayer => {
   return playersStore.getState().players.find(v => v.userId === userId);
@@ -82,6 +88,12 @@ export const unJailPlayer = () => {
 
 export const goToJail = (): boolean => {
   const player = getActingPlayer();
+  setCurrentActionsEvent({
+    action: OutcomeMessageType.DO_NOTHING,
+    actionId: nanoid(4),
+    moveId: 1,
+    userId: getActingPlayer().userId,
+  });
   return updatePlayer({
     ...player,
     jailed: JAIL_TURNS,

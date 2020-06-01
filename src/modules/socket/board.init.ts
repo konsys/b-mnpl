@@ -53,6 +53,7 @@ export class BoardSocket
       createBoardMessage(),
     );
   }
+
   public emitError(error: IErrorMessage) {
     BoardSocket.socketServer.emit(SocketActions.ERROR_MESSAGE, error);
     errorStore.reset();

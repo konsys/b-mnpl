@@ -21,4 +21,4 @@ export const actionsStore = ActionsDomain.store<ICurrentAction>(null)
 export const updateAction = (action: any) => {
   setCurrentActionsEvent(action);
 };
-// actionsStore.updates.watch(v => console.log('actionsStore', v));
+// actionsStore.updates.watch(v => av('actionsStore', v));

@@ -75,6 +75,8 @@ export const unJailPlayer = () => {
     ...player,
     money: player.money - UN_JAIL_PRICE,
     meanPosition: JAIL_POSITION,
+    jailed: 0,
+    unjailAttempts: 0,
   });
 };
 

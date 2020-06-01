@@ -79,7 +79,7 @@ export interface IRollDicesMessage extends IBoardAction {
   dices: number[];
   isDouble: boolean;
   isTriple: boolean;
-  meanPosition: number;
+  meanPosition: number | 'jail';
 }
 
 export interface IShowCanBuyModal extends IBoardAction {

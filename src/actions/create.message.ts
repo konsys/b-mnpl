@@ -36,13 +36,14 @@ export const createBoardMessage = (): BoardMessage => {
   };
 };
 
-// Adapts action store action or message
+// When emit message action is sent from action store
 const adaptAction = (type: OutcomeMessageType | IncomeMessageType) => {
+  console.log('typetypetype', type);
   switch (type) {
     case OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL:
       return rollDicesModalMessage();
 
-    case IncomeMessageType.INCOME_PLAYER_TOKEN_TRANSITION_COMPLETED:
+    case OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION:
       return rollDicesMessage();
 
     case OutcomeMessageType.OUTCOME_CAN_BUY_MODAL:

@@ -7,6 +7,7 @@ import {
   getActingPlayerIndex,
   updateAllPLayers,
   updatePlayer,
+  getPlayerById,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
 
@@ -17,9 +18,7 @@ export const buyFieldModalAction = (): void => {
     action: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,
     userId: player.userId,
     actionId: nanoid(4),
-    isCompleted: false,
     moveId: action.moveId + 1,
-    srcOfChange: 'buyFieldModalAction',
   });
 };
 
@@ -35,11 +34,9 @@ export const buyFieldAction = (): void => {
     price = buyCompany(field);
   }
 
-  // Decrease player`s money
-  const players = playersStore.getState().players;
-  const playerIndex = players.findIndex(v => v.userId === user.userId);
-  players[playerIndex] = { ...user, money: user.money - price };
-  updateAllPLayers(players);
+  // Decrease player`s money;
+  const pl = getPlayerById(user.userId);
+  updatePlayer({ ...pl, money: user.money - price });
 };
 
 export const unJailModalAction = (): void => {
@@ -47,9 +44,7 @@ export const unJailModalAction = (): void => {
     action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
-    srcOfChange: 'unJailModalAction',
   });
 };
 
@@ -58,9 +53,7 @@ export const payTaxModalAction = (): void => {
     action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
-    srcOfChange: 'payTaxModalAction',
   });
 };
 
@@ -69,9 +62,16 @@ export const rollDicesAction = (): void => {
     action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
-    srcOfChange: 'rollDicesAction',
+  });
+};
+
+export const rollDicesModalAction = (): void => {
+  updateAction({
+    action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
+    userId: getActingPlayer().userId,
+    actionId: nanoid(4),
+    moveId: actionsStore.getState().moveId + 1,
   });
 };
 
@@ -80,9 +80,7 @@ export const startAuctionAction = (): void => {
     action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
-    isCompleted: false,
     moveId: actionsStore.getState().moveId + 1,
-    srcOfChange: 'startAuctionAction',
   });
 };
 
@@ -99,8 +97,7 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   if (player.movesLeft > 0) {
     // console.log(1, player.name);
     nextIndex = index;
-    player.movesLeft = --player.movesLeft;
-    updatePlayer(player);
+    updatePlayer({ ...player, movesLeft: --player.movesLeft });
   } else {
     // console.log(2, player.name);
     nextIndex = getNextArrayIndex(index, players);
@@ -122,17 +119,6 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   player = getActingPlayer();
 
   player.jailed ? unJailModalAction() : rollDicesModalAction();
-};
-
-export const rollDicesModalAction = (): void => {
-  updateAction({
-    action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
-    userId: getActingPlayer().userId,
-    actionId: nanoid(4),
-    isCompleted: false,
-    moveId: actionsStore.getState().moveId + 1,
-    srcOfChange: 'rollDicesModalAction',
-  });
 };
 
 export const calcPercentPart = (price: number, percent: number) =>

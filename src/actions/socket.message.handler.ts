@@ -31,7 +31,6 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
-
     if (payload.actionId === action.actionId) {
       Action.rollDicesAction();
       BoardSocket.emitMessage();

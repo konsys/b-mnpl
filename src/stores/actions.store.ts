@@ -6,8 +6,6 @@ export interface ICurrentAction {
   userId: number;
   actionId: string;
   moveId: number;
-  srcOfChange: string;
-  isCompleted: boolean;
 }
 
 export const GameDomain = createDomain('GameDomain');

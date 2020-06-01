@@ -97,9 +97,7 @@ export class BoardSocket
           action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
           userId: resultPlayers.find(v => v.moveOrder === 0).userId,
           moveId: 0,
-          isCompleted: false,
           actionId: nanoid(4),
-          srcOfChange: 'initStores',
         });
       }
 
@@ -123,6 +121,7 @@ export class BoardSocket
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id} args: ${args}`);
+
     BoardSocket.emitMessage();
   }
 }

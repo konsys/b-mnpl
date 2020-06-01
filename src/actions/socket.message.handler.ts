@@ -1,7 +1,6 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { IPlayerMove, IncomeMessageType } from 'src/types/board.types';
 import { Socket } from 'socket.io';
-import { actionsStore } from 'src/stores/actions.store';
 import { IActionId } from 'src/types/board.types';
 import {
   isCompanyForSale,
@@ -35,7 +34,6 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_PLAYER_TOKEN_TRANSITION_COMPLETED)
   async dicesRolled(client: Socket, payload: IPlayerMove): Promise<void> {
-    const action = actionsStore.getState();
     const player = getActingPlayer();
 
     if (!player.jailed) {
@@ -69,7 +67,6 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    const action = actionsStore.getState();
     if (isCompanyForSale() && canBuyField()) {
       Action.buyFieldAction();
     } else {
@@ -100,6 +97,7 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
     moneyTransaction(moneyTransactionParams());
+
     Action.switchPlayerTurn();
     BoardSocket.emitMessage();
   }

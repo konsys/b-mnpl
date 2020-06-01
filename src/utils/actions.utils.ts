@@ -41,7 +41,7 @@ export const buyFieldAction = (): void => {
 
 export const unJailModalAction = (): void => {
   updateAction({
-    action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
+    action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
@@ -95,17 +95,16 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
 
   // Doubled dices and jail
   if (player.movesLeft > 0) {
-    // console.log(1, player.name);
     nextIndex = index;
     updatePlayer({ ...player, movesLeft: --player.movesLeft });
   } else {
-    // console.log(2, player.name);
     nextIndex = getNextArrayIndex(index, players);
   }
 
   const res = players.map((v, k) => {
     if (k === nextIndex) {
       if (unJail) {
+        v.movesLeft = 0;
         v.jailed = 0;
         v.unjailAttempts = 0;
       }
@@ -117,7 +116,6 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
 
   updateAllPLayers(res);
   player = getActingPlayer();
-
   player.jailed ? unJailModalAction() : rollDicesModalAction();
 };
 

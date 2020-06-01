@@ -137,5 +137,5 @@ export const rollDicesModalAction = (): void => {
   });
 };
 
-export const getPercentPart = (price: number, percent: number) =>
+export const calcPercentPart = (price: number, percent: number) =>
   Math.floor((price / 1000) * percent) * 10;

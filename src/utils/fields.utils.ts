@@ -1,7 +1,7 @@
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { IField, IPaymentTransaction, FieldType } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
-import { getPercentPart } from './actions.utils';
+import { calcPercentPart } from './actions.utils';
 import {
   ONE_AUTO_PERCENT,
   TWO_AUTO_PERCENT,
@@ -110,15 +110,15 @@ export const buyAuto = (field: IField): number => {
   const sameGroupFieilds = getSameGroupFields(field);
 
   if (!sameGroupFieilds.length) {
-    price = getPercentPart(price, ONE_AUTO_PERCENT);
+    price = calcPercentPart(price, ONE_AUTO_PERCENT);
   } else if (sameGroupFieilds.length === 1) {
-    price = getPercentPart(price, TWO_AUTO_PERCENT);
+    price = calcPercentPart(price, TWO_AUTO_PERCENT);
   } else if (sameGroupFieilds.length === 2) {
-    price = getPercentPart(price, FREE_AUTO_PERCENT);
+    price = calcPercentPart(price, FREE_AUTO_PERCENT);
   } else if (sameGroupFieilds.length === 3) {
-    price = getPercentPart(price, FOUR_AUTO_PERCENT);
+    price = calcPercentPart(price, FOUR_AUTO_PERCENT);
   } else {
-    price = getPercentPart(price, ONE_FIELD_PERCENT);
+    price = calcPercentPart(price, ONE_FIELD_PERCENT);
   }
 
   field.owner = {
@@ -152,11 +152,11 @@ export const buyCompany = (field: IField): number => {
   const sameGroupFieilds = getSameGroupFields(field);
 
   if (!sameGroupFieilds.length) {
-    price = getPercentPart(price, ONE_FIELD_PERCENT);
+    price = calcPercentPart(price, ONE_FIELD_PERCENT);
   } else if (sameGroupFieilds.length === 1) {
-    price = getPercentPart(price, TWO_FIELD_PERCENT);
+    price = calcPercentPart(price, TWO_FIELD_PERCENT);
   } else if (sameGroupFieilds.length === 1) {
-    price = getPercentPart(price, FREE_FIELD_PERCENT);
+    price = calcPercentPart(price, FREE_FIELD_PERCENT);
   }
 
   field.owner = {

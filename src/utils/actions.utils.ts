@@ -39,15 +39,6 @@ export const buyField = (): void => {
   updatePlayer({ ...pl, money: user.money - price });
 };
 
-export const unJailAction = (): void => {
-  updateAction({
-    action: OutcomeMessageType.OUTCOME_UN_JAIL_ACTION,
-    userId: getActingPlayer().userId,
-    actionId: nanoid(4),
-    moveId: actionsStore.getState().moveId + 1,
-  });
-};
-
 export const unJailModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,

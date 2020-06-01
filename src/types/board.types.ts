@@ -38,7 +38,6 @@ export enum OutcomeMessageType {
   OUTCOME_TAX_PAYING_MODAL = 'taxPayingModal',
   OUTCOME_ROLL_DICES_MODAL = 'rollDicesModal',
   OUTCOME_UN_JAIL_MODAL = 'unJailModal',
-  OUTCOME_UN_JAIL_ACTION = 'unJailAction',
   OUTCOME_AUCTION_MODAL = 'auctionModal',
   OUTCOME_ROLL_DICES_ACTION = 'rollDicesAction',
 }

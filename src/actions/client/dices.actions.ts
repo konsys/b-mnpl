@@ -16,7 +16,7 @@ export const rollDicesMessage = (): IRollDicesMessage => {
     setRandomDicesEvent(action.actionId);
   }
   return {
-    type: OutcomeMessageType.OUTCOME_ROLL_DICES_MESSAGE,
+    type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
     userId: getActingPlayer().userId,
     dices: dicesState.dices,
     meanPosition: dicesState.meanPosition,

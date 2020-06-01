@@ -33,13 +33,13 @@ export enum IncomeMessageType {
 }
 
 export enum OutcomeMessageType {
-  OUTCOME_PLAYER_TOKEN_POSITION_MESSAGE = 'playerTokenPositionMessage',
+  OUTCOME_PLAYER_TOKEN_POSITION_ACTION = 'playerTokenPositionMessage',
   OUTCOME_CAN_BUY_MODAL = 'canBuyModal',
   OUTCOME_TAX_PAYING_MODAL = 'taxPayingModal',
   OUTCOME_ROLL_DICES_MODAL = 'rollDicesModal',
   OUTCOME_UN_JAIL_MODAL = 'unJailModal',
   OUTCOME_AUCTION_MODAL = 'auctionModal',
-  OUTCOME_ROLL_DICES_MESSAGE = 'rollDices',
+  OUTCOME_ROLL_DICES_ACTION = 'rollDices',
 }
 
 export interface IBoardAction {
@@ -75,7 +75,7 @@ export interface IUnJailModal extends IBoardAction {
 }
 
 export interface IRollDicesMessage extends IBoardAction {
-  type: OutcomeMessageType.OUTCOME_ROLL_DICES_MESSAGE;
+  type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION;
   dices: number[];
   isDouble: boolean;
   isTriple: boolean;

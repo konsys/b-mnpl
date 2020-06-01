@@ -11,7 +11,7 @@ import {
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { BoardActionType, IPlayer } from 'src/types/board.types';
+import { IPlayer, OutcomeMessageType } from 'src/types/board.types';
 import { SocketActions } from 'src/types/game.types';
 import { createBoardMessage } from 'src/actions/create.message';
 import { UsersService } from '../../api.gateway/users/users.service';
@@ -94,7 +94,7 @@ export class BoardSocket
         });
 
         updateAction({
-          action: BoardActionType.ROLL_DICES_MODAL,
+          action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
           userId: resultPlayers.find(v => v.moveOrder === 0).userId,
           moveId: 0,
           isCompleted: false,

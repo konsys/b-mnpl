@@ -1,15 +1,19 @@
-import { BoardMessage, IBoardEvent } from '../types/board.types';
+import {
+  BoardMessage,
+  IBoardEvent,
+  IncomeMessageType,
+  OutcomeMessageType,
+} from '../types/board.types';
 import { playersStore } from 'src/stores/players.store';
 import { actionsStore } from 'src/stores/actions.store';
 import { getBoughtFields } from 'src/utils/fields.utils';
-import { BoardActionType } from 'src/types/board.types';
 import {
-  dicesModalHandler,
+  rollDicesModalMessage,
   buyModalHandler,
   payModalHandler,
-  unJailModalHandler,
+  unJailModalMesage,
 } from './client/modals.actions';
-import { rollDicesHandler } from './client/dices.actions';
+import { rollDicesMessage } from './client/dices.actions';
 
 export const createBoardMessage = (): BoardMessage => {
   const actionState = actionsStore.getState();
@@ -32,22 +36,22 @@ export const createBoardMessage = (): BoardMessage => {
   };
 };
 
-// Adaptsaction store action or message
-const adaptAction = (type: BoardActionType) => {
+// Adapts action store action or message
+const adaptAction = (type: OutcomeMessageType | IncomeMessageType) => {
   switch (type) {
-    case BoardActionType.ROLL_DICES_MODAL:
-      return dicesModalHandler();
+    case OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL:
+      return rollDicesModalMessage();
 
-    case BoardActionType.PLAYER_TOKEN_MOVED:
-      return rollDicesHandler();
+    case IncomeMessageType.INCOME_PLAYER_TOKEN_TRANSITION_COMPLETED:
+      return rollDicesMessage();
 
-    case BoardActionType.CAN_BUY:
+    case OutcomeMessageType.OUTCOME_CAN_BUY_MODAL:
       return buyModalHandler();
 
-    case BoardActionType.TAX_PAYING_MODAL:
+    case OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL:
       return payModalHandler();
 
-    case BoardActionType.UN_JAIL_MODAL:
-      return unJailModalHandler();
+    case OutcomeMessageType.OUTCOME_UN_JAIL_MODAL:
+      return unJailModalMesage();
   }
 };

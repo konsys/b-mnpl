@@ -1,5 +1,9 @@
 import { actionsStore, updateAction } from 'src/stores/actions.store';
-import { BoardActionType, FieldType } from 'src/types/board.types';
+import {
+  FieldType,
+  OutcomeMessageType,
+  IncomeMessageType,
+} from 'src/types/board.types';
 import nanoid from 'nanoid';
 import { findFieldByPosition, buyAuto, buyCompany } from './fields.utils';
 import {
@@ -14,7 +18,7 @@ export const buyFieldModalAction = (): void => {
   const player = getActingPlayer();
   const action = actionsStore.getState();
   updateAction({
-    action: BoardActionType.CAN_BUY,
+    action: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,
     userId: player.userId,
     actionId: nanoid(4),
     isCompleted: false,
@@ -44,7 +48,7 @@ export const buyFieldAction = (): void => {
 
 export const unJailModalAction = (): void => {
   updateAction({
-    action: BoardActionType.UN_JAIL_MODAL,
+    action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
     isCompleted: false,
@@ -55,7 +59,7 @@ export const unJailModalAction = (): void => {
 
 export const payTaxModalAction = (): void => {
   updateAction({
-    action: BoardActionType.TAX_PAYING_MODAL,
+    action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
     isCompleted: false,
@@ -65,8 +69,9 @@ export const payTaxModalAction = (): void => {
 };
 
 export const rollDicesAction = (): void => {
+  console.log('rollDicesAction', getActingPlayer().name);
   updateAction({
-    action: BoardActionType.PLAYER_TOKEN_MOVED,
+    action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
     isCompleted: false,
@@ -77,7 +82,7 @@ export const rollDicesAction = (): void => {
 
 export const startAuctionAction = (): void => {
   updateAction({
-    action: BoardActionType.AUCTION_START,
+    action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
     isCompleted: false,
@@ -94,8 +99,6 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   const index = getActingPlayerIndex();
   let player = getActingPlayer();
   let nextIndex = index;
-
-  //
 
   // Doubled dices and jail
   if (player.movesLeft > 0) {
@@ -128,7 +131,7 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
 
 export const rollDicesModalAction = (): void => {
   updateAction({
-    action: BoardActionType.ROLL_DICES_MODAL,
+    action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
     userId: getActingPlayer().userId,
     actionId: nanoid(4),
     isCompleted: false,

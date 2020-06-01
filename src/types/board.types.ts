@@ -23,30 +23,38 @@ export type Contract = {
   _id: string;
 };
 
-export enum BoardActionType {
-  PLAYER_TOKEN_MOVED = 'playerTokenMoved',
-  CAN_BUY = 'canBuy',
-  AUCTION_START = 'auctionStart',
-  BUY = 'buy',
-  TAX_PAYING_MODAL = 'taxPayingModal',
-  TAX_PAID = 'taxPaid',
-  ROLL_DICES_MODAL = 'rollDicesModal',
-  UN_JAIL_MODAL = 'unJailModal',
-  UN_JAIL_PAID = 'unJailPaid',
+export enum IncomeMessageType {
+  INCOME_PLAYER_TOKEN_TRANSITION_COMPLETED = 'playerTokenTransitionCompleted',
+  INCOME_AUCTION_START_CLICKED = 'auctionStartClicked',
+  INCOME_BUY_FIELD_CLICKED = 'buyFieldClicked',
+  INCOME_TAX_PAID_CLICKED = 'taxPaidCLicked',
+  INCOME_UN_JAIL_PAID_CLICKED = 'unJailPaidClicked',
+  INCOME_ROLL_DICES_CLICKED = 'rollDicesClicked',
 }
 
-export interface BoardAction {
-  type: BoardActionType;
+export enum OutcomeMessageType {
+  OUTCOME_PLAYER_TOKEN_POSITION_MESSAGE = 'playerTokenPositionMessage',
+  OUTCOME_CAN_BUY_MODAL = 'canBuyModal',
+  OUTCOME_TAX_PAYING_MODAL = 'taxPayingModal',
+  OUTCOME_ROLL_DICES_MODAL = 'rollDicesModal',
+  OUTCOME_UN_JAIL_MODAL = 'unJailModal',
+  OUTCOME_AUCTION_MODAL = 'auctionModal',
+  OUTCOME_ROLL_DICES_MESSAGE = 'rollDices',
+}
+
+export interface IBoardAction {
+  type: IncomeMessageType | OutcomeMessageType;
   userId: number;
   _id: string;
 }
 
-export interface AuctionStart extends BoardAction {
-  type: BoardActionType.AUCTION_START;
+export interface IAuctionStart extends IBoardAction {
+  type: IncomeMessageType.INCOME_AUCTION_START_CLICKED;
   field: BoardFieldsEntity;
 }
-export interface PayRentStart extends BoardAction {
-  type: BoardActionType.TAX_PAYING_MODAL;
+
+export interface IPayRentStart extends IBoardAction {
+  type: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL;
   field: BoardFieldsEntity;
   money: number;
   toUserId: number;
@@ -54,28 +62,28 @@ export interface PayRentStart extends BoardAction {
   text: string;
 }
 
-export interface DicesModal extends BoardAction {
-  type: BoardActionType.ROLL_DICES_MODAL;
+export interface IDicesModal extends IBoardAction {
+  type: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL;
   title: string;
   text: string;
 }
 
-export interface UnJailModal extends BoardAction {
-  type: BoardActionType.UN_JAIL_MODAL;
+export interface IUnJailModal extends IBoardAction {
+  type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL;
   title: string;
   text: string;
 }
 
-export interface RollDices extends BoardAction {
-  type: BoardActionType.PLAYER_TOKEN_MOVED;
+export interface IRollDicesMessage extends IBoardAction {
+  type: OutcomeMessageType.OUTCOME_ROLL_DICES_MESSAGE;
   dices: number[];
   isDouble: boolean;
   isTriple: boolean;
   meanPosition: number;
 }
 
-export interface CanBuyModal extends BoardAction {
-  type: BoardActionType.CAN_BUY;
+export interface IShowCanBuyModal extends IBoardAction {
+  type: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL;
   field: BoardFieldsEntity;
   money: number;
   title: string;
@@ -83,10 +91,16 @@ export interface CanBuyModal extends BoardAction {
 }
 
 export interface IBoardEvent {
-  action: RollDices | CanBuyModal | DicesModal | PayRentStart | UnJailModal;
+  action:
+    | IDicesModal
+    | IShowCanBuyModal
+    | IDicesModal
+    | IPayRentStart
+    | IUnJailModal
+    | IRollDicesMessage;
 }
 
-interface BoardEventData {
+interface IBoardEventData {
   id: number;
   event: IBoardEvent;
   boardStatus: BoardStatus;
@@ -160,7 +174,7 @@ interface PauseData {
 
 export interface BoardMessage {
   code: ResponceCode;
-  data: BoardEventData;
+  data: IBoardEventData;
 }
 
 export interface IField extends BoardFieldsEntity {

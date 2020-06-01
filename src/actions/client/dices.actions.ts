@@ -1,9 +1,10 @@
-import { BoardActionType, RollDices } from 'src/types/board.types';
+import { OutcomeMessageType, IRollDicesMessage } from 'src/types/board.types';
 import { dicesStore, setRandomDicesEvent } from 'src/stores/dices.store';
 import { IDicesStore } from 'src/stores/dices.store';
 import { actionsStore } from 'src/stores/actions.store';
 import { getActingPlayer } from 'src/utils/users.utils';
-export const rollDicesHandler = (): RollDices => {
+
+export const rollDicesMessage = (): IRollDicesMessage => {
   let dicesState: IDicesStore = null;
   dicesStore.watch(v => {
     dicesState = v;
@@ -15,7 +16,7 @@ export const rollDicesHandler = (): RollDices => {
     setRandomDicesEvent(action.actionId);
   }
   return {
-    type: BoardActionType.PLAYER_TOKEN_MOVED,
+    type: OutcomeMessageType.OUTCOME_ROLL_DICES_MESSAGE,
     userId: getActingPlayer().userId,
     dices: dicesState.dices,
     meanPosition: dicesState.meanPosition,

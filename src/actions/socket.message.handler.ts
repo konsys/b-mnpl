@@ -1,5 +1,5 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { BoardActionType, IPlayerMove } from 'src/types/board.types';
+import { IPlayerMove, IncomeMessageType } from 'src/types/board.types';
 import { Socket } from 'socket.io';
 import { actionsStore } from 'src/stores/actions.store';
 import { IActionId } from 'src/types/board.types';
@@ -28,17 +28,16 @@ import { BoardSocket } from 'src/modules/socket/board.init';
 
 @WebSocketGateway()
 export class BoardMessage {
-  @SubscribeMessage(BoardActionType.ROLL_DICES_MODAL)
+  @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
       Action.rollDicesAction();
-
       BoardSocket.emitMessage();
     }
   }
 
-  @SubscribeMessage(BoardActionType.PLAYER_TOKEN_MOVED)
+  @SubscribeMessage(IncomeMessageType.INCOME_PLAYER_TOKEN_TRANSITION_COMPLETED)
   async dicesRolled(client: Socket, payload: IPlayerMove): Promise<void> {
     const action = actionsStore.getState();
     const player = getActingPlayer();
@@ -66,7 +65,7 @@ export class BoardMessage {
     }
   }
 
-  @SubscribeMessage(BoardActionType.CAN_BUY)
+  @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
@@ -90,7 +89,7 @@ export class BoardMessage {
     }
   }
 
-  @SubscribeMessage(BoardActionType.AUCTION_START)
+  @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_START_CLICKED)
   async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
@@ -103,7 +102,7 @@ export class BoardMessage {
     }
   }
 
-  @SubscribeMessage(BoardActionType.TAX_PAID)
+  @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
@@ -115,13 +114,13 @@ export class BoardMessage {
     }
   }
 
-  @SubscribeMessage(BoardActionType.UN_JAIL_PAID)
+  @SubscribeMessage(IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED)
   async unjailPayment(client: Socket, payload: IActionId): Promise<void> {
     const action = actionsStore.getState();
     if (payload.actionId === action.actionId) {
       unJailPlayer();
-      Action.rollDicesAction();
-
+      console.log('unjail', getActingPlayer().name);
+      Action.rollDicesModalAction();
       BoardSocket.emitMessage();
     }
   }

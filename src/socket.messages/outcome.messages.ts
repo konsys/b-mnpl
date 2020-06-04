@@ -8,9 +8,9 @@ import {
   IRollDicesMessage,
   IncomeMessageType,
 } from 'src/types/board.types';
-import { getActingPlayer } from 'src/utils/users.utils';
+import { getActingPlayer, unjailPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
-import { findFieldByPosition } from 'src/utils/fields.utils';
+import { findFieldByPosition, getActingField } from 'src/utils/fields.utils';
 import nanoid from 'nanoid';
 import {
   IDicesStore,
@@ -44,49 +44,50 @@ export const doNothingMessage = (): IDoNothing => ({
 });
 
 export const buyModalHandler = (): IShowCanBuyModal => {
-  const user = getActingPlayer();
+  const player = getActingPlayer();
 
   return {
     type: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,
-    userId: user.userId,
+    userId: player.userId,
     title: 'Купить поле',
     text: 'Вы можете купить поле или поставить его на аукцион',
-    field: findFieldByPosition(user.meanPosition),
-    money: user.money,
+    field: findFieldByPosition(player.meanPosition),
+    money: player.money,
     _id: actionsStore.getState().actionId,
   };
 };
 
 export const payModalHandler = (): IPayRentStart => {
-  const user = getActingPlayer();
-  const field = findFieldByPosition(user.meanPosition);
-
+  const player = getActingPlayer();
+  const field = getActingField();
   const action = actionsStore.getState();
   return {
     type: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
-    userId: user.userId,
+    userId: player.userId,
     title: 'Заплатить',
     text: `Вы должны заплатить ${field.price}k`,
     field: field,
-    money: user.money,
-
-    // TODO доделать платеж игроку
-    toUserId: 0,
+    money: player.money,
+    toUserId: field.owner && field.owner.userId,
     _id: action.actionId,
   };
 };
 
 export const rollDicesMessage = (): IRollDicesMessage => {
-  let dicesState: IDicesStore = null;
-  dicesStore.watch(v => {
-    dicesState = v;
-  });
+  let dicesState: IDicesStore = dicesStore.getState();
+  const player = getActingPlayer();
 
   // Send message to roll dices and waits for css transition is complete
   const action = actionsStore.getState();
   if (!dicesState || dicesState._id !== action.actionId) {
     setRandomDicesEvent(action.actionId);
   }
+  console.log(11111, player.meanPosition);
+  // if (dicesState.isDouble) {
+  //   unjailPlayer();
+  // } else {
+  //   return;
+  // }
   return {
     type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
     userId: getActingPlayer().userId,
@@ -95,10 +96,11 @@ export const rollDicesMessage = (): IRollDicesMessage => {
     isDouble: dicesState.isDouble,
     isTriple: dicesState.isTriple,
     _id: action.actionId,
+    toMoveToken: true,
   };
 };
 
-// When emit message action is sent from action store
+// When emit message action store to action message adapter
 export const actionTypeToEventAdapter = (
   type: OutcomeMessageType | IncomeMessageType,
 ) => {

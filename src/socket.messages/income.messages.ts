@@ -18,7 +18,7 @@ import { ErrorCode } from 'src/utils/error.code';
 import {
   moneyTransaction,
   getActingPlayer,
-  unJailPlayer,
+  unjailPlayer,
   goToJail,
 } from 'src/utils/users.utils';
 import { START_BONUS } from 'src/utils/board.params.utils';
@@ -106,7 +106,7 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED)
   async unJailPayment(client: Socket, payload: IActionId): Promise<void> {
-    unJailPlayer();
+    unjailPlayer();
 
     BoardSocket.emitMessage();
   }

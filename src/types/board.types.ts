@@ -81,6 +81,7 @@ export interface IRollDicesMessage extends IBoardAction {
   isDouble: boolean;
   isTriple: boolean;
   meanPosition: number | 'jail';
+  toMoveToken: boolean;
 }
 
 export interface IShowCanBuyModal extends IBoardAction {

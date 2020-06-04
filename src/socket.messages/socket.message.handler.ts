@@ -29,15 +29,13 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     Action.rollDicesAction();
+
     BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_TOKEN_TRANSITION_COMPLETED)
   async tokenMoved(client: Socket, payload: IPlayerMove): Promise<void> {
     const player = getActingPlayer();
-
-    console.log(234234234, player.jailed);
-
     if (!player.jailed) {
       noActionField() && Action.switchPlayerTurn();
 
@@ -62,6 +60,8 @@ export class BoardMessage {
           toUserId: 0,
         }) &&
         Action.payTaxModal();
+    } else {
+      Action.switchPlayerTurn();
     }
 
     BoardSocket.emitMessage();

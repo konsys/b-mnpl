@@ -13,7 +13,7 @@ import {
 import { Socket, Server } from 'socket.io';
 import { IPlayer, OutcomeMessageType } from 'src/types/board.types';
 import { SocketActions } from 'src/types/game.types';
-import { createBoardMessage } from 'src/actions/create.message';
+import { createBoardMessage } from 'src/socket.messages/create.message';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { updateAction } from 'src/stores/actions.store';

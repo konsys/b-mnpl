@@ -7,14 +7,15 @@ import {
 import { playersStore } from 'src/stores/players.store';
 import { actionsStore } from 'src/stores/actions.store';
 import { getBoughtFields } from 'src/utils/fields.utils';
+
 import {
+  rollDicesMessage,
   rollDicesModalMessage,
   buyModalHandler,
   payModalHandler,
   unJailModalMesage,
-  doNothing,
-} from './client/modals.actions';
-import { rollDicesMessage } from './client/dices.actions';
+  doNothingMessage,
+} from './outcome.messages';
 
 export const createBoardMessage = (): BoardMessage => {
   const actionState = actionsStore.getState();
@@ -58,6 +59,6 @@ const actionTypeToEventAdapter = (
       return unJailModalMesage();
 
     case OutcomeMessageType.DO_NOTHING:
-      return doNothing();
+      return doNothingMessage();
   }
 };

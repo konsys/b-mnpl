@@ -5,11 +5,17 @@ import {
   IShowCanBuyModal,
   IPayRentStart,
   IDoNothing,
+  IRollDicesMessage,
 } from 'src/types/board.types';
 import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
 import { findFieldByPosition } from 'src/utils/fields.utils';
 import nanoid from 'nanoid';
+import {
+  IDicesStore,
+  dicesStore,
+  setRandomDicesEvent,
+} from 'src/stores/dices.store';
 
 /**
  * Shows modals
@@ -30,7 +36,7 @@ export const unJailModalMesage = (): IUnJailModal => ({
   _id: actionsStore.getState().actionId,
 });
 
-export const doNothing = (): IDoNothing => ({
+export const doNothingMessage = (): IDoNothing => ({
   type: OutcomeMessageType.DO_NOTHING,
   _id: nanoid(),
   userId: getActingPlayer().userId,
@@ -70,6 +76,28 @@ export const payModalHandler = (): IPayRentStart => {
 
     // TODO доделать платеж игроку
     toUserId: 0,
+    _id: action.actionId,
+  };
+};
+
+export const rollDicesMessage = (): IRollDicesMessage => {
+  let dicesState: IDicesStore = null;
+  dicesStore.watch(v => {
+    dicesState = v;
+  });
+
+  // Send message to roll dices and waits for css transition is complete
+  const action = actionsStore.getState();
+  if (!dicesState || dicesState._id !== action.actionId) {
+    setRandomDicesEvent(action.actionId);
+  }
+  return {
+    type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
+    userId: getActingPlayer().userId,
+    dices: dicesState.dices,
+    meanPosition: dicesState.meanPosition,
+    isDouble: dicesState.isDouble,
+    isTriple: dicesState.isTriple,
     _id: action.actionId,
   };
 };

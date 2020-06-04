@@ -102,6 +102,6 @@ export const goToJail = (): boolean => {
     unjailAttempts: 0,
     doublesRolledAsCombo: 0,
     movesLeft: 0,
-    meanPosition: JAIL_POSITION + 1,
+    meanPosition: JAIL_POSITION,
   });
 };

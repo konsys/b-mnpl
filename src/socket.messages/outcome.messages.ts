@@ -41,11 +41,6 @@ export const doNothingMessage = (): IDoNothing => ({
   type: OutcomeMessageType.DO_NOTHING,
   _id: nanoid(),
   userId: getActingPlayer().userId,
-  // userId: getActingPlayer().userId,
-  // action: OutcomeMessageType.DO_NOTHING,
-  // userId: getActingPlayer().userId,
-  // actionId: nanoid(4),
-  // moveId: actionsStore.getState().moveId + 1,
 });
 
 export const buyModalHandler = (): IShowCanBuyModal => {

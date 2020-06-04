@@ -75,7 +75,7 @@ export const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
   );
 };
 
-export const unjailPlayer = () => {
+export const unjailPlayer = (newPosition?: number) => {
   const player = getActingPlayer();
   // After clicking unjail for manoey till show roll dices modal
   setCurrentActionsEvent({
@@ -88,7 +88,7 @@ export const unjailPlayer = () => {
   return updatePlayer({
     ...player,
     money: player.money - UN_JAIL_PRICE,
-    meanPosition: JAIL_POSITION,
+    meanPosition: newPosition || JAIL_POSITION,
     jailed: 0,
     unjailAttempts: 0,
   });

@@ -73,21 +73,17 @@ export const payModalHandler = (): IPayRentStart => {
   };
 };
 
-export const rollDicesMessage = (): IRollDicesMessage => {
-  let dicesState: IDicesStore = dicesStore.getState();
+export const rollDicesMessage = (): IRollDicesMessage | IDoNothing => {
   const player = getActingPlayer();
 
-  // Send message to roll dices and waits for css transition is complete
   const action = actionsStore.getState();
-  if (!dicesState || dicesState._id !== action.actionId) {
-    setRandomDicesEvent(action.actionId);
+  setRandomDicesEvent(action.actionId);
+  let dicesState = dicesStore.getState();
+
+  if (dicesState.isDouble && player.jailed) {
+    unjailPlayer(dicesState.meanPosition);
   }
-  console.log(11111, player.meanPosition);
-  // if (dicesState.isDouble) {
-  //   unjailPlayer();
-  // } else {
-  //   return;
-  // }
+
   return {
     type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
     userId: getActingPlayer().userId,
@@ -96,7 +92,6 @@ export const rollDicesMessage = (): IRollDicesMessage => {
     isDouble: dicesState.isDouble,
     isTriple: dicesState.isTriple,
     _id: action.actionId,
-    toMoveToken: true,
   };
 };
 
@@ -109,7 +104,14 @@ export const actionTypeToEventAdapter = (
       return rollDicesModalMessage();
 
     case OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION:
-      return rollDicesMessage();
+      let rd = null;
+      try {
+        rd = rollDicesMessage();
+      } catch (er) {
+        console.log(3333, er);
+      }
+
+      return rd;
 
     case OutcomeMessageType.OUTCOME_CAN_BUY_MODAL:
       return buyModalHandler();

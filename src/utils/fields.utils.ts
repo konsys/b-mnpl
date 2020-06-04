@@ -197,7 +197,6 @@ export const buyITCompany = (field: IField): number => {
     price = calcPercentPart(price, TWO_IT_FIELD_MULT);
   }
 
-  console.log(222222, price);
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,

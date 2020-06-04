@@ -304,7 +304,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     imgSrc: 'https://m1.dogecdn.wtf/fields/special/goToJail.png',
     mnplSpecial: 1,
     fieldCorner: 3,
-    name: 'goToJail',
+    name: 'arest',
     level: 0,
     type: FieldType.JAIL,
   },

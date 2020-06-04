@@ -33,8 +33,10 @@ export class BoardMessage {
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_TOKEN_TRANSITION_COMPLETED)
-  async dicesRolled(client: Socket, payload: IPlayerMove): Promise<void> {
+  async tokenMoved(client: Socket, payload: IPlayerMove): Promise<void> {
     const player = getActingPlayer();
+
+    console.log(234234234, player.jailed);
 
     if (!player.jailed) {
       noActionField() && Action.switchPlayerTurn();

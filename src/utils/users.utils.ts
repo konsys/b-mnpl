@@ -99,7 +99,7 @@ export const goToJail = (): boolean => {
   return updatePlayer({
     ...player,
     jailed: JAIL_TURNS,
-    unjailAttempts: JAIL_TURNS,
+    unjailAttempts: 0,
     doublesRolledAsCombo: 0,
     movesLeft: 0,
     meanPosition: JAIL_POSITION + 1,

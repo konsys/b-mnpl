@@ -1,7 +1,12 @@
 import { actionsStore, updateAction } from 'src/stores/actions.store';
 import { FieldType, OutcomeMessageType } from 'src/types/board.types';
 import nanoid from 'nanoid';
-import { findFieldByPosition, buyAuto, buyCompany } from './fields.utils';
+import {
+  findFieldByPosition,
+  buyAuto,
+  buyCompany,
+  buyITCompany,
+} from './fields.utils';
 import {
   getActingPlayer,
   getActingPlayerIndex,
@@ -32,6 +37,8 @@ export const buyField = (): void => {
     price = buyAuto(field);
   } else if (field.type === FieldType.COMPANY) {
     price = buyCompany(field);
+  } else if (field.type === FieldType.IT) {
+    price = buyITCompany(field);
   }
 
   // Decrease player`s money;

@@ -28,6 +28,9 @@ export class BoardFieldsEntity {
   isJail?: boolean;
 
   @Column({ default: null })
+  currency?: string;
+
+  @Column({ default: null })
   level?: number;
 
   @Column({ default: null })

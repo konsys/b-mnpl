@@ -10,6 +10,8 @@ import {
   ONE_FIELD_PERCENT,
   TWO_FIELD_PERCENT,
   FREE_FIELD_PERCENT,
+  ONE_IT_FIELD_MULT,
+  TWO_IT_FIELD_MULT,
 } from './board.params.utils';
 
 export const findFieldByPosition = (fieldPosition: number) =>
@@ -159,6 +161,43 @@ export const buyCompany = (field: IField): number => {
     price = calcPercentPart(price, FREE_FIELD_PERCENT);
   }
 
+  field.owner = {
+    fieldId: field.fieldId,
+    userId: user.userId,
+    level: 0,
+    mortgaged: false,
+    updatedPrice: price,
+  };
+
+  sameGroupFieilds.map((v: IField) => {
+    const index = getFieldIndex(v);
+
+    fieldsState[index] = { ...v, owner: { ...v.owner, updatedPrice: price } };
+  });
+
+  fieldsState[fieldIndex] = field;
+
+  updateAllFields(fieldsState);
+  return fieldPrice;
+};
+
+export const buyITCompany = (field: IField): number => {
+  const user = getActingPlayer();
+  const fieldsState = fieldsStore.getState().fields;
+  const fieldIndex = getFieldIndex(field);
+
+  let price = field.price;
+  const fieldPrice = price;
+
+  const sameGroupFieilds = getSameGroupFields(field);
+
+  if (!sameGroupFieilds.length) {
+    price = calcPercentPart(price, ONE_IT_FIELD_MULT);
+  } else if (sameGroupFieilds.length === 1) {
+    price = calcPercentPart(price, TWO_IT_FIELD_MULT);
+  }
+
+  console.log(222222, price);
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,

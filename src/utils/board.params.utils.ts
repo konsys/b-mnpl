@@ -11,4 +11,7 @@ export const TWO_AUTO_PERCENT = 25;
 export const FREE_AUTO_PERCENT = 50;
 export const FOUR_AUTO_PERCENT = 100;
 
+export const ONE_IT_FIELD_MULT = 7;
+export const TWO_IT_FIELD_MULT = 16;
+
 export const START_BONUS = 3000;

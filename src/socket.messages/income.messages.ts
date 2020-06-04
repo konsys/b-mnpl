@@ -29,7 +29,7 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     Action.rollDicesAction();
-
+    console.log(12312312);
     BoardSocket.emitMessage();
   }
 

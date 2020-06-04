@@ -6,6 +6,7 @@ import {
   IPayRentStart,
   IDoNothing,
   IRollDicesMessage,
+  IncomeMessageType,
 } from 'src/types/board.types';
 import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
@@ -100,4 +101,29 @@ export const rollDicesMessage = (): IRollDicesMessage => {
     isTriple: dicesState.isTriple,
     _id: action.actionId,
   };
+};
+
+// When emit message action is sent from action store
+export const actionTypeToEventAdapter = (
+  type: OutcomeMessageType | IncomeMessageType,
+) => {
+  switch (type) {
+    case OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL:
+      return rollDicesModalMessage();
+
+    case OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION:
+      return rollDicesMessage();
+
+    case OutcomeMessageType.OUTCOME_CAN_BUY_MODAL:
+      return buyModalHandler();
+
+    case OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL:
+      return payModalHandler();
+
+    case OutcomeMessageType.OUTCOME_UN_JAIL_MODAL:
+      return unJailModalMesage();
+
+    case OutcomeMessageType.DO_NOTHING:
+      return doNothingMessage();
+  }
 };

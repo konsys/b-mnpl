@@ -10,6 +10,7 @@ import {
 } from 'src/types/board.types';
 import { getActingPlayer, unjailPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
+import { transactionStore } from 'src/stores/transactions.store';
 import { findFieldByPosition, getActingField } from 'src/utils/fields.utils';
 import nanoid from 'nanoid';
 import {
@@ -61,11 +62,15 @@ export const payModalHandler = (): IPayRentStart => {
   const player = getActingPlayer();
   const field = getActingField();
   const action = actionsStore.getState();
+  const transaction = transactionStore.getState();
   return {
     type: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
     userId: player.userId,
     title: 'Заплатить',
-    text: `Вы должны заплатить ${field.price}k`,
+    text: `${transaction &&
+      transaction.reason + '. '}Вы должны заплатить ${(transaction &&
+      Math.abs(transaction.money)) ||
+      field.price}k`,
     field: field,
     money: player.money,
     toUserId: field.owner && field.owner.userId,

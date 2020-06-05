@@ -1,0 +1,1 @@
+export const LINE_TRANSITION_TIMEOUT = 700;

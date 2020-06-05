@@ -23,6 +23,10 @@ import {
 } from 'src/utils/users.utils';
 import { START_BONUS } from 'src/utils/board.params.utils';
 import { BoardSocket } from 'src/modules/socket/board.init';
+import { LINE_TRANSITION_TIMEOUT } from 'src/types/board.params';
+import { getCurrentAction } from 'src/stores/actions.store';
+import { setTransactionEvent } from 'src/stores/transactions.store';
+import nanoid from 'nanoid';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -34,6 +38,10 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_TOKEN_TRANSITION_COMPLETED)
   async tokenMoved(client: Socket, payload: IPlayerMove): Promise<void> {
+    const action = getCurrentAction();
+
+    // if (action.actionId !== payload.actionId) return;
+
     try {
       const player = getActingPlayer();
       if (!player.jailed) {
@@ -47,22 +55,20 @@ export class BoardMessage {
           goToJail() && Action.switchPlayerTurn();
         }
         if (isStart()) {
-          moneyTransaction({
-            sum: START_BONUS,
-            userId: player.userId,
-            toUserId: 0,
-          }) && Action.switchPlayerTurn();
+          Action.switchPlayerTurn();
         }
         if (isTax()) {
           Action.payTaxModal();
         }
         if (isChance()) {
-          console.log(2222);
-          moneyTransaction({
-            sum: 500,
+          setTransactionEvent({
+            money: -5000,
             userId: player.userId,
             toUserId: 0,
-          }) && Action.switchPlayerTurn();
+            reason: 'Надо купить бетон',
+            transactionId: nanoid(4),
+          });
+          Action.payTaxModal();
         }
       } else {
         Action.switchPlayerTurn();
@@ -114,7 +120,10 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED)
   async unJailPayment(client: Socket, payload: IActionId): Promise<void> {
     unjailPlayer();
-
     BoardSocket.emitMessage();
+    setTimeout(() => {
+      Action.rollDicesModal();
+      BoardSocket.emitMessage();
+    }, LINE_TRANSITION_TIMEOUT * 2);
   }
 }

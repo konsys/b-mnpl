@@ -13,11 +13,7 @@ import { actionsStore } from 'src/stores/actions.store';
 import { transactionStore } from 'src/stores/transactions.store';
 import { findFieldByPosition, getActingField } from 'src/utils/fields.utils';
 import nanoid from 'nanoid';
-import {
-  IDicesStore,
-  dicesStore,
-  setRandomDicesEvent,
-} from 'src/stores/dices.store';
+import { dicesStore, setRandomDicesEvent } from 'src/stores/dices.store';
 
 /**
  * Shows modals

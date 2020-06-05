@@ -32,7 +32,6 @@ import nanoid from 'nanoid';
 export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
-    console.log(2342343);
     Action.rollDicesAction();
     BoardSocket.emitMessage();
     setTimeout(() => {

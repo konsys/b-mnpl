@@ -42,8 +42,7 @@ export const buyField = (): void => {
   }
 
   // Decrease player`s money;
-  const pl = getPlayerById(user.userId);
-  updatePlayer({ ...pl, money: user.money - price });
+  updatePlayer({ ...getPlayerById(user.userId), money: user.money - price });
 };
 
 export const unJailModal = (): void => {

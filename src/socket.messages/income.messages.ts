@@ -32,16 +32,16 @@ import nanoid from 'nanoid';
 export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
+    console.log(2342343);
     Action.rollDicesAction();
     BoardSocket.emitMessage();
+    setTimeout(() => {
+      this.tokenMoved();
+      BoardSocket.emitMessage();
+    }, LINE_TRANSITION_TIMEOUT * 3);
   }
 
-  @SubscribeMessage(IncomeMessageType.INCOME_TOKEN_TRANSITION_COMPLETED)
-  async tokenMoved(client: Socket, payload: IPlayerMove): Promise<void> {
-    const action = getCurrentAction();
-
-    // if (action.actionId !== payload.actionId) return;
-
+  tokenMoved() {
     try {
       const player = getActingPlayer();
       if (!player.jailed) {
@@ -73,8 +73,6 @@ export class BoardMessage {
       } else {
         Action.switchPlayerTurn();
       }
-
-      BoardSocket.emitMessage();
     } catch (e) {
       console.log('Error', e);
     }

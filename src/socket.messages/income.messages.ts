@@ -29,42 +29,49 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     Action.rollDicesAction();
-
     BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_TOKEN_TRANSITION_COMPLETED)
   async tokenMoved(client: Socket, payload: IPlayerMove): Promise<void> {
-    const player = getActingPlayer();
-    if (!player.jailed) {
-      noActionField() && Action.switchPlayerTurn();
-
-      isCompanyForSale() && Action.buyFieldModal();
-
-      isJail() && goToJail() && Action.switchPlayerTurn();
-
-      isStart() &&
-        moneyTransaction({
-          sum: START_BONUS,
-          userId: player.userId,
-          toUserId: 0,
-        }) &&
+    try {
+      const player = getActingPlayer();
+      if (!player.jailed) {
+        if (noActionField()) {
+          Action.switchPlayerTurn();
+        }
+        if (isCompanyForSale()) {
+          Action.buyFieldModal();
+        }
+        if (isJail()) {
+          goToJail() && Action.switchPlayerTurn();
+        }
+        if (isStart()) {
+          moneyTransaction({
+            sum: START_BONUS,
+            userId: player.userId,
+            toUserId: 0,
+          }) && Action.switchPlayerTurn();
+        }
+        if (isTax()) {
+          Action.payTaxModal();
+        }
+        if (isChance()) {
+          console.log(2222);
+          moneyTransaction({
+            sum: 500,
+            userId: player.userId,
+            toUserId: 0,
+          }) && Action.switchPlayerTurn();
+        }
+      } else {
         Action.switchPlayerTurn();
+      }
 
-      isTax() && Action.payTaxModal();
-
-      isChance() &&
-        moneyTransaction({
-          sum: 50000,
-          userId: player.userId,
-          toUserId: 0,
-        }) &&
-        Action.payTaxModal();
-    } else {
-      Action.switchPlayerTurn();
+      BoardSocket.emitMessage();
+    } catch (e) {
+      console.log('Error', e);
     }
-
-    BoardSocket.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)

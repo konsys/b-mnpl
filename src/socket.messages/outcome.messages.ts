@@ -104,14 +104,7 @@ export const actionTypeToEventAdapter = (
       return rollDicesModalMessage();
 
     case OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION:
-      let rd = null;
-      try {
-        rd = rollDicesMessage();
-      } catch (er) {
-        console.log(3333, er);
-      }
-
-      return rd;
+      return rollDicesMessage();
 
     case OutcomeMessageType.OUTCOME_CAN_BUY_MODAL:
       return buyModalHandler();

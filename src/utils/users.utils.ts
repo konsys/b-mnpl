@@ -65,8 +65,9 @@ export const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
   const player2 = transaction.toUserId
     ? getPlayerById(transaction.toUserId)
     : 0;
+
   // TODO error handler
-  if (player1.money < transaction.sum) throw Error('No money');
+  if (-player1.money > transaction.sum) throw Error('Not enough money');
 
   return (
     updatePlayer({ ...player1, money: player1.money + transaction.sum }) &&
@@ -77,7 +78,7 @@ export const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
 
 export const unjailPlayer = (newPosition?: number) => {
   const player = getActingPlayer();
-  // After clicking unjail for manoey till show roll dices modal
+  // After clicking unjail for money till show roll dices modal
   setCurrentActionsEvent({
     action: OutcomeMessageType.DO_NOTHING,
     actionId: nanoid(4),
@@ -87,7 +88,8 @@ export const unjailPlayer = (newPosition?: number) => {
 
   return updatePlayer({
     ...player,
-    money: player.money - UN_JAIL_PRICE,
+    // if there is position then unjailed by rolling dices
+    money: newPosition ? player.money : player.money - UN_JAIL_PRICE,
     meanPosition: newPosition || JAIL_POSITION,
     jailed: 0,
     unjailAttempts: 0,

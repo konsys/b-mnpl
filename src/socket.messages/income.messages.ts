@@ -15,17 +15,14 @@ import {
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
-import {
-  moneyTransaction,
-  getActingPlayer,
-  unjailPlayer,
-  goToJail,
-} from 'src/utils/users.utils';
+import { getActingPlayer, unjailPlayer, goToJail } from 'src/utils/users.utils';
 import { START_BONUS } from 'src/utils/board.params.utils';
 import { BoardSocket } from 'src/modules/socket/board.init';
 import { LINE_TRANSITION_TIMEOUT } from 'src/types/board.params';
-import { getCurrentAction } from 'src/stores/actions.store';
-import { setTransactionEvent } from 'src/stores/transactions.store';
+import {
+  setTransactionEvent,
+  transactMoneyEvent,
+} from 'src/stores/transactions.store';
 import nanoid from 'nanoid';
 
 @WebSocketGateway()
@@ -43,6 +40,17 @@ export class BoardMessage {
   tokenMoved() {
     try {
       const player = getActingPlayer();
+
+      const transactionId = nanoid();
+      setTransactionEvent({
+        money: START_BONUS,
+        userId: player.userId,
+        toUserId: 0,
+        reason: 'Просто так бонус',
+        transactionId: transactionId,
+      });
+      transactMoneyEvent(transactionId);
+
       if (!player.jailed) {
         if (noActionField()) {
           Action.switchPlayerTurn();
@@ -108,8 +116,16 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
-    moneyTransaction(moneyTransactionParams());
-
+    const params = moneyTransactionParams();
+    const id = nanoid();
+    setTransactionEvent({
+      money: -5000,
+      userId: params.userId,
+      toUserId: 0,
+      reason: 'Надо купить бетон',
+      transactionId: id,
+    });
+    transactMoneyEvent(id);
     Action.switchPlayerTurn();
     BoardSocket.emitMessage();
   }

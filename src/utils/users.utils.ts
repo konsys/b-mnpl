@@ -60,22 +60,6 @@ export const updateAllPLayers = (players: IPlayer[]): boolean => {
   return true;
 };
 
-export const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
-  const player1 = getPlayerById(transaction.userId);
-  const player2 = transaction.toUserId
-    ? getPlayerById(transaction.toUserId)
-    : 0;
-
-  // TODO error handler
-  if (-player1.money > transaction.sum) throw Error('Not enough money');
-
-  return (
-    updatePlayer({ ...player1, money: player1.money + transaction.sum }) &&
-    player2 &&
-    updatePlayer({ ...player2, money: player2.money - transaction.sum })
-  );
-};
-
 export const unjailPlayer = (newPosition?: number) => {
   const player = getActingPlayer();
   // After clicking unjail for money till show roll dices modal

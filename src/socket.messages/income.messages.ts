@@ -128,7 +128,8 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
-    if (transactMoneyEvent(getCurrentTransaction().transactionId)) {
+    if (getCurrentTransaction().money > -getActingPlayer().money) {
+      transactMoneyEvent(getCurrentTransaction().transactionId);
       Action.switchPlayerTurn();
     }
     BoardSocket.emitMessage();

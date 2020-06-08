@@ -11,6 +11,8 @@ import {
   noActionField,
   isJail,
   isChance,
+  isMyField,
+  isCompany,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -31,18 +33,17 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = getCurrentAction();
-    console.log(111111, payload, action.actionId);
     if (payload.actionId === action.actionId) {
       Action.rollDicesAction();
       BoardSocket.emitMessage();
-      this.tokenMoved();
+      this.tokenMovedAfterClick();
       setTimeout(() => {
         BoardSocket.emitMessage();
       }, LINE_TRANSITION_TIMEOUT * 3);
     }
   }
 
-  tokenMoved() {
+  tokenMovedAfterClick() {
     try {
       const player = getActingPlayer();
 
@@ -62,6 +63,9 @@ export class BoardMessage {
         }
         if (isCompanyForSale()) {
           Action.buyFieldModal();
+        }
+        if (isCompany() && isMyField()) {
+          Action.switchPlayerTurn();
         }
         if (isJail()) {
           goToJail() && Action.switchPlayerTurn();

@@ -34,10 +34,10 @@ export const isTax = (): boolean => getActingField().type === FieldType.TAX;
 export const isStart = (): boolean => getActingField().type === FieldType.START;
 export const isJail = (): boolean => getActingField().type === FieldType.JAIL;
 
-export const isCompany = (field): boolean =>
-  field.type === FieldType.COMPANY ||
-  field.type === FieldType.AUTO ||
-  field.type === FieldType.IT;
+export const isCompany = (): boolean =>
+  getActingField().type === FieldType.COMPANY ||
+  getActingField().type === FieldType.AUTO ||
+  getActingField().type === FieldType.IT;
 
 export const isChance = (): boolean =>
   getActingField().type === FieldType.CHANCE;
@@ -57,22 +57,16 @@ export const noActionField = (): boolean => {
   return field.type === FieldType.TAKE_REST || field.type === FieldType.CASINO;
 };
 
-export const isCompanyForSale = (): boolean => {
-  const field = getActingField();
-  return isCompany(field) && !field.owner;
-};
+export const isCompanyForSale = (): boolean =>
+  isCompany() && !getActingField().owner;
 
-export const isMyField = (): boolean => {
-  const user = getActingPlayer();
-  const field = getActingField();
-  return isCompany(field) && field.owner && field.owner.userId === user.userId;
-};
+export const isMyField = (): boolean =>
+  isCompany() &&
+  getActingField().owner &&
+  getActingField().owner.userId === getActingPlayer().userId;
 
-export const canBuyField = (): boolean => {
-  const user = getActingPlayer();
-  const field = findFieldByPosition(user.meanPosition);
-  return isCompany(field) && field.price <= user.money;
-};
+export const canBuyField = (): boolean =>
+  isCompany() && getActingField().price <= getActingPlayer().money;
 
 export const getFieldIndex = (field: IField): number =>
   fieldsStore.getState().fields.findIndex(v => v.fieldId === field.fieldId);

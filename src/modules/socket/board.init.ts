@@ -103,8 +103,7 @@ export class BoardSocket
       }
 
       updateAllPLayers(resultPlayers);
-      const fields = await this.fieldsService.getInitialFields();
-      updateAllFields(fields);
+      updateAllFields(await this.fieldsService.getInitialFields());
       errorStore.updates.watch(error => this.emitError(error));
     } catch (err) {
       this.logger.error(`Error: ${JSON.stringify(err)}`);

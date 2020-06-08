@@ -12,18 +12,20 @@ import {
   isJail,
   isChance,
   isMyField,
-  isCompany,
+  whosField,
+  getActingField,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
 import { getActingPlayer, unjailPlayer, goToJail } from 'src/utils/users.utils';
-import { START_BONUS } from 'src/utils/board.params.utils';
+// import { START_BONUS } from 'src/utils/board.params.utils';
 import { BoardSocket } from 'src/modules/socket/board.init';
 import { LINE_TRANSITION_TIMEOUT } from 'src/types/board.params';
 import {
   setTransactionEvent,
   transactMoneyEvent,
+  getCurrentTransaction,
 } from 'src/stores/transactions.store';
 import nanoid from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
@@ -47,16 +49,6 @@ export class BoardMessage {
     try {
       const player = getActingPlayer();
 
-      const transactionId = nanoid();
-      setTransactionEvent({
-        money: START_BONUS,
-        userId: player.userId,
-        toUserId: 0,
-        reason: 'Просто так бонус',
-        transactionId: transactionId,
-      });
-      transactMoneyEvent(transactionId);
-
       if (!player.jailed) {
         if (noActionField()) {
           Action.switchPlayerTurn();
@@ -64,8 +56,18 @@ export class BoardMessage {
         if (isCompanyForSale()) {
           Action.buyFieldModal();
         }
-        if (isCompany() && isMyField()) {
+        if (!isCompanyForSale() && isMyField()) {
           Action.switchPlayerTurn();
+        }
+        if (!isCompanyForSale() && !isMyField()) {
+          setTransactionEvent({
+            money: -getActingField().price,
+            userId: player.userId,
+            toUserId: whosField(),
+            reason: 'Пришло время платить по счетам',
+            transactionId: nanoid(4),
+          });
+          Action.payTaxModal();
         }
         if (isJail()) {
           goToJail() && Action.switchPlayerTurn();
@@ -77,6 +79,7 @@ export class BoardMessage {
           Action.payTaxModal();
         }
         if (isChance()) {
+          console.log(123123123);
           setTransactionEvent({
             money: -5000,
             userId: player.userId,
@@ -125,17 +128,9 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
-    const params = moneyTransactionParams();
-    const id = nanoid();
-    setTransactionEvent({
-      money: -5000,
-      userId: params.userId,
-      toUserId: 0,
-      reason: 'Надо купить бетон',
-      transactionId: id,
-    });
-    transactMoneyEvent(id);
-    Action.switchPlayerTurn();
+    if (transactMoneyEvent(getCurrentTransaction().transactionId)) {
+      Action.switchPlayerTurn();
+    }
     BoardSocket.emitMessage();
   }
 

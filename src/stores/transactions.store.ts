@@ -1,6 +1,12 @@
 import { GameDomain } from 'src/stores/actions.store';
-import { getPlayerById, updatePlayer } from 'src/utils/users.utils';
+import {
+  getPlayerById,
+  updatePlayer,
+  getActingPlayer,
+} from 'src/utils/users.utils';
 import { IMoneyTransaction } from 'src/types/board.types';
+import { ErrorCode } from 'src/utils/error.code';
+import { setError } from './error.store';
 const TransactionsDomain = GameDomain.domain('PlayersDomain');
 
 export interface ITransactionStore {
@@ -11,6 +17,7 @@ export interface ITransactionStore {
   toUserId: number;
 }
 
+export const getCurrentTransaction = () => transactionStore.getState();
 export const resetTransactionsEvent = TransactionsDomain.event();
 
 export const transactMoneyEvent = TransactionsDomain.event<string>();
@@ -23,14 +30,22 @@ export const transactionStore = TransactionsDomain.store<ITransactionStore | nul
   null,
 )
   .on(setTransactionEvent, (_, data) => data)
-  .on(transactMoneyEvent, (prev, id) => {
-    id === prev.transactionId &&
+  .on(transactMoneyEvent, (transaction, id) => {
+    if (transaction.money < -getActingPlayer().money) {
+      setError({
+        code: ErrorCode.NotEnoughMoney,
+        message: 'Oop!',
+      });
+      return;
+    }
+    id === transaction.transactionId &&
       moneyTransaction({
-        sum: prev.money,
-        userId: prev.userId,
-        toUserId: prev.toUserId,
+        sum: transaction.money,
+        userId: transaction.userId,
+        toUserId: transaction.toUserId,
       });
     resetTransactionsEvent();
+    return;
   })
   .reset(resetTransactionsEvent);
 
@@ -49,3 +64,5 @@ const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
     updatePlayer({ ...player2, money: player2.money - transaction.sum })
   );
 };
+
+transactionStore.updates.watch(v => console.log(11111, v));

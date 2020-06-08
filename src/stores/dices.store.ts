@@ -22,12 +22,12 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
     const player = getActingPlayer();
     const currenPosition = player.meanPosition;
 
-    const dice1 = 4;
+    const dice1 = 2;
     // const dice2 = random(0, 6);
     let dice2 = 4;
     if (player.name === 'Feodr') {
       // dice2 = random(0, 6);
-      dice2 = 5;
+      // dice2 = 5;
     }
     const dice3 = 0;
     const sum = dice1 + dice2 + dice3 + currenPosition;

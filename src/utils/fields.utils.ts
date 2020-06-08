@@ -43,14 +43,16 @@ export const isChance = (): boolean =>
   getActingField().type === FieldType.CHANCE;
 
 export const moneyTransactionParams = (): IMoneyTransaction => {
-  const user = getActingPlayer();
   const field = getActingField();
   return {
     sum: -field.price,
-    userId: user.userId,
+    userId: getActingPlayer().userId,
     toUserId: (field.owner && field.owner.userId) || 0,
   };
 };
+
+export const whosField = (): number =>
+  (getActingField().owner && getActingField().owner.userId) || 0;
 
 export const noActionField = (): boolean => {
   const field = getActingField();

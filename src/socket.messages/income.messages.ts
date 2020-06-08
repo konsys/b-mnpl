@@ -60,8 +60,9 @@ export class BoardMessage {
           Action.switchPlayerTurn();
         }
         if (!isCompanyForSale() && !isMyField()) {
+          const field = getActingField();
           setTransactionEvent({
-            money: -getActingField().price,
+            money: -(field.owner && field.owner.updatedPrice) || 0,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Пришло время платить по счетам',
@@ -79,7 +80,7 @@ export class BoardMessage {
           Action.payTaxModal();
         }
         if (isChance()) {
-          console.log(123123123);
+          // TODO Make a real chance field action
           setTransactionEvent({
             money: -5000,
             userId: player.userId,
@@ -101,6 +102,7 @@ export class BoardMessage {
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     if (isCompanyForSale() && canBuyField()) {
       Action.buyField();
+      Action.switchPlayerTurn();
     } else {
       !isCompanyForSale() &&
         setError({
@@ -114,7 +116,6 @@ export class BoardMessage {
         });
     }
 
-    Action.switchPlayerTurn();
     BoardSocket.emitMessage();
   }
 
@@ -131,6 +132,11 @@ export class BoardMessage {
     if (getCurrentTransaction().money > -getActingPlayer().money) {
       transactMoneyEvent(getCurrentTransaction().transactionId);
       Action.switchPlayerTurn();
+    } else {
+      setError({
+        code: ErrorCode.NotEnoughMoney,
+        message: 'Oop!',
+      });
     }
     BoardSocket.emitMessage();
   }

@@ -65,4 +65,4 @@ const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
   );
 };
 
-transactionStore.updates.watch(v => console.log(11111, v));
+// transactionStore.updates.watch(v => console.log(11111, v));

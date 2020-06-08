@@ -13,7 +13,11 @@ import { actionsStore } from 'src/stores/actions.store';
 import { transactionStore } from 'src/stores/transactions.store';
 import { findFieldByPosition, getActingField } from 'src/utils/fields.utils';
 import nanoid from 'nanoid';
-import { dicesStore, setRandomDicesEvent } from 'src/stores/dices.store';
+import {
+  dicesStore,
+  setRandomDicesEvent,
+  dicesUpdatePlayerToken,
+} from 'src/stores/dices.store';
 
 /**
  * Shows modals
@@ -80,10 +84,7 @@ export const rollDicesMessage = (): IRollDicesMessage | IDoNothing => {
   const action = actionsStore.getState();
   setRandomDicesEvent(action.actionId);
   let dicesState = dicesStore.getState();
-
-  if (dicesState.isDouble && player.jailed) {
-    unjailPlayer(dicesState.meanPosition);
-  }
+  dicesUpdatePlayerToken(dicesState);
 
   return {
     type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,

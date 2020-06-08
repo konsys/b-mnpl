@@ -46,7 +46,7 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
   })
   .reset(resetDicesEvent);
 
-dicesStore.updates.watch(v => {
+export const dicesUpdatePlayerToken = (v: IDicesStore) => {
   if (v) {
     // Jail checks
     const player = getActingPlayer();
@@ -71,7 +71,7 @@ dicesStore.updates.watch(v => {
       unjailAttempts = 0;
     } else if (player.jailed && !v.isDouble) {
       unjailAttempts++;
-      meanPosition = JAIL_POSITION;
+      // meanPosition = JAIL_POSITION;
     }
 
     if (doublesRolledAsCombo > JAIL_TURNS) {
@@ -88,4 +88,4 @@ dicesStore.updates.watch(v => {
       meanPosition,
     });
   }
-});
+};

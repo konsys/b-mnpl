@@ -1,5 +1,5 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { IPlayerMove, IncomeMessageType } from 'src/types/board.types';
+import { IncomeMessageType } from 'src/types/board.types';
 import { Socket } from 'socket.io';
 import { IActionId } from 'src/types/board.types';
 import {
@@ -24,17 +24,22 @@ import {
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
 import nanoid from 'nanoid';
+import { getCurrentAction } from 'src/stores/actions.store';
 
 @WebSocketGateway()
 export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
-    Action.rollDicesAction();
-    BoardSocket.emitMessage();
-    setTimeout(() => {
-      this.tokenMoved();
+    const action = getCurrentAction();
+    console.log(111111, payload, action.actionId);
+    if (payload.actionId === action.actionId) {
+      Action.rollDicesAction();
       BoardSocket.emitMessage();
-    }, LINE_TRANSITION_TIMEOUT * 3);
+      this.tokenMoved();
+      setTimeout(() => {
+        BoardSocket.emitMessage();
+      }, LINE_TRANSITION_TIMEOUT * 3);
+    }
   }
 
   tokenMoved() {

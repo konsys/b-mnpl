@@ -66,13 +66,6 @@ export class BoardMessage {
 
           const dices = dicesStore.getState();
 
-          console.log(
-            1111,
-            dices.sum,
-            dices.sum * (field.owner && field.owner.paymentMultiplier),
-            field.owner.paymentMultiplier,
-          );
-
           setTransactionEvent({
             money: field.owner.paymentMultiplier
               ? -(dices.sum * (field.owner && field.owner.paymentMultiplier))

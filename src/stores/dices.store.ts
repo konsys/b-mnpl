@@ -37,7 +37,7 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
       userId: player.userId,
       dices: [dice1, dice2, dice3],
       _id: actionId,
-      sum,
+      sum: dice1 + dice2 + dice3,
       meanPosition,
       isDouble: dice1 === dice2,
       // isTriple: dice1 === dice2 && dice2 === dice3,

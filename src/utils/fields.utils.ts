@@ -125,6 +125,7 @@ export const buyAuto = (field: IField): number => {
     level: 0,
     mortgaged: false,
     updatedPrice: price,
+    paymentMultiplier: 0,
   };
 
   sameGroupFieilds.map((v: IField) => {
@@ -163,6 +164,7 @@ export const buyCompany = (field: IField): number => {
     level: 0,
     mortgaged: false,
     updatedPrice: price,
+    paymentMultiplier: 0,
   };
 
   sameGroupFieilds.map((v: IField) => {
@@ -182,15 +184,14 @@ export const buyITCompany = (field: IField): number => {
   const fieldsState = fieldsStore.getState().fields;
   const fieldIndex = getFieldIndex(field);
 
-  let price = field.price;
-  const fieldPrice = price;
+  let paymentMultiplier = field.price;
 
   const sameGroupFieilds = getSameGroupFields(field);
 
   if (!sameGroupFieilds.length) {
-    price = calcPercentPart(price, ONE_IT_FIELD_MULT);
+    paymentMultiplier = calcPercentPart(field.price, ONE_IT_FIELD_MULT);
   } else if (sameGroupFieilds.length === 1) {
-    price = calcPercentPart(price, TWO_IT_FIELD_MULT);
+    paymentMultiplier = calcPercentPart(field.price, TWO_IT_FIELD_MULT);
   }
 
   field.owner = {
@@ -198,17 +199,21 @@ export const buyITCompany = (field: IField): number => {
     userId: user.userId,
     level: 0,
     mortgaged: false,
-    updatedPrice: price,
+    updatedPrice: 0,
+    paymentMultiplier,
   };
 
   sameGroupFieilds.map((v: IField) => {
     const index = getFieldIndex(v);
 
-    fieldsState[index] = { ...v, owner: { ...v.owner, updatedPrice: price } };
+    fieldsState[index] = {
+      ...v,
+      owner: { ...v.owner, updatedPrice: 0, paymentMultiplier },
+    };
   });
 
   fieldsState[fieldIndex] = field;
 
   updateAllFields(fieldsState);
-  return fieldPrice;
+  return paymentMultiplier;
 };

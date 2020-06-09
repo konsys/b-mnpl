@@ -29,6 +29,7 @@ import {
 } from 'src/stores/transactions.store';
 import nanoid from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
+import { dicesStore } from 'src/stores/dices.store';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -59,10 +60,23 @@ export class BoardMessage {
         if (!isCompanyForSale() && isMyField()) {
           Action.switchPlayerTurn();
         }
+
         if (!isCompanyForSale() && !isMyField()) {
           const field = getActingField();
+
+          const dices = dicesStore.getState();
+
+          console.log(
+            1111,
+            dices.sum,
+            dices.sum * (field.owner && field.owner.paymentMultiplier),
+            field.owner.paymentMultiplier,
+          );
+
           setTransactionEvent({
-            money: -(field.owner && field.owner.updatedPrice) || 0,
+            money: field.owner.paymentMultiplier
+              ? -(dices.sum * (field.owner && field.owner.paymentMultiplier))
+              : -(field.owner && field.owner.updatedPrice) || 0,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Пришло время платить по счетам',

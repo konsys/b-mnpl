@@ -161,6 +161,7 @@ export interface IFieldStatus {
   level: number;
   mortgaged: boolean;
   updatedPrice: number;
+  paymentMultiplier: number;
 }
 
 interface BoardTimers {

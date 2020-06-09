@@ -63,16 +63,15 @@ export const payModalHandler = (): IPayRentStart => {
   const field = getActingField();
   const action = actionsStore.getState();
   const transaction = transactionStore.getState();
+  const sum = (transaction && transaction.money) || field.price;
   return {
     type: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
     userId: player.userId,
     title: 'Заплатить',
     text: `${transaction &&
-      transaction.reason + '. '}Вы должны заплатить ${(transaction &&
-      Math.abs(transaction.money)) ||
-      field.price}k`,
+      transaction.reason + '. '}Вы должны заплатить ${Math.abs(sum)}k`,
     field: field,
-    money: player.money,
+    money: sum,
     toUserId: field.owner && field.owner.userId,
     _id: action.actionId,
   };

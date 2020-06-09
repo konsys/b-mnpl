@@ -33,6 +33,7 @@ import {
 import nanoid from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
 import { dicesStore } from 'src/stores/dices.store';
+import { JAIL_TURNS } from 'src/utils/board.params';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -40,12 +41,11 @@ export class BoardMessage {
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = getCurrentAction();
     if (payload.actionId === action.actionId) {
+      const player = getActingPlayer();
       Action.rollDicesAction();
       BoardSocket.emitMessage();
       this.tokenMovedAfterClick();
       setTimeout(() => {
-        const player = getActingPlayer();
-
         BoardSocket.emitMessage();
       }, LINE_TRANSITION_TIMEOUT * 3);
     }
@@ -53,7 +53,6 @@ export class BoardMessage {
 
   tokenMovedAfterClick() {
     try {
-      console.log('tokenMovedAfterClick');
       const player = getActingPlayer();
       if (!player.jailed) {
         if (noActionField()) {
@@ -91,6 +90,19 @@ export class BoardMessage {
             userId: player.userId,
             toUserId: 0,
             reason: 'Надо купить бетон',
+            transactionId: nanoid(4),
+          });
+          Action.payTaxModal();
+        }
+      } else {
+        if (player.unjailAttempts < JAIL_TURNS) {
+          Action.switchPlayerTurn();
+        } else {
+          setTransactionEvent({
+            money: -500,
+            userId: player.userId,
+            toUserId: 0,
+            reason: 'Вы должны заплатить залог за выход из тюрьмы',
             transactionId: nanoid(4),
           });
           Action.payTaxModal();

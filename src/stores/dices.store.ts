@@ -4,7 +4,7 @@ import {
   updatePlayer,
   jailPlayer,
 } from 'src/utils/users.utils';
-import { JAIL_TURNS, JAIL_POSITION } from 'src/utils/board.params.utils';
+import { JAIL_TURNS } from 'src/utils/board.params';
 // import { random } from 'src/utils/common.utils';
 
 export interface IDicesStore {
@@ -51,10 +51,7 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
   .reset(resetDicesEvent);
 
 export const dicesUpdatePlayerToken = (v: IDicesStore): void => {
-  console.log('dicesUpdatePlayerToken');
-
   const player = getActingPlayer();
-
   let jailed = 0;
   let movesLeft = 0;
   let meanPosition = v.meanPosition;

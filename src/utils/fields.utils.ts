@@ -12,7 +12,7 @@ import {
   FREE_FIELD_PERCENT,
   ONE_IT_FIELD_MULT,
   TWO_IT_FIELD_MULT,
-} from './board.params.utils';
+} from './board.params';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsStore.getState().fields.find(v => v.fieldPosition === fieldPosition);

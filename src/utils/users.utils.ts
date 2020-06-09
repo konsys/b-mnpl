@@ -4,7 +4,7 @@ import {
   IMoneyTransaction,
   OutcomeMessageType,
 } from 'src/types/board.types';
-import { JAIL_POSITION, UN_JAIL_PRICE, JAIL_TURNS } from './board.params.utils';
+import { JAIL_POSITION, UN_JAIL_PRICE, JAIL_TURNS } from './board.params';
 import nanoid from 'nanoid';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
 

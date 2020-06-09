@@ -7,19 +7,21 @@ import {
   canBuyField,
   isTax,
   isStart,
-  moneyTransactionParams,
   noActionField,
   isJail,
   isChance,
   isMyField,
   whosField,
   getActingField,
-  isCompany,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
-import { getActingPlayer, unjailPlayer, goToJail } from 'src/utils/users.utils';
+import {
+  getActingPlayer,
+  unjailPlayer,
+  jailPlayer,
+} from 'src/utils/users.utils';
 // import { START_BONUS } from 'src/utils/board.params.utils';
 import { BoardSocket } from 'src/modules/socket/board.init';
 import { LINE_TRANSITION_TIMEOUT } from 'src/types/board.params';
@@ -51,8 +53,8 @@ export class BoardMessage {
 
   tokenMovedAfterClick() {
     try {
+      console.log('tokenMovedAfterClick');
       const player = getActingPlayer();
-      console.log(11111, player.jailed);
       if (!player.jailed) {
         if (noActionField()) {
           Action.switchPlayerTurn();
@@ -77,7 +79,7 @@ export class BoardMessage {
           });
           Action.payTaxModal();
         } else if (isJail()) {
-          goToJail() && Action.switchPlayerTurn();
+          jailPlayer() && Action.switchPlayerTurn();
         } else if (isStart()) {
           Action.switchPlayerTurn();
         } else if (isTax()) {

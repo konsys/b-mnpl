@@ -1,5 +1,9 @@
 import { GameDomain } from 'src/stores/actions.store';
-import { getActingPlayer, updatePlayer, goToJail } from 'src/utils/users.utils';
+import {
+  getActingPlayer,
+  updatePlayer,
+  jailPlayer,
+} from 'src/utils/users.utils';
 import { JAIL_TURNS, JAIL_POSITION } from 'src/utils/board.params.utils';
 // import { random } from 'src/utils/common.utils';
 
@@ -46,49 +50,44 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
   })
   .reset(resetDicesEvent);
 
-export const dicesUpdatePlayerToken = (v: IDicesStore) => {
-  if (v) {
-    // Jail checks
-    const player = getActingPlayer();
+export const dicesUpdatePlayerToken = (v: IDicesStore): void => {
+  console.log('dicesUpdatePlayerToken');
 
-    let jailed = 0;
-    let movesLeft = 0;
-    let meanPosition = v.meanPosition;
-    let doublesRolledAsCombo = player.doublesRolledAsCombo;
-    let unjailAttempts = player.unjailAttempts;
+  const player = getActingPlayer();
 
+  let jailed = 0;
+  let movesLeft = 0;
+  let meanPosition = v.meanPosition;
+  let doublesRolledAsCombo = player.doublesRolledAsCombo;
+
+  if (player.jailed) {
+    if (v.isDouble) {
+      jailed = 0;
+      movesLeft = 0;
+      doublesRolledAsCombo = 0;
+    } else {
+      updatePlayer({ ...player, unjailAttempts: ++player.unjailAttempts });
+      return;
+    }
+  } else {
     if (v.isDouble) {
       doublesRolledAsCombo++;
       movesLeft++;
     } else {
       doublesRolledAsCombo = 0;
     }
-
-    if (player.jailed && v.isDouble) {
-      jailed = 0;
-      movesLeft = 0;
-      doublesRolledAsCombo = 0;
-      unjailAttempts = 0;
-    } else if (player.jailed && !v.isDouble) {
-      unjailAttempts++;
-      meanPosition = JAIL_POSITION;
-      jailed = player.jailed;
-    }
-
-    console.log(12123123, player.jailed, meanPosition, unjailAttempts);
-
-    if (doublesRolledAsCombo > JAIL_TURNS) {
-      goToJail();
-      return;
-    }
-
-    updatePlayer({
-      ...player,
-      movesLeft,
-      doublesRolledAsCombo,
-      jailed,
-      unjailAttempts,
-      meanPosition,
-    });
   }
+
+  if (doublesRolledAsCombo > JAIL_TURNS) {
+    jailPlayer();
+    return;
+  }
+
+  updatePlayer({
+    ...player,
+    movesLeft,
+    doublesRolledAsCombo,
+    jailed,
+    meanPosition,
+  });
 };

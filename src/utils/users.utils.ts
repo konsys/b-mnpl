@@ -15,26 +15,21 @@ export const getPlayerById = (userId: number): IPlayer => {
 export const getActingPlayer = (): IPlayer => {
   const state = playersStore.getState();
   const user =
-    state.players &&
-    state.players.length &&
-    state.players.find(v => v.isActing);
+    Array.isArray(state.players) && state.players.find(v => v.isActing);
   return user;
 };
 
 export const getActingPlayerIndex = (): number => {
   const state = playersStore.getState();
   const index =
-    state.players &&
-    state.players.length &&
-    state.players.findIndex(v => v.isActing);
+    Array.isArray(state.players) && state.players.findIndex(v => v.isActing);
   return index;
 };
 
 export const getPlayerIndexById = (userId: number) => {
   const state = playersStore.getState();
   return (
-    state.players &&
-    state.players.length &&
+    Array.isArray(state.players) &&
     state.players.findIndex(v => v.userId === userId)
   );
 };
@@ -80,7 +75,7 @@ export const unjailPlayer = (newPosition?: number) => {
   });
 };
 
-export const goToJail = (): boolean => {
+export const jailPlayer = (): boolean => {
   const player = getActingPlayer();
   return updatePlayer({
     ...player,

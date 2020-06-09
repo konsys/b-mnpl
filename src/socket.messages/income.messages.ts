@@ -33,7 +33,7 @@ import {
 import nanoid from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
 import { dicesStore } from 'src/stores/dices.store';
-import { JAIL_TURNS } from 'src/utils/board.params';
+import { JAIL_TURNS, BANK_PLAYER_ID } from 'src/utils/board.params';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -88,7 +88,7 @@ export class BoardMessage {
           setTransactionEvent({
             money: -5000,
             userId: player.userId,
-            toUserId: 0,
+            toUserId: BANK_PLAYER_ID,
             reason: 'Надо купить бетон',
             transactionId: nanoid(4),
           });
@@ -101,7 +101,7 @@ export class BoardMessage {
           setTransactionEvent({
             money: -500,
             userId: player.userId,
-            toUserId: 0,
+            toUserId: BANK_PLAYER_ID,
             reason: 'Вы должны заплатить залог за выход из тюрьмы',
             transactionId: nanoid(4),
           });

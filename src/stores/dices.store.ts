@@ -22,7 +22,7 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
     const player = getActingPlayer();
     const currenPosition = player.meanPosition;
 
-    const dice1 = 2;
+    const dice1 = 6;
     // const dice2 = random(0, 6);
     let dice2 = 4;
     if (player.name === 'Feodr') {
@@ -71,8 +71,11 @@ export const dicesUpdatePlayerToken = (v: IDicesStore) => {
       unjailAttempts = 0;
     } else if (player.jailed && !v.isDouble) {
       unjailAttempts++;
-      // meanPosition = JAIL_POSITION;
+      meanPosition = JAIL_POSITION;
+      jailed = player.jailed;
     }
+
+    console.log(12123123, player.jailed, meanPosition, unjailAttempts);
 
     if (doublesRolledAsCombo > JAIL_TURNS) {
       goToJail();

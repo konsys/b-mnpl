@@ -79,8 +79,6 @@ export const payModalHandler = (): IPayRentStart => {
 };
 
 export const rollDicesMessage = (): IRollDicesMessage | IDoNothing => {
-  const player = getActingPlayer();
-
   const action = actionsStore.getState();
   setRandomDicesEvent(action.actionId);
   let dicesState = dicesStore.getState();

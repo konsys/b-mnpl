@@ -34,10 +34,14 @@ export const isTax = (): boolean => getActingField().type === FieldType.TAX;
 export const isStart = (): boolean => getActingField().type === FieldType.START;
 export const isJail = (): boolean => getActingField().type === FieldType.JAIL;
 
-export const isCompany = (): boolean =>
-  getActingField().type === FieldType.COMPANY ||
-  getActingField().type === FieldType.AUTO ||
-  getActingField().type === FieldType.IT;
+export const isCompany = (): boolean => {
+  const type = getActingField().type;
+  return (
+    type === FieldType.COMPANY ||
+    type === FieldType.AUTO ||
+    type === FieldType.IT
+  );
+};
 
 export const isChance = (): boolean =>
   getActingField().type === FieldType.CHANCE;

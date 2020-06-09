@@ -14,6 +14,7 @@ import {
   isMyField,
   whosField,
   getActingField,
+  isCompany,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -41,6 +42,8 @@ export class BoardMessage {
       BoardSocket.emitMessage();
       this.tokenMovedAfterClick();
       setTimeout(() => {
+        const player = getActingPlayer();
+
         BoardSocket.emitMessage();
       }, LINE_TRANSITION_TIMEOUT * 3);
     }
@@ -49,44 +52,37 @@ export class BoardMessage {
   tokenMovedAfterClick() {
     try {
       const player = getActingPlayer();
-
+      console.log(11111, player.jailed);
       if (!player.jailed) {
         if (noActionField()) {
           Action.switchPlayerTurn();
-        }
-        if (isCompanyForSale()) {
+        } else if (isCompanyForSale()) {
           Action.buyFieldModal();
-        }
-        if (!isCompanyForSale() && isMyField()) {
+        } else if (!isCompanyForSale() && isMyField()) {
           Action.switchPlayerTurn();
-        }
-
-        if (!isCompanyForSale() && !isMyField()) {
+        } else if (whosField() && !isMyField()) {
           const field = getActingField();
 
           const dices = dicesStore.getState();
 
           setTransactionEvent({
-            money: field.owner.paymentMultiplier
-              ? -(dices.sum * (field.owner && field.owner.paymentMultiplier))
-              : -(field.owner && field.owner.updatedPrice) || 0,
+            money:
+              field.owner && field.owner.paymentMultiplier
+                ? -(dices.sum * (field.owner && field.owner.paymentMultiplier))
+                : -(field.owner && field.owner.updatedPrice) || 0,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Пришло время платить по счетам',
             transactionId: nanoid(4),
           });
           Action.payTaxModal();
-        }
-        if (isJail()) {
+        } else if (isJail()) {
           goToJail() && Action.switchPlayerTurn();
-        }
-        if (isStart()) {
+        } else if (isStart()) {
           Action.switchPlayerTurn();
-        }
-        if (isTax()) {
+        } else if (isTax()) {
           Action.payTaxModal();
-        }
-        if (isChance()) {
+        } else if (isChance()) {
           // TODO Make a real chance field action
           setTransactionEvent({
             money: -5000,
@@ -97,8 +93,6 @@ export class BoardMessage {
           });
           Action.payTaxModal();
         }
-      } else {
-        Action.switchPlayerTurn();
       }
     } catch (e) {
       console.log('Error', e);

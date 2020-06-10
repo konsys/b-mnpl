@@ -7,8 +7,9 @@ import {
   IDoNothing,
   IRollDicesMessage,
   IncomeMessageType,
+  IUnJailPayingModal,
 } from 'src/types/board.types';
-import { getActingPlayer, unjailPlayer } from 'src/utils/users.utils';
+import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
 import { transactionStore } from 'src/stores/transactions.store';
 import { findFieldByPosition, getActingField } from 'src/utils/fields.utils';
@@ -30,11 +31,11 @@ export const rollDicesModalMessage = (): IDicesModal => ({
   _id: actionsStore.getState().actionId,
 });
 
-export const unJailModalMesage = (): IUnJailModal => ({
-  type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
+export const unJailModalMesage = (): IUnJailPayingModal => ({
+  type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
   userId: getActingPlayer().userId,
-  title: 'Выйти из тюрьмы',
-  text: 'Можете выйти, заплатив залог или кинуть кубики на удачу',
+  title: 'Заплатить залог',
+  text: 'Заплатить за выход из тюрьмы',
   _id: actionsStore.getState().actionId,
 });
 
@@ -68,8 +69,7 @@ export const payModalHandler = (): IPayRentStart => {
     type: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
     userId: player.userId,
     title: 'Заплатить',
-    text: `${transaction &&
-      transaction.reason + '. '}Вы должны заплатить ${Math.abs(sum)}k`,
+    text: `${transaction && transaction.reason + '. '}`,
     field: field,
     money: sum,
     toUserId: field.owner && field.owner.userId,
@@ -112,6 +112,9 @@ export const actionTypeToEventAdapter = (
       return payModalHandler();
 
     case OutcomeMessageType.OUTCOME_UN_JAIL_MODAL:
+      return unJailModalMesage();
+
+    case OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL:
       return unJailModalMesage();
 
     case OutcomeMessageType.DO_NOTHING:

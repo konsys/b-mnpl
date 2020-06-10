@@ -37,6 +37,7 @@ export enum OutcomeMessageType {
   OUTCOME_PLAYER_TOKEN_POSITION_ACTION = 'changeTokenAction',
   OUTCOME_CAN_BUY_MODAL = 'canBuyModal',
   OUTCOME_TAX_PAYING_MODAL = 'taxPayingModal',
+  OUTCOME_UNJAIL_PAYING_MODAL = 'unjailPayingModal',
   OUTCOME_ROLL_DICES_MODAL = 'rollDicesModal',
   OUTCOME_UN_JAIL_MODAL = 'unJailModal',
   OUTCOME_AUCTION_MODAL = 'auctionModal',
@@ -75,6 +76,12 @@ export interface IUnJailModal extends IBoardAction {
   text: string;
 }
 
+export interface IUnJailPayingModal extends IBoardAction {
+  type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL;
+  title: string;
+  text: string;
+}
+
 export interface IRollDicesMessage extends IBoardAction {
   type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION;
   dices: number[];
@@ -101,6 +108,7 @@ export interface IBoardEvent {
     | IDicesModal
     | IPayRentStart
     | IUnJailModal
+    | IUnJailPayingModal
     | IRollDicesMessage
     | IDoNothing;
 }

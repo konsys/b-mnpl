@@ -102,7 +102,7 @@ export class BoardMessage {
             money: -500,
             userId: player.userId,
             toUserId: BANK_PLAYER_ID,
-            reason: 'Вы должны заплатить залог за выход из тюрьмы',
+            reason: 'Залог за выход из тюрьмы',
             transactionId: nanoid(4),
           });
           Action.payTaxModal();

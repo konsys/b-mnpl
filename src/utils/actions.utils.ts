@@ -54,6 +54,15 @@ export const unJailModal = (): void => {
   });
 };
 
+export const payUnJailModal = (): void => {
+  updateAction({
+    action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
+    userId: getActingPlayer().userId,
+    actionId: nanoid(4),
+    moveId: actionsStore.getState().moveId + 1,
+  });
+};
+
 export const payTaxModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,

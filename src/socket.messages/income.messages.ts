@@ -41,7 +41,6 @@ export class BoardMessage {
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = getCurrentAction();
     if (payload.actionId === action.actionId) {
-      const player = getActingPlayer();
       Action.rollDicesAction();
       BoardSocket.emitMessage();
       this.tokenMovedAfterClick();

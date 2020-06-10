@@ -115,7 +115,7 @@ export const actionTypeToEventAdapter = (
       return unJailModalMesage();
 
     case OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL:
-      return unJailModalMesage();
+      return payModalHandler();
 
     case OutcomeMessageType.DO_NOTHING:
       return doNothingMessage();

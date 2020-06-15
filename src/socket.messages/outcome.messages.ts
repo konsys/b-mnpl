@@ -29,20 +29,32 @@ export const rollDicesModalMessage = (): IDicesModal => ({
   title: 'Кидайте кубики',
   text: 'Мы болеем за вас',
   _id: actionsStore.getState().actionId,
+  isModal: true,
 });
 
-export const unJailModalMesage = (): IUnJailPayingModal => ({
+export const unJailModalMesage = (): IUnJailModal => ({
+  type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
+  userId: getActingPlayer().userId,
+  title: 'Заплатить залог',
+  text: 'Заплатить за выход из тюрьмы',
+  _id: actionsStore.getState().actionId,
+  isModal: true,
+});
+
+export const unJailPayModalMesage = (): IUnJailPayingModal => ({
   type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
   userId: getActingPlayer().userId,
   title: 'Заплатить залог',
   text: 'Заплатить за выход из тюрьмы',
   _id: actionsStore.getState().actionId,
+  isModal: true,
 });
 
 export const doNothingMessage = (): IDoNothing => ({
   type: OutcomeMessageType.DO_NOTHING,
   _id: nanoid(),
   userId: getActingPlayer().userId,
+  isModal: false,
 });
 
 export const buyModalHandler = (): IShowCanBuyModal => {
@@ -56,6 +68,7 @@ export const buyModalHandler = (): IShowCanBuyModal => {
     field: findFieldByPosition(player.meanPosition),
     money: player.money,
     _id: actionsStore.getState().actionId,
+    isModal: true,
   };
 };
 
@@ -74,6 +87,7 @@ export const payModalHandler = (): IPayRentStart => {
     money: sum,
     toUserId: field.owner && field.owner.userId,
     _id: action.actionId,
+    isModal: true,
   };
 };
 
@@ -91,6 +105,7 @@ export const rollDicesMessage = (): IRollDicesMessage | IDoNothing => {
     isDouble: dicesState.isDouble,
     isTriple: dicesState.isTriple,
     _id: action.actionId,
+    isModal: false,
   };
 };
 
@@ -115,7 +130,7 @@ export const actionTypeToEventAdapter = (
       return unJailModalMesage();
 
     case OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL:
-      return payModalHandler();
+      return unJailPayModalMesage();
 
     case OutcomeMessageType.DO_NOTHING:
       return doNothingMessage();

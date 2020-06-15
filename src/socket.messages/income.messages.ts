@@ -53,6 +53,7 @@ export class BoardMessage {
   tokenMovedAfterClick() {
     try {
       const player = getActingPlayer();
+
       if (!player.jailed) {
         if (noActionField()) {
           Action.switchPlayerTurn();
@@ -104,7 +105,7 @@ export class BoardMessage {
             reason: 'Залог за выход из тюрьмы',
             transactionId: nanoid(4),
           });
-          Action.payTaxModal();
+          Action.payUnJailModal();
         }
       }
     } catch (e) {

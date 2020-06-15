@@ -50,12 +50,25 @@ export interface IBoardAction {
   _id: string;
 }
 
-export interface IAuctionStart extends IBoardAction {
+export interface IIncomeBoardAction {
+  type: IncomeMessageType;
+  userId: number;
+  _id: string;
+}
+
+export interface IOutcameBoardAction {
+  type: OutcomeMessageType;
+  userId: number;
+  isModal: boolean;
+  _id: string;
+}
+
+export interface IAuctionStart extends IIncomeBoardAction {
   type: IncomeMessageType.INCOME_AUCTION_START_CLICKED;
   field: BoardFieldsEntity;
 }
 
-export interface IPayRentStart extends IBoardAction {
+export interface IPayRentStart extends IOutcameBoardAction {
   type: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL;
   field: BoardFieldsEntity;
   money: number;
@@ -64,25 +77,25 @@ export interface IPayRentStart extends IBoardAction {
   text: string;
 }
 
-export interface IDicesModal extends IBoardAction {
+export interface IDicesModal extends IOutcameBoardAction {
   type: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL;
   title: string;
   text: string;
 }
 
-export interface IUnJailModal extends IBoardAction {
+export interface IUnJailModal extends IOutcameBoardAction {
   type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL;
   title: string;
   text: string;
 }
 
-export interface IUnJailPayingModal extends IBoardAction {
+export interface IUnJailPayingModal extends IOutcameBoardAction {
   type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL;
   title: string;
   text: string;
 }
 
-export interface IRollDicesMessage extends IBoardAction {
+export interface IRollDicesMessage extends IOutcameBoardAction {
   type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION;
   dices: number[];
   isDouble: boolean;
@@ -90,7 +103,7 @@ export interface IRollDicesMessage extends IBoardAction {
   meanPosition: number | 'jail';
 }
 
-export interface IShowCanBuyModal extends IBoardAction {
+export interface IShowCanBuyModal extends IOutcameBoardAction {
   type: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL;
   field: BoardFieldsEntity;
   money: number;
@@ -98,7 +111,7 @@ export interface IShowCanBuyModal extends IBoardAction {
   text: string;
 }
 
-export interface IDoNothing extends IBoardAction {
+export interface IDoNothing extends IOutcameBoardAction {
   type: OutcomeMessageType.DO_NOTHING;
 }
 export interface IBoardEvent {

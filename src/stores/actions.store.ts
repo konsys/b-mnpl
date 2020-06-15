@@ -23,4 +23,3 @@ export const updateAction = (action: ICurrentAction) => {
 };
 
 export const getCurrentAction = () => actionsStore.getState();
-// actionsStore.updates.watch(v => console.log(111, v.action));

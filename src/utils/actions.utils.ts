@@ -55,6 +55,7 @@ export const unJailModal = (): void => {
 };
 
 export const payUnJailModal = (): void => {
+  console.log(123123123);
   updateAction({
     action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
     userId: getActingPlayer().userId,

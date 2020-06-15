@@ -93,6 +93,7 @@ export interface IUnJailPayingModal extends IOutcameBoardAction {
   type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL;
   title: string;
   text: string;
+  money: number;
 }
 
 export interface IRollDicesMessage extends IOutcameBoardAction {

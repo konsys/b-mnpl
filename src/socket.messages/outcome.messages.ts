@@ -41,14 +41,18 @@ export const unJailModalMesage = (): IUnJailModal => ({
   isModal: true,
 });
 
-export const unJailPayModalMesage = (): IUnJailPayingModal => ({
-  type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
-  userId: getActingPlayer().userId,
-  title: 'Заплатить залог',
-  text: 'Заплатить за выход из тюрьмы',
-  _id: actionsStore.getState().actionId,
-  isModal: true,
-});
+export const unJailPayModalMesage = (): IUnJailPayingModal => {
+  const transaction = transactionStore.getState();
+  return {
+    type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
+    userId: getActingPlayer().userId,
+    title: 'Заплатить залог',
+    text: 'Заплатить за выход из тюрьмы',
+    _id: actionsStore.getState().actionId,
+    isModal: true,
+    money: (transaction && transaction.money) || 0,
+  };
+};
 
 export const doNothingMessage = (): IDoNothing => ({
   type: OutcomeMessageType.DO_NOTHING,

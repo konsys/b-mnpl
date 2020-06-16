@@ -57,6 +57,8 @@ export class BoardMessage {
       if (!player.jailed) {
         if (noActionField()) {
           Action.switchPlayerTurn();
+        } else if (isMyField()) {
+          Action.switchPlayerTurn();
         } else if (isCompanyForSale()) {
           Action.buyFieldModal();
         } else if (!isCompanyForSale() && isMyField()) {

@@ -154,12 +154,13 @@ export const buyCompany = (field: IField): number => {
 
   const sameGroupFieilds = getSameGroupFields(field);
 
-  if (!sameGroupFieilds.length) {
-    price = calcPercentPart(price, ONE_FIELD_PERCENT);
-  } else if (sameGroupFieilds.length === 1) {
-    price = calcPercentPart(price, TWO_FIELD_PERCENT);
-  } else if (sameGroupFieilds.length === 1) {
-    price = calcPercentPart(price, FREE_FIELD_PERCENT);
+  let percent = ONE_FIELD_PERCENT;
+  price = calcPercentPart(price, percent);
+
+  if (sameGroupFieilds.length === 1) {
+    percent = TWO_FIELD_PERCENT;
+  } else if (sameGroupFieilds.length === 2) {
+    percent = FREE_FIELD_PERCENT;
   }
 
   field.owner = {
@@ -171,10 +172,16 @@ export const buyCompany = (field: IField): number => {
     paymentMultiplier: 0,
   };
 
+  console.log(1111, percent, price, fieldPrice);
+
   sameGroupFieilds.map((v: IField) => {
     const index = getFieldIndex(v);
 
-    fieldsState[index] = { ...v, owner: { ...v.owner, updatedPrice: price } };
+    console.log(2222, percent, v.price);
+    fieldsState[index] = {
+      ...v,
+      owner: { ...v.owner, updatedPrice: calcPercentPart(v.price, percent) },
+    };
   });
 
   fieldsState[fieldIndex] = field;

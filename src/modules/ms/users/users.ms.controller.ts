@@ -20,4 +20,10 @@ export class UsersMsController {
     const users: any = await this.users.find(filter);
     return of(users).pipe(delay(1));
   }
+
+  @MessagePattern({ cmd: MsPatterns.SAVE_USERS })
+  async saveUsers(users: UsersEntity[]) {
+    const allUsers: UsersEntity[] = await this.users.save(users);
+    return of(allUsers).pipe(delay(1));
+  }
 }

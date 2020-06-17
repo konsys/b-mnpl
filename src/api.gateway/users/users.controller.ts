@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { MsNames } from 'src/types/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from './users.service';
@@ -13,5 +13,9 @@ export class UsersController {
     const players = playersStore.getState().players;
     return Promise.resolve(players);
   }
-  z;
+
+  @Post()
+  async post(): Promise<UsersEntity[]> {
+    return this.service.saveUsers();
+  }
 }

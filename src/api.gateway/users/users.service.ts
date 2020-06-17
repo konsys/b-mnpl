@@ -3,6 +3,8 @@ import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
 import { MsPatterns, MsNames } from 'src/types/ms.types';
 
+import { users } from 'src/entities/dbData';
+
 @Controller()
 export class UsersService {
   private logger: Logger = new Logger('UsersService');
@@ -15,6 +17,16 @@ export class UsersService {
     try {
       return await this.usersClient
         .send<any>({ cmd: MsPatterns.GET_ALL_USERS }, filter || { take: 1 })
+        .toPromise();
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
+  async saveUsers() {
+    try {
+      return await this.usersClient
+        .send<any>({ cmd: MsPatterns.SAVE_USERS }, users)
         .toPromise();
     } catch (err) {
       this.logger.log(`Error: ${err}`);

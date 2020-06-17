@@ -2,6 +2,7 @@ import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { IField, IMoneyTransaction, FieldType } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
 import { calcPercentPart } from './actions.utils';
+import _ from 'lodash';
 import {
   ONE_AUTO_PERCENT,
   TWO_AUTO_PERCENT,
@@ -12,6 +13,7 @@ import {
   FREE_FIELD_PERCENT,
   ONE_IT_FIELD_MULT,
   TWO_IT_FIELD_MULT,
+  BANK_PLAYER_ID,
 } from './board.params';
 
 export const findFieldByPosition = (fieldPosition: number) =>
@@ -56,7 +58,7 @@ export const moneyTransactionParams = (): IMoneyTransaction => {
 };
 
 export const whosField = (): number =>
-  (getActingField().owner && getActingField().owner.userId) || 0;
+  (getActingField().owner && getActingField().owner.userId) || BANK_PLAYER_ID;
 
 export const noActionField = (): boolean => {
   const field = getActingField();
@@ -94,11 +96,14 @@ export const updateAllFields = (fields: IField[]) => {
 const getSameGroupFields = (field: IField) => {
   const fieldsState = fieldsStore.getState().fields;
   const user = getActingPlayer();
-  return fieldsState.filter(
-    v =>
-      v.fieldGroup === field.fieldGroup &&
-      v.owner &&
-      v.owner.userId === user.userId,
+  return _.concat(
+    fieldsState.filter(
+      v =>
+        v.fieldGroup === field.fieldGroup &&
+        v.owner &&
+        v.owner.userId === user.userId,
+    ),
+    field,
   );
 };
 
@@ -111,16 +116,14 @@ export const buyAuto = (field: IField): number => {
   const fieldPrice = price;
   const sameGroupFieilds = getSameGroupFields(field);
 
-  if (!sameGroupFieilds.length) {
+  if (sameGroupFieilds.length === 1) {
     price = calcPercentPart(price, ONE_AUTO_PERCENT);
-  } else if (sameGroupFieilds.length === 1) {
-    price = calcPercentPart(price, TWO_AUTO_PERCENT);
   } else if (sameGroupFieilds.length === 2) {
-    price = calcPercentPart(price, FREE_AUTO_PERCENT);
+    price = calcPercentPart(price, TWO_AUTO_PERCENT);
   } else if (sameGroupFieilds.length === 3) {
+    price = calcPercentPart(price, FREE_AUTO_PERCENT);
+  } else if (sameGroupFieilds.length === 4) {
     price = calcPercentPart(price, FOUR_AUTO_PERCENT);
-  } else {
-    price = calcPercentPart(price, ONE_FIELD_PERCENT);
   }
 
   field.owner = {
@@ -155,11 +158,10 @@ export const buyCompany = (field: IField): number => {
   const sameGroupFieilds = getSameGroupFields(field);
 
   let percent = ONE_FIELD_PERCENT;
-  price = calcPercentPart(price, percent);
 
-  if (sameGroupFieilds.length === 1) {
+  if (sameGroupFieilds.length === 2) {
     percent = TWO_FIELD_PERCENT;
-  } else if (sameGroupFieilds.length === 2) {
+  } else if (sameGroupFieilds.length === 3) {
     percent = FREE_FIELD_PERCENT;
   }
 
@@ -168,16 +170,13 @@ export const buyCompany = (field: IField): number => {
     userId: user.userId,
     level: 0,
     mortgaged: false,
-    updatedPrice: price,
+    updatedPrice: calcPercentPart(price, percent),
     paymentMultiplier: 0,
   };
-
-  console.log(1111, percent, price, fieldPrice);
 
   sameGroupFieilds.map((v: IField) => {
     const index = getFieldIndex(v);
 
-    console.log(2222, percent, v.price);
     fieldsState[index] = {
       ...v,
       owner: { ...v.owner, updatedPrice: calcPercentPart(v.price, percent) },

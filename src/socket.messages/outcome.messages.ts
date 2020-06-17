@@ -3,7 +3,7 @@ import {
   IDicesModal,
   IUnJailModal,
   IShowCanBuyModal,
-  IPayRentStart,
+  IPayRentModal,
   IDoNothing,
   IRollDicesMessage,
   IncomeMessageType,
@@ -76,7 +76,7 @@ export const buyModalHandler = (): IShowCanBuyModal => {
   };
 };
 
-export const payModalHandler = (): IPayRentStart => {
+export const payModalHandler = (): IPayRentModal => {
   const player = getActingPlayer();
   const field = getActingField();
   const action = actionsStore.getState();

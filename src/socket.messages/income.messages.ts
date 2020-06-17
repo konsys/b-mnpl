@@ -40,6 +40,7 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = getCurrentAction();
+
     if (payload.actionId === action.actionId) {
       Action.rollDicesAction();
       BoardSocket.emitMessage();
@@ -53,6 +54,8 @@ export class BoardMessage {
   tokenMovedAfterClick() {
     try {
       const player = getActingPlayer();
+      const field = getActingField();
+      const dices = dicesStore.getState();
 
       if (!player.jailed) {
         if (noActionField()) {
@@ -64,10 +67,6 @@ export class BoardMessage {
         } else if (!isCompanyForSale() && isMyField()) {
           Action.switchPlayerTurn();
         } else if (whosField() && !isMyField()) {
-          const field = getActingField();
-
-          const dices = dicesStore.getState();
-
           setTransactionEvent({
             money:
               field.owner && field.owner.paymentMultiplier
@@ -84,13 +83,21 @@ export class BoardMessage {
         } else if (isStart()) {
           Action.switchPlayerTurn();
         } else if (isTax()) {
+          // TODO написать нормальный текст на налоги
+          setTransactionEvent({
+            money: -field.price,
+            userId: player.userId,
+            toUserId: whosField(),
+            reason: 'Самое время заплатить налоги',
+            transactionId: nanoid(4),
+          });
           Action.payTaxModal();
         } else if (isChance()) {
           // TODO Make a real chance field action
           setTransactionEvent({
             money: -5000,
             userId: player.userId,
-            toUserId: BANK_PLAYER_ID,
+            toUserId: whosField(),
             reason: 'Надо купить бетон',
             transactionId: nanoid(4),
           });
@@ -103,7 +110,7 @@ export class BoardMessage {
           setTransactionEvent({
             money: -500,
             userId: player.userId,
-            toUserId: BANK_PLAYER_ID,
+            toUserId: whosField(),
             reason: 'Залог за выход из тюрьмы',
             transactionId: nanoid(4),
           });

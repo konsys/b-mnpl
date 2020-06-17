@@ -68,7 +68,7 @@ export interface IAuctionStart extends IIncomeBoardAction {
   field: BoardFieldsEntity;
 }
 
-export interface IPayRentStart extends IOutcameBoardAction {
+export interface IPayRentModal extends IOutcameBoardAction {
   type: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL;
   field: BoardFieldsEntity;
   money: number;
@@ -120,7 +120,7 @@ export interface IBoardEvent {
     | IDicesModal
     | IShowCanBuyModal
     | IDicesModal
-    | IPayRentStart
+    | IPayRentModal
     | IUnJailModal
     | IUnJailPayingModal
     | IRollDicesMessage

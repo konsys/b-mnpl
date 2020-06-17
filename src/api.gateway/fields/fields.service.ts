@@ -25,7 +25,6 @@ export class FieldsService {
 
   async saveFields() {
     try {
-      console.log(11111111, fieldsForSave);
       const res = await this.fieldsClient
         .send<any>({ cmd: MsPatterns.SAVE_FIELDS }, fieldsForSave)
         .toPromise();

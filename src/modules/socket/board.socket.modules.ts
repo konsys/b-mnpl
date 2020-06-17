@@ -10,11 +10,11 @@ import { BoardMessage } from '../../socket.messages/income.messages';
   imports: [
     ClientsModule.register([
       {
-        name: MsNames.users,
+        name: MsNames.USERS,
         transport: Transport.NATS,
       },
       {
-        name: MsNames.fields,
+        name: MsNames.FIELDS,
         transport: Transport.NATS,
       },
     ]),

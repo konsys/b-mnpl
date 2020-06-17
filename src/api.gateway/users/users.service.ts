@@ -7,14 +7,14 @@ import { MsPatterns, MsNames } from 'src/types/ms.types';
 export class UsersService {
   private logger: Logger = new Logger('UsersService');
   constructor(
-    @Inject(MsNames.users)
+    @Inject(MsNames.USERS)
     private readonly usersClient: ClientProxy,
   ) {}
 
   async getAllUsers(filter?: FindManyOptions) {
     try {
       return await this.usersClient
-        .send<any>({ cmd: MsPatterns.getAllUsers }, filter || { take: 1 })
+        .send<any>({ cmd: MsPatterns.GET_ALL_USERS }, filter || { take: 1 })
         .toPromise();
     } catch (err) {
       this.logger.log(`Error: ${err}`);

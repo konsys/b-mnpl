@@ -10,7 +10,7 @@ import { Transport, ClientsModule } from '@nestjs/microservices';
     TypeOrmModule.forFeature([BoardFieldsEntity]),
     ClientsModule.register([
       {
-        name: MsNames.fields,
+        name: MsNames.FIELDS,
         transport: Transport.NATS,
       },
     ]),

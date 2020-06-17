@@ -4,7 +4,7 @@ import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from './users.service';
 import { playersStore } from 'src/stores/players.store';
 
-@Controller(MsNames.users)
+@Controller(MsNames.USERS)
 export class UsersController {
   constructor(private readonly service: UsersService) {}
 
@@ -13,4 +13,5 @@ export class UsersController {
     const players = playersStore.getState().players;
     return Promise.resolve(players);
   }
+  z;
 }

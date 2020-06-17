@@ -7,7 +7,7 @@ import { UsersService } from './users.service';
   imports: [
     ClientsModule.register([
       {
-        name: MsNames.users,
+        name: MsNames.USERS,
         transport: Transport.NATS,
       },
     ]),

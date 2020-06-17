@@ -14,7 +14,7 @@ export class UsersMsController {
     private readonly users: Repository<UsersEntity>,
   ) {}
 
-  @MessagePattern({ cmd: MsPatterns.getAllUsers })
+  @MessagePattern({ cmd: MsPatterns.GET_ALL_USERS })
   async allUsers(filter: FindManyOptions) {
     filter = { ...filter, skip: 1 };
     const users: any = await this.users.find(filter);

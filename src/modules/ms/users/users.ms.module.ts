@@ -10,7 +10,7 @@ import { MsNames } from 'src/types/ms.types';
     TypeOrmModule.forFeature([UsersEntity]),
     ClientsModule.register([
       {
-        name: MsNames.users,
+        name: MsNames.USERS,
         transport: Transport.NATS,
       },
     ]),

@@ -12,8 +12,14 @@ export class FieldsMsController {
     private readonly service: Repository<BoardFieldsEntity>,
   ) {}
 
-  @MessagePattern({ cmd: MsPatterns.getInitFields })
+  @MessagePattern({ cmd: MsPatterns.GET_INIT_FIELDS })
   async getFields(): Promise<BoardFieldsEntity[]> {
+    // await this.service.save(fieldsForSave);
+    return await this.service.find();
+  }
+
+  @MessagePattern({ cmd: MsPatterns.SAVE_FIELDS })
+  async saveFields(): Promise<BoardFieldsEntity[]> {
     // await this.service.save(fieldsForSave);
     return await this.service.find();
   }

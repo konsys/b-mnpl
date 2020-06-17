@@ -1,8 +1,9 @@
 export enum MsNames {
-  users = 'users',
-  fields = 'fields',
+  USERS = 'users',
+  FIELDS = 'fields',
 }
 export enum MsPatterns {
-  getAllUsers = 'getAllUsers',
-  getInitFields = 'getInitFields',
+  GET_ALL_USERS = 'getAllUsers',
+  GET_INIT_FIELDS = 'getInitFields',
+  SAVE_FIELDS = 'getInitFields',
 }

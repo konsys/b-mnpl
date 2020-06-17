@@ -8,7 +8,7 @@ import { FieldsService } from './fields.service';
   imports: [
     ClientsModule.register([
       {
-        name: MsNames.fields,
+        name: MsNames.FIELDS,
         transport: Transport.NATS,
       },
     ]),

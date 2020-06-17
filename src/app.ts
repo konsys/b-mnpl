@@ -9,7 +9,8 @@ import { UsersMsModule } from 'src/modules/ms/users/users.ms.module';
 import { FieldsMsModule } from 'src/modules/ms/fields/fields.ms.module';
 import { BoardSocketModule } from './modules/socket/board.socket.modules';
 
-const rootPath = join(__dirname, '../../../', 'assets/');
+const rootPath = join(__dirname, '../', 'assets/');
+
 @Module({
   imports: [
     FieldsModule,

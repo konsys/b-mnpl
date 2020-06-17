@@ -1,5 +1,5 @@
-import { Controller, Inject } from '@nestjs/common';
-import { MessagePattern, ClientProxy } from '@nestjs/microservices';
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindManyOptions } from 'typeorm';
 import { UsersEntity } from 'src/entities/users.entity';

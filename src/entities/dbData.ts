@@ -402,25 +402,30 @@ export const users: UsersEntity[] = [
     name: 'Konstantin',
     registrationType: 'vk',
     vip: true,
+    avatar: '/avatars/konstanstin.png',
   },
   {
     name: 'Diman',
     registrationType: 'vk',
     vip: false,
+    avatar: '/avatars/konstanstin.png',
   },
   {
     name: 'Feodr',
     registrationType: 'vk',
     vip: false,
+    avatar: '/avatars/konstanstin.png',
   },
   {
     name: 'Ivan',
     registrationType: 'vk',
     vip: false,
+    avatar: '/avatars/konstanstin.png',
   },
   {
     name: 'Maxim',
     registrationType: 'vk',
     vip: true,
+    avatar: '/avatars/konstanstin.png',
   },
 ];

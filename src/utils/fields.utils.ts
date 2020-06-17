@@ -1,5 +1,5 @@
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
-import { IField, IMoneyTransaction, FieldType } from 'src/types/board.types';
+import { IField, IMoneyTransaction } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
 import { calcPercentPart } from './actions.utils';
 import _ from 'lodash';
@@ -15,9 +15,10 @@ import {
   TWO_IT_FIELD_MULT,
   BANK_PLAYER_ID,
 } from './board.params';
+import { FieldType } from 'src/entities/board.fields.entity';
 
 export const findFieldByPosition = (fieldPosition: number) =>
-  fieldsStore.getState().fields.find(v => v.fieldPosition === fieldPosition);
+  fieldsStore.getState().fields.find((v) => v.fieldPosition === fieldPosition);
 
 export const getActingField = (): IField => {
   const user = getActingPlayer();
@@ -29,8 +30,8 @@ export const getActingField = (): IField => {
 export const getBoughtFields = () =>
   fieldsStore
     .getState()
-    .fields.filter(v => v.owner && v.owner.userId > 0)
-    .map(v => v.owner);
+    .fields.filter((v) => v.owner && v.owner.userId > 0)
+    .map((v) => v.owner);
 
 export const isTax = (): boolean => getActingField().type === FieldType.TAX;
 export const isStart = (): boolean => getActingField().type === FieldType.START;
@@ -77,7 +78,7 @@ export const canBuyField = (): boolean =>
   isCompany() && getActingField().price <= getActingPlayer().money;
 
 export const getFieldIndex = (field: IField): number =>
-  fieldsStore.getState().fields.findIndex(v => v.fieldId === field.fieldId);
+  fieldsStore.getState().fields.findIndex((v) => v.fieldId === field.fieldId);
 
 export const updateField = (field: IField) => {
   const fields = fieldsStore.getState().fields;
@@ -98,7 +99,7 @@ const getSameGroupFields = (field: IField) => {
   const user = getActingPlayer();
   return _.concat(
     fieldsState.filter(
-      v =>
+      (v) =>
         v.fieldGroup === field.fieldGroup &&
         v.owner &&
         v.owner.userId === user.userId,

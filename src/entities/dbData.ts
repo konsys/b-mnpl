@@ -1,6 +1,5 @@
-import { BoardFieldsEntity } from './board.fields.entity';
+import { BoardFieldsEntity, FieldType } from './board.fields.entity';
 import { UsersEntity } from './users.entity';
-import { FieldType } from 'src/types/board.types';
 
 export const fieldsForSave: BoardFieldsEntity[] = [
   {

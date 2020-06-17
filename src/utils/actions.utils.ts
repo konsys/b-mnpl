@@ -1,5 +1,5 @@
 import { actionsStore, updateAction } from 'src/stores/actions.store';
-import { FieldType, OutcomeMessageType } from 'src/types/board.types';
+import { OutcomeMessageType } from 'src/types/board.types';
 import { nanoid } from 'nanoid';
 import {
   findFieldByPosition,
@@ -15,6 +15,7 @@ import {
   getPlayerById,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
+import { FieldType } from 'src/entities/board.fields.entity';
 
 export const buyFieldModal = (): void => {
   const player = getActingPlayer();

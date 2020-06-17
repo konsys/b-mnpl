@@ -1,7 +1,7 @@
 import { UsersEntity } from 'src/entities/users.entity';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 
-enum ResponceCode {
+export enum ResponceCode {
   ok = 0,
   error = 1,
 }
@@ -213,17 +213,4 @@ export interface IMoneyTransaction {
   sum: number | null;
   userId: number;
   toUserId: number;
-}
-
-export enum FieldType {
-  CHANCE = 'chance',
-  COMPANY = 'company',
-  JAIL = 'jail',
-  ROULETTE = 'roulette',
-  CASINO = 'casino',
-  START = 'start',
-  TAX = 'tax',
-  IT = 'IT',
-  AUTO = 'auto',
-  TAKE_REST = 'takeRest',
 }

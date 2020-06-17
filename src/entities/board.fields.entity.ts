@@ -1,5 +1,23 @@
 import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
-import { FieldType } from 'src/types/board.types';
+// import { FieldType } from '../types/board.types';
+
+export enum FieldType {
+  CHANCE = 'chance',
+  COMPANY = 'company',
+  JAIL = 'jail',
+  ROULETTE = 'roulette',
+  CASINO = 'casino',
+  START = 'start',
+  TAX = 'tax',
+  IT = 'IT',
+  AUTO = 'auto',
+  TAKE_REST = 'takeRest',
+}
+
+export enum CurrencyType {
+  DOLLAR = '$',
+  MULTIPLIER = 'x',
+}
 
 @Entity()
 export class BoardFieldsEntity {
@@ -28,17 +46,24 @@ export class BoardFieldsEntity {
   isJail?: boolean;
 
   @Column({ default: null })
-  currency?: string;
+  level: number;
 
   @Column({ default: null })
-  level?: number;
+  imgSrc: string;
 
   @Column({ default: null })
-  imgSrc?: string;
+  name: string;
 
-  @Column({ default: null })
-  name?: string;
+  @Column('enum', {
+    name: 'fieldsType',
+    enum: FieldType,
+  })
+  type: FieldType;
 
-  @Column('enum', { name: 'fieldsType', enum: FieldType })
-  type?: string;
+  @Column('enum', {
+    name: 'currencyType',
+    enum: CurrencyType,
+    default: CurrencyType.DOLLAR,
+  })
+  currency?: CurrencyType;
 }

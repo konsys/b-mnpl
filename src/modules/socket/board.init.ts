@@ -62,6 +62,7 @@ export class BoardSocket
   private async initStores() {
     try {
       let players: IPlayer[] = await this.usersService.getAllUsers();
+
       const resultPlayers = [];
       if (players.length > 0) {
         // Случайная очередь ходов

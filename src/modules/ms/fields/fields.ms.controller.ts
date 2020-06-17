@@ -14,13 +14,12 @@ export class FieldsMsController {
 
   @MessagePattern({ cmd: MsPatterns.GET_INIT_FIELDS })
   async getFields(): Promise<BoardFieldsEntity[]> {
-    // await this.service.save(fieldsForSave);
     return await this.service.find();
   }
 
   @MessagePattern({ cmd: MsPatterns.SAVE_FIELDS })
-  async saveFields(): Promise<BoardFieldsEntity[]> {
-    // await this.service.save(fieldsForSave);
+  async saveFields(fields: BoardFieldsEntity[]): Promise<BoardFieldsEntity[]> {
+    await this.service.save(fields);
     return await this.service.find();
   }
 }

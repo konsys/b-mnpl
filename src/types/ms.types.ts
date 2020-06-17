@@ -5,5 +5,5 @@ export enum MsNames {
 export enum MsPatterns {
   GET_ALL_USERS = 'getAllUsers',
   GET_INIT_FIELDS = 'getInitFields',
-  SAVE_FIELDS = 'getInitFields',
+  SAVE_FIELDS = 'saveFields',
 }

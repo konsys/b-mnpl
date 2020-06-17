@@ -34,6 +34,7 @@ import nanoid from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
 import { dicesStore } from 'src/stores/dices.store';
 import { JAIL_TURNS, BANK_PLAYER_ID } from 'src/utils/board.params';
+import { getStartBonus } from 'src/utils/moneys.utils';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -59,6 +60,9 @@ export class BoardMessage {
 
       if (!player.jailed) {
         if (noActionField()) {
+          Action.switchPlayerTurn();
+        } else if (isStart()) {
+          getStartBonus();
           Action.switchPlayerTurn();
         } else if (isMyField()) {
           Action.switchPlayerTurn();

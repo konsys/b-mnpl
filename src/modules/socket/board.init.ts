@@ -17,7 +17,7 @@ import { createBoardMessage } from 'src/socket.messages/send.message';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { updateAction } from 'src/stores/actions.store';
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import { updateAllPLayers } from 'src/utils/users.utils';
 import { updateAllFields } from 'src/utils/fields.utils';
@@ -65,7 +65,9 @@ export class BoardSocket
       const resultPlayers = [];
       if (players.length > 0) {
         // Случайная очередь ходов
-        const ids = players.map(v => v.userId).sort(() => Math.random() - 0.5);
+        const ids = players
+          .map((v) => v.userId)
+          .sort(() => Math.random() - 0.5);
 
         // Заполняем статус
         players = players.map((v, k) => ({
@@ -84,19 +86,19 @@ export class BoardSocket
           frags: '',
           additionalTime: 0,
           canUseCredit: false,
-          moveOrder: ids.findIndex(id => id === v.userId),
+          moveOrder: ids.findIndex((id) => id === v.userId),
           isActing: ids[0] === v.userId,
           movesLeft: 0,
         }));
 
         // Заполняем массив в порядке очереди ходов
-        ids.map(id => {
-          resultPlayers.push(players.find(v => v.userId === id));
+        ids.map((id) => {
+          resultPlayers.push(players.find((v) => v.userId === id));
         });
 
         updateAction({
           action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
-          userId: resultPlayers.find(v => v.moveOrder === 0).userId,
+          userId: resultPlayers.find((v) => v.moveOrder === 0).userId,
           moveId: 0,
           actionId: nanoid(4),
         });
@@ -104,7 +106,7 @@ export class BoardSocket
 
       updateAllPLayers(resultPlayers);
       updateAllFields(await this.fieldsService.getInitialFields());
-      errorStore.updates.watch(error => this.emitError(error));
+      errorStore.updates.watch((error) => this.emitError(error));
     } catch (err) {
       this.logger.error(`Error: ${JSON.stringify(err)}`);
     }

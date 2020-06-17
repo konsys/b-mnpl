@@ -5,24 +5,24 @@ import {
   OutcomeMessageType,
 } from 'src/types/board.types';
 import { JAIL_POSITION, UN_JAIL_PRICE, JAIL_TURNS } from './board.params';
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
 
 export const getPlayerById = (userId: number): IPlayer => {
-  return playersStore.getState().players.find(v => v.userId === userId);
+  return playersStore.getState().players.find((v) => v.userId === userId);
 };
 
 export const getActingPlayer = (): IPlayer => {
   const state = playersStore.getState();
   const user =
-    Array.isArray(state.players) && state.players.find(v => v.isActing);
+    Array.isArray(state.players) && state.players.find((v) => v.isActing);
   return user;
 };
 
 export const getActingPlayerIndex = (): number => {
   const state = playersStore.getState();
   const index =
-    Array.isArray(state.players) && state.players.findIndex(v => v.isActing);
+    Array.isArray(state.players) && state.players.findIndex((v) => v.isActing);
   return index;
 };
 
@@ -30,7 +30,7 @@ export const getPlayerIndexById = (userId: number) => {
   const state = playersStore.getState();
   return (
     Array.isArray(state.players) &&
-    state.players.findIndex(v => v.userId === userId)
+    state.players.findIndex((v) => v.userId === userId)
   );
 };
 

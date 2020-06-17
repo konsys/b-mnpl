@@ -13,7 +13,7 @@ import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
 import { transactionStore } from 'src/stores/transactions.store';
 import { findFieldByPosition, getActingField } from 'src/utils/fields.utils';
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 import {
   dicesStore,
   setRandomDicesEvent,

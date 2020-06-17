@@ -25,7 +25,7 @@ const rootPath = join(__dirname, '../../../', 'assets/');
       database: 'mnpl',
       entities: [__dirname + '/entities/*.entity{.ts,.js}'],
       synchronize: true,
-      // logging: ['query'],
+      logging: ['error'],
     }),
     ServeStaticModule.forRoot({
       rootPath,

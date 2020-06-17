@@ -4,7 +4,7 @@ import {
 } from 'src/stores/transactions.store';
 import { START_BONUS } from './board.params';
 import { whosField } from './fields.utils';
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 import { getActingPlayer } from './users.utils';
 
 export const getStartBonus = () => {

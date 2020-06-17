@@ -1,6 +1,6 @@
 import { actionsStore, updateAction } from 'src/stores/actions.store';
 import { FieldType, OutcomeMessageType } from 'src/types/board.types';
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 import {
   findFieldByPosition,
   buyAuto,

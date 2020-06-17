@@ -30,7 +30,7 @@ import {
   transactMoneyEvent,
   getCurrentTransaction,
 } from 'src/stores/transactions.store';
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
 import { dicesStore } from 'src/stores/dices.store';
 import { JAIL_TURNS, BANK_PLAYER_ID } from 'src/utils/board.params';

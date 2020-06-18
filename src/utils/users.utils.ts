@@ -2,6 +2,7 @@ import {
   playersStore,
   setPlayersEvent,
   bankStore,
+  setBankEvent,
 } from 'src/stores/players.store';
 import { IPlayer, OutcomeMessageType } from 'src/types/board.types';
 import {
@@ -41,11 +42,21 @@ export const getPlayerIndexById = (userId: number) => {
 };
 
 export const updatePlayer = (player: IPlayer): boolean => {
+  // Update BANK
+  if (player.userId === BANK_PLAYER_ID) {
+    return (
+      setBankEvent({
+        ...player,
+      }) && true
+    );
+  }
+
   const playersState = playersStore.getState();
   const currentPLayerIndex = getPlayerIndexById(player.userId);
 
   // TODO error handler
-  if (currentPLayerIndex === -1) throw Error('Not found');
+  if (currentPLayerIndex === -1)
+    throw Error(`Not found player with id: ${player.userId}`);
 
   playersState.players[currentPLayerIndex] = player;
 

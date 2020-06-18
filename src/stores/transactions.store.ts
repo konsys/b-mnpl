@@ -46,8 +46,8 @@ export const transactionStore = TransactionsDomain.store<ITransactionStore | nul
         sum: transaction.money,
         userId: transaction.userId,
         toUserId: transaction.toUserId,
-      });
-    resetTransactionsEvent();
+      }) &&
+      resetTransactionsEvent();
     return;
   })
   .reset(resetTransactionsEvent);
@@ -62,4 +62,4 @@ const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
   );
 };
 
-// transactionStore.updates.watch((v) => console.log('transactionStore', v));
+transactionStore.updates.watch((v) => console.log('transactionStore', v));

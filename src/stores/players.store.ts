@@ -42,7 +42,8 @@ export const bankStore = PlayersDomain.store<IPlayer>({
 })
   .on(setBankEvent, (_, data) => data)
   .reset(resetBankEvent);
-bankStore.watch((v) => console.log('bankStore', v.money));
+
+// bankStore.watch((v) => console.log('bankStore', v.money));
 
 export const resetPlayersEvent = PlayersDomain.event();
 export const setPlayersEvent = PlayersDomain.event<IPlayersStore>();

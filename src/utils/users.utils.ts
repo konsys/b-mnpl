@@ -1,12 +1,22 @@
-import { playersStore, setPlayersEvent } from 'src/stores/players.store';
+import {
+  playersStore,
+  setPlayersEvent,
+  bankStore,
+} from 'src/stores/players.store';
 import { IPlayer, OutcomeMessageType } from 'src/types/board.types';
-import { JAIL_POSITION, UN_JAIL_PRICE, JAIL_TURNS } from './board.params';
+import {
+  JAIL_POSITION,
+  UN_JAIL_PRICE,
+  JAIL_TURNS,
+  BANK_PLAYER_ID,
+} from './board.params';
 import { nanoid } from 'nanoid';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
 
-export const getPlayerById = (userId: number): IPlayer => {
-  return playersStore.getState().players.find((v) => v.userId === userId);
-};
+export const getPlayerById = (userId: number): IPlayer =>
+  userId === BANK_PLAYER_ID
+    ? bankStore.getState()
+    : playersStore.getState().players.find((v) => v.userId === userId);
 
 export const getActingPlayer = (): IPlayer => {
   const state = playersStore.getState();

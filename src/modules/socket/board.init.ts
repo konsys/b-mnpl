@@ -65,18 +65,6 @@ export class BoardSocket
     try {
       let players: IPlayer[] = await this.usersService.getAllUsers();
 
-      players = _.concat(players, {
-        userId: BANK_PLAYER_ID,
-        vip: true,
-        registrationType: 'none',
-        name: 'BANK',
-        team: null,
-        avatar: '',
-        createdAt: '2020-06-17T12:08:38.000Z',
-        updatedAt: '2020-06-17T12:08:38.000Z',
-        isActive: false,
-        isBlocked: true,
-      });
       const resultPlayers = [];
       if (players.length > 0) {
         // Случайная очередь ходов

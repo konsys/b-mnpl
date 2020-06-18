@@ -8,6 +8,7 @@ import { IMoneyTransaction } from 'src/types/board.types';
 import { ErrorCode } from 'src/utils/error.code';
 import { setError } from './error.store';
 import { BANK_PLAYER_ID } from 'src/utils/board.params';
+import { bankStore } from './players.store';
 const TransactionsDomain = GameDomain.domain('PlayersDomain');
 
 export interface ITransactionStore {
@@ -53,17 +54,11 @@ export const transactionStore = TransactionsDomain.store<ITransactionStore | nul
 
 const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
   const player1 = getPlayerById(transaction.userId);
-  const player2 = transaction.toUserId
-    ? getPlayerById(transaction.toUserId)
-    : BANK_PLAYER_ID;
-
-  // TODO error handler
-  if (player1.money < transaction.sum) throw Error('Not enough money');
+  const player2 = getPlayerById(transaction.toUserId);
 
   return (
-    updatePlayer({ ...player1, money: player1.money + transaction.sum }) &&
-    player2 &&
-    updatePlayer({ ...player2, money: player2.money - transaction.sum })
+    updatePlayer({ ...player1, money: player1.money - transaction.sum }) &&
+    updatePlayer({ ...player2, money: player2.money + transaction.sum })
   );
 };
 

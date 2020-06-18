@@ -11,11 +11,7 @@ export class UsersController {
 
   @Get()
   async get(): Promise<UsersEntity[]> {
-    const players = playersStore
-      .getState()
-      .players.filter((v) => v.userId !== BANK_PLAYER_ID);
-    console.log('players', players);
-    return Promise.resolve(players);
+    return Promise.resolve(playersStore.getState().players);
   }
 
   @Post()

@@ -1,4 +1,8 @@
-import { BoardFieldsEntity, FieldType } from './board.fields.entity';
+import {
+  BoardFieldsEntity,
+  FieldType,
+  CurrencyType,
+} from './board.fields.entity';
 import { UsersEntity } from './users.entity';
 
 export const fieldsForSave: BoardFieldsEntity[] = [
@@ -128,6 +132,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'rockstar_games',
     level: 0,
     type: FieldType.IT,
+    currency: CurrencyType.MULTIPLIER,
   },
   {
     fieldPosition: 13,
@@ -287,6 +292,7 @@ export const fieldsForSave: BoardFieldsEntity[] = [
     name: 'rovio',
     level: 0,
     type: FieldType.IT,
+    currency: CurrencyType.MULTIPLIER,
   },
   {
     fieldPosition: 29,

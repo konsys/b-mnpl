@@ -195,13 +195,13 @@ export const buyITCompany = (field: IField): number => {
   const fieldsState = fieldsStore.getState().fields;
   const fieldIndex = getFieldIndex(field);
 
-  let paymentMultiplier = field.price;
+  let paymentMultiplier = 0;
 
   const sameGroupFieilds = getSameGroupFields(field);
 
-  if (!sameGroupFieilds.length) {
+  if (sameGroupFieilds.length === 1) {
     paymentMultiplier = calcPercentPart(field.price, ONE_IT_FIELD_MULT);
-  } else if (sameGroupFieilds.length === 1) {
+  } else if (sameGroupFieilds.length === 2) {
     paymentMultiplier = calcPercentPart(field.price, TWO_IT_FIELD_MULT);
   }
 

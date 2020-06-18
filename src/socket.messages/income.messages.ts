@@ -33,7 +33,7 @@ import {
 import { nanoid } from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
 import { dicesStore } from 'src/stores/dices.store';
-import { JAIL_TURNS, BANK_PLAYER_ID } from 'src/utils/board.params';
+import { JAIL_TURNS } from 'src/utils/board.params';
 import { getStartBonus } from 'src/utils/moneys.utils';
 
 @WebSocketGateway()
@@ -62,7 +62,14 @@ export class BoardMessage {
         if (noActionField()) {
           Action.switchPlayerTurn();
         } else if (isStart()) {
-          // Start bonus is paid in dises store
+          // Bonus for start passing
+          if (dices.sum > 0 && player.meanPosition - dices.sum < 0) {
+            console.log('START PASSED 12121212121212');
+            player.meanPosition === 0
+              ? getStartBonus(player.userId, true)
+              : getStartBonus(player.userId);
+          }
+
           Action.switchPlayerTurn();
         } else if (isMyField()) {
           Action.switchPlayerTurn();
@@ -102,7 +109,7 @@ export class BoardMessage {
             money: 1000,
             userId: player.userId,
             toUserId: whosField(),
-            reason: 'Надо купить бетон',
+            reason: 'Хитрый шанс',
             transactionId: nanoid(4),
           });
           Action.payTaxModal();

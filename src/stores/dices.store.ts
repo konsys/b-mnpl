@@ -4,8 +4,7 @@ import {
   updatePlayer,
   jailPlayer,
 } from 'src/utils/users.utils';
-import { JAIL_TURNS, LAST_BORDER_FIELD_NUMBER } from 'src/utils/board.params';
-import { getStartBonus } from 'src/utils/moneys.utils';
+import { JAIL_TURNS } from 'src/utils/board.params';
 // import { random } from 'src/utils/common.utils';
 
 export interface IDicesStore {
@@ -79,17 +78,6 @@ export const dicesUpdatePlayerToken = (dices: IDicesStore): void => {
   if (doublesRolledAsCombo > JAIL_TURNS) {
     jailPlayer();
     return;
-  }
-
-  // Bonus for start passing
-  if (
-    player.meanPosition <= LAST_BORDER_FIELD_NUMBER &&
-    player.meanPosition + dices.sum > LAST_BORDER_FIELD_NUMBER
-  ) {
-    console.log('START PASSED 12121212121212');
-    meanPosition === 0
-      ? getStartBonus(player.userId, true)
-      : getStartBonus(player.userId);
   }
 
   updatePlayer({

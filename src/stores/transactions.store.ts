@@ -41,14 +41,20 @@ export const transactionStore = TransactionsDomain.store<ITransactionStore | nul
       });
       return;
     }
-    id === transaction.transactionId &&
+
+    if (id === transaction.transactionId) {
       moneyTransaction({
         sum: transaction.money,
         userId: transaction.userId,
         toUserId: transaction.toUserId,
-      }) &&
+      });
       resetTransactionsEvent();
-    return;
+    } else {
+      setError({
+        code: ErrorCode.WrongTranactionId,
+        message: 'Oop!',
+      });
+    }
   })
   .reset(resetTransactionsEvent);
 

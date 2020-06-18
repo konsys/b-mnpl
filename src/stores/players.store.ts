@@ -54,10 +54,10 @@ export const playersStore = PlayersDomain.store<IPlayersStore>({
   .on(setPlayersEvent, (_, data) => data)
   .reset(resetPlayersEvent);
 
-// playersStore.updates.watch((v) => {
-//   const r =
-//     v.players &&
-//     v.players.length &&
-//     v.players.find((v) => v.userId === BANK_PLAYER_ID);
-//   console.log('playersStoreWatch', r && r.money);
-// });
+playersStore.updates.watch((v) => {
+  const r =
+    v.players &&
+    v.players.length &&
+    v.players.find((v) => v.userId !== BANK_PLAYER_ID);
+  console.log('playersStoreWatch', r && r.money);
+});

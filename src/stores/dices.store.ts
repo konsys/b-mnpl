@@ -4,7 +4,8 @@ import {
   updatePlayer,
   jailPlayer,
 } from 'src/utils/users.utils';
-import { JAIL_TURNS } from 'src/utils/board.params';
+import { JAIL_TURNS, LAST_BORDER_FIELD_NUMBER } from 'src/utils/board.params';
+import { getStartBonus } from 'src/utils/moneys.utils';
 // import { random } from 'src/utils/common.utils';
 
 export interface IDicesStore {
@@ -26,9 +27,9 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
     const player = getActingPlayer();
     const currenPosition = player.meanPosition;
 
-    const dice1 = 1;
+    const dice1 = 5;
     // const dice2 = random(0, 6);
-    let dice2 = 3;
+    let dice2 = 6;
     if (player.name === 'Feodr') {
       // dice2 = random(0, 6);
       // dice2 = 5;
@@ -50,15 +51,15 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
   })
   .reset(resetDicesEvent);
 
-export const dicesUpdatePlayerToken = (v: IDicesStore): void => {
+export const dicesUpdatePlayerToken = (dices: IDicesStore): void => {
   const player = getActingPlayer();
   let jailed = 0;
   let movesLeft = 0;
-  let meanPosition = v.meanPosition;
+  let meanPosition = dices.meanPosition;
   let doublesRolledAsCombo = player.doublesRolledAsCombo;
 
   if (player.jailed) {
-    if (v.isDouble) {
+    if (dices.isDouble) {
       jailed = 0;
       movesLeft = 0;
       doublesRolledAsCombo = 0;
@@ -67,7 +68,7 @@ export const dicesUpdatePlayerToken = (v: IDicesStore): void => {
       return;
     }
   } else {
-    if (v.isDouble) {
+    if (dices.isDouble) {
       doublesRolledAsCombo++;
       movesLeft++;
     } else {
@@ -78,6 +79,14 @@ export const dicesUpdatePlayerToken = (v: IDicesStore): void => {
   if (doublesRolledAsCombo > JAIL_TURNS) {
     jailPlayer();
     return;
+  }
+
+  // Bonus for start passing
+  if (
+    player.meanPosition <= LAST_BORDER_FIELD_NUMBER &&
+    player.meanPosition + dices.sum > LAST_BORDER_FIELD_NUMBER
+  ) {
+    meanPosition === 0 ? getStartBonus(true) : getStartBonus();
   }
 
   updatePlayer({

@@ -15,5 +15,7 @@ export const ONE_IT_FIELD_MULT = 7;
 export const TWO_IT_FIELD_MULT = 16;
 
 export const START_BONUS = 3000;
+export const START_PASSING_BONUS = 2000;
 
 export const BANK_PLAYER_ID = 0;
+export const LAST_BORDER_FIELD_NUMBER = 39;

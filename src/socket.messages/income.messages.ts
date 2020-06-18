@@ -62,7 +62,7 @@ export class BoardMessage {
         if (noActionField()) {
           Action.switchPlayerTurn();
         } else if (isStart()) {
-          getStartBonus();
+          // Start bonus is paid in disces store
           Action.switchPlayerTurn();
         } else if (isMyField()) {
           Action.switchPlayerTurn();
@@ -99,7 +99,7 @@ export class BoardMessage {
         } else if (isChance()) {
           // TODO Make a real chance field action
           setTransactionEvent({
-            money: -5000,
+            money: -1000,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Надо купить бетон',

@@ -16,6 +16,11 @@ import {
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
 import { FieldType } from 'src/entities/board.fields.entity';
+import {
+  setTransactionEvent,
+  transactMoneyEvent,
+} from 'src/stores/transactions.store';
+import { BANK_PLAYER_ID } from './board.params';
 
 export const buyFieldModal = (): void => {
   const player = getActingPlayer();
@@ -32,18 +37,25 @@ export const buyField = (): void => {
   // Field set to player
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
-  let price = field.price;
+  let money = field.price;
 
   if (field.type === FieldType.AUTO) {
-    price = buyAuto(field);
+    money = buyAuto(field);
   } else if (field.type === FieldType.COMPANY) {
-    price = buyCompany(field);
+    money = buyCompany(field);
   } else if (field.type === FieldType.IT) {
-    price = buyITCompany(field);
+    money = buyITCompany(field);
   }
-
   // Decrease player`s money;
-  updatePlayer({ ...getPlayerById(user.userId), money: user.money - price });
+  const transactionId = nanoid(4);
+  setTransactionEvent({
+    money,
+    reason: `Купить ${field.name}`,
+    toUserId: BANK_PLAYER_ID,
+    transactionId,
+    userId: user.userId,
+  });
+  transactMoneyEvent(transactionId);
 };
 
 export const unJailModal = (): void => {

@@ -81,12 +81,27 @@ export const dicesUpdatePlayerToken = (dices: IDicesStore): void => {
     return;
   }
 
+  // console.log(111111, player.meanPosition <= LAST_BORDER_FIELD_NUMBER);
+  // console.log(
+  //   222222,
+  //   player.meanPosition + dices.sum > LAST_BORDER_FIELD_NUMBER,
+  // );
+
+  // console.log(
+  //   333333,
+  //   player.meanPosition + dices.sum,
+  //   LAST_BORDER_FIELD_NUMBER,
+  // );
+
   // Bonus for start passing
   if (
     player.meanPosition <= LAST_BORDER_FIELD_NUMBER &&
     player.meanPosition + dices.sum > LAST_BORDER_FIELD_NUMBER
   ) {
-    meanPosition === 0 ? getStartBonus(true) : getStartBonus();
+    console.log('START PASSED 12121212121212');
+    meanPosition === 0
+      ? getStartBonus(player.userId, true)
+      : getStartBonus(player.userId);
   }
 
   updatePlayer({

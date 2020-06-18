@@ -19,6 +19,9 @@ export const playersStore = PlayersDomain.store<IPlayersStore>({
   .on(setPlayersEvent, (_, data) => data)
   .reset(resetPlayersEvent);
 
-// playersStore.watch((v) => {
-//   console.log('playersStoreWatch', v);
-// });
+playersStore.watch((v) => {
+  console.log(
+    'playersStoreWatch',
+    v.players && v.players.length && v.players[0].money,
+  );
+});

@@ -1,23 +1,24 @@
 import {
   setTransactionEvent,
   transactMoneyEvent,
-  transactionStore,
 } from 'src/stores/transactions.store';
-import { START_BONUS, START_PASSING_BONUS } from './board.params';
-import { whosField } from './fields.utils';
+import {
+  START_BONUS,
+  START_PASSING_BONUS,
+  BANK_PLAYER_ID,
+} from './board.params';
 import { nanoid } from 'nanoid';
-import { getActingPlayer } from './users.utils';
 
-export const getStartBonus = (isStart = false) => {
+export const getStartBonus = (userId: number, isStart = false) => {
+  // console.log(11111, 'getStartBonus');
   const id = nanoid(4);
-
+  const money = isStart ? START_BONUS : START_PASSING_BONUS;
   setTransactionEvent({
-    money: isStart ? START_BONUS : START_PASSING_BONUS,
-    userId: getActingPlayer().userId,
-    toUserId: whosField(),
+    money,
+    userId: BANK_PLAYER_ID,
     reason: 'Стартовый бонус',
     transactionId: id,
+    toUserId: userId,
   });
-  // console.log(123123123, transactionStore.getState());
   transactMoneyEvent(id);
 };

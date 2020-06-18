@@ -62,7 +62,7 @@ export class BoardMessage {
         if (noActionField()) {
           Action.switchPlayerTurn();
         } else if (isStart()) {
-          // Start bonus is paid in disces store
+          // Start bonus is paid in dises store
           Action.switchPlayerTurn();
         } else if (isMyField()) {
           Action.switchPlayerTurn();
@@ -89,7 +89,7 @@ export class BoardMessage {
         } else if (isTax()) {
           // TODO написать нормальный текст на налоги
           setTransactionEvent({
-            money: -field.price,
+            money: field.price,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Самое время заплатить налоги',
@@ -99,7 +99,7 @@ export class BoardMessage {
         } else if (isChance()) {
           // TODO Make a real chance field action
           setTransactionEvent({
-            money: -1000,
+            money: 1000,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Надо купить бетон',
@@ -112,7 +112,7 @@ export class BoardMessage {
           Action.switchPlayerTurn();
         } else {
           setTransactionEvent({
-            money: -500,
+            money: 500,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Залог за выход из тюрьмы',

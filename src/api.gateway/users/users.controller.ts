@@ -3,6 +3,7 @@ import { MsNames } from 'src/types/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from './users.service';
 import { playersStore } from 'src/stores/players.store';
+import { BANK_PLAYER_ID } from 'src/utils/board.params';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -10,8 +11,10 @@ export class UsersController {
 
   @Get()
   async get(): Promise<UsersEntity[]> {
-    const players = playersStore.getState().players;
-
+    const players = playersStore
+      .getState()
+      .players.filter((v) => v.userId !== BANK_PLAYER_ID);
+    console.log('players', players);
     return Promise.resolve(players);
   }
 

@@ -21,6 +21,8 @@ import { nanoid } from 'nanoid';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import { updateAllPLayers } from 'src/utils/users.utils';
 import { updateAllFields } from 'src/utils/fields.utils';
+import { _ } from 'lodash';
+import { BANK_PLAYER_ID } from 'src/utils/board.params';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -63,6 +65,18 @@ export class BoardSocket
     try {
       let players: IPlayer[] = await this.usersService.getAllUsers();
 
+      players = _.concat(players, {
+        userId: BANK_PLAYER_ID,
+        vip: true,
+        registrationType: 'none',
+        name: 'BANK',
+        team: null,
+        avatar: '',
+        createdAt: '2020-06-17T12:08:38.000Z',
+        updatedAt: '2020-06-17T12:08:38.000Z',
+        isActive: false,
+        isBlocked: true,
+      });
       const resultPlayers = [];
       if (players.length > 0) {
         // Случайная очередь ходов

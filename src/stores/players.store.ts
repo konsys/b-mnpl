@@ -43,7 +43,7 @@ export const bankStore = PlayersDomain.store<IPlayer>({
   .on(setBankEvent, (_, data) => data)
   .reset(resetBankEvent);
 
-// bankStore.watch((v) => console.log('bankStore', v.money));
+bankStore.watch((v) => console.log('BANK Money', v.money));
 
 export const resetPlayersEvent = PlayersDomain.event();
 export const setPlayersEvent = PlayersDomain.event<IPlayersStore>();
@@ -54,10 +54,10 @@ export const playersStore = PlayersDomain.store<IPlayersStore>({
   .on(setPlayersEvent, (_, data) => data)
   .reset(resetPlayersEvent);
 
-playersStore.updates.watch((v) => {
-  const r =
-    v.players &&
-    v.players.length &&
-    v.players.find((v) => v.userId !== BANK_PLAYER_ID);
-  console.log('playersStoreWatch', r && r.money);
-});
+// playersStore.updates.watch((v) => {
+//   const r =
+//     v.players &&
+//     v.players.length &&
+//     v.players.find((v) => v.userId !== BANK_PLAYER_ID);
+//   console.log('playersStoreWatch', r && r.money);
+// });

@@ -80,7 +80,7 @@ export class BoardSocket
           jailed: 0,
           unjailAttempts: 0,
           meanPosition: 0,
-          money: 10000,
+          money: 100000,
           creditPayRound: false,
           creditNextTakeRound: 0,
           score: 0,

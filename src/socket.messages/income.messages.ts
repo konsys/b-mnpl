@@ -59,16 +59,16 @@ export class BoardMessage {
       const dices = dicesStore.getState();
 
       if (!player.jailed) {
-        if (noActionField()) {
-          Action.switchPlayerTurn();
-        } else if (isStartPass()) {
+        if (isStartPass()) {
           // Bonus for start passing
-          console.log('START PASSED 12121212121212');
-
           player.meanPosition === 0
             ? getStartBonus(player.userId, true)
             : getStartBonus(player.userId);
 
+          Action.switchPlayerTurn();
+        }
+
+        if (noActionField()) {
           Action.switchPlayerTurn();
         } else if (isMyField()) {
           Action.switchPlayerTurn();

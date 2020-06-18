@@ -16,6 +16,7 @@ import {
   BANK_PLAYER_ID,
 } from './board.params';
 import { FieldType } from 'src/entities/board.fields.entity';
+import { dicesStore } from 'src/stores/dices.store';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsStore.getState().fields.find((v) => v.fieldPosition === fieldPosition);
@@ -34,7 +35,13 @@ export const getBoughtFields = () =>
     .map((v) => v.owner);
 
 export const isTax = (): boolean => getActingField().type === FieldType.TAX;
-export const isStart = (): boolean => getActingField().type === FieldType.START;
+
+export const isStartPass = (): boolean => {
+  const dices = dicesStore.getState();
+  const player = getActingPlayer();
+
+  return dices.sum > 0 && player.meanPosition - dices.sum < 0;
+};
 export const isJail = (): boolean => getActingField().type === FieldType.JAIL;
 
 export const isCompany = (): boolean => {

@@ -6,7 +6,7 @@ import {
   isCompanyForSale,
   canBuyField,
   isTax,
-  isStart,
+  isStartPass,
   noActionField,
   isJail,
   isChance,
@@ -61,14 +61,13 @@ export class BoardMessage {
       if (!player.jailed) {
         if (noActionField()) {
           Action.switchPlayerTurn();
-        } else if (isStart()) {
+        } else if (isStartPass()) {
           // Bonus for start passing
-          if (dices.sum > 0 && player.meanPosition - dices.sum < 0) {
-            console.log('START PASSED 12121212121212');
-            player.meanPosition === 0
-              ? getStartBonus(player.userId, true)
-              : getStartBonus(player.userId);
-          }
+          console.log('START PASSED 12121212121212');
+
+          player.meanPosition === 0
+            ? getStartBonus(player.userId, true)
+            : getStartBonus(player.userId);
 
           Action.switchPlayerTurn();
         } else if (isMyField()) {
@@ -91,8 +90,6 @@ export class BoardMessage {
           Action.payTaxModal();
         } else if (isJail()) {
           jailPlayer() && Action.switchPlayerTurn();
-        } else if (isStart()) {
-          Action.switchPlayerTurn();
         } else if (isTax()) {
           // TODO написать нормальный текст на налоги
           setTransactionEvent({

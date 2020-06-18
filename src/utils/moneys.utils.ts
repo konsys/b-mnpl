@@ -10,7 +10,6 @@ import {
 import { nanoid } from 'nanoid';
 
 export const getStartBonus = (toUserId: number, isStart = false) => {
-  // console.log(11111, 'getStartBonus');
   const transactionId = nanoid(4);
   const money = isStart ? START_BONUS : START_PASSING_BONUS;
   setTransactionEvent({

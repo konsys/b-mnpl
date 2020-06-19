@@ -1,7 +1,6 @@
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { IField, IMoneyTransaction } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
-import { calcPercentPart } from './actions.utils';
 import _ from 'lodash';
 import {
   ONE_AUTO_PERCENT,

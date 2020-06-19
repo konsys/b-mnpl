@@ -12,7 +12,6 @@ import {
   getActingPlayerIndex,
   updateAllPLayers,
   updatePlayer,
-  getPlayerById,
 } from './users.utils';
 import { playersStore } from 'src/stores/players.store';
 import { FieldType } from 'src/entities/board.fields.entity';
@@ -146,6 +145,3 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   player = getActingPlayer();
   player.jailed ? unJailModal() : rollDicesModal();
 };
-
-export const calcPercentPart = (price: number, percent: number) =>
-  Math.floor((price / 1000) * percent) * 10;

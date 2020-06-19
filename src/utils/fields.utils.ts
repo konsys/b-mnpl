@@ -23,7 +23,7 @@ export const findFieldByPosition = (fieldPosition: number) =>
 export const getActingField = (): IField => {
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
-  if (!field) throw Error('Field not found');
+  if (!field) throw Error(`Field not found: position: ${user.meanPosition}`);
   return field;
 };
 

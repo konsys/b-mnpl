@@ -351,7 +351,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       type: FieldType.AUTO,
     },
     {
-      fieldPosition: 140,
+      fieldPosition: 16,
       rent: {
         baseRent: 140,
         oneStar: 700,
@@ -874,5 +874,3 @@ export const users: UsersEntity[] = [
     avatar: '/avatars/konstanstin.png',
   },
 ];
-
-console.log(1231231231, fieldsForSave());

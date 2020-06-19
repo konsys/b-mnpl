@@ -11,9 +11,9 @@ import { nanoid } from 'nanoid';
 
 export const getStartBonus = (toUserId: number, isStart = false) => {
   const transactionId = nanoid(4);
-  const money = isStart ? START_BONUS : START_PASSING_BONUS;
+  const sum = isStart ? START_BONUS : START_PASSING_BONUS;
   setTransactionEvent({
-    money,
+    sum,
     userId: BANK_PLAYER_ID,
     reason: 'Стартовый бонус',
     transactionId,

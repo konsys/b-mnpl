@@ -37,19 +37,19 @@ export const buyField = (): void => {
   // Field set to player
   const user = getActingPlayer();
   const field = findFieldByPosition(user.meanPosition);
-  let money = field.price;
+  let sum = field.price.startPrice;
 
   if (field.type === FieldType.AUTO) {
-    money = buyAuto(field);
+    sum = buyAuto(field);
   } else if (field.type === FieldType.COMPANY) {
-    money = buyCompany(field);
+    sum = buyCompany(field);
   } else if (field.type === FieldType.IT) {
-    money = buyITCompany(field);
+    sum = buyITCompany(field);
   }
   // Decrease player`s money;
   const transactionId = nanoid(4);
   setTransactionEvent({
-    money,
+    sum,
     reason: `Купить ${field.name}`,
     toUserId: BANK_PLAYER_ID,
     transactionId,

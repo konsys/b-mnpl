@@ -82,7 +82,7 @@ export const isMyField = (): boolean =>
   getActingField().owner.userId === getActingPlayer().userId;
 
 export const canBuyField = (): boolean =>
-  isCompany() && getActingField().price <= getActingPlayer().money;
+  isCompany() && getActingField().price.startPrice <= getActingPlayer().money;
 
 export const getFieldIndex = (field: IField): number =>
   fieldsStore.getState().fields.findIndex((v) => v.fieldId === field.fieldId);
@@ -120,33 +120,23 @@ export const buyAuto = (field: IField): number => {
   const fieldsState = fieldsStore.getState().fields;
   const fieldIndex = getFieldIndex(field);
 
-  let price = field.price;
+  let price = field.price.startPrice;
   const fieldPrice = price;
   const sameGroupFieilds = getSameGroupFields(field);
 
-  if (sameGroupFieilds.length === 1) {
-    price = calcPercentPart(price, ONE_AUTO_PERCENT);
-  } else if (sameGroupFieilds.length === 2) {
-    price = calcPercentPart(price, TWO_AUTO_PERCENT);
-  } else if (sameGroupFieilds.length === 3) {
-    price = calcPercentPart(price, FREE_AUTO_PERCENT);
-  } else if (sameGroupFieilds.length === 4) {
-    price = calcPercentPart(price, FOUR_AUTO_PERCENT);
-  }
-
+  // TODO calc branchs and rent
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,
     level: 0,
     mortgaged: false,
-    updatedPrice: price,
-    paymentMultiplier: 0,
+    sameGroup: sameGroupFieilds.length,
   };
 
   sameGroupFieilds.map((v: IField) => {
     const index = getFieldIndex(v);
 
-    fieldsState[index] = { ...v, owner: { ...v.owner, updatedPrice: price } };
+    fieldsState[index] = { ...v, owner: { ...v.owner } };
   });
 
   fieldsState[fieldIndex] = field;
@@ -178,8 +168,7 @@ export const buyCompany = (field: IField): number => {
     userId: user.userId,
     level: 0,
     mortgaged: false,
-    updatedPrice: calcPercentPart(price, percent),
-    paymentMultiplier: 0,
+    sameGroup: sameGroupFieilds.length,
   };
 
   sameGroupFieilds.map((v: IField) => {
@@ -187,14 +176,14 @@ export const buyCompany = (field: IField): number => {
 
     fieldsState[index] = {
       ...v,
-      owner: { ...v.owner, updatedPrice: calcPercentPart(v.price, percent) },
+      owner: { ...v.owner },
     };
   });
 
   fieldsState[fieldIndex] = field;
 
   updateAllFields(fieldsState);
-  return fieldPrice;
+  return fieldPrice.boughtPrice;
 };
 
 export const buyITCompany = (field: IField): number => {
@@ -206,19 +195,12 @@ export const buyITCompany = (field: IField): number => {
 
   const sameGroupFieilds = getSameGroupFields(field);
 
-  if (sameGroupFieilds.length === 1) {
-    paymentMultiplier = calcPercentPart(field.price, ONE_IT_FIELD_MULT);
-  } else if (sameGroupFieilds.length === 2) {
-    paymentMultiplier = calcPercentPart(field.price, TWO_IT_FIELD_MULT);
-  }
-
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,
     level: 0,
     mortgaged: false,
-    updatedPrice: 0,
-    paymentMultiplier,
+    sameGroup: sameGroupFieilds.length,
   };
 
   sameGroupFieilds.map((v: IField) => {
@@ -226,7 +208,7 @@ export const buyITCompany = (field: IField): number => {
 
     fieldsState[index] = {
       ...v,
-      owner: { ...v.owner, updatedPrice: 0, paymentMultiplier },
+      owner: { ...v.owner },
     };
   });
 

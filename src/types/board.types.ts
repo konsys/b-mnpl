@@ -182,8 +182,25 @@ export interface IFieldStatus {
   userId: number;
   level: number;
   mortgaged: boolean;
-  updatedPrice: number;
-  paymentMultiplier: number;
+  sameGroup: number;
+}
+
+export interface IFieldRent {
+  baseRent: number;
+  oneStar: number;
+  twoStar: number;
+  freeStar: number;
+  fourStar: number;
+  bigStar: number;
+}
+
+export interface IFieldPrice {
+  startPrice: number;
+  pledgePrice: number;
+  buyoutPrice: number;
+  branchPrice: number;
+  paymentMultiplier?: number;
+  boughtPrice: number;
 }
 
 interface BoardTimers {

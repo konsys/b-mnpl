@@ -1,21 +1,15 @@
 import { GameDomain } from 'src/stores/actions.store';
-import {
-  getPlayerById,
-  updatePlayer,
-  getActingPlayer,
-} from 'src/utils/users.utils';
+import { getPlayerById, updatePlayer } from 'src/utils/users.utils';
 import { IMoneyTransaction } from 'src/types/board.types';
 import { ErrorCode } from 'src/utils/error.code';
 import { setError } from './error.store';
-import { BANK_PLAYER_ID } from 'src/utils/board.params';
-import { bankStore } from './players.store';
 const TransactionsDomain = GameDomain.domain('PlayersDomain');
 
 export interface ITransactionStore {
   transactionId: string;
   reason: string;
   userId: number;
-  money: number;
+  sum: number;
   toUserId: number;
 }
 
@@ -34,7 +28,7 @@ export const transactionStore = TransactionsDomain.store<ITransactionStore | nul
   .on(setTransactionEvent, (_, data) => data)
   .on(transactMoneyEvent, (transaction, id) => {
     const player = getPlayerById(transaction.userId);
-    if (transaction.money > player.money) {
+    if (transaction.sum > player.money) {
       setError({
         code: ErrorCode.NotEnoughMoney,
         message: 'Oop!',
@@ -44,7 +38,7 @@ export const transactionStore = TransactionsDomain.store<ITransactionStore | nul
 
     if (id === transaction.transactionId) {
       moneyTransaction({
-        sum: transaction.money,
+        sum: transaction.sum,
         userId: transaction.userId,
         toUserId: transaction.toUserId,
       });

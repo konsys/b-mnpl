@@ -50,7 +50,7 @@ export const unJailPayModalMesage = (): IUnJailPayingModal => {
     text: 'Заплатить за выход из тюрьмы',
     _id: actionsStore.getState().actionId,
     isModal: true,
-    money: (transaction && transaction.money) || 0,
+    money: (transaction && transaction.sum) || 0,
   };
 };
 
@@ -81,7 +81,7 @@ export const payModalHandler = (): IPayRentModal => {
   const field = getActingField();
   const action = actionsStore.getState();
   const transaction = transactionStore.getState();
-  const sum = (transaction && transaction.money) || field.price;
+  const sum = (transaction && transaction.sum) || 0;
   return {
     type: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
     userId: player.userId,

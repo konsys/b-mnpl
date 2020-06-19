@@ -78,10 +78,10 @@ export class BoardMessage {
           Action.switchPlayerTurn();
         } else if (whosField() && !isMyField()) {
           setTransactionEvent({
-            money:
-              field.owner && field.owner.paymentMultiplier
-                ? -(dices.sum * (field.owner && field.owner.paymentMultiplier))
-                : -(field.owner && field.owner.updatedPrice) || 0,
+            sum:
+              field && field.price
+                ? dices.sum * (field.price && field.price.paymentMultiplier)
+                : (field.owner && field.price.boughtPrice) || 0,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Пришло время платить по счетам',
@@ -93,7 +93,7 @@ export class BoardMessage {
         } else if (isTax()) {
           // TODO написать нормальный текст на налоги
           setTransactionEvent({
-            money: field.price,
+            sum: field.price.startPrice,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Самое время заплатить налоги',
@@ -103,7 +103,7 @@ export class BoardMessage {
         } else if (isChance()) {
           // TODO Make a real chance field action
           setTransactionEvent({
-            money: 1000,
+            sum: 1000,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Хитрый шанс',
@@ -116,7 +116,7 @@ export class BoardMessage {
           Action.switchPlayerTurn();
         } else {
           setTransactionEvent({
-            money: 500,
+            sum: 500,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Залог за выход из тюрьмы',
@@ -161,7 +161,7 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
-    if (getCurrentTransaction().money > -getActingPlayer().money) {
+    if (getCurrentTransaction().sum > -getActingPlayer().money) {
       transactMoneyEvent(getCurrentTransaction().transactionId);
       Action.switchPlayerTurn();
     } else {

@@ -1,5 +1,5 @@
 import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
-// import { FieldType } from '../types/board.types';
+import { IFieldPrice, IFieldRent } from 'src/types/board.types';
 
 export enum FieldType {
   CHANCE = 'chance',
@@ -29,9 +29,6 @@ export class BoardFieldsEntity {
 
   @Column({ default: null })
   mnplSpecial?: number;
-
-  @Column({ default: null })
-  price?: number;
 
   @Column({ default: null })
   fieldGroup?: number;
@@ -66,4 +63,10 @@ export class BoardFieldsEntity {
     default: CurrencyType.DOLLAR,
   })
   currency?: CurrencyType;
+
+  @Column('simple-json', { default: null })
+  price?: IFieldPrice;
+
+  @Column('simple-json', { default: null })
+  rent?: IFieldRent;
 }

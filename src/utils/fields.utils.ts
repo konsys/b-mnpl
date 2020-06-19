@@ -119,8 +119,6 @@ export const buyAuto = (field: IField): number => {
   const fieldsState = fieldsStore.getState().fields;
   const fieldIndex = getFieldIndex(field);
 
-  let price = field.price.startPrice;
-  const fieldPrice = price;
   const sameGroupFieilds = getSameGroupFields(field);
 
   // TODO calc branchs and rent
@@ -141,7 +139,7 @@ export const buyAuto = (field: IField): number => {
   fieldsState[fieldIndex] = field;
 
   updateAllFields(fieldsState);
-  return field.rent.baseRent;
+  return field.price.startPrice;
 };
 
 export const buyCompany = (field: IField): number => {
@@ -149,17 +147,14 @@ export const buyCompany = (field: IField): number => {
   const fieldsState = fieldsStore.getState().fields;
   const fieldIndex = getFieldIndex(field);
 
-  let price = field.price;
-  const fieldPrice = price;
-
   const sameGroupFieilds = getSameGroupFields(field);
 
-  let percent = ONE_FIELD_PERCENT;
+  let percent = 1;
 
   if (sameGroupFieilds.length === 2) {
-    percent = TWO_FIELD_PERCENT;
+    percent = 1.2;
   } else if (sameGroupFieilds.length === 3) {
-    percent = FREE_FIELD_PERCENT;
+    percent = 1.4;
   }
 
   field.owner = {
@@ -182,7 +177,7 @@ export const buyCompany = (field: IField): number => {
   fieldsState[fieldIndex] = field;
 
   updateAllFields(fieldsState);
-  return field.rent.baseRent;
+  return field.price.startPrice;
 };
 
 export const buyITCompany = (field: IField): number => {
@@ -214,5 +209,5 @@ export const buyITCompany = (field: IField): number => {
   fieldsState[fieldIndex] = field;
 
   updateAllFields(fieldsState);
-  return paymentMultiplier;
+  return field.price.startPrice;
 };

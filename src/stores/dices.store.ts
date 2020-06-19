@@ -26,7 +26,7 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
     const player = getActingPlayer();
     const currenPosition = player.meanPosition;
 
-    const dice1 = 1;
+    const dice1 = 3;
     // const dice2 = random(0, 6);
     let dice2 = 2;
     if (player.name === 'Feodr') {

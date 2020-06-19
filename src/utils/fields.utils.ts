@@ -141,7 +141,7 @@ export const buyAuto = (field: IField): number => {
   fieldsState[fieldIndex] = field;
 
   updateAllFields(fieldsState);
-  return fieldPrice;
+  return field.rent.baseRent;
 };
 
 export const buyCompany = (field: IField): number => {
@@ -182,7 +182,7 @@ export const buyCompany = (field: IField): number => {
   fieldsState[fieldIndex] = field;
 
   updateAllFields(fieldsState);
-  return fieldPrice.boughtPrice;
+  return field.rent.baseRent;
 };
 
 export const buyITCompany = (field: IField): number => {

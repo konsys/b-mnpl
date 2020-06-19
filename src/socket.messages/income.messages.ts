@@ -79,9 +79,9 @@ export class BoardMessage {
         } else if (whosField() && !isMyField()) {
           setTransactionEvent({
             sum:
-              field && field.price
-                ? dices.sum * (field.price && field.price.paymentMultiplier)
-                : (field.owner && field.price.boughtPrice) || 0,
+              field && field.rent && field.rent.paymentMultiplier
+                ? dices.sum * (field.price && field.rent.paymentMultiplier)
+                : (field.owner && field.rent.baseRent) || 0,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Пришло время платить по счетам',

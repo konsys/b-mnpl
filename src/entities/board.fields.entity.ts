@@ -34,6 +34,9 @@ export class BoardFieldsEntity {
   fieldGroup?: number;
 
   @Column({ default: null })
+  fieldGroupName?: string;
+
+  @Column({ default: null })
   fieldCorner?: number;
 
   @Column({ default: null })

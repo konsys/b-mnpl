@@ -9,6 +9,10 @@ export interface IActionId {
   actionId: string;
 }
 
+export interface IFieldId {
+  fieldId: number;
+}
+
 export interface IPlayerMove extends IActionId {
   userId: number;
 }
@@ -30,6 +34,7 @@ export enum IncomeMessageType {
   INCOME_TAX_PAID_CLICKED = 'taxPaidCLicked',
   INCOME_UN_JAIL_PAID_CLICKED = 'unJailPaidClicked',
   INCOME_ROLL_DICES_CLICKED = 'rollDicesClicked',
+  OUTCOME_MORTGAGE_FIELD_CLICKED = 'mortgageFieldClicked',
 }
 
 export enum OutcomeMessageType {

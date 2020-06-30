@@ -114,34 +114,6 @@ const getSameGroupFields = (field: IField) => {
   );
 };
 
-export const buyAuto = (field: IField): number => {
-  const user = getActingPlayer();
-  const fieldsState = fieldsStore.getState().fields;
-  const fieldIndex = getFieldIndex(field);
-
-  const sameGroupFieilds = getSameGroupFields(field);
-
-  // TODO calc branchs and rent
-  field.owner = {
-    fieldId: field.fieldId,
-    userId: user.userId,
-    level: 0,
-    mortgaged: false,
-    sameGroup: sameGroupFieilds.length,
-  };
-
-  sameGroupFieilds.map((v: IField) => {
-    const index = getFieldIndex(v);
-
-    fieldsState[index] = { ...v, owner: { ...v.owner } };
-  });
-
-  fieldsState[fieldIndex] = field;
-
-  updateAllFields(fieldsState);
-  return field.price.startPrice;
-};
-
 export const buyCompany = (field: IField): number => {
   const user = getActingPlayer();
   const fieldsState = fieldsStore.getState().fields;
@@ -149,14 +121,6 @@ export const buyCompany = (field: IField): number => {
 
   const sameGroupFieilds = getSameGroupFields(field);
 
-  let percent = 1;
-
-  if (sameGroupFieilds.length === 2) {
-    percent = 1.2;
-  } else if (sameGroupFieilds.length === 3) {
-    percent = 1.4;
-  }
-
   field.owner = {
     fieldId: field.fieldId,
     userId: user.userId,
@@ -167,11 +131,10 @@ export const buyCompany = (field: IField): number => {
 
   sameGroupFieilds.map((v: IField) => {
     const index = getFieldIndex(v);
+    v.owner.level = sameGroupFieilds.length || 0;
+    console.log('v.owner.level', v.owner.level);
 
-    fieldsState[index] = {
-      ...v,
-      owner: { ...v.owner },
-    };
+    fieldsState[index] = { ...v, owner: { ...v.owner } };
   });
 
   fieldsState[fieldIndex] = field;
@@ -184,8 +147,6 @@ export const buyITCompany = (field: IField): number => {
   const user = getActingPlayer();
   const fieldsState = fieldsStore.getState().fields;
   const fieldIndex = getFieldIndex(field);
-
-  let paymentMultiplier = 0;
 
   const sameGroupFieilds = getSameGroupFields(field);
 

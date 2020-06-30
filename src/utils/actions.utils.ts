@@ -1,12 +1,7 @@
 import { actionsStore, updateAction } from 'src/stores/actions.store';
 import { OutcomeMessageType } from 'src/types/board.types';
 import { nanoid } from 'nanoid';
-import {
-  findFieldByPosition,
-  buyAuto,
-  buyCompany,
-  buyITCompany,
-} from './fields.utils';
+import { findFieldByPosition, buyCompany, buyITCompany } from './fields.utils';
 import {
   getActingPlayer,
   getActingPlayerIndex,
@@ -38,9 +33,7 @@ export const buyField = (): void => {
   const field = findFieldByPosition(user.meanPosition);
   let sum = field.price.startPrice;
 
-  if (field.type === FieldType.AUTO) {
-    sum = buyAuto(field);
-  } else if (field.type === FieldType.COMPANY) {
+  if (field.type === FieldType.AUTO || field.type === FieldType.COMPANY) {
     sum = buyCompany(field);
   } else if (field.type === FieldType.IT) {
     sum = buyITCompany(field);

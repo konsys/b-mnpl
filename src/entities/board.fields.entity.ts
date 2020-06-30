@@ -1,6 +1,19 @@
 import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
 import { IFieldPrice, IFieldRent } from 'src/types/board.types';
 
+export enum FieldGroupName {
+  IT = 'IT компании',
+  WEB = 'Веб-сервисы',
+  PARFUME = 'Парфюмерия',
+  AUTO = 'Автомобили',
+  CLOTHES = 'Одежда',
+  DRINKS = 'Напитки',
+  AVIA = 'Авиалинии',
+  RESTARAUNT = 'Рестораны',
+  HOTEL = 'Отели',
+  ELECTRONIC = 'Электроника',
+}
+
 export enum FieldType {
   CHANCE = 'chance',
   COMPANY = 'company',
@@ -13,7 +26,6 @@ export enum FieldType {
   AUTO = 'auto',
   TAKE_REST = 'takeRest',
 }
-
 export enum CurrencyType {
   DOLLAR = '$',
   MULTIPLIER = 'x',
@@ -34,9 +46,6 @@ export class BoardFieldsEntity {
   fieldGroup?: number;
 
   @Column({ default: null })
-  fieldGroupName?: string;
-
-  @Column({ default: null })
   fieldCorner?: number;
 
   @Column({ default: null })
@@ -53,6 +62,12 @@ export class BoardFieldsEntity {
 
   @Column({ default: null })
   name: string;
+
+  @Column({ default: null })
+  description?: string;
+
+  @Column('enum', { name: 'fieldGroupName', enum: FieldGroupName })
+  fieldGroupName?: FieldGroupName;
 
   @Column('enum', {
     name: 'fieldsType',

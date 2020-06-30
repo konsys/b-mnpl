@@ -2,6 +2,7 @@ import {
   BoardFieldsEntity,
   FieldType,
   CurrencyType,
+  FieldGroupName,
 } from './board.fields.entity';
 import { UsersEntity } from './users.entity';
 
@@ -40,6 +41,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 0,
       name: 'chanel',
       level: 0,
+      fieldGroupName: FieldGroupName.PARFUME,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -50,19 +53,19 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       mnplSpecial: 1,
       level: 0,
       rent: {
-        baseRent: 40,
-        oneStar: 200,
-        twoStar: 200,
-        freeStar: 1800,
-        fourStar: 3200,
-        bigStar: 4500,
+        baseRent: 2000,
+        oneStar: 0,
+        twoStar: 0,
+        freeStar: 0,
+        fourStar: 0,
+        bigStar: 0,
         paymentMultiplier: 0,
       },
       price: {
-        startPrice: 600,
-        pledgePrice: 300,
-        buyoutPrice: 360,
-        branchPrice: 500,
+        startPrice: 0,
+        pledgePrice: 0,
+        buyoutPrice: 0,
+        branchPrice: 0,
       },
       type: FieldType.TAX,
     },
@@ -89,6 +92,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 0,
       name: 'hugo_boss',
       level: 0,
+      fieldGroupName: FieldGroupName.PARFUME,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -113,6 +118,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 0,
       name: 'iv_roche',
       level: 0,
+      fieldGroupName: FieldGroupName.PARFUME,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -137,6 +144,9 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 0,
       name: 'mercedes',
       level: 0,
+      fieldGroupName: FieldGroupName.AUTO,
+      description:
+        'Рента зависит от количества автомобилей, которыми Вы владеете',
       type: FieldType.AUTO,
     },
     {
@@ -161,6 +171,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 0,
       name: 'adidas',
       level: 0,
+      fieldGroupName: FieldGroupName.CLOTHES,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -194,6 +206,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 0,
       name: 'puma',
       level: 0,
+      fieldGroupName: FieldGroupName.CLOTHES,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -218,6 +232,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 0,
       name: 'lacoste',
       level: 0,
+      fieldGroupName: FieldGroupName.CLOTHES,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -251,6 +267,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 1,
       name: 'vk',
       level: 0,
+      fieldGroupName: FieldGroupName.WEB,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -275,6 +293,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 1,
       name: 'rockstar_games',
       level: 0,
+      fieldGroupName: FieldGroupName.IT,
+      description: 'Рента зависит от количества IT компаний',
       type: FieldType.IT,
       currency: CurrencyType.MULTIPLIER,
     },
@@ -300,6 +320,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 1,
       name: 'facebook',
       level: 0,
+      fieldGroupName: FieldGroupName.WEB,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -324,6 +346,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 1,
       name: 'twitter',
       level: 0,
+      fieldGroupName: FieldGroupName.WEB,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -347,6 +371,9 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldGroup: 0,
       fieldLine: 1,
       name: 'audi',
+      fieldGroupName: FieldGroupName.AUTO,
+      description:
+        'Рента зависит от количества автомобилей, которыми Вы владеете',
       level: 0,
       type: FieldType.AUTO,
     },
@@ -372,6 +399,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 1,
       name: 'coca_cola',
       level: 0,
+      fieldGroupName: FieldGroupName.DRINKS,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -405,6 +434,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 1,
       name: 'pepsi',
       level: 0,
+      fieldGroupName: FieldGroupName.DRINKS,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -429,6 +460,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 1,
       name: 'fanta',
       level: 0,
+      fieldGroupName: FieldGroupName.DRINKS,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -463,6 +496,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldGroup: 5,
       name: 'american_airlines',
       level: 0,
+      fieldGroupName: FieldGroupName.AVIA,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -496,6 +531,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 2,
       name: 'lufthansa',
       level: 0,
+      fieldGroupName: FieldGroupName.AVIA,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -521,6 +558,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 2,
       name: 'british_airways',
       level: 0,
+      fieldGroupName: FieldGroupName.AVIA,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -545,6 +584,9 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 2,
       name: 'ford',
       level: 0,
+      fieldGroupName: FieldGroupName.AUTO,
+      description:
+        'Рента зависит от количества автомобилей, которыми Вы владеете',
       type: FieldType.AUTO,
     },
     {
@@ -569,6 +611,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 2,
       name: 'mcdonalds',
       level: 0,
+      fieldGroupName: FieldGroupName.RESTARAUNT,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -593,6 +637,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 2,
       name: 'burger_king',
       level: 0,
+      fieldGroupName: FieldGroupName.RESTARAUNT,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -617,6 +663,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 2,
       name: 'rovio',
       level: 0,
+      fieldGroupName: FieldGroupName.IT,
+      description: 'Рента зависит от количества IT компаний',
       type: FieldType.IT,
       currency: CurrencyType.MULTIPLIER,
     },
@@ -642,6 +690,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 2,
       name: 'kfc',
       level: 0,
+      fieldGroupName: FieldGroupName.RESTARAUNT,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -675,6 +725,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 3,
       name: 'holiday_inn',
       level: 0,
+      fieldGroupName: FieldGroupName.HOTEL,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -699,6 +751,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 3,
       name: 'radisson_blu',
       level: 0,
+      fieldGroupName: FieldGroupName.HOTEL,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -732,6 +786,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 3,
       name: 'novotel',
       level: 0,
+      fieldGroupName: FieldGroupName.HOTEL,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -756,6 +812,9 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 3,
       name: 'land_rover',
       level: 0,
+      fieldGroupName: FieldGroupName.AUTO,
+      description:
+        'Рента зависит от количества автомобилей, которыми Вы владеете',
       type: FieldType.AUTO,
     },
     {
@@ -766,19 +825,19 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       name: 'tax_luxury',
       level: 0,
       rent: {
-        baseRent: 350,
-        oneStar: 1750,
-        twoStar: 28,
-        freeStar: 28,
-        fourStar: 28,
-        bigStar: 28,
+        baseRent: 1000,
+        oneStar: 0,
+        twoStar: 0,
+        freeStar: 0,
+        fourStar: 0,
+        bigStar: 0,
         paymentMultiplier: 0,
       },
       price: {
-        startPrice: 28,
-        pledgePrice: 28,
-        buyoutPrice: 28,
-        branchPrice: 28,
+        startPrice: 0,
+        pledgePrice: 0,
+        buyoutPrice: 0,
+        branchPrice: 0,
       },
       type: FieldType.TAX,
     },
@@ -804,6 +863,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       },
       name: 'apple',
       level: 0,
+      fieldGroupName: FieldGroupName.ELECTRONIC,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
     {
@@ -837,6 +898,8 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       },
       name: 'nokia',
       level: 0,
+      fieldGroupName: FieldGroupName.ELECTRONIC,
+      description: 'Стройте филиалы, чтобы увеличить ренту',
       type: FieldType.COMPANY,
     },
   ];

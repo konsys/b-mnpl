@@ -132,7 +132,6 @@ export const buyCompany = (field: IField): number => {
   sameGroupFieilds.map((v: IField) => {
     const index = getFieldIndex(v);
     v.owner.level = sameGroupFieilds.length || 0;
-    console.log('v.owner.level', v.owner.level);
 
     fieldsState[index] = { ...v, owner: { ...v.owner } };
   });

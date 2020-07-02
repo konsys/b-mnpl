@@ -216,8 +216,10 @@ export const mortgageNextRound = () => {
   const fields = fieldsState().fields;
   const r = fields.map((v: IField) => {
     return v.status && v.status.mortgaged > 1
-      ? { ...v, status: { ...v.status } }
-      : { ...v, status: undefined };
+      ? { ...v, status: { ...v.status, mortgaged: --v.status.mortgaged } }
+      : v.status && v.status.mortgaged
+      ? { ...v, status: undefined }
+      : { ...v };
   });
   return r;
 };

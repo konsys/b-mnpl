@@ -15,7 +15,9 @@ import {
   getActingField,
   isCompany,
   mortgage,
+  unMortgage,
   isMortgaged,
+  getFieldById,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -24,6 +26,7 @@ import {
   getActingPlayer,
   unjailPlayer,
   jailPlayer,
+  getPlayerMoneyById,
 } from 'src/utils/users.utils';
 // import { START_BONUS } from 'src/utils/board.params.utils';
 import { BoardSocket } from 'src/modules/socket/board.init';
@@ -208,6 +211,40 @@ export class BoardMessage {
       });
     } else {
       mortgage(payload.fieldId);
+    }
+    BoardSocket.emitMessage();
+  }
+
+  @SubscribeMessage(IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED)
+  async unMortgageField(client: Socket, payload: IFieldId): Promise<void> {
+    const player = getActingPlayer();
+    const field = getFieldById(payload.fieldId);
+
+    if (!isMyField(payload.fieldId)) {
+      setError({
+        code: ErrorCode.NotUserField,
+        message: 'Oops!',
+      });
+    } else if (!isCompany(payload.fieldId)) {
+      setError({
+        code: ErrorCode.CannotMortgageField,
+        message: 'Oops!',
+      });
+    } else if (!isMortgaged(payload.fieldId)) {
+      setError({
+        code: ErrorCode.CannotUnMortgageField,
+        message: 'Oops!',
+      });
+    } else if (
+      field.price &&
+      getPlayerMoneyById(player.userId) < field.price.buyoutPrice
+    ) {
+      setError({
+        code: ErrorCode.NotEnoughMoney,
+        message: 'Oops!',
+      });
+    } else {
+      unMortgage(payload.fieldId);
     }
     BoardSocket.emitMessage();
   }

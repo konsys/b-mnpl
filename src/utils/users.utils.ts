@@ -36,6 +36,12 @@ export const getPlayerIndexById = (userId: number) => {
   );
 };
 
+export const getPlayerMoneyById = (userId: number): number => {
+  const state = playersStore.getState().players;
+  const player = Array.isArray(state) && state.find((v) => v.userId === userId);
+  return (player && player.money) || 0;
+};
+
 export const updatePlayer = (player: IPlayer): boolean => {
   // Update BANK
   if (player.userId === BOARD_PARAMS.BANK_PLAYER_ID) {

@@ -6,4 +6,5 @@ export enum ErrorCode {
   'FieldIsMortgaged' = 105,
   'NotMyTurn' = 106,
   'CannotMortgageField' = 107,
+  'CannotUnMortgageField' = 108,
 }

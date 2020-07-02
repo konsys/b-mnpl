@@ -10,7 +10,10 @@ import {
   setTransactionEvent,
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
-import { mortgageFieldEvent } from 'src/stores/mortgage.store';
+import {
+  mortgageFieldEvent,
+  unMortgageFieldEvent,
+} from 'src/stores/mortgage.store';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
@@ -210,6 +213,31 @@ export const mortgage = (fieldId: number): void => {
     toUserId: player.userId,
     transactionId,
     userId: BOARD_PARAMS.BANK_PLAYER_ID,
+  });
+  transactMoneyEvent(transactionId);
+};
+
+export const unMortgage = (fieldId: number): void => {
+  const field = getFieldById(fieldId);
+  const player = getActingPlayer();
+  const fields = fieldsState().fields;
+  const fieldIndex = getFieldIndex(field);
+
+  unMortgageFieldEvent(field.fieldId);
+
+  fields[fieldIndex] = {
+    ...field,
+    owner: { ...field.owner, mortgaged: 0 },
+  };
+  updateAllFields(fields);
+
+  const transactionId = nanoid(4);
+  setTransactionEvent({
+    sum: field.price.buyoutPrice,
+    reason: `Unmortgage field ${field.name}`,
+    toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
+    transactionId,
+    userId: player.userId,
   });
   transactMoneyEvent(transactionId);
 };

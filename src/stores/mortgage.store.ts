@@ -9,6 +9,7 @@ export interface IMortgagesStore {
 }
 
 export const mortgageFieldEvent = MortgagesDomain.event<IMortgagesStore>();
+export const unMortgageFieldEvent = MortgagesDomain.event<number>();
 export const nextTurnMortgageEvent = MortgagesDomain.event<IMortgagesStore[]>();
 
 export const mortgagesStore = MortgagesDomain.store<IMortgagesStore[]>(null)

@@ -1,5 +1,5 @@
 import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
-import { IFieldPrice, IFieldRent } from 'src/types/board.types';
+import { IFieldPrice, IFieldRent } from 'src/types/Board/board.types';
 
 export enum FieldGroupName {
   IT = 'IT компании',

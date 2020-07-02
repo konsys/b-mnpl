@@ -1,4 +1,4 @@
-import { BoardMessage, IBoardEvent } from '../types/board.types';
+import { BoardMessage, IBoardEvent } from '../types/Board/board.types';
 import { playersStore } from 'src/stores/players.store';
 import { actionsStore } from 'src/stores/actions.store';
 import { getBoughtFields } from 'src/utils/fields.utils';

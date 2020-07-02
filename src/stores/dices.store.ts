@@ -4,7 +4,7 @@ import {
   updatePlayer,
   jailPlayer,
 } from 'src/utils/users.utils';
-import { JAIL_TURNS } from 'src/utils/board.params';
+import { JAIL_TURNS } from 'src/params/board.params';
 // import { random } from 'src/utils/common.utils';
 
 export interface IDicesStore {

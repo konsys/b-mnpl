@@ -6,7 +6,7 @@ import {
   START_BONUS,
   START_PASSING_BONUS,
   BANK_PLAYER_ID,
-} from './board.params';
+} from '../params/board.params';
 import { nanoid } from 'nanoid';
 
 export const getStartBonus = (toUserId: number, isStart = false) => {

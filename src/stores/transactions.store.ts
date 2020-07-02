@@ -1,6 +1,6 @@
 import { GameDomain } from 'src/stores/actions.store';
 import { getPlayerById, updatePlayer } from 'src/utils/users.utils';
-import { IMoneyTransaction } from 'src/types/board.types';
+import { IMoneyTransaction } from 'src/types/Board/board.types';
 import { ErrorCode } from 'src/utils/error.code';
 import { setError } from './error.store';
 const TransactionsDomain = GameDomain.domain('PlayersDomain');

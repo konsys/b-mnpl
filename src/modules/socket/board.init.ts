@@ -11,8 +11,8 @@ import {
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { IPlayer, OutcomeMessageType } from 'src/types/board.types';
-import { SocketActions } from 'src/types/game.types';
+import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
+import { SocketActions } from 'src/types/Game/game.types';
 import { createBoardMessage } from 'src/socket.messages/send.message';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
@@ -22,7 +22,7 @@ import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import { updateAllPLayers } from 'src/utils/users.utils';
 import { updateAllFields } from 'src/utils/fields.utils';
 import { _ } from 'lodash';
-import { BANK_PLAYER_ID } from 'src/utils/board.params';
+import { BANK_PLAYER_ID } from 'src/params/board.params';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()

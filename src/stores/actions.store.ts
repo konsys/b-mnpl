@@ -1,5 +1,8 @@
 import { createDomain } from 'effector';
-import { OutcomeMessageType, IncomeMessageType } from 'src/types/board.types';
+import {
+  OutcomeMessageType,
+  IncomeMessageType,
+} from 'src/types/Board/board.types';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;

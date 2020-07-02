@@ -1,5 +1,5 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { MsNames } from 'src/types/ms.types';
+import { MsNames } from 'src/types/MS/ms.types';
 import { FieldsService } from './fields.service';
 
 enum FieldsPaths {

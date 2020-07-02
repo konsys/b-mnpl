@@ -1,10 +1,15 @@
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
-import { IField, IMoneyTransaction } from 'src/types/board.types';
+import { IField, IMoneyTransaction } from 'src/types/Board/board.types';
 import { getActingPlayer } from './users.utils';
 import _ from 'lodash';
-import { BANK_PLAYER_ID } from './board.params';
+import { BANK_PLAYER_ID } from '../params/board.params';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { dicesStore } from 'src/stores/dices.store';
+import { nanoid } from 'nanoid';
+import {
+  setTransactionEvent,
+  transactMoneyEvent,
+} from 'src/stores/transactions.store';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
@@ -161,6 +166,26 @@ export const buyITCompany = (field: IField): number => {
 
   updateAllFields(fields);
   return field.price.startPrice;
+};
+
+export const mortgage = (): void => {
+  const field = getActingField();
+  const player = getActingPlayer();
+  const fields = fieldsState().fields;
+  const fieldIndex = getFieldIndex(field);
+
+  fields[fieldIndex] = { ...field, owner: { ...field.owner, mortgaged: true } };
+  updateAllFields(fields);
+
+  const transactionId = nanoid(4);
+  setTransactionEvent({
+    sum: field.price.pledgePrice,
+    reason: `Money for pledge ${field.name}`,
+    toUserId: player.userId,
+    transactionId,
+    userId: BANK_PLAYER_ID,
+  });
+  transactMoneyEvent(transactionId);
 };
 
 export const fieldsState = () => fieldsStore.getState();

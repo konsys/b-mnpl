@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { MsNames } from 'src/types/ms.types';
+import { MsNames } from 'src/types/MS/ms.types';
 import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { BoardSocket } from './board.init';

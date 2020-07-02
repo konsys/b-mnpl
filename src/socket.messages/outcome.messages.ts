@@ -8,7 +8,7 @@ import {
   IRollDicesMessage,
   IncomeMessageType,
   IUnJailPayingModal,
-} from 'src/types/board.types';
+} from 'src/types/Board/board.types';
 import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
 import { transactionStore } from 'src/stores/transactions.store';

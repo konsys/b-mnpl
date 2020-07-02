@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { FieldsMsController } from './fields.ms.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { MsNames } from 'src/types/ms.types';
+import { MsNames } from 'src/types/MS/ms.types';
 import { Transport, ClientsModule } from '@nestjs/microservices';
 
 @Module({

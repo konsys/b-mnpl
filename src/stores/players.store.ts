@@ -1,6 +1,6 @@
 import { GameDomain } from 'src/stores/actions.store';
-import { IPlayer } from 'src/types/board.types';
-import { BANK_PLAYER_ID } from 'src/utils/board.params';
+import { IPlayer } from 'src/types/Board/board.types';
+import { BANK_PLAYER_ID } from 'src/params/board.params';
 
 const PlayersDomain = GameDomain.domain('PlayersDomain');
 

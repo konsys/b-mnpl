@@ -1,7 +1,7 @@
 import { Controller, Inject, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
-import { MsPatterns, MsNames } from 'src/types/ms.types';
+import { MsPatterns, MsNames } from 'src/types/MS/ms.types';
 import { fieldsForSave } from 'src/entities/dbData';
 @Controller()
 export class FieldsService {

@@ -1,7 +1,7 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { IncomeMessageType, IFieldId } from 'src/types/board.types';
+import { IncomeMessageType, IFieldId } from 'src/types/Board/board.types';
 import { Socket } from 'socket.io';
-import { IActionId } from 'src/types/board.types';
+import { IActionId } from 'src/types/Board/board.types';
 import {
   isCompanyForSale,
   canBuyField,
@@ -25,7 +25,7 @@ import {
 } from 'src/utils/users.utils';
 // import { START_BONUS } from 'src/utils/board.params.utils';
 import { BoardSocket } from 'src/modules/socket/board.init';
-import { LINE_TRANSITION_TIMEOUT } from 'src/types/board.params';
+import { LINE_TRANSITION_TIMEOUT } from 'src/params/board.params';
 import {
   setTransactionEvent,
   transactMoneyEvent,
@@ -34,7 +34,7 @@ import {
 import { nanoid } from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
 import { dicesStore } from 'src/stores/dices.store';
-import { JAIL_TURNS } from 'src/utils/board.params';
+import { JAIL_TURNS } from 'src/params/board.params';
 import { getStartBonus } from 'src/utils/moneys.utils';
 
 @WebSocketGateway()

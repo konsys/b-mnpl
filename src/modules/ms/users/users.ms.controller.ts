@@ -5,7 +5,7 @@ import { Repository, FindManyOptions } from 'typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { MsPatterns } from 'src/types/ms.types';
+import { MsPatterns } from 'src/types/MS/ms.types';
 
 @Controller()
 export class UsersMsController {

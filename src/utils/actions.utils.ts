@@ -1,12 +1,11 @@
 import { actionsStore, updateAction } from 'src/stores/actions.store';
-import { OutcomeMessageType } from 'src/types/board.types';
+import { OutcomeMessageType } from 'src/types/Board/board.types';
 import { nanoid } from 'nanoid';
 import {
   findFieldByPosition,
   buyCompany,
   buyITCompany,
-  getActingField,
-  fieldsState,
+  mortgage,
 } from './fields.utils';
 import {
   getActingPlayer,
@@ -20,7 +19,7 @@ import {
   setTransactionEvent,
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
-import { BANK_PLAYER_ID } from './board.params';
+import { BANK_PLAYER_ID } from '../params/board.params';
 
 export const buyFieldModal = (): void => {
   const player = getActingPlayer();
@@ -66,19 +65,7 @@ export const unJailModal = (): void => {
 };
 
 export const mortgageField = (): void => {
-  const field = getActingField();
-  const player = getActingPlayer();
-  const fields = fieldsState().fields;
-
-  const transactionId = nanoid(4);
-  setTransactionEvent({
-    sum: field.price.pledgePrice,
-    reason: `Money for pledge ${field.name}`,
-    toUserId: player.userId,
-    transactionId,
-    userId: BANK_PLAYER_ID,
-  });
-  transactMoneyEvent(transactionId);
+  mortgage();
 };
 
 export const payUnJailModal = (): void => {

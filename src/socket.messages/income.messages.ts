@@ -13,6 +13,7 @@ import {
   isMyField,
   whosField,
   getActingField,
+  isCompany,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -139,12 +140,12 @@ export class BoardMessage {
       !isCompanyForSale() &&
         setError({
           code: ErrorCode.CompanyHasOwner,
-          message: 'Oop!',
+          message: 'Oops!',
         });
       !canBuyField() &&
         setError({
           code: ErrorCode.NotEnoughMoney,
-          message: 'Oop!',
+          message: 'Oops!',
         });
     }
 
@@ -167,7 +168,7 @@ export class BoardMessage {
     } else {
       setError({
         code: ErrorCode.NotEnoughMoney,
-        message: 'Oop!',
+        message: 'Oops!',
       });
     }
     BoardSocket.emitMessage();
@@ -185,6 +186,19 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.OUTCOME_MORTGAGE_FIELD_CLICKED)
   async mortgageField(client: Socket, payload: IFieldId): Promise<void> {
-    console.log(111, payload);
+    if (!isMyField()) {
+      setError({
+        code: ErrorCode.NotUserField,
+        message: 'Oops!',
+      });
+    } else if (!isCompany()) {
+      setError({
+        code: ErrorCode.CannotMortgageField,
+        message: 'Oops!',
+      });
+    } else {
+      Action.mortgageField();
+    }
+    BoardSocket.emitMessage();
   }
 }

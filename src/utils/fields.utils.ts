@@ -75,6 +75,10 @@ export const noActionField = (): boolean => {
 export const isCompanyForSale = (): boolean =>
   isCompany() && !getActingField().owner;
 
+export const isFieldMortaged = () => {
+  
+};
+
 export const isMyField = (): boolean =>
   isCompany() &&
   getActingField().owner &&

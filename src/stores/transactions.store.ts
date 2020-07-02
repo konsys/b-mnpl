@@ -31,7 +31,7 @@ export const transactionStore = TransactionsDomain.store<ITransactionStore | nul
     if (transaction.sum > player.money) {
       setError({
         code: ErrorCode.NotEnoughMoney,
-        message: 'Oop!',
+        message: 'Oops!',
       });
       return;
     }
@@ -46,7 +46,7 @@ export const transactionStore = TransactionsDomain.store<ITransactionStore | nul
     } else {
       setError({
         code: ErrorCode.WrongTranactionId,
-        message: 'Oop!',
+        message: 'Oops!',
       });
     }
   })

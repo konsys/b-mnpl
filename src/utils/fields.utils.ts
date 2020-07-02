@@ -41,6 +41,11 @@ export const isStartPass = (): boolean => {
 };
 export const isJail = (): boolean => getActingField().type === FieldType.JAIL;
 
+export const isMortgaged = (fieldId: number): boolean => {
+  const field = getFieldById(fieldId);
+  return field && field.owner && field.owner.mortgaged > 0;
+};
+
 export const isCompany = (fieldId: number): boolean => {
   const type = getFieldById(fieldId).type;
   return (

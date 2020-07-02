@@ -15,6 +15,7 @@ import {
   getActingField,
   isCompany,
   mortgage,
+  isMortgaged,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -191,16 +192,25 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED)
   async mortgageField(client: Socket, payload: IFieldId): Promise<void> {
     if (!isMyField(payload.fieldId)) {
+      console.log(888);
       setError({
         code: ErrorCode.NotUserField,
         message: 'Oops!',
       });
     } else if (!isCompany(payload.fieldId)) {
+      console.log(222);
+      setError({
+        code: ErrorCode.CannotMortgageField,
+        message: 'Oops!',
+      });
+    } else if (isMortgaged(payload.fieldId)) {
+      console.log(333);
       setError({
         code: ErrorCode.CannotMortgageField,
         message: 'Oops!',
       });
     } else {
+      console.log(121212);
       mortgage(payload.fieldId);
     }
     BoardSocket.emitMessage();

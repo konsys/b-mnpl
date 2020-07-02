@@ -194,16 +194,13 @@ export class BoardMessage {
         code: ErrorCode.NotUserField,
         message: 'Oops!',
       });
-      console.log(11);
-    } else if (!isCompany()) {
+    } else if (!isCompany(payload.fieldId)) {
       setError({
         code: ErrorCode.CannotMortgageField,
         message: 'Oops!',
       });
-      console.log(22);
     } else {
-      Action.mortgageField();
-      console.log(33);
+      Action.mortgageField(payload.fieldId);
     }
     BoardSocket.emitMessage();
   }

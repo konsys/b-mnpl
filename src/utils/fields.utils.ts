@@ -40,12 +40,13 @@ export const isStartPass = (): boolean => {
 };
 export const isJail = (): boolean => getActingField().type === FieldType.JAIL;
 
-export const isCompany = (): boolean => {
-  const type = getActingField().type;
+export const isCompany = (fieldId: number): boolean => {
+  const type = getFieldById(fieldId).type;
   return (
-    type === FieldType.COMPANY ||
-    type === FieldType.AUTO ||
-    type === FieldType.IT
+    type &&
+    (type === FieldType.COMPANY ||
+      type === FieldType.AUTO ||
+      type === FieldType.IT)
   );
 };
 
@@ -71,17 +72,24 @@ export const noActionField = (): boolean => {
 };
 
 export const isCompanyForSale = (fieldId: number): boolean =>
-  isCompany() && getFieldById(fieldId) && !getFieldById(fieldId).owner;
+  isCompany(getActingField().fieldId) &&
+  getFieldById(fieldId) &&
+  !getFieldById(fieldId).owner;
 
 export const isFieldMortaged = () => {};
 
-export const isMyField = (fieldId: number): boolean =>
-  isCompany() &&
-  getFieldById(fieldId).owner &&
-  getActingField().owner.userId === getActingPlayer().userId;
+export const isMyField = (fieldId: number): boolean => {
+  const field = getFieldById(fieldId);
+  return (
+    isCompany(fieldId) &&
+    field.owner &&
+    field.owner.userId === getActingPlayer().userId
+  );
+};
 
 export const canBuyField = (): boolean =>
-  isCompany() && getActingField().price.startPrice <= getActingPlayer().money;
+  isCompany(getActingField().fieldId) &&
+  getActingField().price.startPrice <= getActingPlayer().money;
 
 export const getFieldIndex = (field: IField): number =>
   fieldsState().fields.findIndex((v) => v.fieldId === field.fieldId);
@@ -172,8 +180,8 @@ export const buyITCompany = (field: IField): number => {
   return field.price.startPrice;
 };
 
-export const mortgage = (): void => {
-  const field = getActingField();
+export const mortgage = (fieldId: number): void => {
+  const field = getFieldById(fieldId);
   const player = getActingPlayer();
   const fields = fieldsState().fields;
   const fieldIndex = getFieldIndex(field);

@@ -64,8 +64,8 @@ export const unJailModal = (): void => {
   });
 };
 
-export const mortgageField = (): void => {
-  mortgage();
+export const mortgageField = (fieldId: number): void => {
+  mortgage(fieldId);
 };
 
 export const payUnJailModal = (): void => {

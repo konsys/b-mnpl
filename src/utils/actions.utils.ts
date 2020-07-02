@@ -6,6 +6,7 @@ import {
   buyCompany,
   buyITCompany,
   mortgage,
+  mortgageNextRound,
 } from './fields.utils';
 import {
   getActingPlayer,
@@ -117,7 +118,7 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   let nextIndex = index;
 
   // Set Next round
-  nextIndex === 0 ? setNewRoundEvent() : setNextRound();
+  nextIndex === 0 && mortgageNextRound();
 
   // Doubled dices and jail
   if (player.movesLeft > 0) {

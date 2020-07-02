@@ -28,4 +28,4 @@ export const boardStore = BoardDomain.store<IBoardStore>({
   }))
   .reset(resetBoardStoreEvent);
 
-boardStore.updates.watch((v) => console.log(12121212, v));
+// boardStore.updates.watch((v) => console.log('boardStoreWatch', v));

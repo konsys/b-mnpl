@@ -10,10 +10,7 @@ import {
   setTransactionEvent,
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
-import {
-  mortgageFieldEvent,
-  unMortgageFieldEvent,
-} from 'src/stores/mortgage.store';
+import { version } from 'os';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
@@ -198,11 +195,6 @@ export const mortgage = (fieldId: number): void => {
   const fields = fieldsState().fields;
   const fieldIndex = getFieldIndex(field);
 
-  mortgageFieldEvent({
-    fieldId: field.fieldId,
-    mortgaged: BOARD_PARAMS.MORTGAGE_TURNS,
-  });
-
   fields[fieldIndex] = {
     ...field,
     owner: { ...field.owner, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },
@@ -220,13 +212,21 @@ export const mortgage = (fieldId: number): void => {
   transactMoneyEvent(transactionId);
 };
 
+export const mortgageNextRound = () => {
+  const fields = fieldsState().fields;
+  const r = fields.map((v: IField) => {
+    return v.owner.mortgaged > 1
+      ? { ...v, owner: { ...v.owner } }
+      : { ...v, owner: undefined };
+  });
+  return r;
+};
+
 export const unMortgage = (fieldId: number): void => {
   const field = getFieldById(fieldId);
   const player = getActingPlayer();
   const fields = fieldsState().fields;
   const fieldIndex = getFieldIndex(field);
-
-  unMortgageFieldEvent(field.fieldId);
 
   fields[fieldIndex] = {
     ...field,

@@ -10,6 +10,7 @@ import {
   setTransactionEvent,
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
+import { mortgageFieldEvent } from 'src/stores/mortgage.store';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
@@ -186,7 +187,15 @@ export const mortgage = (fieldId: number): void => {
   const fields = fieldsState().fields;
   const fieldIndex = getFieldIndex(field);
 
-  fields[fieldIndex] = { ...field, owner: { ...field.owner, mortgaged: 15 } };
+  mortgageFieldEvent({
+    fieldId: field.fieldId,
+    mortgaged: BOARD_PARAMS.MORTGAGE_TURNS,
+  });
+
+  fields[fieldIndex] = {
+    ...field,
+    owner: { ...field.owner, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },
+  };
   updateAllFields(fields);
 
   const transactionId = nanoid(4);

@@ -14,6 +14,7 @@ import {
   whosField,
   getActingField,
   isCompany,
+  mortgage,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -200,7 +201,7 @@ export class BoardMessage {
         message: 'Oops!',
       });
     } else {
-      Action.mortgageField(payload.fieldId);
+      mortgage(payload.fieldId);
     }
     BoardSocket.emitMessage();
   }

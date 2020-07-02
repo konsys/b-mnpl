@@ -64,10 +64,6 @@ export const unJailModal = (): void => {
   });
 };
 
-export const mortgageField = (fieldId: number): void => {
-  mortgage(fieldId);
-};
-
 export const payUnJailModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,

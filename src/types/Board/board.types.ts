@@ -228,7 +228,7 @@ export interface BoardMessage {
 }
 
 export interface IField extends BoardFieldsEntity {
-  owner?: IFieldStatus;
+  status?: IFieldStatus;
 }
 
 export interface IMoneyTransaction {

@@ -89,7 +89,7 @@ export const payModalHandler = (): IPayRentModal => {
     text: `${transaction && transaction.reason + '. '}`,
     field: field,
     money: sum,
-    toUserId: field.owner && field.owner.userId,
+    toUserId: field.status && field.status.userId,
     _id: action.actionId,
     isModal: true,
   };

@@ -89,7 +89,7 @@ export class BoardMessage {
             sum:
               field && field.rent && field.rent.paymentMultiplier
                 ? dices.sum * (field.price && field.rent.paymentMultiplier)
-                : (field.owner && field.rent.baseRent) || 0,
+                : (field.status && field.rent.baseRent) || 0,
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Пришло время платить по счетам',

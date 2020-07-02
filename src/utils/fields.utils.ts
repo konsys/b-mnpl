@@ -31,8 +31,8 @@ export const getFieldIndexById = (fieldId: number) =>
 export const getBoughtFields = () =>
   fieldsStore
     .getState()
-    .fields.filter((v) => v.owner && v.owner.userId > 0)
-    .map((v) => v.owner);
+    .fields.filter((v) => v.status && v.status.userId > 0)
+    .map((v) => v.status);
 
 export const isTax = (): boolean => getActingField().type === FieldType.TAX;
 
@@ -46,7 +46,7 @@ export const isJail = (): boolean => getActingField().type === FieldType.JAIL;
 
 export const isMortgaged = (fieldId: number): boolean => {
   const field = getFieldById(fieldId);
-  return field && field.owner && field.owner.mortgaged > 0;
+  return field && field.status && field.status.mortgaged > 0;
 };
 
 export const isCompany = (fieldId: number): boolean => {
@@ -67,12 +67,12 @@ export const moneyTransactionParams = (): IMoneyTransaction => {
   return {
     sum: -field.price,
     userId: getActingPlayer().userId,
-    toUserId: (field.owner && field.owner.userId) || 0,
+    toUserId: (field.status && field.status.userId) || 0,
   };
 };
 
 export const whosField = (): number =>
-  (getActingField().owner && getActingField().owner.userId) ||
+  (getActingField().status && getActingField().status.userId) ||
   BOARD_PARAMS.BANK_PLAYER_ID;
 
 export const noActionField = (): boolean => {
@@ -83,7 +83,7 @@ export const noActionField = (): boolean => {
 export const isCompanyForSale = (fieldId: number): boolean =>
   isCompany(getActingField().fieldId) &&
   getFieldById(fieldId) &&
-  !getFieldById(fieldId).owner;
+  !getFieldById(fieldId).status;
 
 export const isFieldMortaged = () => {};
 
@@ -91,8 +91,8 @@ export const isMyField = (fieldId: number): boolean => {
   const field = getFieldById(fieldId);
   return (
     isCompany(fieldId) &&
-    field.owner &&
-    field.owner.userId === getActingPlayer().userId
+    field.status &&
+    field.status.userId === getActingPlayer().userId
   );
 };
 
@@ -124,8 +124,8 @@ const getSameGroupFields = (field: IField) => {
     fields.filter(
       (v) =>
         v.fieldGroup === field.fieldGroup &&
-        v.owner &&
-        v.owner.userId === user.userId,
+        v.status &&
+        v.status.userId === user.userId,
     ),
     field,
   );
@@ -138,7 +138,7 @@ export const buyCompany = (field: IField): number => {
 
   const sameGroupFieilds = getSameGroupFields(field);
 
-  field.owner = {
+  field.status = {
     fieldId: field.fieldId,
     userId: user.userId,
     level: 0,
@@ -148,9 +148,9 @@ export const buyCompany = (field: IField): number => {
 
   sameGroupFieilds.map((v: IField) => {
     const index = getFieldIndex(v);
-    v.owner.level = sameGroupFieilds.length || 0;
+    v.status.level = sameGroupFieilds.length || 0;
 
-    fields[index] = { ...v, owner: { ...v.owner } };
+    fields[index] = { ...v, status: { ...v.status } };
   });
 
   fields[fieldIndex] = field;
@@ -166,7 +166,7 @@ export const buyITCompany = (field: IField): number => {
 
   const sameGroupFieilds = getSameGroupFields(field);
 
-  field.owner = {
+  field.status = {
     fieldId: field.fieldId,
     userId: user.userId,
     level: 0,
@@ -179,7 +179,7 @@ export const buyITCompany = (field: IField): number => {
 
     fields[index] = {
       ...v,
-      owner: { ...v.owner },
+      status: { ...v.status },
     };
   });
 
@@ -197,7 +197,7 @@ export const mortgage = (fieldId: number): void => {
 
   fields[fieldIndex] = {
     ...field,
-    owner: { ...field.owner, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },
+    status: { ...field.status, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },
   };
   updateAllFields(fields);
 
@@ -215,9 +215,9 @@ export const mortgage = (fieldId: number): void => {
 export const mortgageNextRound = () => {
   const fields = fieldsState().fields;
   const r = fields.map((v: IField) => {
-    return v.owner.mortgaged > 1
-      ? { ...v, owner: { ...v.owner } }
-      : { ...v, owner: undefined };
+    return v.status && v.status.mortgaged > 1
+      ? { ...v, status: { ...v.status } }
+      : { ...v, status: undefined };
   });
   return r;
 };
@@ -230,7 +230,7 @@ export const unMortgage = (fieldId: number): void => {
 
   fields[fieldIndex] = {
     ...field,
-    owner: { ...field.owner, mortgaged: 0 },
+    status: { ...field.status, mortgaged: 0 },
   };
   updateAllFields(fields);
 

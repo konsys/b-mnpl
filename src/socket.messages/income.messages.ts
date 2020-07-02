@@ -184,7 +184,7 @@ export class BoardMessage {
     }, LINE_TRANSITION_TIMEOUT * 2);
   }
 
-  @SubscribeMessage(IncomeMessageType.OUTCOME_MORTGAGE_FIELD_CLICKED)
+  @SubscribeMessage(IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED)
   async mortgageField(client: Socket, payload: IFieldId): Promise<void> {
     if (!isMyField()) {
       setError({

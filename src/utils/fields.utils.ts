@@ -2,23 +2,12 @@ import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { IField, IMoneyTransaction } from 'src/types/board.types';
 import { getActingPlayer } from './users.utils';
 import _ from 'lodash';
-import {
-  ONE_AUTO_PERCENT,
-  TWO_AUTO_PERCENT,
-  FREE_AUTO_PERCENT,
-  FOUR_AUTO_PERCENT,
-  ONE_FIELD_PERCENT,
-  TWO_FIELD_PERCENT,
-  FREE_FIELD_PERCENT,
-  ONE_IT_FIELD_MULT,
-  TWO_IT_FIELD_MULT,
-  BANK_PLAYER_ID,
-} from './board.params';
+import { BANK_PLAYER_ID } from './board.params';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { dicesStore } from 'src/stores/dices.store';
 
 export const findFieldByPosition = (fieldPosition: number) =>
-  fieldsStore.getState().fields.find((v) => v.fieldPosition === fieldPosition);
+  fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
 
 export const getActingField = (): IField => {
   const user = getActingPlayer();
@@ -75,9 +64,7 @@ export const noActionField = (): boolean => {
 export const isCompanyForSale = (): boolean =>
   isCompany() && !getActingField().owner;
 
-export const isFieldMortaged = () => {
-  
-};
+export const isFieldMortaged = () => {};
 
 export const isMyField = (): boolean =>
   isCompany() &&
@@ -88,16 +75,16 @@ export const canBuyField = (): boolean =>
   isCompany() && getActingField().price.startPrice <= getActingPlayer().money;
 
 export const getFieldIndex = (field: IField): number =>
-  fieldsStore.getState().fields.findIndex((v) => v.fieldId === field.fieldId);
+  fieldsState().fields.findIndex((v) => v.fieldId === field.fieldId);
 
 export const updateField = (field: IField) => {
-  const fields = fieldsStore.getState().fields;
+  const fields = fieldsState().fields;
   fields[getFieldIndex(field)] = field;
   updateAllFields(fields);
 };
 
 export const updateAllFields = (fields: IField[]) => {
-  const version = fieldsStore.getState().version + 1;
+  const version = fieldsState().version + 1;
   setFieldsEvent({
     version,
     fields,
@@ -105,10 +92,10 @@ export const updateAllFields = (fields: IField[]) => {
 };
 
 const getSameGroupFields = (field: IField) => {
-  const fieldsState = fieldsStore.getState().fields;
+  const fields = fieldsState().fields;
   const user = getActingPlayer();
   return _.concat(
-    fieldsState.filter(
+    fields.filter(
       (v) =>
         v.fieldGroup === field.fieldGroup &&
         v.owner &&
@@ -120,7 +107,7 @@ const getSameGroupFields = (field: IField) => {
 
 export const buyCompany = (field: IField): number => {
   const user = getActingPlayer();
-  const fieldsState = fieldsStore.getState().fields;
+  const fields = fieldsState().fields;
   const fieldIndex = getFieldIndex(field);
 
   const sameGroupFieilds = getSameGroupFields(field);
@@ -137,18 +124,18 @@ export const buyCompany = (field: IField): number => {
     const index = getFieldIndex(v);
     v.owner.level = sameGroupFieilds.length || 0;
 
-    fieldsState[index] = { ...v, owner: { ...v.owner } };
+    fields[index] = { ...v, owner: { ...v.owner } };
   });
 
-  fieldsState[fieldIndex] = field;
+  fields[fieldIndex] = field;
 
-  updateAllFields(fieldsState);
+  updateAllFields(fields);
   return field.price.startPrice;
 };
 
 export const buyITCompany = (field: IField): number => {
   const user = getActingPlayer();
-  const fieldsState = fieldsStore.getState().fields;
+  const fields = fieldsState().fields;
   const fieldIndex = getFieldIndex(field);
 
   const sameGroupFieilds = getSameGroupFields(field);
@@ -164,14 +151,16 @@ export const buyITCompany = (field: IField): number => {
   sameGroupFieilds.map((v: IField) => {
     const index = getFieldIndex(v);
 
-    fieldsState[index] = {
+    fields[index] = {
       ...v,
       owner: { ...v.owner },
     };
   });
 
-  fieldsState[fieldIndex] = field;
+  fields[fieldIndex] = field;
 
-  updateAllFields(fieldsState);
+  updateAllFields(fields);
   return field.price.startPrice;
 };
+
+export const fieldsState = () => fieldsStore.getState();

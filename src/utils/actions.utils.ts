@@ -6,6 +6,7 @@ import {
   buyCompany,
   buyITCompany,
   getActingField,
+  fieldsState,
 } from './fields.utils';
 import {
   getActingPlayer,
@@ -67,6 +68,7 @@ export const unJailModal = (): void => {
 export const mortgageField = (): void => {
   const field = getActingField();
   const player = getActingPlayer();
+  const fields = fieldsState().fields;
 
   const transactionId = nanoid(4);
   setTransactionEvent({
@@ -124,9 +126,6 @@ export const startAuctionModal = (): void => {
   });
 };
 
-export const getNextArrayIndex = (index: number, array: any[]) =>
-  index < array.length - 1 ? index + 1 : 0;
-
 export const switchPlayerTurn = (unJail: boolean = false): void => {
   const players = playersStore.getState().players;
   const index = getActingPlayerIndex();
@@ -158,3 +157,6 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   player = getActingPlayer();
   player.jailed ? unJailModal() : rollDicesModal();
 };
+
+const getNextArrayIndex = (index: number, array: any[]) =>
+  index < array.length - 1 ? index + 1 : 0;

@@ -214,14 +214,20 @@ export const mortgage = (fieldId: number): void => {
 
 export const mortgageNextRound = () => {
   const fields = fieldsState().fields;
-  const r = fields.map((v: IField) => {
-    return v.status && v.status.mortgaged > 1
-      ? { ...v, status: { ...v.status, mortgaged: --v.status.mortgaged } }
-      : v.status && v.status.mortgaged
-      ? { ...v, status: undefined }
-      : { ...v };
+  let r = false;
+  const res = fields.map((v: IField) => {
+    if (v.status && v.status.mortgaged > 1) {
+      return { ...v, status: { ...v.status, mortgaged: --v.status.mortgaged } };
+    } else if (v.status) {
+      console.log(3232323);
+      r = true;
+      return { ...v, status: undefined };
+    }
+    return v;
   });
-  return r;
+  // console.log(r);
+  r && console.log(r[5]);
+  return res;
 };
 
 export const unMortgage = (fieldId: number): void => {

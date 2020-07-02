@@ -28,6 +28,9 @@ export const getActingField = (): IField => {
 export const getFieldById = (fieldId: number) =>
   fieldsState().fields.find((v) => v.fieldId === fieldId);
 
+export const getFieldIndexById = (fieldId: number) =>
+  fieldsState().fields.findIndex((v) => v.fieldId === fieldId);
+
 export const getBoughtFields = () =>
   fieldsStore
     .getState()

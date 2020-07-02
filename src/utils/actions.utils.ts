@@ -20,6 +20,7 @@ import {
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
 import { BOARD_PARAMS } from '../params/board.params';
+import { setNewRoundEvent, setNextRound } from 'src/stores/board.store';
 
 export const buyFieldModal = (): void => {
   const player = getActingPlayer();
@@ -114,6 +115,9 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   const index = getActingPlayerIndex();
   let player = getActingPlayer();
   let nextIndex = index;
+
+  // Set Next round
+  nextIndex === 0 ? setNewRoundEvent() : setNextRound();
 
   // Doubled dices and jail
   if (player.movesLeft > 0) {

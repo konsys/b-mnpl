@@ -9,4 +9,6 @@ export const BOARD_PARAMS = {
 
   BANK_PLAYER_ID: 0,
   MORTGAGE_TURNS: 15,
+
+  START_MONEY: 4000,
 };

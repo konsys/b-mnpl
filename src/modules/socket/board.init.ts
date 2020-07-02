@@ -22,6 +22,7 @@ import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import { updateAllPLayers } from 'src/utils/users.utils';
 import { updateAllFields } from 'src/utils/fields.utils';
 import { _ } from 'lodash';
+import { BOARD_PARAMS } from 'src/params/board.params';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -79,7 +80,7 @@ export class BoardSocket
           jailed: 0,
           unjailAttempts: 0,
           meanPosition: 0,
-          money: 4000,
+          money: BOARD_PARAMS.START_MONEY,
           creditPayRound: false,
           creditNextTakeRound: 0,
           score: 0,
@@ -108,6 +109,7 @@ export class BoardSocket
 
       updateAllPLayers(resultPlayers);
       updateAllFields(await this.fieldsService.getInitialFields());
+
       errorStore.updates.watch((error) => this.emitError(error));
     } catch (err) {
       this.logger.error(`Error: ${JSON.stringify(err)}`);

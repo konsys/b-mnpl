@@ -3,7 +3,6 @@ import { MsNames } from 'src/types/MS/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from './users.service';
 import { playersStore } from 'src/stores/players.store';
-import { BANK_PLAYER_ID } from 'src/params/board.params';
 
 @Controller(MsNames.USERS)
 export class UsersController {

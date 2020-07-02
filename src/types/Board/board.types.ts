@@ -186,7 +186,7 @@ export interface IFieldStatus {
   fieldId: number;
   userId: number;
   level: number;
-  mortgaged: boolean;
+  mortgaged: number;
   sameGroup: number;
 }
 

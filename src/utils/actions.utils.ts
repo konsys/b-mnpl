@@ -19,7 +19,7 @@ import {
   setTransactionEvent,
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
-import { BANK_PLAYER_ID } from '../params/board.params';
+import { BOARD_PARAMS } from '../params/board.params';
 
 export const buyFieldModal = (): void => {
   const player = getActingPlayer();
@@ -48,7 +48,7 @@ export const buyField = (): void => {
   setTransactionEvent({
     sum,
     reason: `Купить ${field.name}`,
-    toUserId: BANK_PLAYER_ID,
+    toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
     transactionId,
     userId: user.userId,
   });

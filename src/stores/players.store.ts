@@ -1,6 +1,6 @@
 import { GameDomain } from 'src/stores/actions.store';
 import { IPlayer } from 'src/types/Board/board.types';
-import { BANK_PLAYER_ID } from 'src/params/board.params';
+import { BOARD_PARAMS } from 'src/params/board.params';
 
 const PlayersDomain = GameDomain.domain('PlayersDomain');
 
@@ -12,7 +12,7 @@ export interface IPlayersStore {
 export const resetBankEvent = PlayersDomain.event();
 export const setBankEvent = PlayersDomain.event<IPlayer>();
 export const bankStore = PlayersDomain.store<IPlayer>({
-  userId: BANK_PLAYER_ID,
+  userId: BOARD_PARAMS.BANK_PLAYER_ID,
   money: 100000,
   vip: true,
   registrationType: 'none',
@@ -56,6 +56,6 @@ export const playersStore = PlayersDomain.store<IPlayersStore>({
 //   const r =
 //     v.players &&
 //     v.players.length &&
-//     v.players.find((v) => v.userId !== BANK_PLAYER_ID);
+//     v.players.find((v) => v.userId !==BOARD_PARAMS.BANK_PLAYER_ID);
 //   console.log('playersStoreWatch', r && r.money);
 // });

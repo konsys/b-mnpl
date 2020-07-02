@@ -22,7 +22,6 @@ import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import { updateAllPLayers } from 'src/utils/users.utils';
 import { updateAllFields } from 'src/utils/fields.utils';
 import { _ } from 'lodash';
-import { BANK_PLAYER_ID } from 'src/params/board.params';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()

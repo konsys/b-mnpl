@@ -25,7 +25,6 @@ import {
 } from 'src/utils/users.utils';
 // import { START_BONUS } from 'src/utils/board.params.utils';
 import { BoardSocket } from 'src/modules/socket/board.init';
-import { LINE_TRANSITION_TIMEOUT } from 'src/params/board.params';
 import {
   setTransactionEvent,
   transactMoneyEvent,
@@ -34,7 +33,7 @@ import {
 import { nanoid } from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
 import { dicesStore } from 'src/stores/dices.store';
-import { JAIL_TURNS } from 'src/params/board.params';
+import { BOARD_PARAMS } from 'src/params/board.params';
 import { getStartBonus } from 'src/utils/moneys.utils';
 
 @WebSocketGateway()
@@ -49,7 +48,7 @@ export class BoardMessage {
       this.tokenMovedAfterClick();
       setTimeout(() => {
         BoardSocket.emitMessage();
-      }, LINE_TRANSITION_TIMEOUT * 3);
+      }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
     }
   }
 
@@ -113,7 +112,7 @@ export class BoardMessage {
           Action.payTaxModal();
         }
       } else {
-        if (player.unjailAttempts < JAIL_TURNS) {
+        if (player.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {
           Action.switchPlayerTurn();
         } else {
           setTransactionEvent({
@@ -181,7 +180,7 @@ export class BoardMessage {
     setTimeout(() => {
       Action.rollDicesModal();
       BoardSocket.emitMessage();
-    }, LINE_TRANSITION_TIMEOUT * 2);
+    }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 2);
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED)

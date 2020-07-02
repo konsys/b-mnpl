@@ -5,17 +5,12 @@ import {
   setBankEvent,
 } from 'src/stores/players.store';
 import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
-import {
-  JAIL_POSITION,
-  UN_JAIL_PRICE,
-  JAIL_TURNS,
-  BANK_PLAYER_ID,
-} from '../params/board.params';
+import { BOARD_PARAMS } from '../params/board.params';
 import { nanoid } from 'nanoid';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
 
 export const getPlayerById = (userId: number): IPlayer =>
-  userId === BANK_PLAYER_ID
+  userId === BOARD_PARAMS.BANK_PLAYER_ID
     ? bankStore.getState()
     : playersStore.getState().players.find((v) => v.userId === userId);
 
@@ -43,7 +38,7 @@ export const getPlayerIndexById = (userId: number) => {
 
 export const updatePlayer = (player: IPlayer): boolean => {
   // Update BANK
-  if (player.userId === BANK_PLAYER_ID) {
+  if (player.userId === BOARD_PARAMS.BANK_PLAYER_ID) {
     return (
       setBankEvent({
         ...player,
@@ -85,8 +80,10 @@ export const unjailPlayer = (newPosition?: number) => {
   return updatePlayer({
     ...player,
     // if there is position then unjailed by rolling dices
-    money: newPosition ? player.money : player.money - UN_JAIL_PRICE,
-    meanPosition: newPosition || JAIL_POSITION,
+    money: newPosition
+      ? player.money
+      : player.money - BOARD_PARAMS.UN_JAIL_PRICE,
+    meanPosition: newPosition || BOARD_PARAMS.JAIL_POSITION,
     jailed: 0,
     unjailAttempts: 0,
   });
@@ -96,10 +93,10 @@ export const jailPlayer = (): boolean => {
   const player = getActingPlayer();
   return updatePlayer({
     ...player,
-    jailed: JAIL_TURNS,
+    jailed: BOARD_PARAMS.JAIL_TURNS,
     unjailAttempts: 0,
     doublesRolledAsCombo: 0,
     movesLeft: 0,
-    meanPosition: JAIL_POSITION,
+    meanPosition: BOARD_PARAMS.JAIL_POSITION,
   });
 };

@@ -2,7 +2,7 @@ import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
 import { IField, IMoneyTransaction } from 'src/types/Board/board.types';
 import { getActingPlayer } from './users.utils';
 import _ from 'lodash';
-import { BANK_PLAYER_ID } from '../params/board.params';
+import { BOARD_PARAMS } from '../params/board.params';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { dicesStore } from 'src/stores/dices.store';
 import { nanoid } from 'nanoid';
@@ -59,7 +59,8 @@ export const moneyTransactionParams = (): IMoneyTransaction => {
 };
 
 export const whosField = (): number =>
-  (getActingField().owner && getActingField().owner.userId) || BANK_PLAYER_ID;
+  (getActingField().owner && getActingField().owner.userId) ||
+  BOARD_PARAMS.BANK_PLAYER_ID;
 
 export const noActionField = (): boolean => {
   const field = getActingField();
@@ -121,7 +122,7 @@ export const buyCompany = (field: IField): number => {
     fieldId: field.fieldId,
     userId: user.userId,
     level: 0,
-    mortgaged: false,
+    mortgaged: 0,
     sameGroup: sameGroupFieilds.length,
   };
 
@@ -149,7 +150,7 @@ export const buyITCompany = (field: IField): number => {
     fieldId: field.fieldId,
     userId: user.userId,
     level: 0,
-    mortgaged: false,
+    mortgaged: 0,
     sameGroup: sameGroupFieilds.length,
   };
 
@@ -174,7 +175,7 @@ export const mortgage = (): void => {
   const fields = fieldsState().fields;
   const fieldIndex = getFieldIndex(field);
 
-  fields[fieldIndex] = { ...field, owner: { ...field.owner, mortgaged: true } };
+  fields[fieldIndex] = { ...field, owner: { ...field.owner, mortgaged: 15 } };
   updateAllFields(fields);
 
   const transactionId = nanoid(4);
@@ -183,7 +184,7 @@ export const mortgage = (): void => {
     reason: `Money for pledge ${field.name}`,
     toUserId: player.userId,
     transactionId,
-    userId: BANK_PLAYER_ID,
+    userId: BOARD_PARAMS.BANK_PLAYER_ID,
   });
   transactMoneyEvent(transactionId);
 };

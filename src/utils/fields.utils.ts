@@ -21,6 +21,9 @@ export const getActingField = (): IField => {
   return field;
 };
 
+export const getFieldById = (fieldId: number) =>
+  fieldsState().fields.find((v) => v.fieldId === fieldId);
+
 export const getBoughtFields = () =>
   fieldsStore
     .getState()
@@ -67,14 +70,14 @@ export const noActionField = (): boolean => {
   return field.type === FieldType.TAKE_REST || field.type === FieldType.CASINO;
 };
 
-export const isCompanyForSale = (): boolean =>
-  isCompany() && !getActingField().owner;
+export const isCompanyForSale = (fieldId: number): boolean =>
+  isCompany() && getFieldById(fieldId) && !getFieldById(fieldId).owner;
 
 export const isFieldMortaged = () => {};
 
-export const isMyField = (): boolean =>
+export const isMyField = (fieldId: number): boolean =>
   isCompany() &&
-  getActingField().owner &&
+  getFieldById(fieldId).owner &&
   getActingField().owner.userId === getActingPlayer().userId;
 
 export const canBuyField = (): boolean =>

@@ -70,13 +70,16 @@ export class BoardMessage {
 
         if (noActionField()) {
           Action.switchPlayerTurn();
-        } else if (isMyField()) {
+        } else if (isMyField(field.fieldId)) {
           Action.switchPlayerTurn();
-        } else if (isCompanyForSale()) {
+        } else if (isCompanyForSale(field.fieldId)) {
           Action.buyFieldModal();
-        } else if (!isCompanyForSale() && isMyField()) {
+        } else if (
+          !isCompanyForSale(field.fieldId) &&
+          isMyField(field.fieldId)
+        ) {
           Action.switchPlayerTurn();
-        } else if (whosField() && !isMyField()) {
+        } else if (whosField() && !isMyField(field.fieldId)) {
           setTransactionEvent({
             sum:
               field && field.rent && field.rent.paymentMultiplier
@@ -132,11 +135,12 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    if (isCompanyForSale() && canBuyField()) {
+    const field = getActingField();
+    if (isCompanyForSale(field.fieldId) && canBuyField()) {
       Action.buyField();
       Action.switchPlayerTurn();
     } else {
-      !isCompanyForSale() &&
+      !isCompanyForSale(field.fieldId) &&
         setError({
           code: ErrorCode.CompanyHasOwner,
           message: 'Oops!',
@@ -185,18 +189,21 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED)
   async mortgageField(client: Socket, payload: IFieldId): Promise<void> {
-    if (!isMyField()) {
+    if (!isMyField(payload.fieldId)) {
       setError({
         code: ErrorCode.NotUserField,
         message: 'Oops!',
       });
+      console.log(11);
     } else if (!isCompany()) {
       setError({
         code: ErrorCode.CannotMortgageField,
         message: 'Oops!',
       });
+      console.log(22);
     } else {
       Action.mortgageField();
+      console.log(33);
     }
     BoardSocket.emitMessage();
   }

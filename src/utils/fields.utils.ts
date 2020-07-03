@@ -214,13 +214,11 @@ export const mortgage = (fieldId: number): void => {
 
 export const mortgageNextRound = () => {
   const fields = fieldsState().fields;
-  let r = false;
   const res = fields.map((v: IField) => {
     if (v.status && v.status.mortgaged > 1) {
       return { ...v, status: { ...v.status, mortgaged: --v.status.mortgaged } };
-    } else if (v.status) {
-      r = true;
-      return { ...v, status: undefined };
+    } else if (v.status && v.status.mortgaged === 1) {
+      v.status && delete v.status;
     }
     return v;
   });

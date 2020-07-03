@@ -219,14 +219,11 @@ export const mortgageNextRound = () => {
     if (v.status && v.status.mortgaged > 1) {
       return { ...v, status: { ...v.status, mortgaged: --v.status.mortgaged } };
     } else if (v.status) {
-      console.log(3232323);
       r = true;
       return { ...v, status: undefined };
     }
     return v;
   });
-  // console.log(r);
-  r && console.log(r[5]);
   return res;
 };
 

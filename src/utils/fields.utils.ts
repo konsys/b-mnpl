@@ -192,14 +192,9 @@ export const buyITCompany = (field: IField): number => {
 export const mortgage = (fieldId: number): void => {
   const field = getFieldById(fieldId);
   const player = getActingPlayer();
-  const fields = fieldsState().fields;
-  const fieldIndex = getFieldIndex(field);
+  field.status = { ...field.status, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS };
 
-  fields[fieldIndex] = {
-    ...field,
-    status: { ...field.status, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },
-  };
-  updateAllFields(fields);
+  updateField(field);
 
   const transactionId = nanoid(4);
   setTransactionEvent({
@@ -228,19 +223,42 @@ export const mortgageNextRound = () => {
 export const unMortgage = (fieldId: number): void => {
   const field = getFieldById(fieldId);
   const player = getActingPlayer();
-  const fields = fieldsState().fields;
-  const fieldIndex = getFieldIndex(field);
 
-  fields[fieldIndex] = {
-    ...field,
-    status: { ...field.status, mortgaged: 0 },
-  };
-  updateAllFields(fields);
+  field.status = { ...field.status, mortgaged: 0 };
+
+  updateField(field);
 
   const transactionId = nanoid(4);
   setTransactionEvent({
     sum: field.price.buyoutPrice,
     reason: `Unmortgage field ${field.name}`,
+    toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
+    transactionId,
+    userId: player.userId,
+  });
+  transactMoneyEvent(transactionId);
+};
+
+export const levelUpField = (fieldId: number): void => {
+  const field = getFieldById(fieldId);
+  const player = getActingPlayer();
+  // const fields = fieldsState().fields;
+  // const fieldIndex = getFieldIndex(field);
+
+  // console.log(1112222, fieldIndex);
+  // fields[fieldIndex] = {
+  //   ...field,
+  //   status: { ...field.status, level: ++field.status.level },
+  // };
+  // updateAllFields(fields);
+
+  field.status = { ...field.status, level: ++field.status.level };
+
+  updateField(field);
+  const transactionId = nanoid(4);
+  setTransactionEvent({
+    sum: field.price.branchPrice,
+    reason: `Buy branch ${field.name}`,
     toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
     transactionId,
     userId: player.userId,

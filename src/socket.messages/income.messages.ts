@@ -18,6 +18,7 @@ import {
   unMortgage,
   isMortgaged,
   getFieldById,
+  levelUpField,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -245,6 +246,40 @@ export class BoardMessage {
       });
     } else {
       unMortgage(payload.fieldId);
+    }
+    BoardSocket.emitMessage();
+  }
+
+  @SubscribeMessage(IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED)
+  async levelUpField(client: Socket, payload: IFieldId): Promise<void> {
+    const player = getActingPlayer();
+    const field = getFieldById(payload.fieldId);
+
+    if (!isMyField(payload.fieldId)) {
+      setError({
+        code: ErrorCode.NotUserField,
+        message: 'Oops!',
+      });
+    } else if (!isCompany(payload.fieldId)) {
+      setError({
+        code: ErrorCode.CannotMortgageField,
+        message: 'Oops!',
+      });
+    } else if (
+      field.price &&
+      getPlayerMoneyById(player.userId) < field.price.branchPrice
+    ) {
+      setError({
+        code: ErrorCode.NotEnoughMoney,
+        message: 'Oops!',
+      });
+    } else if (field.price && field.level >= 4) {
+      setError({
+        code: ErrorCode.MaxFieldLevel,
+        message: 'Oops!',
+      });
+    } else {
+      levelUpField(payload.fieldId);
     }
     BoardSocket.emitMessage();
   }

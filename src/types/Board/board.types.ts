@@ -36,6 +36,7 @@ export enum IncomeMessageType {
   INCOME_ROLL_DICES_CLICKED = 'rollDicesClicked',
   INCOME_MORTGAGE_FIELD_CLICKED = 'mortgageFieldClicked',
   INCOME_UN_MORTGAGE_FIELD_CLICKED = 'unMortgageFieldClicked',
+  INCOME_LEVEL_UP_FIELD_CLICKED = 'levelUpFieldClicked',
 }
 
 export enum OutcomeMessageType {

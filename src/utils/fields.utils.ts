@@ -141,14 +141,14 @@ export const buyCompany = (field: IField): number => {
   field.status = {
     fieldId: field.fieldId,
     userId: user.userId,
-    level: 0,
+    branches: 0,
     mortgaged: 0,
     sameGroup: sameGroupFieilds.length,
   };
 
   sameGroupFieilds.map((v: IField) => {
     const index = getFieldIndex(v);
-    v.status.level = sameGroupFieilds.length || 0;
+    v.status.sameGroup = sameGroupFieilds.length || 0;
 
     fields[index] = { ...v, status: { ...v.status } };
   });
@@ -169,7 +169,7 @@ export const buyITCompany = (field: IField): number => {
   field.status = {
     fieldId: field.fieldId,
     userId: user.userId,
-    level: 0,
+    branches: 0,
     mortgaged: 0,
     sameGroup: sameGroupFieilds.length,
   };
@@ -242,9 +242,10 @@ export const unMortgage = (fieldId: number): void => {
 export const levelUpField = (fieldId: number): void => {
   const field = getFieldById(fieldId);
   const player = getActingPlayer();
-  field.status = { ...field.status, level: ++field.status.level };
+  field.status = { ...field.status, branches: ++field.level };
 
   updateField(field);
+  console.log(111111, field);
   const transactionId = nanoid(4);
   setTransactionEvent({
     sum: field.price.branchPrice,

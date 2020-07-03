@@ -187,7 +187,7 @@ interface BoardStatus {
 export interface IFieldStatus {
   fieldId: number;
   userId: number;
-  level: number;
+  branches: number;
   mortgaged: number;
   sameGroup: number;
 }

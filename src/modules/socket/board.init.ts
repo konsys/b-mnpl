@@ -119,7 +119,7 @@ export class BoardSocket
         status: v.type === FieldType.COMPANY && {
           fieldId: v.fieldId,
           userId: 2,
-          level: 1,
+          branches: 0,
           mortgaged: 0,
           sameGroup: 3,
         },

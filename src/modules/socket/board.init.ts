@@ -11,7 +11,11 @@ import {
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
+import {
+  IPlayer,
+  OutcomeMessageType,
+  IField,
+} from 'src/types/Board/board.types';
 import { SocketActions } from 'src/types/Game/game.types';
 import { createBoardMessage } from 'src/socket.messages/send.message';
 import { UsersService } from '../../api.gateway/users/users.service';
@@ -23,6 +27,7 @@ import { updateAllPLayers } from 'src/utils/users.utils';
 import { updateAllFields } from 'src/utils/fields.utils';
 import { _ } from 'lodash';
 import { BOARD_PARAMS } from 'src/params/board.params';
+import { FieldType } from 'src/entities/board.fields.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -80,7 +85,7 @@ export class BoardSocket
           jailed: 0,
           unjailAttempts: 0,
           meanPosition: 0,
-          money: BOARD_PARAMS.START_MONEY,
+          money: BOARD_PARAMS.INIT_MONEY,
           creditPayRound: false,
           creditNextTakeRound: 0,
           score: 0,
@@ -108,7 +113,19 @@ export class BoardSocket
       }
 
       updateAllPLayers(resultPlayers);
-      updateAllFields(await this.fieldsService.getInitialFields());
+      const fields: IField[] = await this.fieldsService.getInitialFields();
+      const r = fields.map((v) => ({
+        ...v,
+        status: v.type === FieldType.COMPANY && {
+          fieldId: v.fieldId,
+          userId: 2,
+          level: 1,
+          mortgaged: 0,
+          sameGroup: 3,
+        },
+      }));
+      // console.log(111, r);
+      updateAllFields(r);
 
       errorStore.updates.watch((error) => this.emitError(error));
     } catch (err) {

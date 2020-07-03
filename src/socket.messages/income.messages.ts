@@ -273,7 +273,7 @@ export class BoardMessage {
         code: ErrorCode.NotEnoughMoney,
         message: 'Oops!',
       });
-    } else if (field.price && field.level >= 4) {
+    } else if (field.price && field.status.branches >= 5) {
       setError({
         code: ErrorCode.MaxFieldLevel,
         message: 'Oops!',

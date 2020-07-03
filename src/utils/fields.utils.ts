@@ -242,16 +242,6 @@ export const unMortgage = (fieldId: number): void => {
 export const levelUpField = (fieldId: number): void => {
   const field = getFieldById(fieldId);
   const player = getActingPlayer();
-  // const fields = fieldsState().fields;
-  // const fieldIndex = getFieldIndex(field);
-
-  // console.log(1112222, fieldIndex);
-  // fields[fieldIndex] = {
-  //   ...field,
-  //   status: { ...field.status, level: ++field.status.level },
-  // };
-  // updateAllFields(fields);
-
   field.status = { ...field.status, level: ++field.status.level };
 
   updateField(field);

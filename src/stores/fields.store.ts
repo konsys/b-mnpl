@@ -18,4 +18,6 @@ export const fieldsStore = FieldsDomain.store<IFieldsStore>({
   .on(setFieldsEvent, (_, data) => data)
   .reset(resetFieldsEvent);
 
-// fieldsStore.watch((v) => console.log('fieldsStore', v.fields && v.fields[5]));
+// fieldsStore.updates.watch((v) =>
+//   console.log('fieldsStore', v.fields && v.fields[1]),
+// );

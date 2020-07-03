@@ -105,6 +105,7 @@ export const getFieldIndex = (field: IField): number =>
 
 export const updateField = (field: IField) => {
   const fields = fieldsState().fields;
+
   fields[getFieldIndex(field)] = field;
   updateAllFields(fields);
 };
@@ -242,10 +243,9 @@ export const unMortgage = (fieldId: number): void => {
 export const levelUpField = (fieldId: number): void => {
   const field = getFieldById(fieldId);
   const player = getActingPlayer();
-  field.status = { ...field.status, branches: ++field.level };
+  field.status = { ...field.status, branches: ++field.status.branches };
 
   updateField(field);
-  console.log(111111, field);
   const transactionId = nanoid(4);
   setTransactionEvent({
     sum: field.price.branchPrice,

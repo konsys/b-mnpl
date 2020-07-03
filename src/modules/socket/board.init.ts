@@ -116,15 +116,15 @@ export class BoardSocket
       const fields: IField[] = await this.fieldsService.getInitialFields();
       const r = fields.map((v) => ({
         ...v,
-        status: v.type === FieldType.COMPANY && {
-          fieldId: v.fieldId,
-          userId: 2,
-          branches: 0,
-          mortgaged: 0,
-          sameGroup: 3,
-        },
+        status: v.type === FieldType.COMPANY &&
+          v.fieldGroup === 1 && {
+            fieldId: v.fieldId,
+            userId: 2,
+            branches: 0,
+            mortgaged: 0,
+            sameGroup: 3,
+          },
       }));
-      // console.log(111, r);
       updateAllFields(r);
 
       errorStore.updates.watch((error) => this.emitError(error));

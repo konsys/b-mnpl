@@ -150,17 +150,39 @@ export const getPlayerGroupFields = (
 export const getFieldsByGroup = (group: number) =>
   fieldsState().fields.filter((v: IField) => v.fieldGroup === group);
 
+export const getNotMortgagedFieldsByGroup = (group: number, user: IPlayer) =>
+  fieldsState().fields.filter(
+    (v: IField) =>
+      v.fieldGroup === group &&
+      v.status &&
+      v.status.mortgaged === 0 &&
+      user.userId === v.status.userId,
+  );
+
 export const buyCompany = (field: IField): number => {
   const user = getActingPlayer();
 
-  field.status = {
-    fieldId: field.fieldId,
-    userId: user.userId,
-    branches: 0,
-    mortgaged: 0,
-    sameGroup: getSameGroupFields(field, user).length,
-    fieldActions: [IFieldAction.MORTGAGE],
-  };
+  const sameGroup = getSameGroupFields(field, user);
+
+  const fieldActions = [IFieldAction.MORTGAGE];
+
+  const notMortgagedGroup = getNotMortgagedFieldsByGroup(
+    field.fieldGroup,
+    user,
+  );
+  sameGroup.length === notMortgagedGroup.length &&
+    fieldActions.push(IFieldAction.LEVEL_UP);
+
+  sameGroup.map((v) => {
+    v.status = {
+      fieldId: v.fieldId,
+      userId: user.userId,
+      branches: 0,
+      mortgaged: 0,
+      sameGroup: sameGroup.length,
+      fieldActions,
+    };
+  });
 
   updateField(field);
   return field.price.startPrice;
@@ -183,7 +205,11 @@ export const buyITCompany = (field: IField): number => {
 export const mortgage = (fieldId: number): void => {
   const field = getFieldById(fieldId);
   const player = getActingPlayer();
-  field.status = { ...field.status, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS };
+  field.status = {
+    ...field.status,
+    mortgaged: BOARD_PARAMS.MORTGAGE_TURNS,
+    fieldActions: [IFieldAction.UNMORTGAGE],
+  };
 
   updateField(field);
 

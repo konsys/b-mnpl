@@ -259,7 +259,6 @@ export class BoardMessage {
     const field = getFieldById(payload.fieldId);
     const group = getFieldsByGroup(field.fieldGroup);
     const playerGroup = getPlayerGroupFields(field, player);
-    console.log(1111, group.length, playerGroup.length);
     if (group.length !== playerGroup.length) {
       setError({
         code: ErrorCode.NoMonopoly,

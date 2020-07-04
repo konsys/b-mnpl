@@ -3,25 +3,15 @@ import { IncomeMessageType, IFieldId } from 'src/types/Board/board.types';
 import { Socket } from 'socket.io';
 import { IActionId } from 'src/types/Board/board.types';
 import {
-  isCompanyForSale,
-  canBuyField,
-  isTax,
-  isStartPass,
   noActionField,
-  isJail,
-  isChance,
-  isMyField,
   whosField,
   getActingField,
-  isCompany,
   mortgage,
   unMortgage,
-  isMortgaged,
   getFieldById,
   levelUpField,
   getFieldsByGroup,
   getPlayerGroupFields,
-  canMortgage,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -45,6 +35,18 @@ import { dicesStore } from 'src/stores/dices.store';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { getStartBonus } from 'src/utils/moneys.utils';
 import { FieldType } from 'src/entities/board.fields.entity';
+import {
+  isCompany,
+  isMyField,
+  isCompanyForSale,
+  canBuyField,
+  isChance,
+  isTax,
+  isJail,
+  canMortgage,
+  isMortgaged,
+  isStartPass,
+} from 'src/utils/checks.utils';
 
 @WebSocketGateway()
 export class BoardMessage {

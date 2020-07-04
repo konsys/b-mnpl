@@ -182,24 +182,40 @@ export const mortgageNextRound = () => {
 };
 
 export const unMortgage = (fieldId: number): void => {
-  const field = getFieldById(fieldId);
-  const player = getActingPlayer();
+  const f = getFieldById(fieldId);
+  const p = getActingPlayer();
+  const notMortgaged = getNotMortgagedFieldsByGroup(f.fieldGroup, p);
+  const group = getFieldsByGroup(f.fieldGroup);
+  const fieldActions =
+    notMortgaged.length + 1 === group.length ? [IFieldAction.LEVEL_UP] : [];
 
-  field.status = {
-    ...field.status,
-    mortgaged: 0,
-    fieldActions: [IFieldAction.MORTGAGE],
-  };
+  const groupFields = getPlayerGroupFields(f, p);
+  groupFields.map((v) => {
+    v.status = {
+      ...v.status,
+      mortgaged: v.fieldId === fieldId ? 0 : v.status.mortgaged,
+      fieldActions: _.concat(
+        [
+          v.fieldId === fieldId
+            ? IFieldAction.MORTGAGE
+            : v.status.mortgaged
+            ? IFieldAction.UNMORTGAGE
+            : IFieldAction.MORTGAGE,
+        ],
+        fieldActions,
+      ),
+    };
 
-  updateField(field);
+    updateField(v);
+  });
 
   const transactionId = nanoid(4);
   setTransactionEvent({
-    sum: field.price.buyoutPrice,
-    reason: `Unmortgage field ${field.name}`,
+    sum: f.price.buyoutPrice,
+    reason: `Unmortgage field ${f.name}`,
     toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
     transactionId,
-    userId: player.userId,
+    userId: p.userId,
   });
   transactMoneyEvent(transactionId);
 };

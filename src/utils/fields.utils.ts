@@ -99,8 +99,6 @@ export const buyCompany = (field: IField): number => {
     user,
   );
 
-  console.log(sameGroup.length, notMortgagedGroup.length);
-
   group.length === sameGroup.length &&
     sameGroup.length === notMortgagedGroup.length + 1 &&
     fieldActions.push(IFieldAction.LEVEL_UP);
@@ -111,7 +109,6 @@ export const buyCompany = (field: IField): number => {
       userId: user.userId,
       branches: 0,
       mortgaged: v.status.mortgaged || 0,
-      sameGroup: sameGroup.length + 1,
       fieldActions: _.concat(fieldActions, [
         v.status.mortgaged > 0
           ? IFieldAction.UNMORTGAGE
@@ -131,7 +128,6 @@ export const buyITCompany = (field: IField): number => {
     fieldId: field.fieldId,
     userId: user.userId,
     branches: 0,
-    sameGroup: getPlayerGroupFields(field, user).length + 1,
     mortgaged: 0,
   };
   updateField(field);
@@ -142,14 +138,24 @@ export const mortgage = (fieldId: number): void => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
   const groupFields = getPlayerGroupFields(f, p);
+  groupFields.map((v) => {
+    v.status = {
+      ...v.status,
+      mortgaged:
+        v.fieldId === fieldId
+          ? BOARD_PARAMS.MORTGAGE_TURNS
+          : v.status.mortgaged,
+      fieldActions: [
+        v.fieldId === fieldId
+          ? IFieldAction.UNMORTGAGE
+          : v.status.mortgaged
+          ? IFieldAction.UNMORTGAGE
+          : IFieldAction.MORTGAGE,
+      ],
+    };
 
-  f.status = {
-    ...f.status,
-    mortgaged: BOARD_PARAMS.MORTGAGE_TURNS,
-    fieldActions: [IFieldAction.UNMORTGAGE],
-  };
-
-  updateField(f);
+    updateField(v);
+  });
 
   const transactionId = nanoid(4);
   setTransactionEvent({

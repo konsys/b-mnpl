@@ -39,7 +39,6 @@ export interface IFieldStatus {
   userId: number;
   branches: number;
   mortgaged: number;
-  sameGroup: number;
   fieldActions?: IFieldAction[];
 }
 

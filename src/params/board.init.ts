@@ -15,6 +15,7 @@ import {
   IPlayer,
   OutcomeMessageType,
   IField,
+  IFieldAction,
 } from 'src/types/Board/board.types';
 import { SocketActions } from 'src/types/Game/game.types';
 import { createBoardMessage } from 'src/socket.messages/send.message';
@@ -114,7 +115,7 @@ export class BoardSocket
 
       updateAllPLayers(resultPlayers);
       const fields: IField[] = await this.fieldsService.getInitialFields();
-      const r = fields.map((v, k) => ({
+      const r = fields.map((v: IField, k) => ({
         ...v,
         status: v.type === FieldType.COMPANY &&
           v.fieldGroup === 1 &&
@@ -123,7 +124,8 @@ export class BoardSocket
             userId: 2,
             branches: 0,
             mortgaged: 0,
-            sameGroup: 3,
+            sameGroup: 2,
+            fieldActions: [IFieldAction.MORTGAGE],
           },
       }));
       updateAllFields(r);

@@ -20,6 +20,7 @@ import {
   getFieldById,
   levelUpField,
   getFieldsByGroup,
+  getPlayerGroupFields,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -256,9 +257,10 @@ export class BoardMessage {
   async levelUpField(client: Socket, payload: IFieldId): Promise<void> {
     const player = getActingPlayer();
     const field = getFieldById(payload.fieldId);
-    console.log(1111, field);
     const group = getFieldsByGroup(field.fieldGroup);
-    if (group.length !== field.status.sameGroup) {
+    const playerGroup = getPlayerGroupFields(field, player);
+    console.log(1111, group.length, playerGroup.length);
+    if (group.length !== playerGroup.length) {
       setError({
         code: ErrorCode.NoMonopoly,
         message: 'Oops!',

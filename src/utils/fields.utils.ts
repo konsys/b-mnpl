@@ -1,5 +1,10 @@
 import { fieldsStore, setFieldsEvent } from 'src/stores/fields.store';
-import { IField, IMoneyTransaction } from 'src/types/Board/board.types';
+import {
+  IField,
+  IMoneyTransaction,
+  IPlayer,
+  IFieldAction,
+} from 'src/types/Board/board.types';
 import { getActingPlayer } from './users.utils';
 import _ from 'lodash';
 import { BOARD_PARAMS } from '../params/board.params';
@@ -118,78 +123,60 @@ export const updateAllFields = (fields: IField[]) => {
   });
 };
 
-const getSameGroupFields = (field: IField) => {
+const getSameGroupFields = (field: IField, player: IPlayer): IField[] => {
   const fields = fieldsState().fields;
-  const user = getActingPlayer();
   return _.concat(
     fields.filter(
       (v) =>
         v.fieldGroup === field.fieldGroup &&
         v.status &&
-        v.status.userId === user.userId,
+        v.status.userId === player.userId,
     ),
     field,
   );
 };
+
+export const getPlayerGroupFields = (
+  field: IField,
+  player: IPlayer,
+): IField[] =>
+  fieldsState().fields.filter(
+    (v) =>
+      v.fieldGroup === field.fieldGroup &&
+      v.status &&
+      v.status.userId === player.userId,
+  );
 
 export const getFieldsByGroup = (group: number) =>
   fieldsState().fields.filter((v: IField) => v.fieldGroup === group);
 
 export const buyCompany = (field: IField): number => {
   const user = getActingPlayer();
-  const fields = fieldsState().fields;
-  const fieldIndex = getFieldIndex(field);
-
-  const sameGroupFieilds = getSameGroupFields(field);
 
   field.status = {
     fieldId: field.fieldId,
     userId: user.userId,
     branches: 0,
     mortgaged: 0,
-    sameGroup: sameGroupFieilds.length,
+    sameGroup: getSameGroupFields(field, user).length,
+    fieldActions: [IFieldAction.MORTGAGE],
   };
 
-  sameGroupFieilds.map((v: IField) => {
-    const index = getFieldIndex(v);
-    v.status.sameGroup = sameGroupFieilds.length || 0;
-
-    fields[index] = { ...v, status: { ...v.status } };
-  });
-
-  fields[fieldIndex] = field;
-
-  updateAllFields(fields);
+  updateField(field);
   return field.price.startPrice;
 };
 
 export const buyITCompany = (field: IField): number => {
   const user = getActingPlayer();
-  const fields = fieldsState().fields;
-  const fieldIndex = getFieldIndex(field);
-
-  const sameGroupFieilds = getSameGroupFields(field);
 
   field.status = {
     fieldId: field.fieldId,
     userId: user.userId,
     branches: 0,
+    sameGroup: getSameGroupFields(field, user).length,
     mortgaged: 0,
-    sameGroup: sameGroupFieilds.length,
   };
-
-  sameGroupFieilds.map((v: IField) => {
-    const index = getFieldIndex(v);
-
-    fields[index] = {
-      ...v,
-      status: { ...v.status },
-    };
-  });
-
-  fields[fieldIndex] = field;
-
-  updateAllFields(fields);
+  updateField(field);
   return field.price.startPrice;
 };
 

@@ -27,6 +27,22 @@ export type Contract = {
   _id: string;
 };
 
+export enum IFieldAction {
+  MORTGAGE,
+  UNMORTGAGE,
+  LEVEL_UP,
+  LEVEL_DOWN,
+}
+
+export interface IFieldStatus {
+  fieldId: number;
+  userId: number;
+  branches: number;
+  mortgaged: number;
+  sameGroup: number;
+  fieldActions?: IFieldAction[];
+}
+
 export enum IncomeMessageType {
   INCOME_TOKEN_TRANSITION_COMPLETED = 'changeTokenPositionCompleted',
   INCOME_AUCTION_START_CLICKED = 'auctionStartClicked',
@@ -182,14 +198,6 @@ interface BoardStatus {
   moveStatus?: MoveStatus;
   fields: IFieldStatus[];
   timers?: BoardTimers;
-}
-
-export interface IFieldStatus {
-  fieldId: number;
-  userId: number;
-  branches: number;
-  mortgaged: number;
-  sameGroup: number;
 }
 
 export interface IFieldRent {

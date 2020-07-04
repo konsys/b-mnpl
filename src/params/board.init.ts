@@ -114,10 +114,11 @@ export class BoardSocket
 
       updateAllPLayers(resultPlayers);
       const fields: IField[] = await this.fieldsService.getInitialFields();
-      const r = fields.map((v) => ({
+      const r = fields.map((v, k) => ({
         ...v,
         status: v.type === FieldType.COMPANY &&
-          v.fieldGroup === 1 && {
+          v.fieldGroup === 1 &&
+          k < 4 && {
             fieldId: v.fieldId,
             userId: 2,
             branches: 0,

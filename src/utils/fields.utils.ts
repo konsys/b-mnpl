@@ -241,7 +241,11 @@ export const unMortgage = (fieldId: number): void => {
   const field = getFieldById(fieldId);
   const player = getActingPlayer();
 
-  field.status = { ...field.status, mortgaged: 0 };
+  field.status = {
+    ...field.status,
+    mortgaged: 0,
+    fieldActions: [IFieldAction.MORTGAGE],
+  };
 
   updateField(field);
 

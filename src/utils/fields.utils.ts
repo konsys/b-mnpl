@@ -91,7 +91,7 @@ export const buyCompany = (field: IField): number => {
   const user = getActingPlayer();
 
   const sameGroup = _.concat(getPlayerGroupFields(field, user), field);
-
+  const group = getFieldsByGroup(field.fieldGroup);
   const fieldActions = [];
 
   const notMortgagedGroup = getNotMortgagedFieldsByGroup(
@@ -101,7 +101,8 @@ export const buyCompany = (field: IField): number => {
 
   console.log(sameGroup.length, notMortgagedGroup.length);
 
-  sameGroup.length === notMortgagedGroup.length + 1 &&
+  group.length === sameGroup.length &&
+    sameGroup.length === notMortgagedGroup.length + 1 &&
     fieldActions.push(IFieldAction.LEVEL_UP);
 
   sameGroup.map((v: IField) => {

@@ -9,14 +9,12 @@ import { getActingPlayer } from './users.utils';
 import _ from 'lodash';
 import { BOARD_PARAMS } from '../params/board.params';
 import { FieldType } from 'src/entities/board.fields.entity';
-import { dicesStore } from 'src/stores/dices.store';
+
 import { nanoid } from 'nanoid';
 import {
   setTransactionEvent,
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
-import { version } from 'os';
-
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
 
@@ -48,15 +46,6 @@ export const moneyTransactionParams = (): IMoneyTransaction => {
   };
 };
 
-export const whosField = (): number =>
-  (getActingField().status && getActingField().status.userId) ||
-  BOARD_PARAMS.BANK_PLAYER_ID;
-
-export const noActionField = (): boolean => {
-  const field = getActingField();
-  return field.type === FieldType.TAKE_REST || field.type === FieldType.CASINO;
-};
-
 export const getFieldIndex = (field: IField): number =>
   fieldsState().fields.findIndex((v) => v.fieldId === field.fieldId);
 
@@ -75,19 +64,6 @@ export const updateAllFields = (fields: IField[]) => {
   });
 };
 
-const getSameGroupFields = (field: IField, player: IPlayer): IField[] => {
-  const fields = fieldsState().fields;
-  return _.concat(
-    fields.filter(
-      (v) =>
-        v.fieldGroup === field.fieldGroup &&
-        v.status &&
-        v.status.userId === player.userId,
-    ),
-    field,
-  );
-};
-
 export const getPlayerGroupFields = (
   field: IField,
   player: IPlayer,
@@ -98,11 +74,6 @@ export const getPlayerGroupFields = (
       v.status &&
       v.status.userId === player.userId,
   );
-
-export const groupHasBranches = (f: IField): boolean =>
-  getFieldsByGroup(f.fieldGroup).filter(
-    (v) => v.status && v.status.branches > 0,
-  ).length > 0;
 
 export const getFieldsByGroup = (group: number) =>
   fieldsState().fields.filter((v: IField) => v.fieldGroup === group);
@@ -119,25 +90,32 @@ export const getNotMortgagedFieldsByGroup = (group: number, user: IPlayer) =>
 export const buyCompany = (field: IField): number => {
   const user = getActingPlayer();
 
-  const sameGroup = getSameGroupFields(field, user);
+  const sameGroup = _.concat(getPlayerGroupFields(field, user), field);
 
-  const fieldActions = [IFieldAction.MORTGAGE];
+  const fieldActions = [];
 
   const notMortgagedGroup = getNotMortgagedFieldsByGroup(
     field.fieldGroup,
     user,
   );
+
+  console.log(sameGroup.length, notMortgagedGroup.length);
+
   sameGroup.length === notMortgagedGroup.length + 1 &&
     fieldActions.push(IFieldAction.LEVEL_UP);
 
-  sameGroup.map((v) => {
+  sameGroup.map((v: IField) => {
     v.status = {
       fieldId: v.fieldId,
       userId: user.userId,
       branches: 0,
-      mortgaged: 0,
-      sameGroup: sameGroup.length,
-      fieldActions,
+      mortgaged: v.status.mortgaged || 0,
+      sameGroup: sameGroup.length + 1,
+      fieldActions: _.concat(fieldActions, [
+        v.status.mortgaged > 0
+          ? IFieldAction.UNMORTGAGE
+          : IFieldAction.MORTGAGE,
+      ]),
     };
     updateField(v);
   });
@@ -152,7 +130,7 @@ export const buyITCompany = (field: IField): number => {
     fieldId: field.fieldId,
     userId: user.userId,
     branches: 0,
-    sameGroup: getSameGroupFields(field, user).length,
+    sameGroup: getPlayerGroupFields(field, user).length + 1,
     mortgaged: 0,
   };
   updateField(field);
@@ -160,21 +138,23 @@ export const buyITCompany = (field: IField): number => {
 };
 
 export const mortgage = (fieldId: number): void => {
-  const field = getFieldById(fieldId);
-  const player = getActingPlayer();
-  field.status = {
-    ...field.status,
+  const f = getFieldById(fieldId);
+  const p = getActingPlayer();
+  const groupFields = getPlayerGroupFields(f, p);
+
+  f.status = {
+    ...f.status,
     mortgaged: BOARD_PARAMS.MORTGAGE_TURNS,
     fieldActions: [IFieldAction.UNMORTGAGE],
   };
 
-  updateField(field);
+  updateField(f);
 
   const transactionId = nanoid(4);
   setTransactionEvent({
-    sum: field.price.pledgePrice,
-    reason: `Money for pledge ${field.name}`,
-    toUserId: player.userId,
+    sum: f.price.pledgePrice,
+    reason: `Money for pledge ${f.name}`,
+    toUserId: p.userId,
     transactionId,
     userId: BOARD_PARAMS.BANK_PLAYER_ID,
   });

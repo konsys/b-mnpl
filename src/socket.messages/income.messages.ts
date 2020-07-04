@@ -3,8 +3,6 @@ import { IncomeMessageType, IFieldId } from 'src/types/Board/board.types';
 import { Socket } from 'socket.io';
 import { IActionId } from 'src/types/Board/board.types';
 import {
-  noActionField,
-  whosField,
   getActingField,
   mortgage,
   unMortgage,
@@ -20,9 +18,7 @@ import {
   getActingPlayer,
   unjailPlayer,
   jailPlayer,
-  getPlayerMoneyById,
 } from 'src/utils/users.utils';
-// import { START_BONUS } from 'src/utils/board.params.utils';
 import { BoardSocket } from 'src/params/board.init';
 import {
   setTransactionEvent,
@@ -34,7 +30,6 @@ import { getCurrentAction } from 'src/stores/actions.store';
 import { dicesStore } from 'src/stores/dices.store';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { getStartBonus } from 'src/utils/moneys.utils';
-import { FieldType } from 'src/entities/board.fields.entity';
 import {
   isCompany,
   isMyField,
@@ -44,8 +39,11 @@ import {
   isTax,
   isJail,
   canMortgage,
-  isMortgaged,
+  canUnMortgage,
   isStartPass,
+  whosField,
+  noActionField,
+  canLevelUp,
 } from 'src/utils/checks.utils';
 
 @WebSocketGateway()
@@ -217,27 +215,9 @@ export class BoardMessage {
     const player = getActingPlayer();
     const field = getFieldById(payload.fieldId);
 
-    if (!isMyField(payload.fieldId)) {
-      setError({
-        code: ErrorCode.NotUserField,
-        message: 'Oops!',
-      });
-    } else if (!isCompany(payload.fieldId)) {
-      setError({
-        code: ErrorCode.CannotMortgageField,
-        message: 'Oops!',
-      });
-    } else if (!isMortgaged(payload.fieldId)) {
+    if (!canUnMortgage(payload.fieldId)) {
       setError({
         code: ErrorCode.CannotUnMortgageField,
-        message: 'Oops!',
-      });
-    } else if (
-      field.price &&
-      getPlayerMoneyById(player.userId) < field.price.buyoutPrice
-    ) {
-      setError({
-        code: ErrorCode.NotEnoughMoney,
         message: 'Oops!',
       });
     } else {
@@ -252,35 +232,7 @@ export class BoardMessage {
     const field = getFieldById(payload.fieldId);
     const group = getFieldsByGroup(field.fieldGroup);
     const playerGroup = getPlayerGroupFields(field, player);
-    if (group.length !== playerGroup.length) {
-      setError({
-        code: ErrorCode.NoMonopoly,
-        message: 'Oops!',
-      });
-    } else if (!isMyField(payload.fieldId)) {
-      setError({
-        code: ErrorCode.NotUserField,
-        message: 'Oops!',
-      });
-    } else if (!isCompany(payload.fieldId)) {
-      setError({
-        code: ErrorCode.CannotMortgageField,
-        message: 'Oops!',
-      });
-    } else if (
-      field.price &&
-      getPlayerMoneyById(player.userId) < field.price.branchPrice
-    ) {
-      setError({
-        code: ErrorCode.NotEnoughMoney,
-        message: 'Oops!',
-      });
-    } else if (field.price && field.status.branches >= 5) {
-      setError({
-        code: ErrorCode.MaxFieldLevel,
-        message: 'Oops!',
-      });
-    } else if (field.price && field.type !== FieldType.COMPANY) {
+    if (!canLevelUp(payload.fieldId)) {
       setError({
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',

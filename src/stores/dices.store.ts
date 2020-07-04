@@ -28,7 +28,7 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
 
     const dice1 = 3;
     // const dice2 = random(0, 6);
-    let dice2 = 2;
+    let dice2 = 1;
     if (player.name === 'Feodr') {
       // dice2 = random(0, 6);
       // dice2 = 5;

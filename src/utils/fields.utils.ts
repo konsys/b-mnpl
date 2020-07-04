@@ -147,6 +147,11 @@ export const getPlayerGroupFields = (
       v.status.userId === player.userId,
   );
 
+export const groupHasBranches = (f: IField): boolean =>
+  getFieldsByGroup(f.fieldGroup).filter(
+    (v) => v.status && v.status.branches > 0,
+  ).length > 0;
+
 export const getFieldsByGroup = (group: number) =>
   fieldsState().fields.filter((v: IField) => v.fieldGroup === group);
 
@@ -159,6 +164,19 @@ export const getNotMortgagedFieldsByGroup = (group: number, user: IPlayer) =>
       user.userId === v.status.userId,
   );
 
+export const canMortgage = (fieldId: number): boolean => {
+  const f = getFieldById(fieldId);
+  const p = getActingPlayer();
+  const hasBranches = groupHasBranches(f);
+  return (
+    f &&
+    isCompany(fieldId) &&
+    f.status &&
+    f.status.mortgaged === 0 &&
+    !hasBranches
+  );
+};
+
 export const buyCompany = (field: IField): number => {
   const user = getActingPlayer();
 
@@ -170,7 +188,7 @@ export const buyCompany = (field: IField): number => {
     field.fieldGroup,
     user,
   );
-  sameGroup.length === notMortgagedGroup.length &&
+  sameGroup.length === notMortgagedGroup.length + 1 &&
     fieldActions.push(IFieldAction.LEVEL_UP);
 
   sameGroup.map((v) => {
@@ -182,9 +200,9 @@ export const buyCompany = (field: IField): number => {
       sameGroup: sameGroup.length,
       fieldActions,
     };
+    updateField(v);
   });
 
-  updateField(field);
   return field.price.startPrice;
 };
 

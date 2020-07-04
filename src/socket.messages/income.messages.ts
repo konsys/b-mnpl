@@ -19,6 +19,7 @@ import {
   isMortgaged,
   getFieldById,
   levelUpField,
+  getFieldsByGroup,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -30,7 +31,7 @@ import {
   getPlayerMoneyById,
 } from 'src/utils/users.utils';
 // import { START_BONUS } from 'src/utils/board.params.utils';
-import { BoardSocket } from 'src/modules/socket/board.init';
+import { BoardSocket } from 'src/params/board.init';
 import {
   setTransactionEvent,
   transactMoneyEvent,
@@ -41,6 +42,7 @@ import { getCurrentAction } from 'src/stores/actions.store';
 import { dicesStore } from 'src/stores/dices.store';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { getStartBonus } from 'src/utils/moneys.utils';
+import { FieldType } from 'src/entities/board.fields.entity';
 
 @WebSocketGateway()
 export class BoardMessage {
@@ -254,8 +256,14 @@ export class BoardMessage {
   async levelUpField(client: Socket, payload: IFieldId): Promise<void> {
     const player = getActingPlayer();
     const field = getFieldById(payload.fieldId);
-
-    if (!isMyField(payload.fieldId)) {
+    console.log(1111, field);
+    const group = getFieldsByGroup(field.fieldGroup);
+    if (group.length !== field.status.sameGroup) {
+      setError({
+        code: ErrorCode.NoMonopoly,
+        message: 'Oops!',
+      });
+    } else if (!isMyField(payload.fieldId)) {
       setError({
         code: ErrorCode.NotUserField,
         message: 'Oops!',
@@ -276,6 +284,11 @@ export class BoardMessage {
     } else if (field.price && field.status.branches >= 5) {
       setError({
         code: ErrorCode.MaxFieldLevel,
+        message: 'Oops!',
+      });
+    } else if (field.price && field.type !== FieldType.COMPANY) {
+      setError({
+        code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
     } else {

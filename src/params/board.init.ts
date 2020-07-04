@@ -18,8 +18,8 @@ import {
 } from 'src/types/Board/board.types';
 import { SocketActions } from 'src/types/Game/game.types';
 import { createBoardMessage } from 'src/socket.messages/send.message';
-import { UsersService } from '../../api.gateway/users/users.service';
-import { FieldsService } from '../../api.gateway/fields/fields.service';
+import { UsersService } from '../api.gateway/users/users.service';
+import { FieldsService } from '../api.gateway/fields/fields.service';
 import { updateAction } from 'src/stores/actions.store';
 import { nanoid } from 'nanoid';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';

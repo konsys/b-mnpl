@@ -132,6 +132,9 @@ const getSameGroupFields = (field: IField) => {
   );
 };
 
+export const getFieldsByGroup = (group: number) =>
+  fieldsState().fields.filter((v: IField) => v.fieldGroup === group);
+
 export const buyCompany = (field: IField): number => {
   const user = getActingPlayer();
   const fields = fieldsState().fields;

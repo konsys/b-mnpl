@@ -164,6 +164,7 @@ export const canLevelDown = (
     f.status &&
     hasMonopoly &&
     !isMortgaged &&
+    f.type === FieldType.COMPANY &&
     f.status.branches > 0 &&
     byOrder
   );

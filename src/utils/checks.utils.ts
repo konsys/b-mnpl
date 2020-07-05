@@ -77,9 +77,7 @@ export const isGroupMortgaged = (f: IField): boolean => {
 };
 
 export const groupHasBranches = (f: IField): boolean =>
-  getFieldsByGroup(f.fieldGroup).filter(
-    (v) => v.status && v.status.branches > 0,
-  ).length > 0;
+  getFieldsByGroup(f.fieldGroup).some((v) => v.status && v.status.branches > 0);
 
 export const canMortgage = (fieldId: number): boolean => {
   const f = getFieldById(fieldId);
@@ -119,7 +117,7 @@ export const canLevelUp = (
   const branches = group.map((v) => v.status.branches);
   const max = Math.max(...branches);
   const min = Math.min(...branches);
-  console.log(max, min);
+
   const byOrder = buildByOrder
     ? max > min
       ? f.status.branches === min
@@ -167,7 +165,6 @@ export const canLevelDown = (
     f.status &&
     hasMonopoly &&
     !isMortgaged &&
-    f.status.branches <= 4 &&
     f.status.branches > 0 &&
     byOrder
   );

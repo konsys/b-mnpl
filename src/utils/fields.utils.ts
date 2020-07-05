@@ -111,8 +111,6 @@ export const buyCompany = (f: IField): number => {
         fieldActions: getFieldActions(f.fieldId),
       },
     });
-
-    console.log(sameGroup.map((v) => v.name));
     sameGroup.map((v: IField) => {
       v.status = {
         fieldId: v.fieldId,

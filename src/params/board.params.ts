@@ -14,5 +14,6 @@ export const BOARD_PARAMS = {
 
   BRANCHES: {
     BUILD_QEUEU: true,
+    ONE_BRANCH_PER_TURN: true,
   },
 };

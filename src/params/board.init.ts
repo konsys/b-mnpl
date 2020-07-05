@@ -25,7 +25,7 @@ import { updateAction } from 'src/stores/actions.store';
 import { nanoid } from 'nanoid';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import { updateAllPLayers } from 'src/utils/users.utils';
-import { updateAllFields } from 'src/utils/fields.utils';
+import { updateAllFields, getFieldActions } from 'src/utils/fields.utils';
 import { _ } from 'lodash';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { FieldType } from 'src/entities/board.fields.entity';

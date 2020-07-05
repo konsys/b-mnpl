@@ -219,23 +219,25 @@ export const unMortgage = (fieldId: number): void => {
   transactMoneyEvent(transactionId);
 };
 
-export const levelUpField = (
-  fieldId: number,
-  buildByOrder: boolean = true,
-): void => {
+export const levelUpField = (fieldId: number): void => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
 
   canLevelUp(f.fieldId) &&
     updateField({
       ...f,
-      status: { ...f.status, branches: ++f.status.branches },
+      status: {
+        ...f.status,
+        branches: ++f.status.branches,
+      },
     });
   const group = getFieldsByGroup(f.fieldGroup);
   group.map((v) => {
     v.status = {
       ...v.status,
-      fieldActions: getFieldActions(v.fieldId),
+      fieldActions: getFieldActions(v.fieldId).filter(
+        (v: IFieldAction) => v !== IFieldAction.LEVEL_UP,
+      ),
     };
     updateField(v);
   });
@@ -251,10 +253,7 @@ export const levelUpField = (
   transactMoneyEvent(transactionId);
 };
 
-export const levelDownField = (
-  fieldId: number,
-  buildByOrder: boolean = true,
-): void => {
+export const levelDownField = (fieldId: number): void => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
 

@@ -122,9 +122,8 @@ export class BoardSocket
             // k < 4
             fieldId: v.fieldId,
             userId: 2,
-            branches: 0,
+            branches: 2,
             mortgaged: 0,
-            group: 3,
             fieldActions: [IFieldAction.MORTGAGE],
           },
       }));

@@ -106,7 +106,6 @@ export const buyCompany = (f: IField): number => {
         fieldId: f.fieldId,
         userId: p.userId,
         branches: 0,
-        group: sameGroup.length,
         mortgaged: f.status.mortgaged || 0,
         fieldActions: getFieldActions(f.fieldId),
       },
@@ -118,7 +117,6 @@ export const buyCompany = (f: IField): number => {
         fieldId: v.fieldId,
         userId: p.userId,
         branches: v.status.branches || 0,
-        group: sameGroup.length,
         mortgaged: v.status.mortgaged || 0,
         fieldActions: getFieldActions(v.fieldId),
       };

@@ -233,13 +233,16 @@ export const levelUpField = (
     });
   const group = getFieldsByGroup(f.fieldGroup);
   group.map((v) => {
+    console.log(v.name, canLevelUp(v.fieldId, buildByOrder));
     v.status = {
       ...v.status,
-      fieldActions: canLevelUp(v.fieldId, buildByOrder)
-        ? v.status.branches > 0
+      fieldActions:
+        canLevelUp(v.fieldId, buildByOrder) &&
+        canLevelDown(v.fieldId, buildByOrder)
           ? [IFieldAction.LEVEL_UP, IFieldAction.LEVEL_DOWN]
-          : [IFieldAction.LEVEL_UP]
-        : [IFieldAction.LEVEL_DOWN],
+          : canLevelUp(v.fieldId, buildByOrder)
+          ? [IFieldAction.LEVEL_UP]
+          : canLevelDown && [IFieldAction.LEVEL_DOWN],
     };
     updateField(v);
   });

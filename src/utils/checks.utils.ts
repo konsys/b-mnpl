@@ -119,6 +119,7 @@ export const canLevelUp = (
   const branches = group.map((v) => v.status.branches);
   const max = Math.max(...branches);
   const min = Math.min(...branches);
+  console.log(max, min);
   const byOrder = buildByOrder
     ? max > min
       ? f.status.branches === min
@@ -167,6 +168,7 @@ export const canLevelDown = (
     hasMonopoly &&
     !isMortgaged &&
     f.status.branches <= 4 &&
+    f.status.branches > 0 &&
     byOrder
   );
 };

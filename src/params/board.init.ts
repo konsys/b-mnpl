@@ -117,12 +117,13 @@ export class BoardSocket
       const fields: IField[] = await this.fieldsService.getInitialFields();
       const r = fields.map((v: IField, k) => ({
         ...v,
-        status: v.type === FieldType.AUTO && //  &&
-          v.fieldId !== 6 && {
+        status:
+          //  v.type === FieldType.AUTO && //  &&
+          v.fieldId === 29 && {
             // k < 4
             fieldId: v.fieldId,
             userId: 2,
-            branches: 2,
+            branches: 0,
             mortgaged: 0,
             fieldActions: [IFieldAction.MORTGAGE],
           },

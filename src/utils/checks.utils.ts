@@ -128,7 +128,7 @@ export const canLevelUp = (
   return (
     f &&
     p.money > f.price.branchPrice &&
-    isCompany(fieldId) &&
+    f.type === FieldType.COMPANY &&
     f.status &&
     m &&
     !isMortgaged &&

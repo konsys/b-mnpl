@@ -126,19 +126,6 @@ export const buyCompany = (f: IField): number => {
   return f.price.startPrice;
 };
 
-export const buyITCompany = (field: IField): number => {
-  const user = getActingPlayer();
-
-  field.status = {
-    fieldId: field.fieldId,
-    userId: user.userId,
-    branches: 0,
-    mortgaged: 0,
-  };
-  updateField(field);
-  return field.price.startPrice;
-};
-
 export const mortgage = (fieldId: number): void => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();

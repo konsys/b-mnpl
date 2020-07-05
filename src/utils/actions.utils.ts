@@ -4,8 +4,6 @@ import { nanoid } from 'nanoid';
 import {
   findFieldByPosition,
   buyCompany,
-  buyITCompany,
-  mortgage,
   mortgageNextRound,
 } from './fields.utils';
 import {
@@ -21,7 +19,6 @@ import {
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
 import { BOARD_PARAMS } from '../params/board.params';
-import { setNewRoundEvent, setNextRound } from 'src/stores/board.store';
 
 export const buyFieldModal = (): void => {
   const player = getActingPlayer();
@@ -40,11 +37,8 @@ export const buyField = (): void => {
   const field = findFieldByPosition(user.meanPosition);
   let sum = field.price.startPrice;
 
-  if (field.type === FieldType.AUTO || field.type === FieldType.COMPANY) {
-    sum = buyCompany(field);
-  } else if (field.type === FieldType.IT) {
-    sum = buyITCompany(field);
-  }
+  sum = buyCompany(field);
+
   // Decrease player`s money;
   const transactionId = nanoid(4);
   setTransactionEvent({

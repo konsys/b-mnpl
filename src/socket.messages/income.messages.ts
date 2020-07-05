@@ -149,7 +149,7 @@ export class BoardMessage {
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     const f = getActingField();
     const p = getActingPlayer();
-    if (isCompanyForSale(f.fieldId) && canBuyField(f.fieldId, p)) {
+    if (canBuyField(f.fieldId, p)) {
       Action.buyField();
       Action.switchPlayerTurn();
     } else {

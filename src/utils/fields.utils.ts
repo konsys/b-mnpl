@@ -226,7 +226,7 @@ export const levelUpField = (
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
 
-  canLevelUp(f.fieldId, buildByOrder) &&
+  canLevelUp(f.fieldId) &&
     updateField({
       ...f,
       status: { ...f.status, branches: ++f.status.branches },
@@ -258,7 +258,7 @@ export const levelDownField = (
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
 
-  canLevelDown(f.fieldId, buildByOrder) &&
+  canLevelDown(f.fieldId) &&
     updateField({
       ...f,
       status: {

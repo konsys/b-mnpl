@@ -11,4 +11,8 @@ export const BOARD_PARAMS = {
   MORTGAGE_TURNS: 3,
 
   INIT_MONEY: 40000,
+
+  BRANCHES: {
+    BUILD_QEUEU: true,
+  },
 };

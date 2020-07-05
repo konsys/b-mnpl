@@ -103,10 +103,7 @@ export const canUnMortgage = (fieldId: number): boolean => {
   );
 };
 
-export const canLevelUp = (
-  fieldId: number,
-  buildByOrder: boolean = true,
-): boolean => {
+export const canLevelUp = (fieldId: number): boolean => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
   const m = playerHasMonopoly(f, p);
@@ -117,7 +114,7 @@ export const canLevelUp = (
   const max = Math.max(...branches);
   const min = Math.min(...branches);
 
-  const byOrder = buildByOrder
+  const byOrder = BOARD_PARAMS.BRANCHES.BUILD_QEUEU
     ? max > min
       ? f.status.branches === min
         ? true
@@ -137,10 +134,7 @@ export const canLevelUp = (
   );
 };
 
-export const canLevelDown = (
-  fieldId: number,
-  buildByOrder: boolean = true,
-): boolean => {
+export const canLevelDown = (fieldId: number): boolean => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
   const hasMonopoly = playerHasMonopoly(f, p);
@@ -150,7 +144,7 @@ export const canLevelDown = (
   const branches = group.map((v) => v.status.branches);
   const max = Math.max(...branches);
   const min = Math.min(...branches);
-  const byOrder = buildByOrder
+  const byOrder = BOARD_PARAMS.BRANCHES.BUILD_QEUEU
     ? max > min
       ? f.status.branches === max
         ? true

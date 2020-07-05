@@ -95,28 +95,30 @@ export const getNotMortgagedFieldsByGroup = (group: number, user: IPlayer) =>
   );
 
 export const buyCompany = (f: IField): number => {
-  const user = getActingPlayer();
+  const p = getActingPlayer();
+  const sameGroup = _.concat(getPlayerGroupFields(f, p), f);
 
-  if (canBuyField(f.fieldId, user)) {
+  if (canBuyField(f.fieldId, p)) {
     updateField({
       ...f,
 
       status: {
         fieldId: f.fieldId,
-        userId: user.userId,
+        userId: p.userId,
         branches: 0,
+        group: sameGroup.length,
         mortgaged: f.status.mortgaged || 0,
         fieldActions: getFieldActions(f.fieldId),
       },
     });
 
-    const sameGroup = _.concat(getPlayerGroupFields(f, user), f);
-
+    console.log(sameGroup.map((v) => v.name));
     sameGroup.map((v: IField) => {
       v.status = {
         fieldId: v.fieldId,
-        userId: user.userId,
-        branches: 0,
+        userId: p.userId,
+        branches: v.status.branches || 0,
+        group: sameGroup.length,
         mortgaged: v.status.mortgaged || 0,
         fieldActions: getFieldActions(v.fieldId),
       };

@@ -51,9 +51,8 @@ export const isMyField = (fieldId: number): boolean => {
   );
 };
 
-export const canBuyField = (): boolean =>
-  isCompany(getActingField().fieldId) &&
-  getActingField().price.startPrice <= getActingPlayer().money;
+export const canBuyField = (fieldId: number, p: IPlayer): boolean =>
+  isCompany(fieldId) && getFieldById(fieldId).price.startPrice <= p.money;
 
 export const whosField = (): number =>
   (getActingField().status && getActingField().status.userId) ||

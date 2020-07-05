@@ -19,6 +19,7 @@ import {
   canMortgage,
   canUnMortgage,
   canLevelDown,
+  canBuyField,
 } from './checks.utils';
 
 export const findFieldByPosition = (fieldPosition: number) =>
@@ -93,29 +94,36 @@ export const getNotMortgagedFieldsByGroup = (group: number, user: IPlayer) =>
       user.userId === v.status.userId,
   );
 
-export const buyCompany = (field: IField): number => {
+export const buyCompany = (f: IField): number => {
   const user = getActingPlayer();
 
-  const sameGroup = _.concat(getPlayerGroupFields(field, user), field);
-  const group = getFieldsByGroup(field.fieldGroup);
+  if (canBuyField(f.fieldId, user)) {
+    updateField({
+      ...f,
 
-  const notMortgagedGroup = getNotMortgagedFieldsByGroup(
-    field.fieldGroup,
-    user,
-  );
+      status: {
+        fieldId: f.fieldId,
+        userId: user.userId,
+        branches: 0,
+        mortgaged: f.status.mortgaged || 0,
+        fieldActions: getFieldActions(f.fieldId),
+      },
+    });
 
-  sameGroup.map((v: IField) => {
-    v.status = {
-      fieldId: v.fieldId,
-      userId: user.userId,
-      branches: 0,
-      mortgaged: v.status.mortgaged || 0,
-      fieldActions: getFieldActions(v.fieldId),
-    };
-    updateField(v);
-  });
+    const sameGroup = _.concat(getPlayerGroupFields(f, user), f);
 
-  return field.price.startPrice;
+    sameGroup.map((v: IField) => {
+      v.status = {
+        fieldId: v.fieldId,
+        userId: user.userId,
+        branches: 0,
+        mortgaged: v.status.mortgaged || 0,
+        fieldActions: getFieldActions(v.fieldId),
+      };
+      updateField(v);
+    });
+  }
+  return f.price.startPrice;
 };
 
 export const buyITCompany = (field: IField): number => {

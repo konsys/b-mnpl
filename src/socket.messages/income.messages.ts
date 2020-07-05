@@ -147,17 +147,18 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    const field = getActingField();
-    if (isCompanyForSale(field.fieldId) && canBuyField()) {
+    const f = getActingField();
+    const p = getActingPlayer();
+    if (isCompanyForSale(f.fieldId) && canBuyField(f.fieldId, p)) {
       Action.buyField();
       Action.switchPlayerTurn();
     } else {
-      !isCompanyForSale(field.fieldId) &&
+      !isCompanyForSale(f.fieldId) &&
         setError({
           code: ErrorCode.CompanyHasOwner,
           message: 'Oops!',
         });
-      !canBuyField() &&
+      !canBuyField(f.fieldId, p) &&
         setError({
           code: ErrorCode.NotEnoughMoney,
           message: 'Oops!',

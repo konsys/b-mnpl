@@ -21,6 +21,7 @@ import {
   canLevelDown,
   canBuyField,
 } from './checks.utils';
+import { FieldType } from 'src/entities/board.fields.entity';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
@@ -105,7 +106,7 @@ export const buyCompany = (f: IField): number => {
       status: {
         fieldId: f.fieldId,
         userId: p.userId,
-        branches: 0,
+        branches: f.type === FieldType.COMPANY ? 0 : sameGroup.length - 1,
         mortgaged: f.status.mortgaged || 0,
         fieldActions: getFieldActions(f.fieldId),
       },
@@ -116,7 +117,10 @@ export const buyCompany = (f: IField): number => {
       v.status = {
         fieldId: v.fieldId,
         userId: p.userId,
-        branches: v.status.branches || 0,
+        branches:
+          f.type === FieldType.COMPANY
+            ? v.status.branches || 0
+            : sameGroup.length - 1,
         mortgaged: v.status.mortgaged || 0,
         fieldActions: getFieldActions(v.fieldId),
       };

@@ -8,7 +8,7 @@ import {
 import { FieldType } from 'src/entities/board.fields.entity';
 import { dicesStore } from 'src/stores/dices.store';
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { IPlayer, IField } from 'src/types/Board/board.types';
+import { IPlayer, IField, IFieldAction } from 'src/types/Board/board.types';
 
 export const isTax = (): boolean => getActingField().type === FieldType.TAX;
 
@@ -55,31 +55,6 @@ export const canBuyField = (): boolean =>
   isCompany(getActingField().fieldId) &&
   getActingField().price.startPrice <= getActingPlayer().money;
 
-export const canMortgage = (fieldId: number): boolean => {
-  const f = getFieldById(fieldId);
-  const hasBranches = groupHasBranches(f);
-
-  return (
-    f &&
-    isCompany(fieldId) &&
-    f.status &&
-    f.status.mortgaged === 0 &&
-    !hasBranches
-  );
-};
-
-export const canUnMortgage = (fieldId: number): boolean => {
-  const f = getFieldById(fieldId);
-  const p = getActingPlayer();
-  return (
-    f &&
-    isCompany(fieldId) &&
-    f.status &&
-    f.status.mortgaged > 0 &&
-    f.status.userId === p.userId
-  );
-};
-
 export const whosField = (): number =>
   (getActingField().status && getActingField().status.userId) ||
   BOARD_PARAMS.BANK_PLAYER_ID;
@@ -106,12 +81,52 @@ export const groupHasBranches = (f: IField): boolean =>
     (v) => v.status && v.status.branches > 0,
   ).length > 0;
 
-export const canLevelUp = (fieldId: number): boolean => {
+export const canMortgage = (fieldId: number): boolean => {
+  const f = getFieldById(fieldId);
+  const hasBranches = groupHasBranches(f);
+
+  return (
+    f &&
+    isCompany(fieldId) &&
+    f.status &&
+    f.status.mortgaged === 0 &&
+    !hasBranches
+  );
+};
+
+export const canUnMortgage = (fieldId: number): boolean => {
+  const f = getFieldById(fieldId);
+  const p = getActingPlayer();
+  return (
+    f &&
+    isCompany(fieldId) &&
+    f.status &&
+    f.status.mortgaged > 0 &&
+    f.status.userId === p.userId
+  );
+};
+
+export const canLevelUp = (
+  fieldId: number,
+  buildByOrder: boolean = true,
+): boolean => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
   const m = playerHasMonopoly(f, p);
   const isMortgaged = isGroupMortgaged(f);
-  console.log(m, isMortgaged);
+
+  const group = getFieldsByGroup(f.fieldGroup);
+  const branches = group.map((v) => v.status.branches);
+  const max = Math.max(...branches);
+  const min = Math.min(...branches);
+  const byOrder = buildByOrder
+    ? max > min
+      ? f.status.branches === min
+        ? true
+        : false
+      : true
+    : true;
+
   return (
     f &&
     p.money > f.price.branchPrice &&
@@ -119,6 +134,7 @@ export const canLevelUp = (fieldId: number): boolean => {
     f.status &&
     m &&
     !isMortgaged &&
-    f.status.branches <= 4
+    f.status.branches <= 4 &&
+    byOrder
   );
 };

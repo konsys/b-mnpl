@@ -8,13 +8,14 @@ import {
 import { getActingPlayer } from './users.utils';
 import _ from 'lodash';
 import { BOARD_PARAMS } from '../params/board.params';
-import { FieldType } from 'src/entities/board.fields.entity';
 
 import { nanoid } from 'nanoid';
 import {
   setTransactionEvent,
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
+import { canLevelUp, canMortgage, canUnMortgage } from './checks.utils';
+
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
 
@@ -137,20 +138,18 @@ export const buyITCompany = (field: IField): number => {
 export const mortgage = (fieldId: number): void => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
+  canMortgage(f.fieldId) &&
+    updateField({
+      ...f,
+      status: { ...f.status, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },
+    });
+
   const groupFields = getPlayerGroupFields(f, p);
   groupFields.map((v) => {
     v.status = {
       ...v.status,
-      mortgaged:
-        v.fieldId === fieldId
-          ? BOARD_PARAMS.MORTGAGE_TURNS
-          : v.status.mortgaged,
       fieldActions: [
-        v.fieldId === fieldId
-          ? IFieldAction.UNMORTGAGE
-          : v.status.mortgaged
-          ? IFieldAction.UNMORTGAGE
-          : IFieldAction.MORTGAGE,
+        v.status.mortgaged ? IFieldAction.UNMORTGAGE : IFieldAction.MORTGAGE,
       ],
     };
 
@@ -184,26 +183,21 @@ export const mortgageNextRound = () => {
 export const unMortgage = (fieldId: number): void => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
-  const notMortgaged = getNotMortgagedFieldsByGroup(f.fieldGroup, p);
-  const group = getFieldsByGroup(f.fieldGroup);
-  const fieldActions =
-    notMortgaged.length + 1 === group.length ? [IFieldAction.LEVEL_UP] : [];
+  canUnMortgage(f.fieldId) &&
+    updateField({
+      ...f,
+      status: { ...f.status, mortgaged: 0 },
+    });
 
   const groupFields = getPlayerGroupFields(f, p);
   groupFields.map((v) => {
     v.status = {
       ...v.status,
-      mortgaged: v.fieldId === fieldId ? 0 : v.status.mortgaged,
-      fieldActions: _.concat(
-        [
-          v.fieldId === fieldId
-            ? IFieldAction.MORTGAGE
-            : v.status.mortgaged
-            ? IFieldAction.UNMORTGAGE
-            : IFieldAction.MORTGAGE,
-        ],
-        fieldActions,
-      ),
+      fieldActions: v.status.mortgaged
+        ? [IFieldAction.UNMORTGAGE]
+        : canLevelUp(v.fieldId)
+        ? [IFieldAction.MORTGAGE, IFieldAction.LEVEL_UP]
+        : [IFieldAction.MORTGAGE],
     };
 
     updateField(v);
@@ -220,19 +214,38 @@ export const unMortgage = (fieldId: number): void => {
   transactMoneyEvent(transactionId);
 };
 
-export const levelUpField = (fieldId: number): void => {
-  const field = getFieldById(fieldId);
-  const player = getActingPlayer();
-  field.status = { ...field.status, branches: ++field.status.branches };
+export const levelUpField = (
+  fieldId: number,
+  buildByOrder: boolean = true,
+): void => {
+  const f = getFieldById(fieldId);
+  const p = getActingPlayer();
 
-  updateField(field);
+  canLevelUp(f.fieldId, buildByOrder) &&
+    updateField({
+      ...f,
+      status: { ...f.status, branches: ++f.status.branches },
+    });
+  const group = getFieldsByGroup(f.fieldGroup);
+  group.map((v) => {
+    v.status = {
+      ...v.status,
+      fieldActions: canLevelUp(v.fieldId, buildByOrder)
+        ? v.status.branches > 0
+          ? [IFieldAction.LEVEL_UP, IFieldAction.LEVEL_DOWN]
+          : [IFieldAction.LEVEL_UP]
+        : [IFieldAction.LEVEL_DOWN],
+    };
+    updateField(v);
+  });
+
   const transactionId = nanoid(4);
   setTransactionEvent({
-    sum: field.price.branchPrice,
-    reason: `Buy branch ${field.name}`,
+    sum: f.price.branchPrice,
+    reason: `Buy branch ${f.name}`,
     toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
     transactionId,
-    userId: player.userId,
+    userId: p.userId,
   });
   transactMoneyEvent(transactionId);
 };

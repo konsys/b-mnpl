@@ -138,3 +138,35 @@ export const canLevelUp = (
     byOrder
   );
 };
+
+export const canLevelDown = (
+  fieldId: number,
+  buildByOrder: boolean = true,
+): boolean => {
+  const f = getFieldById(fieldId);
+  const p = getActingPlayer();
+  const hasMonopoly = playerHasMonopoly(f, p);
+  const isMortgaged = isGroupMortgaged(f);
+
+  const group = getFieldsByGroup(f.fieldGroup);
+  const branches = group.map((v) => v.status.branches);
+  const max = Math.max(...branches);
+  const min = Math.min(...branches);
+  const byOrder = buildByOrder
+    ? max > min
+      ? f.status.branches === max
+        ? true
+        : false
+      : true
+    : true;
+
+  return (
+    f &&
+    isCompany(fieldId) &&
+    f.status &&
+    hasMonopoly &&
+    !isMortgaged &&
+    f.status.branches <= 4 &&
+    byOrder
+  );
+};

@@ -10,6 +10,7 @@ import {
   levelUpField,
   getFieldsByGroup,
   getPlayerGroupFields,
+  levelDownField,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -44,6 +45,7 @@ import {
   whosField,
   noActionField,
   canLevelUp,
+  canLevelDown,
 } from 'src/utils/checks.utils';
 
 @WebSocketGateway()
@@ -212,9 +214,6 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED)
   async unMortgageField(client: Socket, payload: IFieldId): Promise<void> {
-    const player = getActingPlayer();
-    const field = getFieldById(payload.fieldId);
-
     if (!canUnMortgage(payload.fieldId)) {
       setError({
         code: ErrorCode.CannotUnMortgageField,
@@ -228,10 +227,6 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED)
   async levelUpField(client: Socket, payload: IFieldId): Promise<void> {
-    const player = getActingPlayer();
-    const field = getFieldById(payload.fieldId);
-    const group = getFieldsByGroup(field.fieldGroup);
-    const playerGroup = getPlayerGroupFields(field, player);
     if (!canLevelUp(payload.fieldId)) {
       setError({
         code: ErrorCode.CannotBuildBranch,
@@ -239,6 +234,19 @@ export class BoardMessage {
       });
     } else {
       levelUpField(payload.fieldId);
+    }
+    BoardSocket.emitMessage();
+  }
+
+  @SubscribeMessage(IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED)
+  async levelDownField(client: Socket, payload: IFieldId): Promise<void> {
+    if (!canLevelDown(payload.fieldId)) {
+      setError({
+        code: ErrorCode.CannotBuildBranch,
+        message: 'Oops!',
+      });
+    } else {
+      levelDownField(payload.fieldId);
     }
     BoardSocket.emitMessage();
   }

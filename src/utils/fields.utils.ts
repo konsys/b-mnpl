@@ -14,7 +14,12 @@ import {
   setTransactionEvent,
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
-import { canLevelUp, canMortgage, canUnMortgage } from './checks.utils';
+import {
+  canLevelUp,
+  canMortgage,
+  canUnMortgage,
+  canLevelDown,
+} from './checks.utils';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
@@ -235,6 +240,45 @@ export const levelUpField = (
           ? [IFieldAction.LEVEL_UP, IFieldAction.LEVEL_DOWN]
           : [IFieldAction.LEVEL_UP]
         : [IFieldAction.LEVEL_DOWN],
+    };
+    updateField(v);
+  });
+
+  const transactionId = nanoid(4);
+  setTransactionEvent({
+    sum: f.price.branchPrice,
+    reason: `Buy branch ${f.name}`,
+    toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
+    transactionId,
+    userId: p.userId,
+  });
+  transactMoneyEvent(transactionId);
+};
+
+export const levelDownField = (
+  fieldId: number,
+  buildByOrder: boolean = true,
+): void => {
+  const f = getFieldById(fieldId);
+  const p = getActingPlayer();
+
+  canLevelDown(f.fieldId, buildByOrder) &&
+    updateField({
+      ...f,
+      status: {
+        ...f.status,
+        branches: f.status.branches > 0 ? --f.status.branches : 0,
+      },
+    });
+  const group = getFieldsByGroup(f.fieldGroup);
+  group.map((v) => {
+    v.status = {
+      ...v.status,
+      fieldActions: canLevelDown(v.fieldId, buildByOrder)
+        ? v.status.branches > 0
+          ? [IFieldAction.LEVEL_UP, IFieldAction.LEVEL_DOWN]
+          : [IFieldAction.LEVEL_UP]
+        : [IFieldAction.LEVEL_UP],
     };
     updateField(v);
   });

@@ -10,6 +10,7 @@ export const setNextRound = BoardDomain.event();
 
 export interface IPlayerAction {
   userId: number;
+  fieldId: number;
   fieldGroup: number;
   fieldAction: IFieldAction;
 }
@@ -50,6 +51,6 @@ export const boardStore = BoardDomain.store<IBoardStore>({
   }))
   .reset(resetBoardStoreEvent);
 
-boardStore.updates.watch((v) =>
-  console.log('boardStoreWatch', v.playerActions),
-);
+// boardStore.updates.watch((v) =>
+// console.log('boardStoreWatch', v.playerActions),
+// );

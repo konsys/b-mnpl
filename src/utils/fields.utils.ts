@@ -136,6 +136,7 @@ export const mortgage = (fieldId: number): void => {
   setPlayerActionEvent({
     userId: p.userId,
     fieldGroup: f.fieldGroup,
+    fieldId: f.fieldId,
     fieldAction: IFieldAction.MORTGAGE,
   });
 
@@ -204,6 +205,7 @@ export const unMortgage = (fieldId: number): void => {
   setPlayerActionEvent({
     userId: p.userId,
     fieldGroup: f.fieldGroup,
+    fieldId: f.fieldId,
     fieldAction: IFieldAction.UNMORTGAGE,
   });
 
@@ -241,6 +243,7 @@ export const levelUpField = (fieldId: number): void => {
   setPlayerActionEvent({
     userId: p.userId,
     fieldGroup: f.fieldGroup,
+    fieldId: f.fieldId,
     fieldAction: IFieldAction.LEVEL_UP,
   });
 
@@ -279,6 +282,7 @@ export const levelDownField = (fieldId: number): void => {
   setPlayerActionEvent({
     userId: p.userId,
     fieldGroup: f.fieldGroup,
+    fieldId: f.fieldId,
     fieldAction: IFieldAction.LEVEL_DOWN,
   });
 

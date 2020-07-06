@@ -246,15 +246,13 @@ export const levelUpField = (fieldId: number): void => {
     fieldId: f.fieldId,
     fieldAction: IFieldAction.LEVEL_UP,
   });
-
-  canLevelUp(f.fieldId) &&
-    updateField({
-      ...f,
-      status: {
-        ...f.status,
-        branches: ++f.status.branches,
-      },
-    });
+  updateField({
+    ...f,
+    status: {
+      ...f.status,
+      branches: ++f.status.branches,
+    },
+  });
   const group = getFieldsByGroup(f.fieldGroup);
   group.map((v) => {
     v.status = {

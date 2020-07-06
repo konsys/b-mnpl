@@ -19,6 +19,7 @@ import {
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
 import { BOARD_PARAMS } from '../params/board.params';
+import { setNewRoundEvent, setNewTurnEvent } from 'src/stores/board.store';
 
 export const buyFieldModal = (): void => {
   const player = getActingPlayer();
@@ -111,6 +112,11 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   let player = getActingPlayer();
   let nextIndex = index;
 
+  if (index === 0) {
+    setNewRoundEvent();
+  } else {
+    setNewTurnEvent();
+  }
   // Set Next round
   nextIndex === 0 && mortgageNextRound();
 

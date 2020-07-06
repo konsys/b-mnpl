@@ -9,6 +9,7 @@ import { FieldType } from 'src/entities/board.fields.entity';
 import { dicesStore } from 'src/stores/dices.store';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { IPlayer, IField, IFieldAction } from 'src/types/Board/board.types';
+import { boardStore } from 'src/stores/board.store';
 
 export const isTax = (): boolean => getActingField().type === FieldType.TAX;
 
@@ -113,7 +114,11 @@ export const canLevelUp = (fieldId: number): boolean => {
   const branches = group.map((v) => v.status.branches);
   const max = Math.max(...branches);
   const min = Math.min(...branches);
-
+  const boardState = boardStore.getState();
+  const alreadyUp = boardState.playerActions.some(
+    (v) =>
+      v.fieldGroup === f.fieldGroup && v.fieldAction === IFieldAction.LEVEL_UP,
+  );
   const byOrder = BOARD_PARAMS.BRANCHES.BUILD_QEUEU
     ? max > min
       ? f.status.branches === min
@@ -129,6 +134,7 @@ export const canLevelUp = (fieldId: number): boolean => {
     f.status &&
     m &&
     !isMortgaged &&
+    !alreadyUp &&
     f.status.branches <= 4 &&
     byOrder
   );

@@ -22,6 +22,7 @@ import {
   canBuyField,
 } from './checks.utils';
 import { FieldType } from 'src/entities/board.fields.entity';
+import { setPlayerActionEvent } from 'src/stores/board.store';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
@@ -131,6 +132,13 @@ export const buyCompany = (f: IField): number => {
 export const mortgage = (fieldId: number): void => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
+
+  setPlayerActionEvent({
+    userId: p.userId,
+    fieldGroup: f.fieldGroup,
+    fieldAction: IFieldAction.MORTGAGE,
+  });
+
   canMortgage(f.fieldId) &&
     updateField({
       ...f,
@@ -192,6 +200,13 @@ export const getFieldActions = (fieldId: number): IFieldAction[] => {
 export const unMortgage = (fieldId: number): void => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
+
+  setPlayerActionEvent({
+    userId: p.userId,
+    fieldGroup: f.fieldGroup,
+    fieldAction: IFieldAction.UNMORTGAGE,
+  });
+
   canUnMortgage(f.fieldId) &&
     updateField({
       ...f,
@@ -223,6 +238,12 @@ export const levelUpField = (fieldId: number): void => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
 
+  setPlayerActionEvent({
+    userId: p.userId,
+    fieldGroup: f.fieldGroup,
+    fieldAction: IFieldAction.LEVEL_UP,
+  });
+
   canLevelUp(f.fieldId) &&
     updateField({
       ...f,
@@ -235,9 +256,7 @@ export const levelUpField = (fieldId: number): void => {
   group.map((v) => {
     v.status = {
       ...v.status,
-      fieldActions: getFieldActions(v.fieldId).filter(
-        (v: IFieldAction) => v !== IFieldAction.LEVEL_UP,
-      ),
+      fieldActions: getFieldActions(v.fieldId),
     };
     updateField(v);
   });
@@ -256,6 +275,12 @@ export const levelUpField = (fieldId: number): void => {
 export const levelDownField = (fieldId: number): void => {
   const f = getFieldById(fieldId);
   const p = getActingPlayer();
+
+  setPlayerActionEvent({
+    userId: p.userId,
+    fieldGroup: f.fieldGroup,
+    fieldAction: IFieldAction.LEVEL_DOWN,
+  });
 
   canLevelDown(f.fieldId) &&
     updateField({

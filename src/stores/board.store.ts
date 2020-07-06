@@ -1,5 +1,7 @@
 import { GameDomain } from './actions.store';
 import { IFieldAction } from 'src/types/Board/board.types';
+import { sample } from 'effector';
+import { updateFieldActionsEvent } from './fields.store';
 
 const BoardDomain = GameDomain.domain('FieldsDomain');
 export const resetBoardStoreEvent = BoardDomain.event();
@@ -22,18 +24,23 @@ export interface IBoardStore {
   playerActions: IPlayerAction[];
 }
 
+// Update field actions on new round
+setNewRoundEvent.watch((v) => updateFieldActionsEvent());
+
 export const boardStore = BoardDomain.store<IBoardStore>({
   gameRound: 0,
   isNewRound: false,
   playersTurn: 0,
   playerActions: [],
 })
-  .on(setNewRoundEvent, (prev) => ({
-    isNewRound: true,
-    gameRound: ++prev.gameRound,
-    playersTurn: ++prev.playersTurn,
-    playerActions: [],
-  }))
+  .on(setNewRoundEvent, (prev) => {
+    return {
+      isNewRound: true,
+      gameRound: ++prev.gameRound,
+      playersTurn: ++prev.playersTurn,
+      playerActions: [],
+    };
+  })
   .on(setNewTurnEvent, (prev) => ({
     isNewRound: false,
     gameRound: prev.gameRound,

@@ -134,7 +134,7 @@ export const canLevelUp = (fieldId: number): boolean => {
     f.status &&
     m &&
     !isMortgaged &&
-    !alreadyUp &&
+    (!alreadyUp || !BOARD_PARAMS.BRANCHES.ONE_BRANCH_PER_TURN) &&
     f.status.branches <= 4 &&
     byOrder
   );

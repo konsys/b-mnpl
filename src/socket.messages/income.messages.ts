@@ -6,10 +6,7 @@ import {
   getActingField,
   mortgage,
   unMortgage,
-  getFieldById,
   levelUpField,
-  getFieldsByGroup,
-  getPlayerGroupFields,
   levelDownField,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
@@ -32,7 +29,6 @@ import { dicesStore } from 'src/stores/dices.store';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { getStartBonus } from 'src/utils/moneys.utils';
 import {
-  isCompany,
   isMyField,
   isCompanyForSale,
   canBuyField,
@@ -95,7 +91,10 @@ export class BoardMessage {
           setTransactionEvent({
             sum:
               field && field.rent && field.rent.paymentMultiplier
-                ? dices.sum * (field.price && field.rent.paymentMultiplier)
+                ? dices.sum *
+                  (field.status.branches > 1
+                    ? field.rent.oneStar
+                    : field.rent.baseRent)
                 : (field.status && field.rent.baseRent) || 0,
             userId: player.userId,
             toUserId: whosField(),
@@ -178,7 +177,7 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
-    if (getCurrentTransaction().sum > -getActingPlayer().money) {
+    if (getCurrentTransaction().sum < getActingPlayer().money) {
       transactMoneyEvent(getCurrentTransaction().transactionId);
       Action.switchPlayerTurn();
     } else {

@@ -5,7 +5,7 @@ import {
   IPlayer,
   IFieldAction,
 } from 'src/types/Board/board.types';
-import { getActingPlayer } from './users.utils';
+import { getActingPlayer, getPlayerById } from './users.utils';
 import _ from 'lodash';
 import { BOARD_PARAMS } from '../params/board.params';
 
@@ -23,6 +23,7 @@ import {
 } from './checks.utils';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { setPlayerActionEvent } from 'src/stores/board.store';
+import { dicesStore } from 'src/stores/dices.store';
 
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
@@ -71,6 +72,43 @@ export const updateAllFields = (fields: IField[]) => {
     version,
     fields,
   });
+};
+
+export const getFieldRent = (field: IField): number => {
+  if (field && field.rent && field.rent.paymentMultiplier) {
+    const group = getPlayerGroupFields(
+      field,
+      getPlayerById(field.status.userId),
+    );
+    const dices = dicesStore.getState();
+    return (
+      dices.sum *
+      (group.length === 1 ? field.rent.baseRent : field.rent.oneStar)
+    );
+  }
+  console.log(field);
+  if (!field.status || field.status.branches === 0) {
+    return field.rent.baseRent;
+  }
+  if (field.status) {
+    if (field.status.branches === 1) {
+      return field.rent.oneStar;
+    }
+    if (field.status.branches === 2) {
+      return field.rent.twoStar;
+    }
+    if (field.status.branches === 3) {
+      return field.rent.freeStar;
+    }
+    if (field.status.branches === 4) {
+      return field.rent.fourStar;
+    }
+    if (field.status.branches === 5) {
+      return field.rent.bigStar;
+    }
+  }
+
+  return 0;
 };
 
 export const getPlayerGroupFields = (

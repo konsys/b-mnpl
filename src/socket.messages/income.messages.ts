@@ -8,6 +8,8 @@ import {
   unMortgage,
   levelUpField,
   levelDownField,
+  getPlayerGroupFields,
+  getFieldRent,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
@@ -64,7 +66,6 @@ export class BoardMessage {
     try {
       const player = getActingPlayer();
       const field = getActingField();
-      const dices = dicesStore.getState();
 
       if (!player.jailed) {
         if (isStartPass()) {
@@ -89,13 +90,7 @@ export class BoardMessage {
           Action.switchPlayerTurn();
         } else if (whosField() && !isMyField(field.fieldId)) {
           setTransactionEvent({
-            sum:
-              field && field.rent && field.rent.paymentMultiplier
-                ? dices.sum *
-                  (field.status.branches > 1
-                    ? field.rent.oneStar
-                    : field.rent.baseRent)
-                : (field.status && field.rent.baseRent) || 0,
+            sum: getFieldRent(field),
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Пришло время платить по счетам',
@@ -107,7 +102,7 @@ export class BoardMessage {
         } else if (isTax()) {
           // TODO написать нормальный текст на налоги
           setTransactionEvent({
-            sum: field.price.startPrice,
+            sum: getFieldRent(field),
             userId: player.userId,
             toUserId: whosField(),
             reason: 'Самое время заплатить налоги',

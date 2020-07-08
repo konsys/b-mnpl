@@ -75,7 +75,7 @@ export const dicesUpdatePlayerToken = (dices: IDicesStore): void => {
     }
   }
 
-  if (doublesRolledAsCombo > BOARD_PARAMS.JAIL_TURNS) {
+  if (doublesRolledAsCombo >= BOARD_PARAMS.JAIL_TURNS) {
     jailPlayer();
     return;
   }

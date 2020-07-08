@@ -86,7 +86,6 @@ export const getFieldRent = (field: IField): number => {
       (group.length === 1 ? field.rent.baseRent : field.rent.oneStar)
     );
   }
-  console.log(field);
   if (!field.status || field.status.branches === 0) {
     return field.rent.baseRent;
   }

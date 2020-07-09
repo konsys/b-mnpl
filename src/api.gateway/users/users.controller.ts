@@ -4,16 +4,32 @@ import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from './users.service';
 import { playersStore } from 'src/stores/players.store';
 import { LocalAuthGuard } from 'src/modules/auth/local-auth.guard';
+import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
+import { AuthService } from 'src/modules/auth/auth.service';
 
 @Controller(MsNames.USERS)
 export class UsersController {
-  constructor(private readonly service: UsersService) {}
+  constructor(
+    private readonly service: UsersService, //
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req) {
     return req.user;
   }
+
+  // @UseGuards(LocalAuthGuard)
+  // @Post('auth/login')
+  // async login(@Request() req) {
+  //   return this.authService.login(req.user);
+  // }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Get('profile')
+  // getProfile(@Request() req) {
+  //   return req.user;
+  // }
 
   @Get()
   async get(): Promise<UsersEntity[]> {

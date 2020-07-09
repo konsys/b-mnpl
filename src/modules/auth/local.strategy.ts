@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
     // http://www.passportjs.org/docs/configure/
-    super({ usernameField: 'email' });
+    super({ usernameField: 'email', passReqToCallback: true });
   }
 
   async validate(email: string, password: string): Promise<any> {

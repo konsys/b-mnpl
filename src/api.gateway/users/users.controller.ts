@@ -5,6 +5,7 @@ import { UsersService } from './users.service';
 import { playersStore } from 'src/stores/players.store';
 import { LocalAuthGuard } from 'src/modules/auth/local-auth.guard';
 import { AuthService } from 'src/modules/auth/auth.service';
+import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -19,11 +20,11 @@ export class UsersController {
     return this.authService.login(req.user);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get('profile')
-  // getProfile(@Request() req) {
-  //   return req.user;
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
+  }
 
   @Get()
   async get(): Promise<UsersEntity[]> {

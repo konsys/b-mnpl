@@ -10,12 +10,12 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({ usernameField: 'email', passReqToCallback: true });
   }
 
-  async validate(email: string, password: string): Promise<any> {
+  async validate(
+    request: Request,
+    email: string,
+    password: string,
+  ): Promise<any> {
     const user = await this.authService.validateUser(email, password);
-
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-    return user;
+    return user ? user : null;
   }
 }

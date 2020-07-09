@@ -908,30 +908,35 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
 export const users: UsersEntity[] = [
   {
     name: 'Konstantin',
+    email: 'test1@yandex.ru',
     registrationType: 'vk',
     vip: true,
     avatar: '/avatars/konstanstin.png',
   },
   {
     name: 'Diman',
+    email: 'test2@yandex.ru',
     registrationType: 'vk',
     vip: false,
     avatar: '/avatars/konstanstin.png',
   },
   {
     name: 'Feodr',
+    email: 'test3@yandex.ru',
     registrationType: 'vk',
     vip: false,
     avatar: '/avatars/konstanstin.png',
   },
   {
     name: 'Ivan',
+    email: 'test4@yandex.ru',
     registrationType: 'vk',
     vip: false,
     avatar: '/avatars/konstanstin.png',
   },
   {
     name: 'Maxim',
+    email: 'test5@yandex.ru',
     registrationType: 'vk',
     vip: true,
     avatar: '/avatars/konstanstin.png',

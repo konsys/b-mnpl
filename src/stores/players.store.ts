@@ -17,6 +17,7 @@ export const bankStore = PlayersDomain.store<IPlayer>({
   vip: true,
   registrationType: 'none',
   name: 'BANK',
+  email: 'b@b.ru',
   team: null,
   avatar: '',
   createdAt: new Date('2020-06-17T12:08:38.000Z'),

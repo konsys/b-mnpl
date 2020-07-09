@@ -8,6 +8,7 @@ import { FieldsModule } from 'src/api.gateway/fields/fields.module';
 import { UsersMsModule } from 'src/modules/ms/users/users.ms.module';
 import { FieldsMsModule } from 'src/modules/ms/fields/fields.ms.module';
 import { BoardSocketModule } from './modules/socket/board.socket.modules';
+import { AuthModule } from './modules/auth/auth.module';
 
 const rootPath = join(__dirname, '../', 'assets/');
 
@@ -17,6 +18,7 @@ const rootPath = join(__dirname, '../', 'assets/');
     FieldsMsModule,
     UsersModule,
     UsersMsModule,
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '0.0.0.0',

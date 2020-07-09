@@ -25,6 +25,18 @@ export class UsersService {
     }
   }
 
+  async getUserByCredentials(name: string, pass: string) {
+    try {
+      const res = await this.usersClient
+        .send<any>({ cmd: MsPatterns.GET_USER_BY_CREDENTIALS }, { name, pass })
+        .toPromise();
+
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
   async saveUsers() {
     try {
       return await this.usersClient

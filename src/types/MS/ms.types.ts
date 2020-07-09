@@ -4,6 +4,7 @@ export enum MsNames {
 }
 export enum MsPatterns {
   GET_ALL_USERS = 'getAllUsers',
+  GET_USER_BY_CREDENTIALS = 'getUserByCredentials',
   GET_INIT_FIELDS = 'getInitFields',
   SAVE_FIELDS = 'saveFields',
   SAVE_USERS = 'saveUsers',

@@ -25,12 +25,12 @@ export class UsersService {
     }
   }
 
-  async getUserByCredentials(username: string, password: string) {
+  async getUserByCredentials(email: string, password: string) {
     try {
       const res = await this.usersClient
         .send<any>(
           { cmd: MsPatterns.GET_USER_BY_CREDENTIALS },
-          { username, password },
+          { email, password },
         )
         .toPromise();
 

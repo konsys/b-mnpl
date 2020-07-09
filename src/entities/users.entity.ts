@@ -16,6 +16,9 @@ export class UsersEntity {
   @Column()
   name: string;
 
+  @Column()
+  email: string;
+
   @Column({ default: null })
   team?: string;
 

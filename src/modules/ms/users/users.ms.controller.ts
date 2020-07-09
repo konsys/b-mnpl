@@ -23,7 +23,7 @@ export class UsersMsController {
 
   @MessagePattern({ cmd: MsPatterns.GET_USER_BY_CREDENTIALS })
   async verifyUsers(filter: any) {
-    const users: any = await this.users.findOne({ name: filter.username });
+    const users: any = await this.users.findOne({ email: filter.email });
 
     return of(users).pipe(delay(1));
   }

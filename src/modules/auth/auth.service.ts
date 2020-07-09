@@ -16,11 +16,8 @@ export class AuthService {
   }
 
   async login(user: UsersEntity) {
-    console.log(user);
     const payload = {
-      name: user.name,
-      id: user.userId,
-      vip: user.vip,
+      username: user.name,
       sub: user.userId,
     };
     return {

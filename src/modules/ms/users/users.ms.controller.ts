@@ -21,6 +21,13 @@ export class UsersMsController {
     return of(users).pipe(delay(1));
   }
 
+  @MessagePattern({ cmd: MsPatterns.GET_USER_BY_CREDENTIALS })
+  async verifyUsers(filter: any) {
+    const users: any = await this.users.findOne({ name: filter.username });
+
+    return of(users).pipe(delay(1));
+  }
+
   @MessagePattern({ cmd: MsPatterns.SAVE_USERS })
   async saveUsers(users: UsersEntity[]) {
     const allUsers: UsersEntity[] = await this.users.save(users);

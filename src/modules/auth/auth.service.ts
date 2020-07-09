@@ -5,12 +5,8 @@ import { UsersService } from '../../api.gateway/users/users.service';
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
-  async validateUser(username: string, password: string): Promise<any> {
-    console.log(username);
-    const user = await this.usersService.getUserByCredentials(
-      username,
-      password,
-    );
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.usersService.getUserByCredentials(email, password);
     return user ? user : null;
   }
 }

@@ -21,11 +21,18 @@ export class UsersMsController {
     return of(users).pipe(delay(1));
   }
 
+  @MessagePattern({ cmd: MsPatterns.GET_USER })
+  async getUser(userId: number) {
+    const user: any = await this.users.findOne(userId);
+
+    return of(user).pipe(delay(1));
+  }
+
   @MessagePattern({ cmd: MsPatterns.GET_USER_BY_CREDENTIALS })
   async verifyUsers(filter: any) {
-    const users: any = await this.users.findOne({ email: filter.email });
+    const user: any = await this.users.findOne({ email: filter.email });
 
-    return of(users).pipe(delay(1));
+    return of(user).pipe(delay(1));
   }
 
   @MessagePattern({ cmd: MsPatterns.SAVE_USERS })

@@ -40,6 +40,18 @@ export class UsersService {
     }
   }
 
+  async getUser(userId: number | null) {
+    try {
+      const res = await this.usersClient
+        .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
+        .toPromise();
+
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
   async saveUsers() {
     try {
       return await this.usersClient

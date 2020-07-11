@@ -113,7 +113,8 @@ export class BoardSocket
         });
       }
 
-      updateAllPLayers(resultPlayers);
+      updateAllPLayers(nanoid(), resultPlayers);
+
       const fields: IField[] = await this.fieldsService.getInitialFields();
       const r = fields.map((v: IField, k) => ({
         ...v,

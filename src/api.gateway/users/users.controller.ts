@@ -1,4 +1,11 @@
-import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Request,
+  Query,
+} from '@nestjs/common';
 import { MsNames } from 'src/types/MS/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from './users.service';
@@ -28,7 +35,8 @@ export class UsersController {
   }
 
   @Get()
-  async get(): Promise<UsersEntity[]> {
+  async get(@Query() ids): Promise<UsersEntity[]> {
+    console.log(ids);
     return Promise.resolve(playersStore.getState().players);
   }
 

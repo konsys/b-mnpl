@@ -107,7 +107,7 @@ export const startAuctionModal = (): void => {
 };
 
 export const switchPlayerTurn = (unJail: boolean = false): void => {
-  const players = playersStore.getState().players;
+  const store = playersStore.getState();
   const index = getActingPlayerIndex();
   let player = getActingPlayer();
   let nextIndex = index;
@@ -125,10 +125,10 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
     nextIndex = index;
     updatePlayer({ ...player, movesLeft: --player.movesLeft });
   } else {
-    nextIndex = getNextArrayIndex(index, players);
+    nextIndex = getNextArrayIndex(index, store.players);
   }
 
-  const res = players.map((v, k) => {
+  const res = store.players.map((v, k) => {
     if (k === nextIndex) {
       if (unJail) {
         v.movesLeft = 0;
@@ -141,7 +141,7 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
     }
   });
 
-  updateAllPLayers(res);
+  updateAllPLayers(store.gameId, res);
   player = getActingPlayer();
   player.jailed ? unJailModal() : rollDicesModal();
 };

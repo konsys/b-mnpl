@@ -5,8 +5,7 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 const PlayersDomain = GameDomain.domain('PlayersDomain');
 
 export interface IPlayersStore {
-  version: number;
-  players: IPlayer[];
+  [gameId: string]: IPlayer[];
 }
 
 export const resetBankEvent = PlayersDomain.event();
@@ -47,16 +46,9 @@ export const bankStore = PlayersDomain.store<IPlayer>({
 export const resetPlayersEvent = PlayersDomain.event();
 export const setPlayersEvent = PlayersDomain.event<IPlayersStore>();
 export const playersStore = PlayersDomain.store<IPlayersStore>({
-  version: 0,
-  players: [],
+  test: [],
 })
-  .on(setPlayersEvent, (_, data) => data)
+  .on(setPlayersEvent, (prev, data) => {
+    return data;
+  })
   .reset(resetPlayersEvent);
-
-// playersStore.updates.watch((v) => {
-//   const r =
-//     v.players &&
-//     v.players.length &&
-//     v.players.find((v) => v.userId !==BOARD_PARAMS.BANK_PLAYER_ID);
-//   console.log('playersStoreWatch', r && r.money);
-// });

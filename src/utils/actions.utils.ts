@@ -22,7 +22,7 @@ import { BOARD_PARAMS } from '../params/board.params';
 import { setNewRoundEvent, setNewTurnEvent } from 'src/stores/board.store';
 
 export const buyFieldModal = (): void => {
-  const player = getActingPlayer();
+  const player = getActingPlayer('kkk');
   const action = actionsStore.getState();
   updateAction({
     action: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,
@@ -34,7 +34,7 @@ export const buyFieldModal = (): void => {
 
 export const buyField = (): void => {
   // Field set to player
-  const user = getActingPlayer();
+  const user = getActingPlayer('kkk');
   const field = findFieldByPosition(user.meanPosition);
   let sum = field.price.startPrice;
 
@@ -55,7 +55,7 @@ export const buyField = (): void => {
 export const unJailModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
-    userId: getActingPlayer().userId,
+    userId: getActingPlayer('kkk').userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
@@ -64,7 +64,7 @@ export const unJailModal = (): void => {
 export const payUnJailModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
-    userId: getActingPlayer().userId,
+    userId: getActingPlayer('kkk').userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
@@ -73,7 +73,7 @@ export const payUnJailModal = (): void => {
 export const payTaxModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
-    userId: getActingPlayer().userId,
+    userId: getActingPlayer('kkk').userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
@@ -82,7 +82,7 @@ export const payTaxModal = (): void => {
 export const rollDicesAction = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
-    userId: getActingPlayer().userId,
+    userId: getActingPlayer('kkk').userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
@@ -91,7 +91,7 @@ export const rollDicesAction = (): void => {
 export const rollDicesModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
-    userId: getActingPlayer().userId,
+    userId: getActingPlayer('kkk').userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
@@ -100,7 +100,7 @@ export const rollDicesModal = (): void => {
 export const startAuctionModal = (): void => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
-    userId: getActingPlayer().userId,
+    userId: getActingPlayer('kkk').userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
@@ -108,8 +108,8 @@ export const startAuctionModal = (): void => {
 
 export const switchPlayerTurn = (unJail: boolean = false): void => {
   const store = playersStore.getState();
-  const index = getActingPlayerIndex();
-  let player = getActingPlayer();
+  const index = getActingPlayerIndex('kkk');
+  let player = getActingPlayer('kkk');
   let nextIndex = index;
 
   if (index === 0) {
@@ -123,7 +123,7 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
   // Doubled dices and jail
   if (player.movesLeft > 0) {
     nextIndex = index;
-    updatePlayer({ ...player, movesLeft: --player.movesLeft });
+    updatePlayer('kkk', { ...player, movesLeft: --player.movesLeft });
   } else {
     nextIndex = getNextArrayIndex(index, store.players);
   }
@@ -141,8 +141,8 @@ export const switchPlayerTurn = (unJail: boolean = false): void => {
     }
   });
 
-  updateAllPLayers(store.gameId, res);
-  player = getActingPlayer();
+  updateAllPLayers('kkk', res);
+  player = getActingPlayer('kkk');
   player.jailed ? unJailModal() : rollDicesModal();
 };
 

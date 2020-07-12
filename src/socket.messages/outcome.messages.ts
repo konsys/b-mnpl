@@ -25,7 +25,7 @@ import {
  */
 export const rollDicesModalMessage = (): IDicesModal => ({
   type: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
-  userId: getActingPlayer().userId,
+  userId: getActingPlayer('kkk').userId,
   title: 'Кидайте кубики',
   text: 'Мы болеем за вас',
   _id: actionsStore.getState().actionId,
@@ -34,7 +34,7 @@ export const rollDicesModalMessage = (): IDicesModal => ({
 
 export const unJailModalMesage = (): IUnJailModal => ({
   type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
-  userId: getActingPlayer().userId,
+  userId: getActingPlayer('kkk').userId,
   title: 'Заплатить залог',
   text: 'Заплатить за выход из тюрьмы',
   _id: actionsStore.getState().actionId,
@@ -45,7 +45,7 @@ export const unJailPayModalMesage = (): IUnJailPayingModal => {
   const transaction = transactionStore.getState();
   return {
     type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
-    userId: getActingPlayer().userId,
+    userId: getActingPlayer('kkk').userId,
     title: 'Заплатить залог',
     text: 'Заплатить за выход из тюрьмы',
     _id: actionsStore.getState().actionId,
@@ -57,12 +57,12 @@ export const unJailPayModalMesage = (): IUnJailPayingModal => {
 export const doNothingMessage = (): IDoNothing => ({
   type: OutcomeMessageType.DO_NOTHING,
   _id: nanoid(),
-  userId: getActingPlayer().userId,
+  userId: getActingPlayer('kkk').userId,
   isModal: false,
 });
 
 export const buyModalHandler = (): IShowCanBuyModal => {
-  const player = getActingPlayer();
+  const player = getActingPlayer('kkk');
 
   return {
     type: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,
@@ -77,8 +77,8 @@ export const buyModalHandler = (): IShowCanBuyModal => {
 };
 
 export const payModalHandler = (): IPayRentModal => {
-  const player = getActingPlayer();
-  const field = getActingField();
+  const player = getActingPlayer('kkk');
+  const field = getActingField('kkk');
   const action = actionsStore.getState();
   const transaction = transactionStore.getState();
   const sum = (transaction && transaction.sum) || 0;
@@ -103,7 +103,7 @@ export const rollDicesMessage = (): IRollDicesMessage | IDoNothing => {
 
   return {
     type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
-    userId: getActingPlayer().userId,
+    userId: getActingPlayer('kkk').userId,
     dices: dicesState.dices,
     meanPosition: dicesState.meanPosition,
     isDouble: dicesState.isDouble,

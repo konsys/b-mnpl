@@ -11,15 +11,17 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { IPlayer, IField, IFieldAction } from 'src/types/Board/board.types';
 import { boardStore } from 'src/stores/board.store';
 
-export const isTax = (): boolean => getActingField().type === FieldType.TAX;
+export const isTax = (): boolean =>
+  getActingField('kkk').type === FieldType.TAX;
 
 export const isStartPass = (): boolean => {
   const dices = dicesStore.getState();
-  const player = getActingPlayer();
+  const player = getActingPlayer('kkk');
 
   return dices.sum > 0 && player.meanPosition - dices.sum < 0;
 };
-export const isJail = (): boolean => getActingField().type === FieldType.JAIL;
+export const isJail = (): boolean =>
+  getActingField('kkk').type === FieldType.JAIL;
 
 export const isFieldMortgaged = (fieldId: number): boolean => {
   const field = getFieldById(fieldId);
@@ -36,10 +38,10 @@ export const isCompany = (fieldId: number): boolean => {
 };
 
 export const isChance = (): boolean =>
-  getActingField().type === FieldType.CHANCE;
+  getActingField('kkk').type === FieldType.CHANCE;
 
 export const isCompanyForSale = (fieldId: number): boolean =>
-  isCompany(getActingField().fieldId) &&
+  isCompany(getActingField('kkk').fieldId) &&
   getFieldById(fieldId) &&
   !getFieldById(fieldId).status;
 
@@ -48,7 +50,7 @@ export const isMyField = (fieldId: number): boolean => {
   return (
     isCompany(fieldId) &&
     field.status &&
-    field.status.userId === getActingPlayer().userId
+    field.status.userId === getActingPlayer('kkk').userId
   );
 };
 
@@ -56,11 +58,11 @@ export const canBuyField = (fieldId: number, p: IPlayer): boolean =>
   isCompany(fieldId) && getFieldById(fieldId).price.startPrice <= p.money;
 
 export const whosField = (): number =>
-  (getActingField().status && getActingField().status.userId) ||
+  (getActingField('kkk').status && getActingField('kkk').status.userId) ||
   BOARD_PARAMS.BANK_PLAYER_ID;
 
 export const noActionField = (): boolean => {
-  const field = getActingField();
+  const field = getActingField('kkk');
   return field.type === FieldType.TAKE_REST || field.type === FieldType.CASINO;
 };
 
@@ -71,7 +73,7 @@ export const playerHasMonopoly = (f: IField, p: IPlayer): boolean => {
 };
 
 export const isGroupMortgaged = (f: IField): boolean => {
-  const p = getActingPlayer();
+  const p = getActingPlayer('kkk');
   const sg = getPlayerGroupFields(f, p);
   return sg.some((v) => v.status && v.status.mortgaged > 0);
 };
@@ -94,7 +96,7 @@ export const canMortgage = (fieldId: number): boolean => {
 
 export const canUnMortgage = (fieldId: number): boolean => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer();
+  const p = getActingPlayer('kkk');
   return (
     f &&
     isCompany(fieldId) &&
@@ -106,7 +108,7 @@ export const canUnMortgage = (fieldId: number): boolean => {
 
 export const canLevelUp = (fieldId: number): boolean => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer();
+  const p = getActingPlayer('kkk');
   const m = playerHasMonopoly(f, p);
   const isMortgaged = isGroupMortgaged(f);
 
@@ -142,7 +144,7 @@ export const canLevelUp = (fieldId: number): boolean => {
 
 export const canLevelDown = (fieldId: number): boolean => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer();
+  const p = getActingPlayer('kkk');
   const hasMonopoly = playerHasMonopoly(f, p);
   const isMortgaged = isGroupMortgaged(f);
 

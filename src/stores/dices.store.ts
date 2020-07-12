@@ -23,7 +23,7 @@ export const setRandomDicesEvent = DicesDomain.event<string>();
 
 export const dicesStore = DicesDomain.store<IDicesStore>(null)
   .on(setRandomDicesEvent, (_, actionId) => {
-    const player = getActingPlayer();
+    const player = getActingPlayer('kkk');
     const currenPosition = player.meanPosition;
 
     const dice1 = 1;
@@ -51,7 +51,7 @@ export const dicesStore = DicesDomain.store<IDicesStore>(null)
   .reset(resetDicesEvent);
 
 export const dicesUpdatePlayerToken = (dices: IDicesStore): void => {
-  const player = getActingPlayer();
+  const player = getActingPlayer('kkk');
   let jailed = 0;
   let movesLeft = 0;
   let meanPosition = dices.meanPosition;
@@ -63,7 +63,10 @@ export const dicesUpdatePlayerToken = (dices: IDicesStore): void => {
       movesLeft = 0;
       doublesRolledAsCombo = 0;
     } else {
-      updatePlayer({ ...player, unjailAttempts: ++player.unjailAttempts });
+      updatePlayer('kkk', {
+        ...player,
+        unjailAttempts: ++player.unjailAttempts,
+      });
       return;
     }
   } else {
@@ -76,11 +79,11 @@ export const dicesUpdatePlayerToken = (dices: IDicesStore): void => {
   }
 
   if (doublesRolledAsCombo >= BOARD_PARAMS.JAIL_TURNS) {
-    jailPlayer();
+    jailPlayer('kkk');
     return;
   }
 
-  updatePlayer({
+  updatePlayer('kkk', {
     ...player,
     movesLeft,
     doublesRolledAsCombo,

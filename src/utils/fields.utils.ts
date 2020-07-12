@@ -28,8 +28,8 @@ import { dicesStore } from 'src/stores/dices.store';
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
 
-export const getActingField = (): IField => {
-  const user = getActingPlayer();
+export const getActingField = (gameId: string): IField => {
+  const user = getActingPlayer(gameId);
   const field = findFieldByPosition(user.meanPosition);
   if (!field) throw Error(`Field not found: position: ${user.meanPosition}`);
   return field;
@@ -48,10 +48,10 @@ export const getBoughtFields = () =>
     .map((v) => v.status);
 
 export const moneyTransactionParams = (): IMoneyTransaction => {
-  const field = getActingField();
+  const field = getActingField('kkk');
   return {
     sum: -field.price,
-    userId: getActingPlayer().userId,
+    userId: getActingPlayer('kkk').userId,
     toUserId: (field.status && field.status.userId) || 0,
   };
 };
@@ -78,7 +78,7 @@ export const getFieldRent = (field: IField): number => {
   if (field && field.rent && field.rent.paymentMultiplier) {
     const group = getPlayerGroupFields(
       field,
-      getPlayerById(field.status.userId),
+      getPlayerById('kkk', field.status.userId),
     );
     const dices = dicesStore.getState();
     return (
@@ -134,7 +134,7 @@ export const getNotMortgagedFieldsByGroup = (group: number, user: IPlayer) =>
   );
 
 export const buyCompany = (f: IField): number => {
-  const p = getActingPlayer();
+  const p = getActingPlayer('kkk');
   const sameGroup = _.concat(getPlayerGroupFields(f, p), f);
 
   if (canBuyField(f.fieldId, p)) {
@@ -168,7 +168,7 @@ export const buyCompany = (f: IField): number => {
 
 export const mortgage = (fieldId: number): void => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer();
+  const p = getActingPlayer('kkk');
 
   setPlayerActionEvent({
     userId: p.userId,
@@ -237,7 +237,7 @@ export const getFieldActions = (fieldId: number): IFieldAction[] => {
 
 export const unMortgage = (fieldId: number): void => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer();
+  const p = getActingPlayer('kkk');
 
   setPlayerActionEvent({
     userId: p.userId,
@@ -275,7 +275,7 @@ export const unMortgage = (fieldId: number): void => {
 
 export const levelUpField = (fieldId: number): void => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer();
+  const p = getActingPlayer('kkk');
 
   setPlayerActionEvent({
     userId: p.userId,
@@ -312,7 +312,7 @@ export const levelUpField = (fieldId: number): void => {
 
 export const levelDownField = (fieldId: number): void => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer();
+  const p = getActingPlayer('kkk');
 
   setPlayerActionEvent({
     userId: p.userId,

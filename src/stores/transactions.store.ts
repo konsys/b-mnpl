@@ -27,7 +27,7 @@ export const transactionStore = TransactionsDomain.store<ITransactionStore | nul
 )
   .on(setTransactionEvent, (_, data) => data)
   .on(transactMoneyEvent, (transaction, id) => {
-    const player = getPlayerById(transaction.userId);
+    const player = getPlayerById('kkk', transaction.userId);
     if (transaction.sum > player.money) {
       setError({
         code: ErrorCode.NotEnoughMoney,
@@ -53,12 +53,15 @@ export const transactionStore = TransactionsDomain.store<ITransactionStore | nul
   .reset(resetTransactionsEvent);
 
 const moneyTransaction = (transaction: IMoneyTransaction): boolean => {
-  const player1 = getPlayerById(transaction.userId);
-  const player2 = getPlayerById(transaction.toUserId);
+  const player1 = getPlayerById('kkk', transaction.userId);
+  const player2 = getPlayerById('kkk', transaction.toUserId);
 
   return (
-    updatePlayer({ ...player1, money: player1.money - transaction.sum }) &&
-    updatePlayer({ ...player2, money: player2.money + transaction.sum })
+    updatePlayer('kkk', {
+      ...player1,
+      money: player1.money - transaction.sum,
+    }) &&
+    updatePlayer('kkk', { ...player2, money: player2.money + transaction.sum })
   );
 };
 

@@ -55,17 +55,17 @@ export class BoardMessage {
     if (payload.actionId === action.actionId) {
       Action.rollDicesAction();
       BoardSocket.emitMessage();
-      this.tokenMovedAfterClick();
+      this.tokenMovedAfterClick('kkk');
       setTimeout(() => {
         BoardSocket.emitMessage();
       }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
     }
   }
 
-  tokenMovedAfterClick() {
+  tokenMovedAfterClick(gameId: string) {
     try {
-      const player = getActingPlayer();
-      const field = getActingField();
+      const player = getActingPlayer(gameId);
+      const field = getActingField(gameId);
 
       if (!player.jailed) {
         if (isStartPass()) {
@@ -98,7 +98,7 @@ export class BoardMessage {
           });
           Action.payTaxModal();
         } else if (isJail()) {
-          jailPlayer() && Action.switchPlayerTurn();
+          jailPlayer(gameId) && Action.switchPlayerTurn();
         } else if (isTax()) {
           // TODO написать нормальный текст на налоги
           setTransactionEvent({
@@ -141,8 +141,8 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    const f = getActingField();
-    const p = getActingPlayer();
+    const f = getActingField('kkk');
+    const p = getActingPlayer('kkk');
     if (canBuyField(f.fieldId, p)) {
       Action.buyField();
       Action.switchPlayerTurn();
@@ -172,7 +172,7 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
-    if (getCurrentTransaction().sum < getActingPlayer().money) {
+    if (getCurrentTransaction().sum < getActingPlayer('kkk').money) {
       transactMoneyEvent(getCurrentTransaction().transactionId);
       Action.switchPlayerTurn();
     } else {
@@ -186,7 +186,7 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED)
   async unJailPayment(client: Socket, payload: IActionId): Promise<void> {
-    unjailPlayer();
+    unjailPlayer('kkk');
     BoardSocket.emitMessage();
     setTimeout(() => {
       Action.rollDicesModal();

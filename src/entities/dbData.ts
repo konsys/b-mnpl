@@ -908,6 +908,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
 export const users: UsersEntity[] = [
   {
     name: 'Konstantin',
+    password: 'password',
     email: 'test1@yandex.ru',
     registrationType: 'vk',
     vip: true,
@@ -915,6 +916,7 @@ export const users: UsersEntity[] = [
   },
   {
     name: 'Diman',
+    password: 'password',
     email: 'test2@yandex.ru',
     registrationType: 'vk',
     vip: false,
@@ -922,6 +924,7 @@ export const users: UsersEntity[] = [
   },
   {
     name: 'Feodr',
+    password: 'password',
     email: 'test3@yandex.ru',
     registrationType: 'vk',
     vip: false,
@@ -929,6 +932,7 @@ export const users: UsersEntity[] = [
   },
   {
     name: 'Ivan',
+    password: 'password',
     email: 'test4@yandex.ru',
     registrationType: 'vk',
     vip: false,
@@ -936,6 +940,7 @@ export const users: UsersEntity[] = [
   },
   {
     name: 'Maxim',
+    password: 'password',
     email: 'test5@yandex.ru',
     registrationType: 'vk',
     vip: true,

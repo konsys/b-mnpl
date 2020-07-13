@@ -16,8 +16,13 @@ export class UsersEntity {
   @Column()
   name: string;
 
+  @Exclude()
   @Column()
   email: string;
+
+  @Exclude()
+  @Column({ default: 'password' })
+  password: string;
 
   @Column({ default: null })
   team?: string;

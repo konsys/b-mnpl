@@ -41,7 +41,7 @@ export class UsersService {
     }
   }
 
-  async getUser(userId: number | null) {
+  async getUser(userId: number | null): Promise<UsersEntity> {
     try {
       const res = await this.usersClient
         .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
@@ -53,14 +53,13 @@ export class UsersService {
     }
   }
 
-  async getUsersByIds(userId: number[]): Promise<UsersEntity[]> {
+  async getUsersByIds(userIds: number[]): Promise<UsersEntity[]> {
     try {
-      // const res = await this.usersClient
-      //   .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
-      //   .toPromise();
+      const res = await this.usersClient
+        .send<any>({ cmd: MsPatterns.GET_USERS_BY_IDS }, { userIds })
+        .toPromise();
 
-      // return res;
-      return [];
+      return res;
     } catch (err) {
       this.logger.log(`Error: ${err}`);
     }

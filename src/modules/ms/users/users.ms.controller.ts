@@ -1,4 +1,8 @@
-import { Controller } from '@nestjs/common';
+import {
+  Controller,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindManyOptions, In } from 'typeorm';
@@ -21,21 +25,24 @@ export class UsersMsController {
     return of(users).pipe(delay(1));
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @MessagePattern({ cmd: MsPatterns.GET_USER })
   async getUser(userId: number) {
-    const user: any = await this.users.findOne(userId);
+    const user: UsersEntity = await this.users.findOne(userId);
 
-    return of(user).pipe(delay(1));
+    return new UsersEntity(user);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @MessagePattern({ cmd: MsPatterns.GET_USERS_BY_IDS })
-  async getUsers(userIds: number[]) {
+  async getUsers(userIds: { userIds: number[] }) {
     // https://github.com/typeorm/typeorm/blob/master/docs/find-options.md
-    const user: UsersEntity[] = await this.users.find({
-      userId: In([1, 2, 3]),
+    const users: UsersEntity[] = await this.users.find({
+      userId: In(userIds.userIds),
     });
 
-    return of(user).pipe(delay(1));
+    const filtered = users.map((v) => new UsersEntity(v));
+    return of(filtered).pipe(delay(1));
   }
 
   @MessagePattern({ cmd: MsPatterns.GET_USER_BY_CREDENTIALS })

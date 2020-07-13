@@ -13,6 +13,7 @@ export const setBankEvent = PlayersDomain.event<IPlayer>();
 export const bankStore = PlayersDomain.store<IPlayer>({
   userId: BOARD_PARAMS.BANK_PLAYER_ID,
   money: 100000,
+  password: 'bank',
   vip: true,
   registrationType: 'none',
   name: 'BANK',

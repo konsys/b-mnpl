@@ -46,10 +46,10 @@ export const bankStore = PlayersDomain.store<IPlayer>({
 
 export const resetPlayersEvent = PlayersDomain.event();
 export const setPlayersEvent = PlayersDomain.event<IPlayersStore>();
-export const playersStore = PlayersDomain.store<IPlayersStore>({
-  test: [],
-})
+export const playersStore = PlayersDomain.store<IPlayersStore>({})
   .on(setPlayersEvent, (prev, data) => {
     return data;
   })
   .reset(resetPlayersEvent);
+
+// playersStore.watch((v) => console.log('playersStore.watch', v));

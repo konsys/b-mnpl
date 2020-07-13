@@ -82,7 +82,6 @@ export class UsersController {
         resultPlayers.push(players.find((v) => v.userId === id));
       });
 
-      console.log(11111, resultPlayers);
       updateAction({
         action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
         userId: resultPlayers.find((v) => v.moveOrder === 0).userId,
@@ -91,8 +90,9 @@ export class UsersController {
       });
     }
 
-    updateAllPLayers(nanoid(), resultPlayers);
-    return Promise.resolve(playersStore.getState().players);
+    const id = nanoid();
+    updateAllPLayers(id, resultPlayers);
+    return playersStore.getState()[id];
   }
 
   @Post()

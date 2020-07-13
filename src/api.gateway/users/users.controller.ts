@@ -55,7 +55,6 @@ export class UsersController {
       // Заполняем статус
       players = players.map((v, k) => {
         v = new UsersEntity(v);
-        console.log(11111, v);
         return {
           ...v,
           gameId: 'gameId',
@@ -83,6 +82,7 @@ export class UsersController {
         resultPlayers.push(players.find((v) => v.userId === id));
       });
 
+      console.log(11111, resultPlayers);
       updateAction({
         action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
         userId: resultPlayers.find((v) => v.moveOrder === 0).userId,

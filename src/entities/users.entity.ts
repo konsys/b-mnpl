@@ -38,6 +38,7 @@ export class UsersEntity {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt?: Date;
 
+  @Exclude()
   @Column({ default: true })
   isActive?: boolean;
 

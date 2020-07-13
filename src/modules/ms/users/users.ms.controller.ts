@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindManyOptions } from 'typeorm';
+import { Repository, FindManyOptions, In } from 'typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
@@ -28,9 +28,19 @@ export class UsersMsController {
     return of(user).pipe(delay(1));
   }
 
+  @MessagePattern({ cmd: MsPatterns.GET_USERS_BY_IDS })
+  async getUsers(userIds: number[]) {
+    // https://github.com/typeorm/typeorm/blob/master/docs/find-options.md
+    const user: UsersEntity[] = await this.users.find({
+      userId: In([1, 2, 3]),
+    });
+
+    return of(user).pipe(delay(1));
+  }
+
   @MessagePattern({ cmd: MsPatterns.GET_USER_BY_CREDENTIALS })
   async verifyUsers(filter: any) {
-    const user: any = await this.users.findOne({ email: filter.email });
+    const user: UsersEntity = await this.users.findOne({ email: filter.email });
 
     return of(user).pipe(delay(1));
   }

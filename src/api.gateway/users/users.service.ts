@@ -4,6 +4,7 @@ import { FindManyOptions } from 'typeorm';
 import { MsPatterns, MsNames } from 'src/types/MS/ms.types';
 
 import { users } from 'src/entities/dbData';
+import { UsersEntity } from 'src/entities/users.entity';
 
 @Controller()
 export class UsersService {
@@ -47,6 +48,19 @@ export class UsersService {
         .toPromise();
 
       return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
+  async getUsersByIds(userId: number[]): Promise<UsersEntity[]> {
+    try {
+      // const res = await this.usersClient
+      //   .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
+      //   .toPromise();
+
+      // return res;
+      return [];
     } catch (err) {
       this.logger.log(`Error: ${err}`);
     }

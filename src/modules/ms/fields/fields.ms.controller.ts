@@ -9,17 +9,17 @@ import { MessagePattern } from '@nestjs/microservices';
 export class FieldsMsController {
   constructor(
     @InjectRepository(BoardFieldsEntity)
-    private readonly service: Repository<BoardFieldsEntity>,
+    private readonly fieldsRepository: Repository<BoardFieldsEntity>,
   ) {}
 
   @MessagePattern({ cmd: MsPatterns.GET_INIT_FIELDS })
   async getFields(): Promise<BoardFieldsEntity[]> {
-    return await this.service.find();
+    return await this.fieldsRepository.find();
   }
 
   @MessagePattern({ cmd: MsPatterns.SAVE_FIELDS })
   async saveFields(fields: BoardFieldsEntity[]): Promise<BoardFieldsEntity[]> {
-    await this.service.save(fields);
-    return await this.service.find();
+    await this.fieldsRepository.save(fields);
+    return await this.fieldsRepository.find();
   }
 }

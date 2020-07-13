@@ -13,6 +13,11 @@ import { playersStore } from 'src/stores/players.store';
 import { LocalAuthGuard } from 'src/modules/auth/local-auth.guard';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
+import { BOARD_PARAMS } from 'src/params/board.params';
+import { updateAction } from 'src/stores/actions.store';
+import { OutcomeMessageType } from 'src/types/Board/board.types';
+import { nanoid } from 'nanoid';
+import { updateAllPLayers } from 'src/utils/users.utils';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -36,7 +41,49 @@ export class UsersController {
 
   @Get()
   async get(@Query() ids): Promise<UsersEntity[]> {
-    console.log(ids);
+    let players = await this.service.getUsersByIds(ids.ids);
+    console.log(11111, players);
+    const resultPlayers = [];
+    if (players.length > 0) {
+      // Случайная очередь ходов
+      const ids = players.map((v) => v.userId).sort(() => Math.random() - 0.5);
+
+      // Заполняем статус
+      players = players.map((v, k) => ({
+        ...v,
+        gameId: 'gameId',
+        doublesRolledAsCombo: 0,
+        jailed: 0,
+        unjailAttempts: 0,
+        meanPosition: 0,
+        money: BOARD_PARAMS.INIT_MONEY,
+        creditPayRound: false,
+        creditNextTakeRound: 0,
+        score: 0,
+        timeReduceLevel: 0,
+        creditToPay: 0,
+        frags: '',
+        additionalTime: 0,
+        canUseCredit: false,
+        moveOrder: ids.findIndex((id) => id === v.userId),
+        isActing: ids[0] === v.userId,
+        movesLeft: 0,
+      }));
+
+      // Заполняем массив в порядке очереди ходов
+      ids.map((id) => {
+        resultPlayers.push(players.find((v) => v.userId === id));
+      });
+
+      updateAction({
+        action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
+        userId: resultPlayers.find((v) => v.moveOrder === 0).userId,
+        moveId: 0,
+        actionId: nanoid(4),
+      });
+    }
+
+    updateAllPLayers(nanoid(), resultPlayers);
     return Promise.resolve(playersStore.getState().players);
   }
 

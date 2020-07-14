@@ -8,10 +8,10 @@ export interface IPlayersStore {
 }
 
 export const setPlayersStore = async (gameId: string, players: IPlayersStore) =>
-  await redis.set(gameId, JSON.stringify(players));
+  await redis.set(`${gameId}-players`, JSON.stringify(players));
 
 export const getPlayersStore = async (gameId: string): Promise<IPlayersStore> =>
-  JSON.parse(await redis.get(gameId)) as IPlayersStore;
+  JSON.parse(await redis.get(`${gameId}-players`)) as IPlayersStore;
 
 const bank: IPlayer = {
   userId: BOARD_PARAMS.BANK_PLAYER_ID,

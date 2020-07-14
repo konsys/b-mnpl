@@ -23,21 +23,6 @@ import { nanoid } from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { getStartBonus } from 'src/utils/moneys.utils';
-import {
-  isMyField,
-  isCompanyForSale,
-  canBuyField,
-  isChance,
-  isTax,
-  isJail,
-  canMortgage,
-  canUnMortgage,
-  isStartPass,
-  whosField,
-  noActionField,
-  canLevelUp,
-  canLevelDown,
-} from 'src/utils/checks.utils';
 import { UsersService } from 'src/api.gateway/users/users.service';
 
 @WebSocketGateway()

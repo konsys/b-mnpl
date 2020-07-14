@@ -69,23 +69,23 @@ export class TransactionService {
     transaction: IMoneyTransaction,
   ): Promise<boolean> {
     const player1 = await this.usersService.getPlayerById(
-        gameId,
+      gameId,
       transaction.userId,
     );
     const player2 = await this.usersService.getPlayerById(
-        gameId,
+      gameId,
       transaction.toUserId,
     );
 
     return (
-      await this.usersService.updatePlayer(gameId, {
+      (await this.usersService.updatePlayer(gameId, {
         ...player1,
         money: player1.money - transaction.sum,
-      }) &&
-      await this.usersService.updatePlayer(gameId', {
+      })) &&
+      (await this.usersService.updatePlayer(gameId, {
         ...player2,
         money: player2.money + transaction.sum,
-      })
+      }))
     );
   }
 }

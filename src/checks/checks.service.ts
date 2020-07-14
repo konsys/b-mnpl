@@ -14,9 +14,9 @@ export class ChecksService {
     private readonly fieldsService: FieldsService,
   ) {}
 
-  async isTax(): Promise<boolean> {
+  async isTax(gameId: string): Promise<boolean> {
     return (
-      (await this.fieldsService.getActingField('kkk')).type === FieldType.TAX
+      (await this.fieldsService.getActingField(gameId)).type === FieldType.TAX
     );
   }
 

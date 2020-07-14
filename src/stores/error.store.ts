@@ -1,12 +1,10 @@
-import { GameDomain } from 'src/stores/actions.store';
-import {} from 'src/entities/board.fields.entity';
-import { IField } from 'src/types/Board/board.types';
+import { createDomain } from 'effector';
 
 export interface IErrorMessage {
   code: number;
   message: string;
 }
-const ErrorDomain = GameDomain.domain('FieldsDomain');
+const ErrorDomain = createDomain('FieldsDomain');
 export const resetError = ErrorDomain.event();
 
 export const setError = ErrorDomain.event<IErrorMessage>();

@@ -13,13 +13,13 @@ import {
 import { Socket, Server } from 'socket.io';
 import { IPlayer, IField, IFieldAction } from 'src/types/Board/board.types';
 import { SocketActions } from 'src/types/Game/game.types';
-import { createBoardMessage } from 'src/socket.messages/send.message';
 import { UsersService } from '../api.gateway/users/users.service';
 import { FieldsService } from '../api.gateway/fields/fields.service';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import { updateAllFields } from 'src/utils/fields.utils';
 import { _ } from 'lodash';
 import { FieldType } from 'src/entities/board.fields.entity';
+import { BoardMessageService } from 'src/api.gateway/board.message/board.message.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -30,6 +30,7 @@ export class BoardSocket
   constructor(
     private readonly usersService: UsersService,
     private readonly fieldsService: FieldsService,
+    private readonly boardService: BoardMessageService,
   ) {}
 
   @WebSocketServer()
@@ -46,10 +47,10 @@ export class BoardSocket
     }
   }
 
-  public static emitMessage() {
+  public async emitMessage() {
     BoardSocket.socketServer.emit(
       SocketActions.BOARD_MESSAGE,
-      createBoardMessage(),
+      await this.boardService.createBoardMessage(),
     );
   }
 
@@ -95,6 +96,6 @@ export class BoardSocket
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id} args: ${args}`);
 
-    BoardSocket.emitMessage();
+    this.emitMessage();
   }
 }

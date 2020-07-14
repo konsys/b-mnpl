@@ -130,7 +130,6 @@ export class UsersService {
   }
 
   async setBankStore(gameId: string, player: IPlayer) {
-    console.log(1111111, redis);
     return await redis.set(gameId, JSON.stringify(player));
   }
 

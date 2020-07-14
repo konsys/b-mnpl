@@ -18,7 +18,6 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { updateAction } from 'src/stores/actions.store';
 import { OutcomeMessageType } from 'src/types/Board/board.types';
 import { nanoid } from 'nanoid';
-import { updateAllPLayers } from 'src/utils/users.utils';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -90,7 +89,7 @@ export class UsersController {
     }
 
     const id = nanoid();
-    updateAllPLayers(id, resultPlayers);
+    this.service.updateAllPLayers(id, resultPlayers);
     const st = await this.service.getPlayersStore(id);
 
     return st.players;

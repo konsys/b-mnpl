@@ -13,11 +13,6 @@ import {
 import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
-import {
-  getActingPlayer,
-  unjailPlayer,
-  jailPlayer,
-} from 'src/utils/users.utils';
 import { BoardSocket } from 'src/params/board.init';
 import {
   setTransaction,
@@ -43,26 +38,32 @@ import {
   canLevelUp,
   canLevelDown,
 } from 'src/utils/checks.utils';
+import { UsersService } from 'src/api.gateway/users/users.service';
 
 @WebSocketGateway()
 export class BoardMessage {
+  constructor(
+    private readonly service: BoardSocket,
+    private readonly usersService: UsersService,
+  ) {}
+
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const action = getCurrentAction();
 
     if (payload.actionId === action.actionId) {
       Action.rollDicesAction();
-      BoardSocket.emitMessage();
+      this.service.emitMessage();
       this.tokenMovedAfterClick('kkk');
       setTimeout(() => {
-        BoardSocket.emitMessage();
+        this.service.emitMessage();
       }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
     }
   }
 
   async tokenMovedAfterClick(gameId: string) {
     try {
-      const player = await getActingPlayer(gameId);
+      const player = await this.usersService.getActingPlayer(gameId);
       const field = await getActingField(gameId);
 
       if (!player.jailed) {
@@ -96,7 +97,8 @@ export class BoardMessage {
           });
           Action.payTaxModal();
         } else if (isJail()) {
-          jailPlayer(gameId) && Action.switchPlayerTurn();
+          (await this.usersService.jailPlayer(gameId)) &&
+            Action.switchPlayerTurn();
         } else if (isTax()) {
           // TODO написать нормальный текст на налоги
           setTransaction(gameId, {
@@ -140,7 +142,7 @@ export class BoardMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     const f = await getActingField('kkk');
-    const p = await getActingPlayer('kkk');
+    const p = await this.usersService.getActingPlayer('kkk');
     if (canBuyField(f.fieldId, p)) {
       Action.buyField();
       Action.switchPlayerTurn();
@@ -157,7 +159,7 @@ export class BoardMessage {
         });
     }
 
-    BoardSocket.emitMessage();
+    await this.service.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_START_CLICKED)
@@ -165,14 +167,14 @@ export class BoardMessage {
     Action.startAuctionModal();
     Action.switchPlayerTurn();
 
-    BoardSocket.emitMessage();
+    this.service.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
     if (
       (await getCurrentTransaction('kkk')).sum <
-      (await getActingPlayer('kkk')).money
+      (await this.usersService.getActingPlayer('kkk')).money
     ) {
       await transactMoney(
         'kkk',
@@ -185,16 +187,16 @@ export class BoardMessage {
         message: 'Oops!',
       });
     }
-    BoardSocket.emitMessage();
+    await this.service.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED)
   async unJailPayment(client: Socket, payload: IActionId): Promise<void> {
-    unjailPlayer('kkk');
-    BoardSocket.emitMessage();
-    setTimeout(() => {
+    await this.usersService.unjailPlayer('kkk');
+    await this.service.emitMessage();
+    setTimeout(async () => {
       Action.rollDicesModal();
-      BoardSocket.emitMessage();
+      await this.service.emitMessage();
     }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 2);
   }
 
@@ -208,7 +210,7 @@ export class BoardMessage {
     } else {
       mortgage(payload.fieldId);
     }
-    BoardSocket.emitMessage();
+    await this.service.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED)
@@ -221,7 +223,7 @@ export class BoardMessage {
     } else {
       unMortgage(payload.fieldId);
     }
-    BoardSocket.emitMessage();
+    await this.service.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED)
@@ -234,7 +236,7 @@ export class BoardMessage {
     } else {
       levelUpField(payload.fieldId);
     }
-    BoardSocket.emitMessage();
+    await this.service.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED)
@@ -247,6 +249,6 @@ export class BoardMessage {
     } else {
       levelDownField(payload.fieldId);
     }
-    BoardSocket.emitMessage();
+    await this.service.emitMessage();
   }
 }

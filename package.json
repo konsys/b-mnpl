@@ -62,6 +62,7 @@
     "@types/helmet": "^0.0.47",
     "@types/ioredis": "^4.17.2",
     "@types/jest": "26.0.0",
+    "@types/lodash": "^4.14.157",
     "@types/nanoid": "^2.1.0",
     "@types/node": "^14.0.13",
     "@types/passport-jwt": "^3.0.3",

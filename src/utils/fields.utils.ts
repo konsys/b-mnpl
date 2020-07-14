@@ -5,7 +5,6 @@ import {
   IPlayer,
   IFieldAction,
 } from 'src/types/Board/board.types';
-import { getActingPlayer, getPlayerById } from './users.utils';
 import _ from 'lodash';
 import { BOARD_PARAMS } from '../params/board.params';
 

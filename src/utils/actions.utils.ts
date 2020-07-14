@@ -12,10 +12,7 @@ import {
   updateAllPLayers,
   updatePlayer,
 } from './users.utils';
-import {
-  setTransactionEvent,
-  transactMoneyEvent,
-} from 'src/stores/transactions.store';
+import { setTransaction, transactMoney } from 'src/stores/transactions.store';
 import { BOARD_PARAMS } from '../params/board.params';
 import { setNewRoundEvent, setNewTurnEvent } from 'src/stores/board.store';
 import { getPlayersStore } from 'src/stores/players.store';
@@ -41,14 +38,14 @@ export const buyField = async (): Promise<void> => {
 
   // Decrease player`s money;
   const transactionId = nanoid(4);
-  setTransactionEvent({
+  await setTransaction('kkk', {
     sum,
     reason: `Купить ${field.name}`,
     toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
     transactionId,
     userId: user.userId,
   });
-  transactMoneyEvent(transactionId);
+  transactMoney('kkk', transactionId);
 };
 
 export const unJailModal = async (): Promise<void> => {

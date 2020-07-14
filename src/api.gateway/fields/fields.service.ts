@@ -16,6 +16,8 @@ import { IFieldsStore } from 'src/stores/fields.store';
 import _ from 'lodash';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { ChecksService } from 'src/checks/checks.service';
+import { BOARD_PARAMS } from 'src/params/board.params';
+import { nanoid } from 'nanoid';
 
 @Controller()
 export class FieldsService {
@@ -223,31 +225,31 @@ export class FieldsService {
   }
 
   async mortgage(gameId: string, fieldId: number): Promise<void> {
-    const f = this.getFieldById(gameId, fieldId);
+    const f = await this.getFieldById(gameId, fieldId);
     const p = await this.usersService.getActingPlayer(gameId);
 
-    setPlayerActionEvent({
+    await this.usersService.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
       fieldAction: IFieldAction.MORTGAGE,
     });
 
-    (await this.checksService.canMortgage(f.fieldId)) &&
-      updateField({
+    (await this.checksService.canMortgage(gameId, f.fieldId)) &&
+      (await this.updateField(gameId, {
         ...f,
         status: { ...f.status, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },
-      });
+      }));
 
-    const groupFields = getPlayerGroupFields(f, p);
-    groupFields.map((v) => {
+    const groupFields = await this.getPlayerGroupFields(gameId, f, p);
+    for (const v of groupFields) {
       v.status = {
         ...v.status,
-        fieldActions: getFieldActions(v.fieldId),
+        fieldActions: await this.getFieldActions(gameId, v.fieldId),
       };
 
-      updateField(v);
-    });
+      await this.updateField(gameId, v);
+    }
 
     const transactionId = nanoid(4);
     await setTransaction(gameId, {

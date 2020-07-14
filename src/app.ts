@@ -11,6 +11,7 @@ import { BoardSocketModule } from './modules/socket/board.socket.modules';
 import { AuthModule } from './modules/auth/auth.module';
 import { BoardMessageModule } from './api.gateway/board.message/board.message.module';
 import { ChecksModule } from './checks/checks.module';
+import { TransactionModule } from './api.gateway/transaction/transaction.module';
 
 const rootPath = join(__dirname, '../', 'assets/');
 
@@ -23,6 +24,7 @@ const rootPath = join(__dirname, '../', 'assets/');
     AuthModule,
     ChecksModule,
     BoardMessageModule,
+    TransactionModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '0.0.0.0',

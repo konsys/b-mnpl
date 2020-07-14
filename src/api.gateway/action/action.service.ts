@@ -71,7 +71,7 @@ export class ActionService {
   async unJailModal(gameId: string) {
     await this.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
-      userId: (await this.usersService.getActingPlayer('kkk')).userId,
+      userId: (await this.usersService.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.getActionStore(gameId)).moveId,
     });
@@ -80,7 +80,7 @@ export class ActionService {
   async payUnJailModal(gameId: string) {
     await this.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
-      userId: (await this.usersService.getActingPlayer('kkk')).userId,
+      userId: (await this.usersService.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.getActionStore(gameId)).moveId,
     });
@@ -89,7 +89,7 @@ export class ActionService {
   async payTaxModal(gameId: string) {
     await this.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
-      userId: (await this.usersService.getActingPlayer('kkk')).userId,
+      userId: (await this.usersService.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.getActionStore(gameId)).moveId,
     });
@@ -98,7 +98,7 @@ export class ActionService {
   async rollDicesAction(gameId: string) {
     await this.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
-      userId: (await this.usersService.getActingPlayer('kkk')).userId,
+      userId: (await this.usersService.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.getActionStore(gameId)).moveId,
     });
@@ -107,7 +107,7 @@ export class ActionService {
   async rollDicesModal(gameId: string) {
     await this.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
-      userId: (await this.usersService.getActingPlayer('kkk')).userId,
+      userId: (await this.usersService.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.getActionStore(gameId)).moveId,
     });

@@ -70,7 +70,7 @@ export const unjailPlayer = async (gameId: string, newPosition?: number) => {
 };
 
 export const jailPlayer = async (gameId: string): Promise<boolean> => {
-  const player = getActingPlayer(gameId);
+  const player = await getActingPlayer(gameId);
   return await updatePlayer(gameId, {
     ...player,
     jailed: BOARD_PARAMS.JAIL_TURNS,
@@ -87,23 +87,19 @@ export const updatePlayer = async (
 ): Promise<boolean> => {
   // Update BANK
   if (player.userId === BOARD_PARAMS.BANK_PLAYER_ID) {
-    return (
-      setBankStore(gameId, {
-        player,
-      }) && true
-    );
+    return setBankStore(gameId, player) && true;
   }
 
-  const playersState = await getBankStore(gameId);
-  const currentPLayerIndex = getPlayerIndexById(gameId, player.userId);
+  const playersState = await getPlayersStore(gameId);
+  const currentPLayerIndex = await getPlayerIndexById(gameId, player.userId);
 
   // TODO error handler
   if (currentPLayerIndex === -1)
     throw Error(`Not found player with id: ${player.userId}`);
 
-  playersState[currentPLayerIndex] = player;
+  playersState.players[currentPLayerIndex] = player;
 
-  return updateAllPLayers(gameId, playersState);
+  return await updateAllPLayers(gameId, playersState.players);
 };
 
 export const updateAllPLayers = async (

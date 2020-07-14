@@ -28,8 +28,8 @@ import { dicesStore } from 'src/stores/dices.store';
 export const findFieldByPosition = (fieldPosition: number) =>
   fieldsState().fields.find((v) => v.fieldPosition === fieldPosition);
 
-export const getActingField = (gameId: string): IField => {
-  const user = getActingPlayer(gameId);
+export const getActingField = async (gameId: string): Promise<IField> => {
+  const user = await getActingPlayer(gameId);
   const field = findFieldByPosition(user.meanPosition);
   if (!field) throw Error(`Field not found: position: ${user.meanPosition}`);
   return field;
@@ -47,11 +47,12 @@ export const getBoughtFields = () =>
     .fields.filter((v) => v.status && v.status.userId > 0)
     .map((v) => v.status);
 
-export const moneyTransactionParams = (): IMoneyTransaction => {
-  const field = getActingField('kkk');
+export const moneyTransactionParams = async (): Promise<IMoneyTransaction> => {
+  const field = await getActingField('kkk');
+  const p = await getActingPlayer('kkk');
   return {
     sum: -field.price,
-    userId: getActingPlayer('kkk').userId,
+    userId: p.userId,
     toUserId: (field.status && field.status.userId) || 0,
   };
 };
@@ -74,11 +75,11 @@ export const updateAllFields = (fields: IField[]) => {
   });
 };
 
-export const getFieldRent = (field: IField): number => {
+export const getFieldRent = async (field: IField): Promise<number> => {
   if (field && field.rent && field.rent.paymentMultiplier) {
     const group = getPlayerGroupFields(
       field,
-      getPlayerById('kkk', field.status.userId),
+      await getPlayerById('kkk', field.status.userId),
     );
     const dices = dicesStore.getState();
     return (
@@ -133,8 +134,8 @@ export const getNotMortgagedFieldsByGroup = (group: number, user: IPlayer) =>
       user.userId === v.status.userId,
   );
 
-export const buyCompany = (f: IField): number => {
-  const p = getActingPlayer('kkk');
+export const buyCompany = async (f: IField): Promise<number> => {
+  const p = await getActingPlayer('kkk');
   const sameGroup = _.concat(getPlayerGroupFields(f, p), f);
 
   if (canBuyField(f.fieldId, p)) {
@@ -166,9 +167,9 @@ export const buyCompany = (f: IField): number => {
   return f.price.startPrice;
 };
 
-export const mortgage = (fieldId: number): void => {
+export const mortgage = async (fieldId: number): Promise<void> => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer('kkk');
+  const p = await getActingPlayer('kkk');
 
   setPlayerActionEvent({
     userId: p.userId,
@@ -235,9 +236,9 @@ export const getFieldActions = (fieldId: number): IFieldAction[] => {
   return [];
 };
 
-export const unMortgage = (fieldId: number): void => {
+export const unMortgage = async (fieldId: number): Promise<void> => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer('kkk');
+  const p = await getActingPlayer('kkk');
 
   setPlayerActionEvent({
     userId: p.userId,
@@ -273,9 +274,9 @@ export const unMortgage = (fieldId: number): void => {
   transactMoneyEvent(transactionId);
 };
 
-export const levelUpField = (fieldId: number): void => {
+export const levelUpField = async (fieldId: number): Promise<void> => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer('kkk');
+  const p = await getActingPlayer('kkk');
 
   setPlayerActionEvent({
     userId: p.userId,
@@ -310,9 +311,9 @@ export const levelUpField = (fieldId: number): void => {
   transactMoneyEvent(transactionId);
 };
 
-export const levelDownField = (fieldId: number): void => {
+export const levelDownField = async (fieldId: number): Promise<void> => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer('kkk');
+  const p = await getActingPlayer('kkk');
 
   setPlayerActionEvent({
     userId: p.userId,

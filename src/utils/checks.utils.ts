@@ -11,17 +11,17 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { IPlayer, IField, IFieldAction } from 'src/types/Board/board.types';
 import { boardStore } from 'src/stores/board.store';
 
-export const isTax = (): boolean =>
-  getActingField('kkk').type === FieldType.TAX;
+export const isTax = async (): Promise<boolean> =>
+  (await getActingField('kkk')).type === FieldType.TAX;
 
-export const isStartPass = (): boolean => {
+export const isStartPass = async (): Promise<boolean> => {
   const dices = dicesStore.getState();
-  const player = getActingPlayer('kkk');
+  const player = await getActingPlayer('kkk');
 
   return dices.sum > 0 && player.meanPosition - dices.sum < 0;
 };
-export const isJail = (): boolean =>
-  getActingField('kkk').type === FieldType.JAIL;
+export const isJail = async (): Promise<boolean> =>
+  (await getActingField('kkk')).type === FieldType.JAIL;
 
 export const isFieldMortgaged = (fieldId: number): boolean => {
   const field = getFieldById(fieldId);
@@ -37,32 +37,37 @@ export const isCompany = (fieldId: number): boolean => {
   );
 };
 
-export const isChance = (): boolean =>
-  getActingField('kkk').type === FieldType.CHANCE;
+export const isChance = async (): Promise<boolean> =>
+  (await getActingField('kkk')).type === FieldType.CHANCE;
 
-export const isCompanyForSale = (fieldId: number): boolean =>
-  isCompany(getActingField('kkk').fieldId) &&
+export const isCompanyForSale = async (fieldId: number): Promise<boolean> =>
+  isCompany((await getActingField('kkk')).fieldId) &&
   getFieldById(fieldId) &&
   !getFieldById(fieldId).status;
 
-export const isMyField = (fieldId: number): boolean => {
+export const isMyField = async (fieldId: number): Promise<boolean> => {
   const field = getFieldById(fieldId);
   return (
     isCompany(fieldId) &&
     field.status &&
-    field.status.userId === getActingPlayer('kkk').userId
+    field.status.userId === (await getActingPlayer('kkk')).userId
   );
 };
 
-export const canBuyField = (fieldId: number, p: IPlayer): boolean =>
+export const canBuyField = async (
+  fieldId: number,
+  p: IPlayer,
+): Promise<boolean> =>
   isCompany(fieldId) && getFieldById(fieldId).price.startPrice <= p.money;
 
-export const whosField = (): number =>
-  (getActingField('kkk').status && getActingField('kkk').status.userId) ||
-  BOARD_PARAMS.BANK_PLAYER_ID;
+export const whosField = async (): Promise<number> => {
+  const p = await getActingField('kkk');
 
-export const noActionField = (): boolean => {
-  const field = getActingField('kkk');
+  return (p.status && p.status.userId) || BOARD_PARAMS.BANK_PLAYER_ID;
+};
+
+export const noActionField = async (): Promise<boolean> => {
+  const field = await getActingField('kkk');
   return field.type === FieldType.TAKE_REST || field.type === FieldType.CASINO;
 };
 
@@ -72,8 +77,8 @@ export const playerHasMonopoly = (f: IField, p: IPlayer): boolean => {
   return sg.length === pg.length;
 };
 
-export const isGroupMortgaged = (f: IField): boolean => {
-  const p = getActingPlayer('kkk');
+export const isGroupMortgaged = async (f: IField): Promise<boolean> => {
+  const p = await getActingPlayer('kkk');
   const sg = getPlayerGroupFields(f, p);
   return sg.some((v) => v.status && v.status.mortgaged > 0);
 };
@@ -94,9 +99,9 @@ export const canMortgage = (fieldId: number): boolean => {
   );
 };
 
-export const canUnMortgage = (fieldId: number): boolean => {
+export const canUnMortgage = async (fieldId: number): Promise<boolean> => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer('kkk');
+  const p = await getActingPlayer('kkk');
   return (
     f &&
     isCompany(fieldId) &&
@@ -106,9 +111,9 @@ export const canUnMortgage = (fieldId: number): boolean => {
   );
 };
 
-export const canLevelUp = (fieldId: number): boolean => {
+export const canLevelUp = async (fieldId: number): Promise<boolean> => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer('kkk');
+  const p = await getActingPlayer('kkk');
   const m = playerHasMonopoly(f, p);
   const isMortgaged = isGroupMortgaged(f);
 
@@ -142,9 +147,9 @@ export const canLevelUp = (fieldId: number): boolean => {
   );
 };
 
-export const canLevelDown = (fieldId: number): boolean => {
+export const canLevelDown = async (fieldId: number): Promise<boolean> => {
   const f = getFieldById(fieldId);
-  const p = getActingPlayer('kkk');
+  const p = await getActingPlayer('kkk');
   const hasMonopoly = playerHasMonopoly(f, p);
   const isMortgaged = isGroupMortgaged(f);
 

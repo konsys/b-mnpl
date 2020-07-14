@@ -62,9 +62,9 @@ export class BoardMessage {
     }
   }
 
-  tokenMovedAfterClick(gameId: string) {
+  async tokenMovedAfterClick(gameId: string) {
     try {
-      const player = getActingPlayer(gameId);
+      const player = await getActingPlayer(gameId);
       const field = getActingField(gameId);
 
       if (!player.jailed) {

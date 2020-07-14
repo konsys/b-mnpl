@@ -20,8 +20,8 @@ import { BOARD_PARAMS } from '../params/board.params';
 import { setNewRoundEvent, setNewTurnEvent } from 'src/stores/board.store';
 import { getPlayersStore } from 'src/stores/players.store';
 
-export const buyFieldModal = (): void => {
-  const player = getActingPlayer('kkk');
+export const buyFieldModal = async (): Promise<void> => {
+  const player = await getActingPlayer('kkk');
   const action = actionsStore.getState();
   updateAction({
     action: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,
@@ -31,13 +31,13 @@ export const buyFieldModal = (): void => {
   });
 };
 
-export const buyField = (): void => {
+export const buyField = async (): Promise<void> => {
   // Field set to player
-  const user = getActingPlayer('kkk');
+  const user = await getActingPlayer('kkk');
   const field = findFieldByPosition(user.meanPosition);
   let sum = field.price.startPrice;
 
-  sum = buyCompany(field);
+  sum = await buyCompany(field);
 
   // Decrease player`s money;
   const transactionId = nanoid(4);
@@ -51,55 +51,55 @@ export const buyField = (): void => {
   transactMoneyEvent(transactionId);
 };
 
-export const unJailModal = (): void => {
+export const unJailModal = async (): Promise<void> => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
-    userId: getActingPlayer('kkk').userId,
+    userId: (await getActingPlayer('kkk')).userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
 };
 
-export const payUnJailModal = (): void => {
+export const payUnJailModal = async (): Promise<void> => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
-    userId: getActingPlayer('kkk').userId,
+    userId: (await getActingPlayer('kkk')).userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
 };
 
-export const payTaxModal = (): void => {
+export const payTaxModal = async (): Promise<void> => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
-    userId: getActingPlayer('kkk').userId,
+    userId: (await getActingPlayer('kkk')).userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
 };
 
-export const rollDicesAction = (): void => {
+export const rollDicesAction = async (): Promise<void> => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
-    userId: getActingPlayer('kkk').userId,
+    userId: (await getActingPlayer('kkk')).userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
 };
 
-export const rollDicesModal = (): void => {
+export const rollDicesModal = async (): Promise<void> => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
-    userId: getActingPlayer('kkk').userId,
+    userId: (await getActingPlayer('kkk')).userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
 };
 
-export const startAuctionModal = (): void => {
+export const startAuctionModal = async (): Promise<void> => {
   updateAction({
     action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
-    userId: getActingPlayer('kkk').userId,
+    userId: (await getActingPlayer('kkk')).userId,
     actionId: nanoid(4),
     moveId: actionsStore.getState().moveId + 1,
   });
@@ -107,10 +107,10 @@ export const startAuctionModal = (): void => {
 
 export const switchPlayerTurn = async (
   unJail: boolean = false,
-): Promise<void> => {
+): Promise<Promise<void>> => {
   const store = await getPlayersStore('kkk');
-  const index = getActingPlayerIndex('kkk');
-  let player = getActingPlayer('kkk');
+  const index = await getActingPlayerIndex('kkk');
+  let player = await getActingPlayer('kkk');
   let nextIndex = index;
 
   if (index === 0) {
@@ -126,7 +126,7 @@ export const switchPlayerTurn = async (
     nextIndex = index;
     updatePlayer('kkk', { ...player, movesLeft: --player.movesLeft });
   } else {
-    nextIndex = getNextArrayIndex(index, store.players);
+    nextIndex = await getNextArrayIndex(index, store.players);
   }
 
   const res = store.players.map((v, k) => {
@@ -143,9 +143,9 @@ export const switchPlayerTurn = async (
   });
 
   updateAllPLayers('kkk', res);
-  player = getActingPlayer('kkk');
+  player = await getActingPlayer('kkk');
   player.jailed ? unJailModal() : rollDicesModal();
 };
 
-const getNextArrayIndex = (index: number, array: any[]) =>
+const getNextArrayIndex = async (index: number, array: any[]) =>
   index < array.length - 1 ? index + 1 : 0;

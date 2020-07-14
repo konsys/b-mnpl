@@ -13,6 +13,8 @@ import { BoardMessageModule } from './api.gateway/board.message/board.message.mo
 import { ChecksModule } from './checks/checks.module';
 import { TransactionModule } from './api.gateway/transaction/transaction.module';
 import { BoardModule } from './api.gateway/board/board.module';
+import { IncomeMessageModule } from './api.gateway/income-message/income-message.module';
+import { OutcomeMessageModule } from './api.gateway/outcome-message/outcome-message.module';
 
 const rootPath = join(__dirname, '../', 'assets/');
 
@@ -27,6 +29,8 @@ const rootPath = join(__dirname, '../', 'assets/');
     ChecksModule,
     BoardMessageModule,
     TransactionModule,
+    IncomeMessageModule,
+    OutcomeMessageModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '0.0.0.0',

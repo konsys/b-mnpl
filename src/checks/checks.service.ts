@@ -20,16 +20,16 @@ export class ChecksService {
     );
   }
 
-  async isStartPass(): Promise<boolean> {
+  async isStartPass(gameId: string): Promise<boolean> {
     const dices = dicesStore.getState();
-    const player = await this.usersService.getActingPlayer('kkk');
+    const player = await this.usersService.getActingPlayer(gameId);
 
     return dices.sum > 0 && player.meanPosition - dices.sum < 0;
   }
 
-  async isJail(): Promise<boolean> {
+  async isJail(gameId: string): Promise<boolean> {
     return (
-      (await this.fieldsService.getActingField('kkk')).type === FieldType.JAIL
+      (await this.fieldsService.getActingField(gameId)).type === FieldType.JAIL
     );
   }
 

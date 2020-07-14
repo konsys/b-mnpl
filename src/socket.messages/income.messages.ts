@@ -2,42 +2,33 @@ import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { IncomeMessageType, IFieldId } from 'src/types/Board/board.types';
 import { Socket } from 'socket.io';
 import { IActionId } from 'src/types/Board/board.types';
-import {
-  getActingField,
-  mortgage,
-  unMortgage,
-  levelUpField,
-  levelDownField,
-  getFieldRent,
-} from 'src/utils/fields.utils';
-import * as Action from 'src/utils/actions.utils';
 import { setError } from 'src/stores/error.store';
 import { ErrorCode } from 'src/utils/error.code';
 import { BoardSocket } from 'src/params/board.init';
-import {
-  setTransaction,
-  transactMoney,
-  getCurrentTransaction,
-} from 'src/stores/transactions.store';
 import { nanoid } from 'nanoid';
-import { getCurrentAction } from 'src/stores/actions.store';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { getStartBonus } from 'src/utils/moneys.utils';
 import { UsersService } from 'src/api.gateway/users/users.service';
+import { FieldsService } from 'src/api.gateway/fields/fields.service';
+import { ActionService } from 'src/api.gateway/await this.actionsService/await this.actionsService.service';
+import { ChecksService } from 'src/checks/checks.service';
 
 @WebSocketGateway()
 export class BoardMessage {
   constructor(
     private readonly service: BoardSocket,
     private readonly usersService: UsersService,
+    private readonly fieldsService: FieldsService,
+    private readonly actionsService: ActionService,
+    private readonly checksService: ChecksService,
   ) {}
 
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
-    const action = getCurrentAction();
+    const action = await this.actionsService.getActionStore('kkk');
 
-    if (payload.actionId === action.actionId) {
-      Action.rollDicesAction();
+    if (payload.actionId === (await this.actionsService.actionId)) {
+      await this.actionsService.rollDicesAction();
       this.service.emitMessage();
       this.tokenMovedAfterClick('kkk');
       setTimeout(() => {
@@ -49,29 +40,29 @@ export class BoardMessage {
   async tokenMovedAfterClick(gameId: string) {
     try {
       const player = await this.usersService.getActingPlayer(gameId);
-      const field = await getActingField(gameId);
+      const field = await this.fieldsService.getActingField(gameId);
 
       if (!player.jailed) {
-        if (isStartPass()) {
+        if (await this.checksService.isStartPass()) {
           // Bonus for start passing
           player.meanPosition === 0
             ? getStartBonus(player.userId, true)
             : getStartBonus(player.userId);
 
-          Action.switchPlayerTurn();
+          await this.actionsService.switchPlayerTurn();
         }
 
         if (noActionField()) {
-          Action.switchPlayerTurn();
+          await this.actionsService.switchPlayerTurn();
         } else if (isMyField(field.fieldId)) {
-          Action.switchPlayerTurn();
+          await this.actionsService.switchPlayerTurn();
         } else if (isCompanyForSale(field.fieldId)) {
-          Action.buyFieldModal();
+          await this.actionsService.buyFieldModal();
         } else if (
           !isCompanyForSale(field.fieldId) &&
           isMyField(field.fieldId)
         ) {
-          Action.switchPlayerTurn();
+          await this.actionsService.switchPlayerTurn();
         } else if (whosField() && !isMyField(field.fieldId)) {
           await setTransaction('kkk', {
             sum: await getFieldRent(field),
@@ -80,10 +71,10 @@ export class BoardMessage {
             reason: 'Пришло время платить по счетам',
             transactionId: nanoid(4),
           });
-          Action.payTaxModal();
+          await this.actionsService.payTaxModal();
         } else if (isJail()) {
           (await this.usersService.jailPlayer(gameId)) &&
-            Action.switchPlayerTurn();
+            (await this.actionsService.switchPlayerTurn());
         } else if (isTax()) {
           // TODO написать нормальный текст на налоги
           setTransaction(gameId, {
@@ -93,9 +84,9 @@ export class BoardMessage {
             reason: 'Самое время заплатить налоги',
             transactionId: nanoid(4),
           });
-          Action.payTaxModal();
+          await this.actionsService.payTaxModal();
         } else if (isChance()) {
-          // TODO Make a real chance field action
+          // TODO Make a real chance field await this.actionsService
           await setTransaction(gameId, {
             sum: 1000,
             userId: player.userId,
@@ -103,11 +94,11 @@ export class BoardMessage {
             reason: 'Хитрый шанс',
             transactionId: nanoid(4),
           });
-          Action.payTaxModal();
+          await this.actionsService.payTaxModal();
         }
       } else {
         if (player.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {
-          Action.switchPlayerTurn();
+          await this.actionsService.switchPlayerTurn();
         } else {
           await setTransaction(gameId, {
             sum: 500,
@@ -116,7 +107,7 @@ export class BoardMessage {
             reason: 'Залог за выход из тюрьмы',
             transactionId: nanoid(4),
           });
-          Action.payUnJailModal();
+          await this.actionsService.payUnJailModal();
         }
       }
     } catch (e) {
@@ -129,8 +120,8 @@ export class BoardMessage {
     const f = await getActingField('kkk');
     const p = await this.usersService.getActingPlayer('kkk');
     if (canBuyField(f.fieldId, p)) {
-      Action.buyField();
-      Action.switchPlayerTurn();
+      await this.actionsService.buyField();
+      await this.actionsService.switchPlayerTurn();
     } else {
       !isCompanyForSale(f.fieldId) &&
         setError({
@@ -149,8 +140,8 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_START_CLICKED)
   async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
-    Action.startAuctionModal();
-    Action.switchPlayerTurn();
+    await this.actionsService.startAuctionModal();
+    await this.actionsService.switchPlayerTurn();
 
     this.service.emitMessage();
   }
@@ -165,7 +156,7 @@ export class BoardMessage {
         'kkk',
         (await getCurrentTransaction('kkk')).transactionId,
       );
-      Action.switchPlayerTurn();
+      await this.actionsService.switchPlayerTurn();
     } else {
       setError({
         code: ErrorCode.NotEnoughMoney,
@@ -180,7 +171,7 @@ export class BoardMessage {
     await this.usersService.unjailPlayer('kkk');
     await this.service.emitMessage();
     setTimeout(async () => {
-      Action.rollDicesModal();
+      await this.actionsService.rollDicesModal();
       await this.service.emitMessage();
     }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 2);
   }

@@ -9,9 +9,7 @@ import {
   IncomeMessageType,
   IUnJailPayingModal,
 } from 'src/types/Board/board.types';
-import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
-import { findFieldByPosition, getActingField } from 'src/utils/fields.utils';
 import { nanoid } from 'nanoid';
 import {
   dicesStore,

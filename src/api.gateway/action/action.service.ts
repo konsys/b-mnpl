@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { actionsStore, updateAction } from 'src/stores/actions.store';
 import {
   OutcomeMessageType,
   IncomeMessageType,
 } from 'src/types/Board/board.types';
 import { nanoid } from 'nanoid';
-import { setTransaction, transactMoney } from 'src/stores/transactions.store';
 import { setNewRoundEvent, setNewTurnEvent } from 'src/stores/board.store';
 import { UsersService } from '../users/users.service';
 import { FieldsService } from '../fields/fields.service';
 import { redis } from 'src/main';
 import { BOARD_PARAMS } from 'src/params/board.params';
+import { TransactionService } from '../transaction/transaction.service';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -24,6 +23,7 @@ export class ActionService {
   constructor(
     private readonly usersService: UsersService,
     private readonly fieldsService: FieldsService,
+    private readonly transactionService: TransactionService,
   ) {}
 
   async setActionStore(gameId: string, board: ICurrentAction) {
@@ -58,14 +58,14 @@ export class ActionService {
 
     // Decrease player`s money;
     const transactionId = nanoid(4);
-    await setTransaction(gameId, {
+    await this.transactionService.setTransaction(gameId, {
       sum,
       reason: `Купить ${field.name}`,
       toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
       transactionId,
       userId: user.userId,
     });
-    transactMoney(gameId, transactionId);
+    await this.transactionService.transactMoney(gameId, transactionId);
   }
 
   async unJailModal(gameId: string) {
@@ -73,7 +73,7 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
       userId: (await this.usersService.getActingPlayer('kkk')).userId,
       actionId: nanoid(4),
-      moveId: actionsStore.getState().moveId + 1,
+      moveId: ++(await this.getActionStore(gameId)).moveId,
     });
   }
 
@@ -82,7 +82,7 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
       userId: (await this.usersService.getActingPlayer('kkk')).userId,
       actionId: nanoid(4),
-      moveId: actionsStore.getState().moveId + 1,
+      moveId: ++(await this.getActionStore(gameId)).moveId,
     });
   }
 
@@ -91,7 +91,7 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
       userId: (await this.usersService.getActingPlayer('kkk')).userId,
       actionId: nanoid(4),
-      moveId: actionsStore.getState().moveId + 1,
+      moveId: ++(await this.getActionStore(gameId)).moveId,
     });
   }
 
@@ -100,7 +100,7 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
       userId: (await this.usersService.getActingPlayer('kkk')).userId,
       actionId: nanoid(4),
-      moveId: actionsStore.getState().moveId + 1,
+      moveId: ++(await this.getActionStore(gameId)).moveId,
     });
   }
 
@@ -109,7 +109,7 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
       userId: (await this.usersService.getActingPlayer('kkk')).userId,
       actionId: nanoid(4),
-      moveId: actionsStore.getState().moveId + 1,
+      moveId: ++(await this.getActionStore(gameId)).moveId,
     });
   }
 
@@ -118,7 +118,7 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
       userId: (await this.usersService.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
-      moveId: actionsStore.getState().moveId + 1,
+      moveId: ++(await this.getActionStore(gameId)).moveId,
     });
   }
 

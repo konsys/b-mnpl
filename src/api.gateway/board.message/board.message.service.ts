@@ -3,12 +3,15 @@ import { BoardMessage } from 'src/types/Board/board.types';
 import { actionsStore } from 'src/stores/actions.store';
 import { IBoardEvent } from 'src/types/Board/board.types';
 import { actionTypeToEventAdapter } from 'src/socket.messages/outcome.messages';
-import { getBoughtFields } from 'src/utils/fields.utils';
 import { UsersService } from '../users/users.service';
+import { FieldsService } from '../fields/fields.service';
 
 @Injectable()
 export class BoardMessageService {
-  constructor(private readonly usersClient: UsersService) {}
+  constructor(
+    private readonly usersClient: UsersService,
+    private readonly fieldsClient: FieldsService,
+  ) {}
 
   async createBoardMessage(): Promise<BoardMessage> {
     const actionState = actionsStore.getState();
@@ -26,7 +29,7 @@ export class BoardMessageService {
         event,
         boardStatus: {
           players: players.players,
-          fields: getBoughtFields(),
+          fields: await this.fieldsClient.getBoughtFields('kkk'),
         },
       },
     };

@@ -8,7 +8,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Transport } from '@nestjs/microservices';
 import Redis from 'ioredis';
 
-export const redis = new Redis('redis://localhost:6379');
+export let redis = null;
 
 async function bootstrap() {
   redis.connect(() => console.log('Redis connected'));
@@ -35,6 +35,8 @@ async function bootstrap() {
       url: 'nats://localhost:4222',
     },
   });
+  redis = new Redis('redis://localhost:6379');
+  await redis.connect();
   await app.startAllMicroservicesAsync();
 
   app.enableCors();

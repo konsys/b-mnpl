@@ -1,14 +1,7 @@
-import {
-  getPlayersStore,
-  setPlayersStore,
-  getBankStore,
-  setBankStore,
-} from 'src/stores/players.store';
 import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
 import { BOARD_PARAMS } from '../params/board.params';
 import { nanoid } from 'nanoid';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
-import { NotFoundException } from '@nestjs/common';
 
 export const getPlayerById = async (
   gameId: string,

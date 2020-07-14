@@ -19,7 +19,6 @@ import { updateAction } from 'src/stores/actions.store';
 import { OutcomeMessageType } from 'src/types/Board/board.types';
 import { nanoid } from 'nanoid';
 import { updateAllPLayers } from 'src/utils/users.utils';
-import { getPlayersStore } from 'src/stores/players.store';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -92,7 +91,7 @@ export class UsersController {
 
     const id = nanoid();
     updateAllPLayers(id, resultPlayers);
-    const st = await getPlayersStore(id);
+    const st = await this.service.getPlayersStore(id);
 
     return st.players;
   }

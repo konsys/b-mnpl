@@ -9,6 +9,7 @@ import { UsersMsModule } from 'src/modules/ms/users/users.ms.module';
 import { FieldsMsModule } from 'src/modules/ms/fields/fields.ms.module';
 import { BoardSocketModule } from './modules/socket/board.socket.modules';
 import { AuthModule } from './modules/auth/auth.module';
+import { BoardMessageModule } from './api.gateway/board.message/board.message.module';
 
 const rootPath = join(__dirname, '../', 'assets/');
 
@@ -19,6 +20,7 @@ const rootPath = join(__dirname, '../', 'assets/');
     UsersModule,
     UsersMsModule,
     AuthModule,
+    BoardMessageModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '0.0.0.0',

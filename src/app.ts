@@ -12,6 +12,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { BoardMessageModule } from './api.gateway/board.message/board.message.module';
 import { ChecksModule } from './checks/checks.module';
 import { TransactionModule } from './api.gateway/transaction/transaction.module';
+import { BoardModule } from './api.gateway/board/board.module';
 
 const rootPath = join(__dirname, '../', 'assets/');
 
@@ -21,6 +22,7 @@ const rootPath = join(__dirname, '../', 'assets/');
     FieldsMsModule,
     UsersModule,
     UsersMsModule,
+    BoardModule,
     AuthModule,
     ChecksModule,
     BoardMessageModule,

@@ -1,6 +1,5 @@
 import { GameDomain } from './actions.store';
 import { IFieldAction } from 'src/types/Board/board.types';
-import { sample } from 'effector';
 import { updateFieldActionsEvent } from './fields.store';
 
 const BoardDomain = GameDomain.domain('FieldsDomain');
@@ -57,7 +56,3 @@ export const boardStore = BoardDomain.store<IBoardStore>({
     playersTurn: ++prev.playersTurn,
   }))
   .reset(resetBoardStoreEvent);
-
-// boardStore.updates.watch((v) =>
-//   console.log('boardStoreWatch', v.playerActions),
-// );

@@ -1,8 +1,8 @@
 import {
-  playersStore,
-  setPlayersEvent,
-  bankStore,
-  setBankEvent,
+  getPlayersStore,
+  setPlayersStore,
+  getBankStore,
+  setBankStore,
 } from 'src/stores/players.store';
 import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
 import { BOARD_PARAMS } from '../params/board.params';
@@ -10,36 +10,45 @@ import { nanoid } from 'nanoid';
 import { setCurrentActionsEvent } from 'src/stores/actions.store';
 import { NotFoundException } from '@nestjs/common';
 
-export const getPlayerById = (gameId: string, userId: number): IPlayer =>
-  userId === BOARD_PARAMS.BANK_PLAYER_ID
-    ? bankStore.getState()
-    : playersStore.getState()[gameId].find((v) => v.userId === userId);
+export const getPlayerById = async (
+  gameId: string,
+  userId: number,
+): Promise<IPlayer> => {
+  const bank = await getBankStore(gameId);
+  const players = await getPlayersStore(gameId);
+  return userId === BOARD_PARAMS.BANK_PLAYER_ID
+    ? bank
+    : players.players.find((v) => v.userId === userId);
+};
 
-export const getActingPlayer = (gameId: string): IPlayer => {
-  const state = playersStore.getState()[gameId];
+export const getActingPlayer = async (gameId: string): Promise<IPlayer> => {
+  const state = await getBankStore(gameId);
   const user = Array.isArray(state) && state.find((v) => v.isActing);
   return user;
 };
 
-export const getActingPlayerIndex = (gameId: string): number => {
-  const state = playersStore.getState()[gameId];
+export const getActingPlayerIndex = async (gameId: string): Promise<number> => {
+  const state = await getBankStore(gameId);
   const index = Array.isArray(state) && state.findIndex((v) => v.isActing);
   return index;
 };
 
-export const getPlayerIndexById = (gameId: string, userId: number) => {
-  const state = playersStore.getState()[gameId];
+export const getPlayerIndexById = async (gameId: string, userId: number) => {
+  const state = await getBankStore(gameId);
   return Array.isArray(state) && state.findIndex((v) => v.userId === userId);
 };
 
-export const getPlayerMoneyById = (gameId: string, userId: number): number => {
-  const state = playersStore.getState()[gameId];
+export const getPlayerMoneyById = async (
+  gameId: string,
+  userId: number,
+): Promise<number> => {
+  const state = await getBankStore(gameId);
   const player = Array.isArray(state) && state.find((v) => v.userId === userId);
   return (player && player.money) || 0;
 };
 
-export const unjailPlayer = (gameId: string, newPosition?: number) => {
-  const player = getActingPlayer(gameId);
+export const unjailPlayer = async (gameId: string, newPosition?: number) => {
+  const player = await getActingPlayer(gameId);
   // After clicking unjail for money till show roll dices modal
   setCurrentActionsEvent({
     action: OutcomeMessageType.DO_NOTHING,
@@ -60,9 +69,9 @@ export const unjailPlayer = (gameId: string, newPosition?: number) => {
   });
 };
 
-export const jailPlayer = (gameId: string): boolean => {
+export const jailPlayer = async (gameId: string): Promise<boolean> => {
   const player = getActingPlayer(gameId);
-  return updatePlayer(gameId, {
+  return await updatePlayer(gameId, {
     ...player,
     jailed: BOARD_PARAMS.JAIL_TURNS,
     unjailAttempts: 0,
@@ -72,17 +81,20 @@ export const jailPlayer = (gameId: string): boolean => {
   });
 };
 
-export const updatePlayer = (gameId: string, player: IPlayer): boolean => {
+export const updatePlayer = async (
+  gameId: string,
+  player: IPlayer,
+): Promise<boolean> => {
   // Update BANK
   if (player.userId === BOARD_PARAMS.BANK_PLAYER_ID) {
     return (
-      setBankEvent({
-        ...player,
+      setBankStore(gameId, {
+        player,
       }) && true
     );
   }
 
-  const playersState = playersStore.getState()[gameId];
+  const playersState = await getBankStore(gameId);
   const currentPLayerIndex = getPlayerIndexById(gameId, player.userId);
 
   // TODO error handler
@@ -94,21 +106,11 @@ export const updatePlayer = (gameId: string, player: IPlayer): boolean => {
   return updateAllPLayers(gameId, playersState);
 };
 
-export const updateAllPLayers = (
+export const updateAllPLayers = async (
   gameId: string,
   players: IPlayer[],
-): boolean => {
-  let state = playersStore.getState();
-  setPlayersEvent({
-    ...state,
-    [gameId]: players,
-  });
+): Promise<boolean> => {
+  let state = await getPlayersStore(gameId);
+  setPlayersStore(gameId, { players, version: ++state.version });
   return true;
-};
-const getPlayersStore = (gameId: string) => {
-  const state = playersStore.getState().gameId;
-  if (!state) {
-    throw new NotFoundException(`Players with gameid ${gameId} not found`);
-  }
-  return state;
 };

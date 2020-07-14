@@ -6,8 +6,16 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Transport } from '@nestjs/microservices';
+import Redis from 'ioredis';
+
+export const redis = new Redis('redis://localhost:6379');
 
 async function bootstrap() {
+  redis.connect(() => console.log('Redis connected'));
+
+  redis.on('error', (err) => {
+    console.log('Redis Error ' + err);
+  });
   const app = await NestFactory.create(App, {
     logger: ['error', 'warn'],
   });

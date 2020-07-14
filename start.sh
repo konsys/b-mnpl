@@ -8,6 +8,8 @@ docker run --name my-own-nats -d -p 4222:4222 nats:2.1.6
 
 docker run --name my-own-pgadmin -d --link testsql:db -p 5050:5050 -e PGADMIN_DEFAULT_EMAIL=admin@admin.ru -e PGADMIN_DEFAULT_PASSWORD=smz dpage/pgadmin4:4.20
 
+
+docker run --name my-own-redis -d -p 6379:6379 redis:6.0.5
 # docker ps -a
 
 # http://localhost:8081

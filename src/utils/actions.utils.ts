@@ -12,14 +12,13 @@ import {
   updateAllPLayers,
   updatePlayer,
 } from './users.utils';
-import { playersStore } from 'src/stores/players.store';
-import { FieldType } from 'src/entities/board.fields.entity';
 import {
   setTransactionEvent,
   transactMoneyEvent,
 } from 'src/stores/transactions.store';
 import { BOARD_PARAMS } from '../params/board.params';
 import { setNewRoundEvent, setNewTurnEvent } from 'src/stores/board.store';
+import { getPlayersStore } from 'src/stores/players.store';
 
 export const buyFieldModal = (): void => {
   const player = getActingPlayer('kkk');
@@ -106,8 +105,10 @@ export const startAuctionModal = (): void => {
   });
 };
 
-export const switchPlayerTurn = (unJail: boolean = false): void => {
-  const store = playersStore.getState();
+export const switchPlayerTurn = async (
+  unJail: boolean = false,
+): Promise<void> => {
+  const store = await getPlayersStore('kkk');
   const index = getActingPlayerIndex('kkk');
   let player = getActingPlayer('kkk');
   let nextIndex = index;

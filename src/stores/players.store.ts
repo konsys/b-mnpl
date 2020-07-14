@@ -1,16 +1,19 @@
-import { GameDomain } from 'src/stores/actions.store';
 import { IPlayer } from 'src/types/Board/board.types';
 import { BOARD_PARAMS } from 'src/params/board.params';
-
-const PlayersDomain = GameDomain.domain('PlayersDomain');
+import { redis } from 'src/main';
 
 export interface IPlayersStore {
-  [gameId: string]: IPlayer[];
+  version: number;
+  players: IPlayer[];
 }
 
-export const resetBankEvent = PlayersDomain.event();
-export const setBankEvent = PlayersDomain.event<IPlayer>();
-export const bankStore = PlayersDomain.store<IPlayer>({
+export const setPlayersStore = async (gameId: string, players: IPlayersStore) =>
+  await redis.set(gameId, JSON.stringify(players));
+
+export const getPlayersStore = async (gameId: string): Promise<IPlayersStore> =>
+  JSON.parse(await redis.get(gameId)) as IPlayersStore;
+
+const bank: IPlayer = {
   userId: BOARD_PARAMS.BANK_PLAYER_ID,
   money: 100000,
   password: 'bank',
@@ -40,16 +43,12 @@ export const bankStore = PlayersDomain.store<IPlayer>({
   moveOrder: 0,
   isAlive: false,
   movesLeft: 0,
-})
-  .on(setBankEvent, (_, data) => data)
-  .reset(resetBankEvent);
+};
 
-export const resetPlayersEvent = PlayersDomain.event();
-export const setPlayersEvent = PlayersDomain.event<IPlayersStore>();
-export const playersStore = PlayersDomain.store<IPlayersStore>({})
-  .on(setPlayersEvent, (prev, data) => {
-    return data;
-  })
-  .reset(resetPlayersEvent);
+export const setBankStore = async (gameId: string, player: IPlayer) =>
+  await redis.set(gameId, JSON.stringify(player));
 
-// playersStore.watch((v) => console.log('playersStore.watch', v));
+export const getBankStore = async (gameId: string): Promise<IPlayer> =>
+  JSON.parse(await redis.get(gameId));
+
+setBankStore('bankStore', bank);

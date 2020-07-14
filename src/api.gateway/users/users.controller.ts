@@ -11,7 +11,6 @@ import {
 import { MsNames } from 'src/types/MS/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from './users.service';
-import { playersStore } from 'src/stores/players.store';
 import { LocalAuthGuard } from 'src/modules/auth/local-auth.guard';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
@@ -20,6 +19,7 @@ import { updateAction } from 'src/stores/actions.store';
 import { OutcomeMessageType } from 'src/types/Board/board.types';
 import { nanoid } from 'nanoid';
 import { updateAllPLayers } from 'src/utils/users.utils';
+import { getPlayersStore } from 'src/stores/players.store';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -92,7 +92,9 @@ export class UsersController {
 
     const id = nanoid();
     updateAllPLayers(id, resultPlayers);
-    return playersStore.getState()[id];
+    const st = await getPlayersStore(id);
+
+    return st.players;
   }
 
   @Post()

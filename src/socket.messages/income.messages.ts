@@ -8,7 +8,6 @@ import {
   unMortgage,
   levelUpField,
   levelDownField,
-  getPlayerGroupFields,
   getFieldRent,
 } from 'src/utils/fields.utils';
 import * as Action from 'src/utils/actions.utils';
@@ -21,13 +20,12 @@ import {
 } from 'src/utils/users.utils';
 import { BoardSocket } from 'src/params/board.init';
 import {
-  setTransactionEvent,
-  transactMoneyEvent,
+  setTransaction,
+  transactMoney,
   getCurrentTransaction,
 } from 'src/stores/transactions.store';
 import { nanoid } from 'nanoid';
 import { getCurrentAction } from 'src/stores/actions.store';
-import { dicesStore } from 'src/stores/dices.store';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { getStartBonus } from 'src/utils/moneys.utils';
 import {
@@ -65,7 +63,7 @@ export class BoardMessage {
   async tokenMovedAfterClick(gameId: string) {
     try {
       const player = await getActingPlayer(gameId);
-      const field = getActingField(gameId);
+      const field = await getActingField(gameId);
 
       if (!player.jailed) {
         if (isStartPass()) {
@@ -89,10 +87,10 @@ export class BoardMessage {
         ) {
           Action.switchPlayerTurn();
         } else if (whosField() && !isMyField(field.fieldId)) {
-          setTransactionEvent({
-            sum: getFieldRent(field),
+          await setTransaction('kkk', {
+            sum: await getFieldRent(field),
             userId: player.userId,
-            toUserId: whosField(),
+            toUserId: await whosField(),
             reason: 'Пришло время платить по счетам',
             transactionId: nanoid(4),
           });
@@ -101,20 +99,20 @@ export class BoardMessage {
           jailPlayer(gameId) && Action.switchPlayerTurn();
         } else if (isTax()) {
           // TODO написать нормальный текст на налоги
-          setTransactionEvent({
-            sum: getFieldRent(field),
+          setTransaction(gameId, {
+            sum: await getFieldRent(field),
             userId: player.userId,
-            toUserId: whosField(),
+            toUserId: await whosField(),
             reason: 'Самое время заплатить налоги',
             transactionId: nanoid(4),
           });
           Action.payTaxModal();
         } else if (isChance()) {
           // TODO Make a real chance field action
-          setTransactionEvent({
+          await setTransaction(gameId, {
             sum: 1000,
             userId: player.userId,
-            toUserId: whosField(),
+            toUserId: await whosField(),
             reason: 'Хитрый шанс',
             transactionId: nanoid(4),
           });
@@ -124,10 +122,10 @@ export class BoardMessage {
         if (player.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {
           Action.switchPlayerTurn();
         } else {
-          setTransactionEvent({
+          await setTransaction(gameId, {
             sum: 500,
             userId: player.userId,
-            toUserId: whosField(),
+            toUserId: await whosField(),
             reason: 'Залог за выход из тюрьмы',
             transactionId: nanoid(4),
           });
@@ -141,8 +139,8 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    const f = getActingField('kkk');
-    const p = getActingPlayer('kkk');
+    const f = await getActingField('kkk');
+    const p = await getActingPlayer('kkk');
     if (canBuyField(f.fieldId, p)) {
       Action.buyField();
       Action.switchPlayerTurn();
@@ -172,8 +170,14 @@ export class BoardMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
-    if (getCurrentTransaction().sum < getActingPlayer('kkk').money) {
-      transactMoneyEvent(getCurrentTransaction().transactionId);
+    if (
+      (await getCurrentTransaction('kkk')).sum <
+      (await getActingPlayer('kkk')).money
+    ) {
+      await transactMoney(
+        'kkk',
+        (await getCurrentTransaction('kkk')).transactionId,
+      );
       Action.switchPlayerTurn();
     } else {
       setError({

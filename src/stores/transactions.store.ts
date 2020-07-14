@@ -1,10 +1,8 @@
-import { GameDomain } from 'src/stores/actions.store';
 import { getPlayerById, updatePlayer } from 'src/utils/users.utils';
 import { IMoneyTransaction } from 'src/types/Board/board.types';
 import { ErrorCode } from 'src/utils/error.code';
 import { setError } from './error.store';
 import { redis } from 'src/main';
-const TransactionsDomain = GameDomain.domain('PlayersDomain');
 
 export interface ITransactionStore {
   transactionId: string;
@@ -28,11 +26,8 @@ export const getCurrentTransaction = async (gameId: string) =>
 export const resetTransactionsEvent = (gameId: string) =>
   setTransaction(gameId, null);
 
-export const transactMoneyEvent = async (
-  gameId: string,
-  transaction: ITransactionStore,
-  id: string,
-) => {
+export const transactMoney = async (gameId: string, transactionId: string) => {
+  const transaction = await getTransaction(gameId);
   const player = await getPlayerById('kkk', transaction.userId);
   if (transaction.sum > player.money) {
     setError({
@@ -42,7 +37,7 @@ export const transactMoneyEvent = async (
     return;
   }
 
-  if (id === transaction.transactionId) {
+  if (transactionId === transaction.transactionId) {
     moneyTransaction({
       sum: transaction.sum,
       userId: transaction.userId,
@@ -56,10 +51,6 @@ export const transactMoneyEvent = async (
     });
   }
 };
-
-export const setTransactionEvent = TransactionsDomain.event<
-  ITransactionStore
->();
 
 const moneyTransaction = async (
   transaction: IMoneyTransaction,

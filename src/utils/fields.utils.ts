@@ -10,10 +10,7 @@ import _ from 'lodash';
 import { BOARD_PARAMS } from '../params/board.params';
 
 import { nanoid } from 'nanoid';
-import {
-  setTransactionEvent,
-  transactMoneyEvent,
-} from 'src/stores/transactions.store';
+import { setTransaction, transactMoney } from 'src/stores/transactions.store';
 import {
   canLevelUp,
   canMortgage,
@@ -195,14 +192,14 @@ export const mortgage = async (fieldId: number): Promise<void> => {
   });
 
   const transactionId = nanoid(4);
-  setTransactionEvent({
+  await setTransaction('kkk', {
     sum: f.price.pledgePrice,
     reason: `Money for pledge ${f.name}`,
     toUserId: p.userId,
     transactionId,
     userId: BOARD_PARAMS.BANK_PLAYER_ID,
   });
-  transactMoneyEvent(transactionId);
+  await transactMoney('kkk', transactionId);
 };
 
 export const mortgageNextRound = () => {
@@ -264,14 +261,14 @@ export const unMortgage = async (fieldId: number): Promise<void> => {
   });
 
   const transactionId = nanoid(4);
-  setTransactionEvent({
+  await setTransaction('kkk', {
     sum: f.price.buyoutPrice,
     reason: `Unmortgage field ${f.name}`,
     toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
     transactionId,
     userId: p.userId,
   });
-  transactMoneyEvent(transactionId);
+  await transactMoney('kkk', transactionId);
 };
 
 export const levelUpField = async (fieldId: number): Promise<void> => {
@@ -301,14 +298,14 @@ export const levelUpField = async (fieldId: number): Promise<void> => {
   });
 
   const transactionId = nanoid(4);
-  setTransactionEvent({
+  await setTransaction('kkk', {
     sum: f.price.branchPrice,
     reason: `Buy branch ${f.name}`,
     toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
     transactionId,
     userId: p.userId,
   });
-  transactMoneyEvent(transactionId);
+  await transactMoney('kkk', transactionId);
 };
 
 export const levelDownField = async (fieldId: number): Promise<void> => {
@@ -340,14 +337,14 @@ export const levelDownField = async (fieldId: number): Promise<void> => {
   });
 
   const transactionId = nanoid(4);
-  setTransactionEvent({
+  await setTransaction('kkk', {
     sum: f.price.branchPrice,
     reason: `Buy branch ${f.name}`,
     toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
     transactionId,
     userId: p.userId,
   });
-  transactMoneyEvent(transactionId);
+  transactMoney('kkk', transactionId);
 };
 
 export const fieldsState = () => fieldsStore.getState();

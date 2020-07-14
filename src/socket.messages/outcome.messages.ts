@@ -11,7 +11,6 @@ import {
 } from 'src/types/Board/board.types';
 import { getActingPlayer } from 'src/utils/users.utils';
 import { actionsStore } from 'src/stores/actions.store';
-import { transactionStore } from 'src/stores/transactions.store';
 import { findFieldByPosition, getActingField } from 'src/utils/fields.utils';
 import { nanoid } from 'nanoid';
 import {
@@ -19,33 +18,34 @@ import {
   setRandomDicesEvent,
   dicesUpdatePlayerToken,
 } from 'src/stores/dices.store';
+import { getTransaction } from 'src/stores/transactions.store';
 
 /**
  * Shows modals
  */
-export const rollDicesModalMessage = (): IDicesModal => ({
+export const rollDicesModalMessage = async (): Promise<IDicesModal> => ({
   type: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
-  userId: getActingPlayer('kkk').userId,
+  userId: (await getActingPlayer('kkk')).userId,
   title: 'Кидайте кубики',
   text: 'Мы болеем за вас',
   _id: actionsStore.getState().actionId,
   isModal: true,
 });
 
-export const unJailModalMesage = (): IUnJailModal => ({
+export const unJailModalMesage = async (): Promise<IUnJailModal> => ({
   type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
-  userId: getActingPlayer('kkk').userId,
+  userId: (await getActingPlayer('kkk')).userId,
   title: 'Заплатить залог',
   text: 'Заплатить за выход из тюрьмы',
   _id: actionsStore.getState().actionId,
   isModal: true,
 });
 
-export const unJailPayModalMesage = (): IUnJailPayingModal => {
-  const transaction = transactionStore.getState();
+export const unJailPayModalMesage = async (): Promise<IUnJailPayingModal> => {
+  const transaction = await getTransaction('kkk');
   return {
     type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
-    userId: getActingPlayer('kkk').userId,
+    userId: (await getActingPlayer('kkk')).userId,
     title: 'Заплатить залог',
     text: 'Заплатить за выход из тюрьмы',
     _id: actionsStore.getState().actionId,
@@ -54,15 +54,15 @@ export const unJailPayModalMesage = (): IUnJailPayingModal => {
   };
 };
 
-export const doNothingMessage = (): IDoNothing => ({
+export const doNothingMessage = async (): Promise<IDoNothing> => ({
   type: OutcomeMessageType.DO_NOTHING,
   _id: nanoid(),
-  userId: getActingPlayer('kkk').userId,
+  userId: (await getActingPlayer('kkk')).userId,
   isModal: false,
 });
 
-export const buyModalHandler = (): IShowCanBuyModal => {
-  const player = getActingPlayer('kkk');
+export const buyModalHandler = async (): Promise<IShowCanBuyModal> => {
+  const player = await getActingPlayer('kkk');
 
   return {
     type: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,
@@ -76,11 +76,11 @@ export const buyModalHandler = (): IShowCanBuyModal => {
   };
 };
 
-export const payModalHandler = (): IPayRentModal => {
-  const player = getActingPlayer('kkk');
-  const field = getActingField('kkk');
+export const payModalHandler = async (): Promise<IPayRentModal> => {
+  const player = await getActingPlayer('kkk');
+  const field = await getActingField('kkk');
   const action = actionsStore.getState();
-  const transaction = transactionStore.getState();
+  const transaction = await getTransaction('kkk');
   const sum = (transaction && transaction.sum) || 0;
   return {
     type: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
@@ -95,7 +95,9 @@ export const payModalHandler = (): IPayRentModal => {
   };
 };
 
-export const rollDicesMessage = (): IRollDicesMessage | IDoNothing => {
+export const rollDicesMessage = async (): Promise<
+  IRollDicesMessage | IDoNothing
+> => {
   const action = actionsStore.getState();
   setRandomDicesEvent(action.actionId);
   let dicesState = dicesStore.getState();
@@ -103,7 +105,7 @@ export const rollDicesMessage = (): IRollDicesMessage | IDoNothing => {
 
   return {
     type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
-    userId: getActingPlayer('kkk').userId,
+    userId: (await getActingPlayer('kkk')).userId,
     dices: dicesState.dices,
     meanPosition: dicesState.meanPosition,
     isDouble: dicesState.isDouble,
@@ -114,7 +116,7 @@ export const rollDicesMessage = (): IRollDicesMessage | IDoNothing => {
 };
 
 // When emit message action store to action message adapter
-export const actionTypeToEventAdapter = (
+export const actionTypeToEventAdapter = async (
   type: OutcomeMessageType | IncomeMessageType,
 ) => {
   switch (type) {

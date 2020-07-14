@@ -39,32 +39,24 @@ export class ChecksService {
   }
 
   async isCompany(gameId: string, fieldId: number) {
-    //     const type = (await this.fieldsService.getFieldById(gameId, fieldId)).type;
-    //    return  type && (type === FieldType.COMPANY ||type === FieldType.AUTO ||type === FieldType.IT);
-    return true;
+    const type = (await this.fieldsService.getFieldById(gameId, fieldId)).type;
+    return (
+      type &&
+      (type === FieldType.COMPANY ||
+        type === FieldType.AUTO ||
+        type === FieldType.IT)
+    );
   }
-
-  //   async isCompany1 (gameId: string, fieldId: number): Promise<boolean>  {
-  //     const type = (await this.fieldsService.getFieldById(gameId, fieldId)).type;
-  //     return type &&(type === FieldType.COMPANY ||type === FieldType.AUTO ||type === FieldType.IT)
-
-  //   };
-
   async isChance(gameId: string): Promise<boolean> {
     return (
-      (await this.fieldsService.getActingField('kkk')).type === FieldType.CHANCE
+      (await this.fieldsService.getActingField(gameId)).type ===
+      FieldType.CHANCE
     );
   }
 
   async isCompanyForSale(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fieldsService.getFieldById('kkk', fieldId);
-    return (
-      (await this.isCompany(
-        (await this.fieldsService.getActingField('kkk')).fieldId,
-      )) &&
-      f &&
-      !f.status
-    );
+    const f = await this.fieldsService.getFieldById(gameId, fieldId);
+    return (await this.isCompany(gameId, f.fieldId)) && f && !f.status;
   }
 
   async isMyField(gameId: string, fieldId: number): Promise<boolean> {

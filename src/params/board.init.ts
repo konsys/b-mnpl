@@ -49,7 +49,7 @@ export class BoardSocket
   public async emitMessage() {
     BoardSocket.socketServer.emit(
       SocketActions.BOARD_MESSAGE,
-      await this.boardService.createBoardMessage(),
+      await this.boardService.createBoardMessage('kkk'),
     );
   }
 

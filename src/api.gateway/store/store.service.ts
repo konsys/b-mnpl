@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { redis } from 'src/main';
 import { IField, IFieldAction } from 'src/types/Board/board.types';
 import { IPlayersStore } from '../users/users.service';
-import { ICurrentAction } from './action.service';
+import { ICurrentAction } from '../action/action.service';
 
 export interface IPlayerAction {
   userId: number;

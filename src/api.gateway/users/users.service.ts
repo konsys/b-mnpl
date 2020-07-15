@@ -9,7 +9,7 @@ import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
 import { redis } from 'src/main';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { nanoid } from 'nanoid';
-import { StoreService } from '../action/store.service';
+import { StoreService } from '../store/store.service';
 
 export interface IPlayersStore {
   version: number;

@@ -4,8 +4,8 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { IPlayer, IField, IFieldAction } from 'src/types/Board/board.types';
 import { UsersService } from 'src/api.gateway/users/users.service';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
-import { DicesService } from 'src/api.gateway/action/dices.service';
-import { StoreService } from 'src/api.gateway/action/store.service';
+import { DicesService } from 'src/api.gateway/dices/dices.service';
+import { StoreService } from 'src/api.gateway/store/store.service';
 
 @Injectable()
 export class ChecksService {

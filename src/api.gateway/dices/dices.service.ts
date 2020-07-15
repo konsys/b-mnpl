@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { IDicesStore, StoreService } from './store.service';
 import { UsersService } from '../users/users.service';
 import { FieldsService } from '../fields/fields.service';
-import { ActionService } from './action.service';
+import { ActionService } from '../action/action.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 
 @Injectable()

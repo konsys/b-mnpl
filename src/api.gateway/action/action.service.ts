@@ -8,7 +8,7 @@ import { UsersService } from '../users/users.service';
 import { FieldsService } from '../fields/fields.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { TransactionService } from '../transaction/transaction.service';
-import { StoreService } from './store.service';
+import { StoreService } from '../store/store.service';
 import { BoardService } from '../board/board.service';
 
 export interface ICurrentAction {

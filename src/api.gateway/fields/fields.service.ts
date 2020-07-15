@@ -15,7 +15,7 @@ import { FieldType } from 'src/entities/board.fields.entity';
 import { ChecksService } from 'src/api.gateway/checks/checks.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { nanoid } from 'nanoid';
-import { StoreService } from '../action/store.service';
+import { StoreService } from '../store/store.service';
 import { ActionService } from '../action/action.service';
 import { TransactionService } from '../transaction/transaction.service';
 

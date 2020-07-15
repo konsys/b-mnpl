@@ -15,6 +15,8 @@ import { TransactionModule } from './api.gateway/transaction/transaction.module'
 import { BoardModule } from './api.gateway/board/board.module';
 import { IncomeMessageModule } from './api.gateway/income-message/income-message.module';
 import { OutcomeMessageModule } from './api.gateway/outcome-message/outcome-message.module';
+import { StoreModule } from './api.gateway/store/store.module';
+import { DicesModule } from './api.gateway/dices/dices.module';
 
 const rootPath = join(__dirname, '../', 'assets/');
 
@@ -22,6 +24,8 @@ const rootPath = join(__dirname, '../', 'assets/');
   imports: [
     FieldsModule,
     FieldsMsModule,
+    StoreModule,
+    DicesModule,
     UsersModule,
     UsersMsModule,
     BoardModule,

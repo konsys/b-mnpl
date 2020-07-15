@@ -3,7 +3,7 @@ import { ErrorCode } from 'src/utils/error.code';
 import { setError } from 'src/stores/error.store';
 import { UsersService } from '../users/users.service';
 import { IMoneyTransaction } from 'src/types/Board/board.types';
-import { StoreService } from '../action/store.service';
+import { StoreService } from '../store/store.service';
 import { nanoid } from 'nanoid';
 import { BOARD_PARAMS } from 'src/params/board.params';
 

@@ -9,7 +9,7 @@ import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
 import { redis } from 'src/main';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { nanoid } from 'nanoid';
-import { setCurrentActionsEvent } from 'src/stores/actions.store';
+import { StoreService } from '../action/store.service';
 
 export interface IPlayersStore {
   version: number;
@@ -54,6 +54,7 @@ export class UsersService {
   constructor(
     @Inject(MsNames.USERS)
     private readonly usersClient: ClientProxy,
+    private readonly store: StoreService,
   ) {}
 
   onModuleInit() {
@@ -121,14 +122,6 @@ export class UsersService {
     }
   }
 
-  async setPlayersStore(gameId: string, players: IPlayersStore) {
-    await redis.set(`${gameId}-players`, JSON.stringify(players));
-  }
-
-  async getPlayersStore(gameId: string): Promise<IPlayersStore> {
-    return JSON.parse(await redis.get(`${gameId}-players`)) as IPlayersStore;
-  }
-
   async setBankStore(gameId: string, player: IPlayer) {
     return await redis.set(gameId, JSON.stringify(player));
   }
@@ -139,7 +132,7 @@ export class UsersService {
 
   async getPlayerById(gameId: string, userId: number): Promise<IPlayer> {
     const bank = await this.getBankStore(gameId);
-    const players = await this.getPlayersStore(gameId);
+    const players = await this.store.getPlayersStore(gameId);
     return userId === BOARD_PARAMS.BANK_PLAYER_ID
       ? bank
       : players.players.find((v) => v.userId === userId);
@@ -172,7 +165,7 @@ export class UsersService {
   async unjailPlayer(gameId: string, newPosition?: number) {
     const player = await this.getActingPlayer(gameId);
     // After clicking unjail for money till show roll dices modal
-    setCurrentActionsEvent({
+    await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.DO_NOTHING,
       actionId: nanoid(4),
       moveId: 1,
@@ -209,7 +202,7 @@ export class UsersService {
       return this.setBankStore(gameId, player) && true;
     }
 
-    const playersState = await this.getPlayersStore(gameId);
+    const playersState = await this.store.getPlayersStore(gameId);
     const currentPLayerIndex = await this.getPlayerIndexById(
       gameId,
       player.userId,
@@ -225,8 +218,11 @@ export class UsersService {
   }
 
   async updateAllPLayers(gameId: string, players: IPlayer[]): Promise<boolean> {
-    let state = await this.getPlayersStore(gameId);
-    await this.setPlayersStore(gameId, { players, version: ++state.version });
+    let state = await this.store.getPlayersStore(gameId);
+    await this.store.setPlayersStore(gameId, {
+      players,
+      version: ++state.version,
+    });
     return true;
   }
 }

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { redis } from 'src/main';
 import { IField, IFieldAction } from 'src/types/Board/board.types';
+import { IPlayersStore } from '../users/users.service';
+import { ICurrentAction } from './action.service';
 
 export interface IPlayerAction {
   userId: number;
@@ -31,8 +33,16 @@ export interface ITransactionStore {
 
 @Injectable()
 export class StoreService {
+  async setActionStore(gameId: string, data: ICurrentAction) {
+    await this.set(gameId, 'action', data);
+  }
+
+  async getActionStore(gameId: string): Promise<ICurrentAction> {
+    return (await this.get(gameId, 'action')) as ICurrentAction;
+  }
+
   async setBoardStore(gameId: string, data: IBoardStore) {
-    this.set(gameId, 'board', data);
+    await this.set(gameId, 'board', data);
   }
 
   async getBoardStore(gameId: string): Promise<IBoardStore> {
@@ -40,7 +50,7 @@ export class StoreService {
   }
 
   async setFieldsStore(gameId: string, data: IFieldsStore) {
-    this.set(gameId, 'fields', data);
+    await this.set(gameId, 'fields', data);
   }
 
   async getFieldsStore(gameId: string): Promise<IFieldsStore> {
@@ -48,7 +58,7 @@ export class StoreService {
   }
 
   async setTransaction(gameId: string, data: ITransactionStore) {
-    this.set(gameId, 'transaction', data);
+    await this.set(gameId, 'transaction', data);
   }
 
   async getTransaction(gameId: string): Promise<ITransactionStore> {
@@ -57,6 +67,14 @@ export class StoreService {
 
   async resetTransactionsEvent(gameId: string) {
     await this.set(gameId, 'transaction', null);
+  }
+
+  async setPlayersStore(gameId: string, data: IPlayersStore) {
+    await this.set(gameId, 'players', data);
+  }
+
+  async getPlayersStore(gameId: string): Promise<IPlayersStore> {
+    return (await this.get(gameId, 'players')) as IPlayersStore;
   }
 
   private async set(gameId: string, serviceName: string, data: any) {

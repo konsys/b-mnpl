@@ -26,14 +26,6 @@ export class ActionService {
     private readonly transactionService: TransactionService,
   ) {}
 
-  async setActionStore(gameId: string, board: ICurrentAction) {
-    await redis.set(`${gameId}-board`, JSON.stringify(board));
-  }
-
-  async getActionStore(gameId: string): Promise<ICurrentAction> {
-    return JSON.parse(await redis.get(`${gameId}-board`)) as ICurrentAction;
-  }
-
   async buyFieldModal(gameId: string) {
     const player = await this.usersService.getActingPlayer(gameId);
     const action = await this.getActionStore(gameId);

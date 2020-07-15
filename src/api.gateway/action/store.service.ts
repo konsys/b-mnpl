@@ -31,8 +31,26 @@ export interface ITransactionStore {
   toUserId: number;
 }
 
+export interface IDicesStore {
+  userId: number;
+  _id: string;
+  dices: number[];
+  sum: number;
+  meanPosition: number;
+  isDouble: boolean;
+  isTriple: boolean;
+}
+
 @Injectable()
 export class StoreService {
+  async setDicesStore(gameId: string, data: IDicesStore) {
+    await this.set(gameId, 'dices', data);
+  }
+
+  async getDicesStore(gameId: string): Promise<IDicesStore> {
+    return (await this.get(gameId, 'dices')) as IDicesStore;
+  }
+
   async setActionStore(gameId: string, data: ICurrentAction) {
     await this.set(gameId, 'action', data);
   }

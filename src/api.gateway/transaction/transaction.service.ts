@@ -4,6 +4,8 @@ import { setError } from 'src/stores/error.store';
 import { UsersService } from '../users/users.service';
 import { IMoneyTransaction } from 'src/types/Board/board.types';
 import { StoreService } from '../action/store.service';
+import { nanoid } from 'nanoid';
+import { BOARD_PARAMS } from 'src/params/board.params';
 
 @Injectable()
 export class TransactionService {
@@ -68,5 +70,20 @@ export class TransactionService {
         money: player2.money + transaction.sum,
       }))
     );
+  }
+
+  async getStartBonus(gameId: string, toUserId: number, isStart = false) {
+    const transactionId = nanoid(4);
+    const sum = isStart
+      ? BOARD_PARAMS.START_BONUS
+      : BOARD_PARAMS.START_PASSING_BONUS;
+    await this.store.setTransaction(gameId, {
+      sum,
+      userId: BOARD_PARAMS.BANK_PLAYER_ID,
+      reason: 'Стартовый бонус',
+      transactionId,
+      toUserId,
+    });
+    await this.transactMoney(gameId, transactionId);
   }
 }

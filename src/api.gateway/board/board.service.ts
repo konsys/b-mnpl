@@ -1,20 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { IFieldAction } from 'src/types/Board/board.types';
+import { Injectable } from '@nestjs/common';\
 import { redis } from 'src/main';
-
-export interface IPlayerAction {
-  userId: number;
-  fieldId: number;
-  fieldGroup: number;
-  fieldAction: IFieldAction;
-}
-
-export interface IBoardStore {
-  isNewRound: boolean;
-  gameRound: number;
-  playersTurn: number;
-  playerActions: IPlayerAction[];
-}
+import { IBoardStore } from '../action/store.service';
 
 @Injectable()
 export class BoardService {

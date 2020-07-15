@@ -12,7 +12,6 @@ import {
 import { UsersService } from '../users/users.service';
 import { dicesStore } from 'src/stores/dices.store';
 import { redis } from 'src/main';
-import { IFieldsStore } from 'src/stores/fields.store';
 import _ from 'lodash';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { ChecksService } from 'src/checks/checks.service';
@@ -408,13 +407,5 @@ export class FieldsService {
       userId: p.userId,
     });
     transactMoney(gameId, transactionId);
-  }
-
-  async setFieldsStore(gameId: string, fields: IFieldsStore) {
-    await redis.set(`${gameId}-fields`, JSON.stringify(fields));
-  }
-
-  async getFieldsStore(gameId: string): Promise<IFieldsStore> {
-    return JSON.parse(await redis.get(`${gameId}-fields`)) as IFieldsStore;
   }
 }

@@ -1,27 +1,16 @@
-import { GameDomain } from './actions.store';
-import { IFieldAction } from 'src/types/Board/board.types';
 import { updateFieldActionsEvent } from './fields.store';
+import {
+  IPlayerAction,
+  IBoardStore,
+} from 'src/api.gateway/action/store.service';
+import { createDomain } from 'effector';
 
-const BoardDomain = GameDomain.domain('FieldsDomain');
+const BoardDomain = createDomain('FieldsDomain');
 export const resetBoardStoreEvent = BoardDomain.event();
 export const setNewRoundEvent = BoardDomain.event();
 export const setNewTurnEvent = BoardDomain.event();
 export const setPlayerActionEvent = BoardDomain.event<IPlayerAction>();
 export const setNextRound = BoardDomain.event();
-
-export interface IPlayerAction {
-  userId: number;
-  fieldId: number;
-  fieldGroup: number;
-  fieldAction: IFieldAction;
-}
-
-export interface IBoardStore {
-  isNewRound: boolean;
-  gameRound: number;
-  playersTurn: number;
-  playerActions: IPlayerAction[];
-}
 
 // Update field actions on new round
 setNewRoundEvent.watch((v) => updateFieldActionsEvent());

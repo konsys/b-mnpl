@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { BoardSocketModule } from './modules/socket/board.socket.modules';
+import { BoardSocketModule } from './modules/socket/board.socket.module';
 const rootPath = join(__dirname, '../', 'assets/');
 
 @Module({

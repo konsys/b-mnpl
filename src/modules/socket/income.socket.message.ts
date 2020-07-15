@@ -13,7 +13,6 @@ import { ChecksService } from 'src/api.gateway/checks/checks.service';
 import { TransactionService } from 'src/api.gateway/transaction/transaction.service';
 import { ActionService } from 'src/api.gateway/action/action.service';
 import { StoreService } from 'src/api.gateway/store/store.service';
-import { Inject, forwardRef } from '@nestjs/common';
 
 @WebSocketGateway()
 export class IncomeSocketMessage {
@@ -22,7 +21,6 @@ export class IncomeSocketMessage {
     private readonly usersService: UsersService,
     private readonly fieldsService: FieldsService,
     private readonly actionsService: ActionService,
-    @Inject(forwardRef(() => ChecksService))
     private readonly checksService: ChecksService,
     private readonly transactionService: TransactionService,
     private readonly store: StoreService,

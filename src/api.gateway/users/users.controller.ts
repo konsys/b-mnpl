@@ -15,15 +15,16 @@ import { LocalAuthGuard } from 'src/modules/auth/local-auth.guard';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { updateAction } from 'src/stores/actions.store';
 import { OutcomeMessageType } from 'src/types/Board/board.types';
 import { nanoid } from 'nanoid';
+import { StoreService } from '../action/store.service';
 
 @Controller(MsNames.USERS)
 export class UsersController {
   constructor(
     private readonly service: UsersService,
     private readonly authService: AuthService,
+    private readonly store: StoreService,
   ) {}
 
   @UseGuards(LocalAuthGuard)
@@ -80,7 +81,7 @@ export class UsersController {
         resultPlayers.push(players.find((v) => v.userId === id));
       });
 
-      updateAction({
+      await this.store.setActionStore('kkk', {
         action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
         userId: resultPlayers.find((v) => v.moveOrder === 0).userId,
         moveId: 0,
@@ -90,7 +91,7 @@ export class UsersController {
 
     const id = nanoid();
     this.service.updateAllPLayers(id, resultPlayers);
-    const st = await this.service.getPlayersStore(id);
+    const st = await this.store.getPlayersStore(id);
 
     return st.players;
   }

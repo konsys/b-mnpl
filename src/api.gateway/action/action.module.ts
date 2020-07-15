@@ -3,10 +3,12 @@ import { ActionController } from './action.controller';
 import { ActionService } from './action.service';
 import { DicesService } from '../dices/dices.service';
 import { StoreService } from '../store/store.service';
+import { FieldsService } from '../fields/fields.service';
 
 @Module({
+  imports: [],
   controllers: [ActionController],
-  providers: [ActionService, DicesService, StoreService],
+  providers: [ActionService, DicesService, StoreService, FieldsService],
   exports: [],
 })
 export class ActionModule {}

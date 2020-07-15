@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { IPlayer, IField, IFieldAction } from 'src/types/Board/board.types';
 import { UsersService } from 'src/api.gateway/users/users.service';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
-import { DicesService } from 'src/api.gateway/dices/dices.service';
 import { StoreService } from 'src/api.gateway/store/store.service';
 
 @Injectable()
 export class ChecksService {
   constructor(
     private readonly usersService: UsersService,
+    @Inject(forwardRef(() => FieldsService))
     private readonly fieldsService: FieldsService,
     private readonly store: StoreService,
   ) {}

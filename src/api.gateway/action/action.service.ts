@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import {
   OutcomeMessageType,
   IncomeMessageType,
 } from 'src/types/Board/board.types';
 import { nanoid } from 'nanoid';
 import { UsersService } from '../users/users.service';
-import { FieldsService } from '../fields/fields.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { TransactionService } from '../transaction/transaction.service';
 import { StoreService } from '../store/store.service';
 import { BoardService } from '../board/board.service';
+import { FieldsService } from '../fields/fields.service';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -22,10 +22,11 @@ export interface ICurrentAction {
 export class ActionService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly fieldsService: FieldsService,
     private readonly transactionService: TransactionService,
     private readonly boardService: BoardService,
     private readonly store: StoreService,
+    @Inject(forwardRef(() => FieldsService))
+    private readonly fieldsService: FieldsService,
   ) {}
 
   async buyFieldModal(gameId: string) {

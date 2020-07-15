@@ -6,10 +6,11 @@ import { StoreService } from '../store/store.service';
 import { FieldsService } from '../fields/fields.service';
 import { UsersModule } from '../users/users.module';
 import { ActionModule } from '../action/action.module';
+import { FieldsModule } from '../fields/fields.module';
 
 @Module({
   controllers: [ChecksController],
   providers: [ChecksService, UsersService, StoreService, FieldsService],
-  imports: [UsersModule, ActionModule],
+  imports: [UsersModule, ActionModule, FieldsModule],
 })
 export class ChecksModule {}

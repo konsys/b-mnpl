@@ -52,8 +52,7 @@ const bank: IPlayer = {
 export class UsersService {
   private logger: Logger = new Logger('UsersService');
   constructor(
-    @Inject(MsNames.USERS)
-    private readonly usersClient: ClientProxy,
+    private readonly proxy: ClientProxy,
     private readonly store: StoreService,
   ) {}
 
@@ -63,7 +62,7 @@ export class UsersService {
 
   async getAllUsers(filter?: FindManyOptions) {
     try {
-      const res = await this.usersClient
+      const res = await this.proxy
         .send<any>({ cmd: MsPatterns.GET_ALL_USERS }, filter || { take: 2 })
         .toPromise();
 
@@ -75,7 +74,7 @@ export class UsersService {
 
   async getUserByCredentials(email: string, password: string) {
     try {
-      const res = await this.usersClient
+      const res = await this.proxy
         .send<any>(
           { cmd: MsPatterns.GET_USER_BY_CREDENTIALS },
           { email, password },
@@ -90,7 +89,7 @@ export class UsersService {
 
   async getUser(userId: number | null): Promise<UsersEntity> {
     try {
-      const res = await this.usersClient
+      const res = await this.proxy
         .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
         .toPromise();
 
@@ -102,7 +101,7 @@ export class UsersService {
 
   async getUsersByIds(userIds: number[]): Promise<UsersEntity[]> {
     try {
-      const res = await this.usersClient
+      const res = await this.proxy
         .send<any>({ cmd: MsPatterns.GET_USERS_BY_IDS }, { userIds })
         .toPromise();
 
@@ -114,7 +113,7 @@ export class UsersService {
 
   async saveUsers() {
     try {
-      return await this.usersClient
+      return await this.proxy
         .send<any>({ cmd: MsPatterns.SAVE_USERS }, users)
         .toPromise();
     } catch (err) {

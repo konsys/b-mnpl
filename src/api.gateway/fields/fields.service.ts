@@ -10,13 +10,14 @@ import {
   IFieldAction,
 } from 'src/types/Board/board.types';
 import { UsersService } from '../users/users.service';
-import { dicesStore } from 'src/stores/dices.store';
-import { redis } from 'src/main';
 import _ from 'lodash';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { ChecksService } from 'src/checks/checks.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { nanoid } from 'nanoid';
+import { StoreService } from '../action/store.service';
+import { ActionService } from '../action/action.service';
+import { TransactionService } from '../transaction/transaction.service';
 
 @Controller()
 export class FieldsService {
@@ -26,6 +27,9 @@ export class FieldsService {
     private readonly fieldsClient: ClientProxy,
     private readonly usersService: UsersService,
     private readonly checksService: ChecksService,
+    private readonly actionService: ActionService,
+    private readonly transactionService: TransactionService,
+    private readonly store: StoreService,
   ) {}
 
   async getInitialFields(filter?: FindManyOptions) {
@@ -54,7 +58,7 @@ export class FieldsService {
   }
 
   async findFieldByPosition(gameId: string, fieldPosition: number) {
-    return (await this.getFieldsStore(gameId)).fields.find(
+    return (await this.store.getFieldsStore(gameId)).fields.find(
       (v) => v.fieldPosition === fieldPosition,
     );
   }
@@ -67,19 +71,19 @@ export class FieldsService {
   }
 
   async getFieldById(gameId: string, fieldId: number) {
-    return (await this.getFieldsStore(gameId)).fields.find(
+    return (await this.store.getFieldsStore(gameId)).fields.find(
       (v) => v.fieldId === fieldId,
     );
   }
 
   async getFieldIndexById(gameId: string, fieldId: number) {
-    return (await this.getFieldsStore(gameId)).fields.findIndex(
+    return (await this.store.getFieldsStore(gameId)).fields.findIndex(
       (v) => v.fieldId === fieldId,
     );
   }
 
   async getBoughtFields(gameId: string) {
-    return (await this.getFieldsStore(gameId)).fields
+    return (await this.store.getFieldsStore(gameId)).fields
       .filter((v) => v.status && v.status.userId > 0)
       .map((v) => v.status);
   }
@@ -95,21 +99,21 @@ export class FieldsService {
   }
 
   async getFieldIndex(gameId: string, field: IField): Promise<number> {
-    return (await this.getFieldsStore(gameId)).fields.findIndex(
+    return (await this.store.getFieldsStore(gameId)).fields.findIndex(
       (v: any) => v.fieldId === field.fieldId,
     );
   }
 
   async updateField(gameId: string, field: IField) {
-    const fields = (await this.getFieldsStore(gameId)).fields;
+    const fields = (await this.store.getFieldsStore(gameId)).fields;
 
     fields[await this.getFieldIndex(gameId, field)] = field;
     this.updateAllFields(gameId, fields);
   }
 
   async updateAllFields(gameId: string, fields: IField[]) {
-    const version = (await this.getFieldsStore(gameId)).version + 1;
-    this.setFieldsStore(gameId, {
+    const version = (await this.store.getFieldsStore(gameId)).version + 1;
+    await this.store.setFieldsStore(gameId, {
       version,
       fields,
     });
@@ -122,7 +126,7 @@ export class FieldsService {
         field,
         await this.usersService.getPlayerById(gameId, field.status.userId),
       );
-      const dices = dicesStore.getState();
+      const dices = await this.store.getDicesStore(gameId);
       return (
         dices.sum *
         (group.length === 1 ? field.rent.baseRent : field.rent.oneStar)
@@ -157,7 +161,7 @@ export class FieldsService {
     field: IField,
     player: IPlayer,
   ): Promise<IField[]> {
-    return (await this.getFieldsStore(gameId)).fields.filter(
+    return (await this.store.getFieldsStore(gameId)).fields.filter(
       (v) =>
         v.fieldGroup === field.fieldGroup &&
         v.status &&
@@ -166,7 +170,7 @@ export class FieldsService {
   }
 
   async getFieldsByGroup(gameId: string, group: number): Promise<IField[]> {
-    return (await this.getFieldsStore(gameId)).fields.filter(
+    return (await this.store.getFieldsStore(gameId)).fields.filter(
       (v: IField) => v.fieldGroup === group,
     );
   }
@@ -176,7 +180,7 @@ export class FieldsService {
     group: number,
     user: IPlayer,
   ) {
-    (await this.getFieldsStore(gameId)).fields.filter(
+    (await this.store.getFieldsStore(gameId)).fields.filter(
       (v: IField) =>
         v.fieldGroup === group &&
         v.status &&
@@ -215,7 +219,7 @@ export class FieldsService {
               ? v.status.branches || 0
               : sameGroup.length - 1,
           mortgaged: v.status.mortgaged || 0,
-          fieldActions: this.getFieldActions(gameId, v.fieldId),
+          fieldActions: await this.getFieldActions(gameId, v.fieldId),
         };
         await this.updateField(gameId, v);
       }
@@ -227,7 +231,7 @@ export class FieldsService {
     const f = await this.getFieldById(gameId, fieldId);
     const p = await this.usersService.getActingPlayer(gameId);
 
-    await this.usersService.setPlayerActionEvent(gameId, {
+    await this.actionService.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
@@ -251,18 +255,18 @@ export class FieldsService {
     }
 
     const transactionId = nanoid(4);
-    await setTransaction(gameId, {
+    await this.store.setTransaction(gameId, {
       sum: f.price.pledgePrice,
       reason: `Money for pledge ${f.name}`,
       toUserId: p.userId,
       transactionId,
       userId: BOARD_PARAMS.BANK_PLAYER_ID,
     });
-    await transactMoney(gameId, transactionId);
+    await this.transactionService.transactMoney(gameId, transactionId);
   }
 
   async mortgageNextRound(gameId: string) {
-    const fields = (await this.getFieldsStore(gameId)).fields;
+    const fields = (await this.store.getFieldsStore(gameId)).fields;
     const res = fields.map((v: IField) => {
       if (v.status && v.status.mortgaged > 1) {
         return {
@@ -277,18 +281,27 @@ export class FieldsService {
     return res;
   }
 
-  async getFieldActions(gameId: string, fieldId: number): IFieldAction[] {
-    if (canMortgage(fieldId) && canLevelUp(fieldId)) {
+  async getFieldActions(
+    gameId: string,
+    fieldId: number,
+  ): Promise<IFieldAction[]> {
+    if (
+      (await this.checksService.canMortgage(gameId, fieldId)) &&
+      (await this.checksService.canLevelUp(gameId, fieldId))
+    ) {
       return [IFieldAction.MORTGAGE, IFieldAction.LEVEL_UP];
-    } else if (canUnMortgage(fieldId)) {
+    } else if (await this.checksService.canUnMortgage(gameId, fieldId)) {
       return [IFieldAction.UNMORTGAGE];
-    } else if (canLevelUp(fieldId) && canLevelDown(fieldId)) {
+    } else if (
+      (await this.checksService.canLevelUp(gameId, fieldId)) &&
+      (await this.checksService.canLevelDown(gameId, fieldId))
+    ) {
       return [IFieldAction.LEVEL_UP, IFieldAction.LEVEL_DOWN];
-    } else if (canLevelDown(fieldId)) {
+    } else if (await this.checksService.canLevelDown(gameId, fieldId)) {
       return [IFieldAction.LEVEL_DOWN];
-    } else if (canMortgage(fieldId)) {
+    } else if (await this.checksService.canMortgage(gameId, fieldId)) {
       return [IFieldAction.MORTGAGE];
-    } else if (canLevelUp(fieldId)) {
+    } else if (await this.checksService.canLevelUp(gameId, fieldId)) {
       return [IFieldAction.LEVEL_UP];
     }
 
@@ -296,116 +309,116 @@ export class FieldsService {
   }
 
   async unMortgage(gameId: string, fieldId: number): Promise<void> {
-    const f = this.getFieldById(gameId, fieldId);
+    const f = await this.getFieldById(gameId, fieldId);
     const p = await this.usersService.getActingPlayer(gameId);
 
-    setPlayerActionEvent(gameId, {
+    await this.actionService.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
       fieldAction: IFieldAction.UNMORTGAGE,
     });
 
-    canUnMortgage(f.fieldId) &&
-      updateField({
+    (await this.checksService.canUnMortgage(gameId, f.fieldId)) &&
+      (await this.updateField(gameId, {
         ...f,
         status: { ...f.status, mortgaged: 0 },
-      });
+      }));
 
-    const groupFields = getPlayerGroupFields(f, p);
-    groupFields.map((v) => {
+    const groupFields = await this.getPlayerGroupFields(gameId, f, p);
+    for (const v of groupFields) {
       v.status = {
         ...v.status,
-        fieldActions: getFieldActions(v.fieldId),
+        fieldActions: await this.getFieldActions(gameId, v.fieldId),
       };
 
-      updateField(v);
-    });
+      await this.updateField(gameId, v);
+    }
 
     const transactionId = nanoid(4);
-    await setTransaction(gameId, {
+    await this.store.setTransaction(gameId, {
       sum: f.price.buyoutPrice,
       reason: `Unmortgage field ${f.name}`,
       toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
       transactionId,
       userId: p.userId,
     });
-    await transactMoney(gameId, transactionId);
+    await this.transactionService.transactMoney(gameId, transactionId);
   }
 
   async levelUpField(gameId: string, fieldId: number): Promise<void> {
-    const f = this.getFieldById(fieldId);
+    const f = await this.getFieldById(gameId, fieldId);
     const p = await this.usersService.getActingPlayer(gameId);
 
-    setPlayerActionEvent({
+    await this.actionService.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
       fieldAction: IFieldAction.LEVEL_UP,
     });
-    updateField({
+    await this.updateField(gameId, {
       ...f,
       status: {
         ...f.status,
         branches: ++f.status.branches,
       },
     });
-    const group = getFieldsByGroup(f.fieldGroup);
-    group.map((v) => {
+    const group = await this.getFieldsByGroup(gameId, f.fieldGroup);
+    for (const v of group) {
       v.status = {
         ...v.status,
-        fieldActions: getFieldActions(v.fieldId),
+        fieldActions: await this.getFieldActions(gameId, v.fieldId),
       };
-      updateField(v);
-    });
+      await this.updateField(gameId, v);
+    }
 
     const transactionId = nanoid(4);
-    await setTransaction(gameId, {
+    await this.store.setTransaction(gameId, {
       sum: f.price.branchPrice,
       reason: `Buy branch ${f.name}`,
       toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
       transactionId,
       userId: p.userId,
     });
-    await transactMoney(gameId, transactionId);
+    await this.transactionService.transactMoney(gameId, transactionId);
   }
 
   async levelDownField(gameId: string, fieldId: number): Promise<void> {
-    const f = this.getFieldById(fieldId);
+    const f = await this.getFieldById(gameId, fieldId);
     const p = await this.usersService.getActingPlayer(gameId);
 
-    setPlayerActionEvent({
+    await this.actionService.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
       fieldAction: IFieldAction.LEVEL_DOWN,
     });
 
-    canLevelDown(f.fieldId) &&
-      updateField({
+    (await this.checksService.canLevelDown(gameId, f.fieldId)) &&
+      (await this.updateField(gameId, {
         ...f,
         status: {
           ...f.status,
           branches: f.status.branches > 0 ? --f.status.branches : 0,
         },
-      });
-    const group = getFieldsByGroup(f.fieldGroup);
-    group.map((v) => {
+      }));
+    const group = await this.getFieldsByGroup(gameId, f.fieldGroup);
+    for (const v of group) {
       v.status = {
         ...v.status,
-        fieldActions: getFieldActions(v.fieldId),
+        fieldActions: await this.getFieldActions(gameId, v.fieldId),
       };
-      updateField(v);
-    });
+      await this.updateField(gameId, v);
+    }
 
     const transactionId = nanoid(4);
-    await setTransaction(gameId, {
+    await this.store.setTransaction(gameId, {
       sum: f.price.branchPrice,
       reason: `Buy branch ${f.name}`,
       toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
       transactionId,
       userId: p.userId,
     });
-    transactMoney(gameId, transactionId);
+    await this.transactionService.transactMoney(gameId, transactionId);
   }
 }

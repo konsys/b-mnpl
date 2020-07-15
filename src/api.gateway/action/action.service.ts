@@ -10,6 +10,7 @@ import { FieldsService } from '../fields/fields.service';
 import { redis } from 'src/main';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { TransactionService } from '../transaction/transaction.service';
+import { StoreService } from './store.service';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -24,6 +25,7 @@ export class ActionService {
     private readonly usersService: UsersService,
     private readonly fieldsService: FieldsService,
     private readonly transactionService: TransactionService,
+    private readonly store: StoreService,
   ) {}
 
   async buyFieldModal(gameId: string) {
@@ -160,7 +162,12 @@ export class ActionService {
       : await this.rollDicesModal(gameId);
   }
 
-  getNextArrayIndex(index: number, array: any[]) {
+  async setPlayerActionEvent(gameId: string, playerActions: any) {
+    const prev = await this.store.getActionStore(gameId);
+    await this.store.setActionStore(gameId, playerActions);
+  }
+
+  private getNextArrayIndex(index: number, array: any[]) {
     return index < array.length - 1 ? index + 1 : 0;
   }
 }

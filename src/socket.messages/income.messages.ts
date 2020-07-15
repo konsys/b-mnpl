@@ -7,15 +7,15 @@ import { ErrorCode } from 'src/utils/error.code';
 import { BoardSocket } from 'src/params/board.init';
 import { nanoid } from 'nanoid';
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { getStartBonus } from 'src/utils/moneys.utils';
 import { UsersService } from 'src/api.gateway/users/users.service';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { ChecksService } from 'src/checks/checks.service';
 import { TransactionService } from 'src/api.gateway/transaction/transaction.service';
 import { ActionService } from 'src/api.gateway/action/action.service';
+import { StoreService } from 'src/api.gateway/action/store.service';
 
 @WebSocketGateway()
-export class BoardMessage {
+export class IncomeMessage {
   constructor(
     private readonly service: BoardSocket,
     private readonly usersService: UsersService,
@@ -23,11 +23,12 @@ export class BoardMessage {
     private readonly actionsService: ActionService,
     private readonly checksService: ChecksService,
     private readonly transactionService: TransactionService,
+    private readonly store: StoreService,
   ) {}
 
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
-    const action = await this.actionsService.getActionStore('kkk');
+    const action = await this.store.getActionStore('kkk');
 
     if (payload.actionId === action.actionId) {
       await this.actionsService.rollDicesAction('kkk');
@@ -48,8 +49,15 @@ export class BoardMessage {
         if (await this.checksService.isStartPass(gameId)) {
           // Bonus for start passing
           player.meanPosition === 0
-            ? getStartBonus(player.userId, true)
-            : getStartBonus(player.userId);
+            ? await this.transactionService.getStartBonus(
+                gameId,
+                player.userId,
+                true,
+              )
+            : await this.transactionService.getStartBonus(
+                gameId,
+                player.userId,
+              );
 
           await this.actionsService.switchPlayerTurn(gameId, false);
         }
@@ -71,7 +79,7 @@ export class BoardMessage {
           (await this.checksService.whosField(gameId)) &&
           !(await this.checksService.isMyField(gameId, field.fieldId))
         ) {
-          await this.transactionService.setTransaction(gameId, {
+          await this.store.setTransaction(gameId, {
             sum: await this.fieldsService.getFieldRent(gameId, field),
             userId: player.userId,
             toUserId: await this.checksService.whosField(gameId),
@@ -84,7 +92,7 @@ export class BoardMessage {
             (await this.actionsService.switchPlayerTurn(gameId, false));
         } else if (await this.checksService.isTax(gameId)) {
           // TODO написать нормальный текст на налоги
-          await this.transactionService.setTransaction(gameId, {
+          await this.store.setTransaction(gameId, {
             sum: await this.fieldsService.getFieldRent(gameId, field),
             userId: player.userId,
             toUserId: await await this.checksService.whosField(gameId),
@@ -94,7 +102,7 @@ export class BoardMessage {
           await this.actionsService.payTaxModal(gameId);
         } else if (await this.checksService.isChance(gameId)) {
           // TODO Make a real chance field await this.actionsService
-          await this.transactionService.setTransaction(gameId, {
+          await this.store.setTransaction(gameId, {
             sum: 1000,
             userId: player.userId,
             toUserId: await this.checksService.whosField(gameId),
@@ -107,7 +115,7 @@ export class BoardMessage {
         if (player.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {
           await this.actionsService.switchPlayerTurn(gameId, false);
         } else {
-          await this.transactionService.setTransaction(gameId, {
+          await this.store.setTransaction(gameId, {
             sum: 500,
             userId: player.userId,
             toUserId: await this.checksService.whosField(gameId),

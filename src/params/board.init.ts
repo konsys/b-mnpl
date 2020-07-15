@@ -16,8 +16,7 @@ import { SocketActions } from 'src/types/Game/game.types';
 import { UsersService } from '../api.gateway/users/users.service';
 import { FieldsService } from '../api.gateway/fields/fields.service';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';
-import { updateAllFields } from 'src/utils/fields.utils';
-import { _ } from 'lodash';
+import _ from 'lodash';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { BoardMessageService } from 'src/api.gateway/board.message/board.message.service';
 
@@ -37,7 +36,7 @@ export class BoardSocket
   public static socketServer: Server;
 
   async onModuleInit() {
-    await this.initStores();
+    await this.initStores('kkk');
     try {
       setInterval(() => {
         // BoardSocket.emitMessage();
@@ -59,7 +58,7 @@ export class BoardSocket
     errorStore.reset();
   }
 
-  private async initStores() {
+  private async initStores(gameId: string) {
     try {
       let players: IPlayer[] = await this.usersService.getAllUsers();
 
@@ -76,7 +75,7 @@ export class BoardSocket
             fieldActions: [IFieldAction.MORTGAGE],
           },
       }));
-      updateAllFields(r);
+      await this.fieldsService.updateAllFields(gameId, r);
 
       errorStore.updates.watch((error) => this.emitError(error));
     } catch (err) {

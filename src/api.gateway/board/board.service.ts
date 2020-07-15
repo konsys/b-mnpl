@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';\
+import { Injectable } from '@nestjs/common';
 import { redis } from 'src/main';
 import { IBoardStore } from '../action/store.service';
 

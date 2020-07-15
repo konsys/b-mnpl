@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { FieldType } from 'src/entities/board.fields.entity';
-import { dicesStore } from 'src/stores/dices.store';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { IPlayer, IField, IFieldAction } from 'src/types/Board/board.types';
-import { boardStore } from 'src/stores/board.store';
 import { UsersService } from 'src/api.gateway/users/users.service';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
+import { DicesService } from 'src/api.gateway/action/dices.service';
+import { StoreService } from 'src/api.gateway/action/store.service';
 
 @Injectable()
 export class ChecksService {
   constructor(
     private readonly usersService: UsersService,
     private readonly fieldsService: FieldsService,
+    private readonly store: StoreService,
   ) {}
 
   async isTax(gameId: string): Promise<boolean> {
@@ -21,7 +22,7 @@ export class ChecksService {
   }
 
   async isStartPass(gameId: string): Promise<boolean> {
-    const dices = dicesStore.getState();
+    const dices = await this.store.getDicesStore(gameId);
     const player = await this.usersService.getActingPlayer(gameId);
 
     return dices.sum > 0 && player.meanPosition - dices.sum < 0;
@@ -154,7 +155,7 @@ export class ChecksService {
     const branches = group.map((v) => v.status.branches);
     const max = Math.max(...branches);
     const min = Math.min(...branches);
-    const boardState = boardStore.getState();
+    const boardState = await this.store.getBoardStore(gameId);
     const alreadyUp = boardState.playerActions.some(
       (v) =>
         v.fieldGroup === f.fieldGroup &&

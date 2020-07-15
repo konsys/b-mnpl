@@ -1,42 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { ErrorCode } from 'src/utils/error.code';
-import { redis } from 'src/main';
 import { setError } from 'src/stores/error.store';
 import { UsersService } from '../users/users.service';
 import { IMoneyTransaction } from 'src/types/Board/board.types';
-
-export interface ITransactionStore {
-  transactionId: string;
-  reason: string;
-  userId: number;
-  sum: number;
-  toUserId: number;
-}
+import { StoreService } from '../action/store.service';
 
 @Injectable()
 export class TransactionService {
-  constructor(private readonly usersService: UsersService) {}
-
-  async setTransaction(gameId: string, t: ITransactionStore) {
-    return await redis.set(`${gameId}-transaction`, JSON.stringify(t));
-  }
-
-  async getTransaction(gameId: string): Promise<ITransactionStore> {
-    return JSON.parse(
-      await redis.get(`${gameId}-transaction`),
-    ) as ITransactionStore;
-  }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly store: StoreService,
+  ) {}
 
   async getCurrentTransaction(gameId: string) {
-    return await this.getTransaction(gameId);
-  }
-
-  async resetTransactionsEvent(gameId: string) {
-    await this.setTransaction(gameId, null);
+    return await this.store.getTransaction(gameId);
   }
 
   async transactMoney(gameId: string, transactionId: string) {
-    const transaction = await this.getTransaction(gameId);
+    const transaction = await this.store.getTransaction(gameId);
     const player = await this.usersService.getPlayerById(
       gameId,
       transaction.userId,
@@ -55,7 +36,7 @@ export class TransactionService {
         userId: transaction.userId,
         toUserId: transaction.toUserId,
       });
-      await this.resetTransactionsEvent(gameId);
+      await this.store.resetTransactionsEvent(gameId);
     } else {
       setError({
         code: ErrorCode.WrongTranactionId,

@@ -21,6 +21,14 @@ export interface IFieldsStore {
   fields: IField[];
 }
 
+export interface ITransactionStore {
+  transactionId: string;
+  reason: string;
+  userId: number;
+  sum: number;
+  toUserId: number;
+}
+
 @Injectable()
 export class StoreService {
   async setBoardStore(gameId: string, data: IBoardStore) {
@@ -32,11 +40,23 @@ export class StoreService {
   }
 
   async setFieldsStore(gameId: string, data: IFieldsStore) {
-    this.set(gameId, 'board', data);
+    this.set(gameId, 'fields', data);
   }
 
   async getFieldsStore(gameId: string): Promise<IFieldsStore> {
-    return JSON.parse(await redis.get(`${gameId}-fields`)) as IFieldsStore;
+    return (await this.get(gameId, 'fields')) as IFieldsStore;
+  }
+
+  async setTransaction(gameId: string, data: ITransactionStore) {
+    this.set(gameId, 'transaction', data);
+  }
+
+  async getTransaction(gameId: string): Promise<ITransactionStore> {
+    return (await this.get(gameId, 'transaction')) as ITransactionStore;
+  }
+
+  async resetTransactionsEvent(gameId: string) {
+    await this.set(gameId, 'transaction', null);
   }
 
   private async set(gameId: string, serviceName: string, data: any) {

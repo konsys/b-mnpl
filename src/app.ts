@@ -10,7 +10,7 @@ import { FieldsMsModule } from 'src/modules/ms/fields/fields.ms.module';
 import { BoardSocketModule } from './modules/socket/board.socket.modules';
 import { AuthModule } from './modules/auth/auth.module';
 import { BoardMessageModule } from './api.gateway/board.message/board.message.module';
-import { ChecksModule } from './checks/checks.module';
+import { ChecksModule } from './api.gateway/checks/checks.module';
 import { TransactionModule } from './api.gateway/transaction/transaction.module';
 import { BoardModule } from './api.gateway/board/board.module';
 import { IncomeMessageModule } from './api.gateway/income-message/income-message.module';

@@ -11,7 +11,8 @@ import Redis from 'ioredis';
 export let redis = null;
 
 async function bootstrap() {
-  redis.connect(() => console.log('Redis connected'));
+  redis = new Redis('redis://localhost:6379');
+  // await redis.connect(() => console.log('Redis connected'));
 
   redis.on('error', (err) => {
     console.log('Redis Error ' + err);
@@ -35,8 +36,7 @@ async function bootstrap() {
       url: 'nats://localhost:4222',
     },
   });
-  redis = new Redis('redis://localhost:6379');
-  await redis.connect();
+
   await app.startAllMicroservicesAsync();
 
   app.enableCors();

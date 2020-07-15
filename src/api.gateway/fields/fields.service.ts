@@ -1,4 +1,4 @@
-import { Controller, Inject, Logger } from '@nestjs/common';
+import { Inject, Logger, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
 import { MsPatterns, MsNames } from 'src/types/MS/ms.types';
@@ -12,14 +12,14 @@ import {
 import { UsersService } from '../users/users.service';
 import _ from 'lodash';
 import { FieldType } from 'src/entities/board.fields.entity';
-import { ChecksService } from 'src/checks/checks.service';
+import { ChecksService } from 'src/api.gateway/checks/checks.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { nanoid } from 'nanoid';
 import { StoreService } from '../action/store.service';
 import { ActionService } from '../action/action.service';
 import { TransactionService } from '../transaction/transaction.service';
 
-@Controller()
+@Injectable()
 export class FieldsService {
   private logger: Logger = new Logger('FieldsService');
   constructor(

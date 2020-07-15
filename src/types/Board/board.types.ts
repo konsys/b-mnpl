@@ -139,7 +139,7 @@ export interface IDoNothing extends IOutcameBoardAction {
   type: OutcomeMessageType.DO_NOTHING;
 }
 export interface IBoardEvent {
-  action: Promise<
+  action:
     | IDicesModal
     | IShowCanBuyModal
     | IDicesModal
@@ -147,8 +147,7 @@ export interface IBoardEvent {
     | IUnJailModal
     | IUnJailPayingModal
     | IRollDicesMessage
-    | IDoNothing
-  >;
+    | IDoNothing;
 }
 
 interface IBoardEventData {

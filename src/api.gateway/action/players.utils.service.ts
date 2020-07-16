@@ -133,11 +133,13 @@ export class PlayersUtilsService {
   }
 
   async updateAllPLayers(gameId: string, players: IPlayer[]): Promise<boolean> {
-    let state = await this.store.getPlayersStore(gameId);
     await this.store.setPlayersStore(gameId, {
       players,
-      version: state && state.version ? ++state.version : 1,
     });
     return true;
+  }
+
+  private async getPlayers(gameId: string) {
+    const playersState = await this.store.getPlayersStore(gameId);
   }
 }

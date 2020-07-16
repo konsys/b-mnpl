@@ -8,7 +8,6 @@ import { UsersEntity } from 'src/entities/users.entity';
 import { users } from 'src/entities/dbData';
 
 export interface IPlayersStore {
-  version: number;
   players: IPlayer[];
 }
 

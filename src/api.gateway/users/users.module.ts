@@ -8,12 +8,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from 'src/modules/auth/constants';
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: MsNames.USERS,
-        transport: Transport.NATS,
-      },
-    ]),
+    // ClientsModule.register([
+    //   {
+    //     name: MsNames.USERS,
+    //     transport: Transport.NATS,
+    //   },
+    // ]),
     // TODO Remove doubling import module with auth module
     JwtModule.register({
       secret: jwtConstants.secret,

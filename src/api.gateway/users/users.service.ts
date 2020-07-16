@@ -1,7 +1,7 @@
-import { Inject, Logger, Injectable } from '@nestjs/common';
+import { Logger, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
-import { MsPatterns, MsNames } from 'src/types/MS/ms.types';
+import { MsPatterns } from 'src/types/MS/ms.types';
 
 import { users } from 'src/entities/dbData';
 import { UsersEntity } from 'src/entities/users.entity';
@@ -50,9 +50,9 @@ const bank: IPlayer = {
 
 @Injectable()
 export class UsersService {
-  // private logger: Logger = new Logger('UsersService');
+  private logger: Logger = new Logger('UsersService');
   constructor(
-    // private readonly proxy: ClientProxy,
+    private readonly proxy: ClientProxy,
     private readonly store: StoreService,
   ) {}
 
@@ -61,68 +61,65 @@ export class UsersService {
   }
 
   async getAllUsers(filter?: FindManyOptions) {
-    return [];
-    // try {
-    //   const res = await this.proxy
-    //     .send<any>({ cmd: MsPatterns.GET_ALL_USERS }, filter || { take: 2 })
-    //     .toPromise();
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsPatterns.GET_ALL_USERS }, filter || { take: 2 })
+        .toPromise();
 
-    //   return res;
-    // } catch (err) {
-    //   this.logger.log(`Error: ${err}`);
-    // }
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
   }
 
   async getUserByCredentials(email: string, password: string) {
-    return [];
-    // try {
-    //   const res = await this.proxy
-    //     .send<any>(
-    //       { cmd: MsPatterns.GET_USER_BY_CREDENTIALS },
-    //       { email, password },
-    //     )
-    //     .toPromise();
+    try {
+      const res = await this.proxy
+        .send<any>(
+          { cmd: MsPatterns.GET_USER_BY_CREDENTIALS },
+          { email, password },
+        )
+        .toPromise();
 
-    //   return res;
-    // } catch (err) {
-    //   this.logger.log(`Error: ${err}`);
-    // }
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
   }
 
   async getUser(userId: number | null): Promise<any> {
-    // try {
-    //   const res = await this.proxy
-    //     .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
-    //     .toPromise();
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
+        .toPromise();
 
-    //   return res;
-    // } catch (err) {
-    //   this.logger.log(`Error: ${err}`);
-    // }
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
     return {};
   }
 
   async getUsersByIds(userIds: number[]): Promise<UsersEntity[]> {
-    // try {
-    //   const res = await this.proxy
-    //     .send<any>({ cmd: MsPatterns.GET_USERS_BY_IDS }, { userIds })
-    //     .toPromise();
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsPatterns.GET_USERS_BY_IDS }, { userIds })
+        .toPromise();
 
-    //   return res;
-    // } catch (err) {
-    //   this.logger.log(`Error: ${err}`);
-    // }
-    return [];
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
   }
 
   async saveUsers() {
-    // try {
-    //   return await this.proxy
-    //     .send<any>({ cmd: MsPatterns.SAVE_USERS }, users)
-    //     .toPromise();
-    // } catch (err) {
-    //   this.logger.log(`Error: ${err}`);
-    // }
+    try {
+      return await this.proxy
+        .send<any>({ cmd: MsPatterns.SAVE_USERS }, users)
+        .toPromise();
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
   }
 
   async setBankStore(gameId: string, player: IPlayer) {

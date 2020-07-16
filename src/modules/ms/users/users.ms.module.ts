@@ -1,9 +1,10 @@
+import { ClientsModule, Transport } from '@nestjs/microservices';
+
 import { Module } from '@nestjs/common';
-import { UsersMsController } from './users.ms.controller';
+import { MsNames } from 'src/types/MS/ms.types';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { MsNames } from 'src/types/MS/ms.types';
+import { UsersMsController } from './users.ms.controller';
 
 @Module({
   imports: [

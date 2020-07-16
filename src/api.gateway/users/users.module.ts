@@ -22,7 +22,7 @@ import { jwtConstants } from 'src/modules/auth/constants';
     // TODO Remove doubling import module with auth module
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: jwtConstants.expires },
     }),
     ActionModule,
   ],

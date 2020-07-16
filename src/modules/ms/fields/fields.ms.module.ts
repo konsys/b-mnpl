@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
-import { FieldsMsController } from './fields.ms.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
+import { FieldsMsController } from './fields.ms.controller';
+import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/MS/ms.types';
-import { Transport, ClientsModule } from '@nestjs/microservices';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [

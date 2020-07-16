@@ -1,4 +1,4 @@
-import { Inject, Logger, Injectable } from '@nestjs/common';
+import { Inject, Logger, Injectable, forwardRef } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
 import { MsPatterns, MsNames } from 'src/types/MS/ms.types';
@@ -26,7 +26,9 @@ export class FieldsService {
     @Inject(MsNames.FIELDS)
     private readonly fieldsClient: ClientProxy,
     private readonly usersService: UsersService,
+    @Inject(forwardRef(() => ChecksService))
     private readonly checksService: ChecksService,
+    @Inject(forwardRef(() => ActionService))
     private readonly actionService: ActionService,
     private readonly transactionService: TransactionService,
     private readonly store: StoreService,

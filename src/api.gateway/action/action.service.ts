@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import {
   OutcomeMessageType,
   IncomeMessageType,
@@ -25,6 +25,7 @@ export class ActionService {
     private readonly transactionService: TransactionService,
     private readonly boardService: BoardService,
     private readonly store: StoreService,
+    @Inject(forwardRef(() => FieldsService))
     private readonly fieldsService: FieldsService,
   ) {}
 

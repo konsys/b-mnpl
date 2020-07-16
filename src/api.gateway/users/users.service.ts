@@ -52,7 +52,7 @@ const bank: IPlayer = {
 export class UsersService {
   private logger: Logger = new Logger('UsersService');
   constructor(
-    private readonly proxy: ClientProxy,
+    // private readonly proxy: ClientProxy,
     private readonly store: StoreService,
   ) {}
 
@@ -61,64 +61,68 @@ export class UsersService {
   }
 
   async getAllUsers(filter?: FindManyOptions) {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsPatterns.GET_ALL_USERS }, filter || { take: 2 })
-        .toPromise();
+    return [];
+    // try {
+    //   const res = await this.proxy
+    //     .send<any>({ cmd: MsPatterns.GET_ALL_USERS }, filter || { take: 2 })
+    //     .toPromise();
 
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    //   return res;
+    // } catch (err) {
+    //   this.logger.log(`Error: ${err}`);
+    // }
   }
 
   async getUserByCredentials(email: string, password: string) {
-    try {
-      const res = await this.proxy
-        .send<any>(
-          { cmd: MsPatterns.GET_USER_BY_CREDENTIALS },
-          { email, password },
-        )
-        .toPromise();
+    return [];
+    // try {
+    //   const res = await this.proxy
+    //     .send<any>(
+    //       { cmd: MsPatterns.GET_USER_BY_CREDENTIALS },
+    //       { email, password },
+    //     )
+    //     .toPromise();
 
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    //   return res;
+    // } catch (err) {
+    //   this.logger.log(`Error: ${err}`);
+    // }
   }
 
-  async getUser(userId: number | null): Promise<UsersEntity> {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
-        .toPromise();
+  async getUser(userId: number | null): Promise<any> {
+    // try {
+    //   const res = await this.proxy
+    //     .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
+    //     .toPromise();
 
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    //   return res;
+    // } catch (err) {
+    //   this.logger.log(`Error: ${err}`);
+    // }
+    return {};
   }
 
   async getUsersByIds(userIds: number[]): Promise<UsersEntity[]> {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsPatterns.GET_USERS_BY_IDS }, { userIds })
-        .toPromise();
+    // try {
+    //   const res = await this.proxy
+    //     .send<any>({ cmd: MsPatterns.GET_USERS_BY_IDS }, { userIds })
+    //     .toPromise();
 
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    //   return res;
+    // } catch (err) {
+    //   this.logger.log(`Error: ${err}`);
+    // }
+    return [];
   }
 
   async saveUsers() {
-    try {
-      return await this.proxy
-        .send<any>({ cmd: MsPatterns.SAVE_USERS }, users)
-        .toPromise();
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    // try {
+    //   return await this.proxy
+    //     .send<any>({ cmd: MsPatterns.SAVE_USERS }, users)
+    //     .toPromise();
+    // } catch (err) {
+    //   this.logger.log(`Error: ${err}`);
+    // }
   }
 
   async setBankStore(gameId: string, player: IPlayer) {

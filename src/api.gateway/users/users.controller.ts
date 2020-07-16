@@ -97,7 +97,8 @@ export class UsersController {
   }
 
   @Post()
-  async post(): Promise<UsersEntity[]> {
-    return this.service.saveUsers();
+  async post(): Promise<any[]> {
+    // return this.service.saveUsers();
+    return [];
   }
 }

@@ -1,24 +1,26 @@
 import {
-  WebSocketGateway,
-  OnGatewayInit,
-  WebSocketServer,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-} from '@nestjs/websockets';
-import {
+  ClassSerializerInterceptor,
   Logger,
   UseInterceptors,
-  ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { Socket, Server } from 'socket.io';
-import { IPlayer, IField, IFieldAction } from 'src/types/Board/board.types';
+import { IErrorMessage, errorStore } from 'src/stores/error.store';
+import { IField, IFieldAction, IPlayer } from 'src/types/Board/board.types';
+import {
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+
+import { BoardMessageService } from 'src/api.gateway/action/board.message.service';
+import { FieldType } from 'src/entities/board.fields.entity';
+import { FieldsService } from '../api.gateway/fields/fields.service';
+import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
 import { SocketActions } from 'src/types/Game/game.types';
 import { UsersService } from '../api.gateway/users/users.service';
-import { FieldsService } from '../api.gateway/fields/fields.service';
-import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import _ from 'lodash';
-import { FieldType } from 'src/entities/board.fields.entity';
-import { BoardMessageService } from 'src/api.gateway/action/board.message.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -29,6 +31,7 @@ export class BoardSocket
   constructor(
     private readonly usersService: UsersService,
     private readonly fieldsService: FieldsService,
+    private readonly fields: FieldsUtilsService,
     private readonly boardService: BoardMessageService,
   ) {}
 
@@ -75,7 +78,7 @@ export class BoardSocket
             fieldActions: [IFieldAction.MORTGAGE],
           },
       }));
-      await this.fieldsService.updateAllFields(gameId, r);
+      await this.fields.updateAllFields(gameId, r);
 
       errorStore.updates.watch((error) => this.emitError(error));
     } catch (err) {

@@ -16,9 +16,11 @@ import { Server, Socket } from 'socket.io';
 
 import { BoardMessageService } from 'src/api.gateway/action/board.message.service';
 import { FieldType } from 'src/entities/board.fields.entity';
+import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
 import { PlayersUtilsService } from 'src/api.gateway/action/players.utils.service';
 import { SocketActions } from 'src/types/Game/game.types';
+import { UsersService } from 'src/api.gateway/users/users.service';
 import _ from 'lodash';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,7 +30,7 @@ export class BoardSocket
   private logger: Logger = new Logger('BoardSocket');
 
   constructor(
-    private readonly players: PlayersUtilsService,
+    private readonly fieldsService: FieldsService,
     private readonly fields: FieldsUtilsService,
     private readonly boardService: BoardMessageService,
   ) {}
@@ -61,9 +63,7 @@ export class BoardSocket
 
   private async initStores(gameId: string) {
     try {
-      let players: IPlayer[] = await this.players.getAllUsers();
-
-      const fields: IField[] = await this.fields.getInitialFields();
+      const fields: IField[] = await this.fieldsService.getInitialFields();
       const r = fields.map((v: IField, k) => ({
         ...v,
         status: v.type === FieldType.COMPANY &&

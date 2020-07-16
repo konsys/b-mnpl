@@ -5,43 +5,40 @@ import { FieldType } from 'src/entities/board.fields.entity';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { StoreService } from 'src/api.gateway/action/store.service';
-import { UsersService } from 'src/api.gateway/users/users.service';
+import { FieldsUtilsService } from './fields.utils.service';
+import { PlayersUtilsService } from './players.utils.service';
 
 @Injectable()
 export class ChecksService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly players: PlayersUtilsService,
     @Inject(forwardRef(() => FieldsService))
-    private readonly fieldsService: FieldsService,
+    private readonly fields: FieldsUtilsService,
     private readonly store: StoreService,
   ) {}
 
   async isTax(gameId: string): Promise<boolean> {
-    return (
-      (await this.fieldsService.getActingField(gameId)).type === FieldType.TAX
-    );
+    return (await this.fields.getActingField(gameId)).type === FieldType.TAX;
   }
 
   async isStartPass(gameId: string): Promise<boolean> {
     const dices = await this.store.getDicesStore(gameId);
-    const player = await this.usersService.getActingPlayer(gameId);
+    const player = await this.players.getActingPlayer(gameId);
 
     return dices.sum > 0 && player.meanPosition - dices.sum < 0;
   }
 
   async isJail(gameId: string): Promise<boolean> {
-    return (
-      (await this.fieldsService.getActingField(gameId)).type === FieldType.JAIL
-    );
+    return (await this.fields.getActingField(gameId)).type === FieldType.JAIL;
   }
 
   async isFieldMortgaged(gameId: string, fieldId: number): Promise<boolean> {
-    const field = await this.fieldsService.getFieldById(gameId, fieldId);
+    const field = await this.fields.getFieldById(gameId, fieldId);
     return field && field.status && field.status.mortgaged > 0;
   }
 
   async isCompany(gameId: string, fieldId: number) {
-    const type = (await this.fieldsService.getFieldById(gameId, fieldId)).type;
+    const type = (await this.fields.getFieldById(gameId, fieldId)).type;
     return (
       type &&
       (type === FieldType.COMPANY ||
@@ -50,24 +47,20 @@ export class ChecksService {
     );
   }
   async isChance(gameId: string): Promise<boolean> {
-    return (
-      (await this.fieldsService.getActingField(gameId)).type ===
-      FieldType.CHANCE
-    );
+    return (await this.fields.getActingField(gameId)).type === FieldType.CHANCE;
   }
 
   async isCompanyForSale(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fieldsService.getFieldById(gameId, fieldId);
+    const f = await this.fields.getFieldById(gameId, fieldId);
     return (await this.isCompany(gameId, f.fieldId)) && f && !f.status;
   }
 
   async isMyField(gameId: string, fieldId: number): Promise<boolean> {
-    const field = await this.fieldsService.getFieldById(gameId, fieldId);
+    const field = await this.fields.getFieldById(gameId, fieldId);
     return (
       this.isCompany(gameId, fieldId) &&
       field.status &&
-      field.status.userId ===
-        (await this.usersService.getActingPlayer('kkk')).userId
+      field.status.userId === (await this.players.getActingPlayer('kkk')).userId
     );
   }
 
@@ -78,19 +71,19 @@ export class ChecksService {
   ): Promise<boolean> {
     return (
       (await this.isCompany(gameId, fieldId)) &&
-      (await this.fieldsService.getFieldById(gameId, fieldId)).price
-        .startPrice <= p.money
+      (await this.fields.getFieldById(gameId, fieldId)).price.startPrice <=
+        p.money
     );
   }
 
   async whosField(gameId: string): Promise<number> {
-    const p = await this.fieldsService.getActingField(gameId);
+    const p = await this.fields.getActingField(gameId);
 
     return (p.status && p.status.userId) || BOARD_PARAMS.BANK_PLAYER_ID;
   }
 
   async noActionField(gameId: string): Promise<boolean> {
-    const field = await this.fieldsService.getActingField(gameId);
+    const field = await this.fields.getActingField(gameId);
     return (
       field.type === FieldType.TAKE_REST || field.type === FieldType.CASINO
     );
@@ -101,25 +94,25 @@ export class ChecksService {
     f: IField,
     p: IPlayer,
   ): Promise<boolean> {
-    const sg = await this.fieldsService.getPlayerGroupFields(gameId, f, p);
-    const pg = await this.fieldsService.getFieldsByGroup(gameId, f.fieldGroup);
+    const sg = await this.fields.getPlayerGroupFields(gameId, f, p);
+    const pg = await this.fields.getFieldsByGroup(gameId, f.fieldGroup);
     return sg.length === pg.length;
   }
 
   async isGroupMortgaged(gameId: string, f: IField): Promise<boolean> {
-    const p = await this.usersService.getActingPlayer(gameId);
-    const sg = await this.fieldsService.getPlayerGroupFields(gameId, f, p);
+    const p = await this.players.getActingPlayer(gameId);
+    const sg = await this.fields.getPlayerGroupFields(gameId, f, p);
     return sg.some((v) => v.status && v.status.mortgaged > 0);
   }
 
   async groupHasBranches(gameId: string, f: IField): Promise<boolean> {
-    return (
-      await this.fieldsService.getFieldsByGroup(gameId, f.fieldGroup)
-    ).some((v) => v.status && v.status.branches > 0);
+    return (await this.fields.getFieldsByGroup(gameId, f.fieldGroup)).some(
+      (v) => v.status && v.status.branches > 0,
+    );
   }
 
   async canMortgage(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fieldsService.getFieldById(gameId, fieldId);
+    const f = await this.fields.getFieldById(gameId, fieldId);
     const hasBranches = await this.groupHasBranches(gameId, f);
 
     return (
@@ -132,8 +125,8 @@ export class ChecksService {
   }
 
   async canUnMortgage(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fieldsService.getFieldById(gameId, fieldId);
-    const p = await this.usersService.getActingPlayer(gameId);
+    const f = await this.fields.getFieldById(gameId, fieldId);
+    const p = await this.players.getActingPlayer(gameId);
     return (
       f &&
       (await this.isCompany(gameId, fieldId)) &&
@@ -144,15 +137,12 @@ export class ChecksService {
   }
 
   async canLevelUp(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fieldsService.getFieldById(gameId, fieldId);
-    const p = await this.usersService.getActingPlayer(gameId);
+    const f = await this.fields.getFieldById(gameId, fieldId);
+    const p = await this.players.getActingPlayer(gameId);
     const m = await this.playerHasMonopoly(gameId, f, p);
     const isMortgaged = await this.isGroupMortgaged(gameId, f);
 
-    const group = await this.fieldsService.getFieldsByGroup(
-      gameId,
-      f.fieldGroup,
-    );
+    const group = await this.fields.getFieldsByGroup(gameId, f.fieldGroup);
     const branches = group.map((v) => v.status.branches);
     const max = Math.max(...branches);
     const min = Math.min(...branches);
@@ -184,15 +174,12 @@ export class ChecksService {
   }
 
   async canLevelDown(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fieldsService.getFieldById(gameId, fieldId);
-    const p = await this.usersService.getActingPlayer(gameId);
+    const f = await this.fields.getFieldById(gameId, fieldId);
+    const p = await this.players.getActingPlayer(gameId);
     const hasMonopoly = await this.playerHasMonopoly(gameId, f, p);
     const isMortgaged = await this.isGroupMortgaged(gameId, f);
 
-    const group = await this.fieldsService.getFieldsByGroup(
-      gameId,
-      f.fieldGroup,
-    );
+    const group = await this.fields.getFieldsByGroup(gameId, f.fieldGroup);
     const branches = group.map((v) => v.status.branches);
     const max = Math.max(...branches);
     const min = Math.min(...branches);

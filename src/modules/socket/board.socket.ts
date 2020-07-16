@@ -16,9 +16,9 @@ import { Server, Socket } from 'socket.io';
 
 import { BoardMessageService } from 'src/api.gateway/action/board.message.service';
 import { FieldType } from 'src/entities/board.fields.entity';
-import { FieldsService } from '../../api.gateway/fields/fields.service';
+import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
+import { PlayersUtilsService } from 'src/api.gateway/action/players.utils.service';
 import { SocketActions } from 'src/types/Game/game.types';
-import { UsersService } from '../../api.gateway/users/users.service';
 import _ from 'lodash';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,8 +28,8 @@ export class BoardSocket
   private logger: Logger = new Logger('BoardSocket');
 
   constructor(
-    private readonly usersService: UsersService,
-    private readonly fieldsService: FieldsService,
+    private readonly players: PlayersUtilsService,
+    private readonly fields: FieldsUtilsService,
     private readonly boardService: BoardMessageService,
   ) {}
 
@@ -61,9 +61,9 @@ export class BoardSocket
 
   private async initStores(gameId: string) {
     try {
-      let players: IPlayer[] = await this.usersService.getAllUsers();
+      let players: IPlayer[] = await this.players.getAllUsers();
 
-      const fields: IField[] = await this.fieldsService.getInitialFields();
+      const fields: IField[] = await this.fields.getInitialFields();
       const r = fields.map((v: IField, k) => ({
         ...v,
         status: v.type === FieldType.COMPANY &&
@@ -76,7 +76,7 @@ export class BoardSocket
             fieldActions: [IFieldAction.MORTGAGE],
           },
       }));
-      await this.fieldsService.updateAllFields(gameId, r);
+      await this.fields.updateAllFields(gameId, r);
 
       errorStore.updates.watch((error) => this.emitError(error));
     } catch (err) {

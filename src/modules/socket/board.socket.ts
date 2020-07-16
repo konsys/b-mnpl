@@ -19,6 +19,7 @@ import { FieldType } from 'src/entities/board.fields.entity';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
 import { SocketActions } from 'src/types/Game/game.types';
+import { StoreService } from 'src/api.gateway/action/store.service';
 import _ from 'lodash';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -31,13 +32,15 @@ export class BoardSocket
     private readonly fieldsService: FieldsService,
     private readonly fields: FieldsUtilsService,
     private readonly boardService: BoardMessageService,
+    private readonly store: StoreService,
   ) {}
 
   @WebSocketServer()
   public static socketServer: Server;
 
   async onModuleInit() {
-    const r = await this.initStores('kkk');
+    await this.store.flushGame('kkk');
+    await this.initStores('kkk');
     try {
       setInterval(() => {
         // BoardSocket.emitMessage();
@@ -60,6 +63,7 @@ export class BoardSocket
   }
 
   private async initStores(gameId: string) {
+    this.store;
     try {
       const fields: IField[] = await this.fieldsService.getInitialFields();
       const r = fields.map((v: IField, k) => ({

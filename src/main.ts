@@ -1,12 +1,13 @@
-import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
 import { App } from 'src/app';
-import helmet from 'helmet';
+import { NestFactory } from '@nestjs/core';
+import Redis from 'ioredis';
+import { Transport } from '@nestjs/microservices';
 // import csurf from 'csurf';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { Transport } from '@nestjs/microservices';
-import Redis from 'ioredis';
+import helmet from 'helmet';
 
 export let redis = null;
 

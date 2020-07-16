@@ -41,66 +41,96 @@ export interface IDicesStore {
   isTriple: boolean;
 }
 
+export interface IStore {
+  bank: string;
+  dices: string;
+  action: string;
+  board: string;
+  fields: string;
+  transaction: string;
+  players: string;
+}
+
+const storeNames: IStore = {
+  bank: 'bank',
+  dices: 'dices',
+  action: 'action',
+  board: 'board',
+  fields: 'fields',
+  transaction: 'transaction',
+  players: 'players',
+};
 @Injectable()
 export class StoreService {
+  async flushGame(gameId: string) {
+    const pipeline = redis.pipeline();
+
+    for (const k of Object.values(storeNames)) {
+      await pipeline.del(`${gameId}-${k}`);
+    }
+  }
+
   async setBankStore(gameId: string, data: IPlayer) {
-    await this.set(gameId, 'dices', data);
+    await this.set(gameId, storeNames.bank, data);
   }
 
   async getBankStore(gameId: string): Promise<IPlayer> {
-    return (await this.get(gameId, 'dices')) as IPlayer;
+    return (await this.get(gameId, storeNames.bank)) as IPlayer;
   }
 
   async setDicesStore(gameId: string, data: IDicesStore) {
-    await this.set(gameId, 'dices', data);
+    await this.set(gameId, storeNames.dices, data);
   }
 
   async getDicesStore(gameId: string): Promise<IDicesStore> {
-    return (await this.get(gameId, 'dices')) as IDicesStore;
+    return (await this.get(gameId, storeNames.dices)) as IDicesStore;
   }
 
   async setActionStore(gameId: string, data: ICurrentAction) {
-    await this.set(gameId, 'action', data);
+    await this.set(gameId, storeNames.action, data);
   }
 
   async getActionStore(gameId: string): Promise<ICurrentAction> {
-    return (await this.get(gameId, 'action')) as ICurrentAction;
+    return (await this.get(gameId, storeNames.action)) as ICurrentAction;
   }
 
   async setBoardStore(gameId: string, data: IBoardStore) {
-    await this.set(gameId, 'board', data);
+    await this.set(gameId, storeNames.board, data);
   }
 
   async getBoardStore(gameId: string): Promise<IBoardStore> {
-    return (await this.get(gameId, 'board')) as IBoardStore;
+    return (await this.get(gameId, storeNames.board)) as IBoardStore;
   }
 
   async setFieldsStore(gameId: string, data: IFieldsStore) {
-    await this.set(gameId, 'fields', data);
+    await this.set(gameId, storeNames.fields, data);
   }
 
   async getFieldsStore(gameId: string): Promise<IFieldsStore> {
-    return (await this.get(gameId, 'fields')) as IFieldsStore;
+    return (await this.get(gameId, storeNames.fields)) as IFieldsStore;
   }
 
   async setTransaction(gameId: string, data: ITransactionStore) {
-    await this.set(gameId, 'transaction', data);
+    await this.set(gameId, storeNames.transaction, data);
   }
 
   async getTransaction(gameId: string): Promise<ITransactionStore> {
-    return (await this.get(gameId, 'transaction')) as ITransactionStore;
+    return (await this.get(
+      gameId,
+      storeNames.transaction,
+    )) as ITransactionStore;
   }
 
   async resetTransactionsEvent(gameId: string) {
-    await this.set(gameId, 'transaction', null);
+    await redis.pipeline().del(`${gameId}-${storeNames.transaction}`);
   }
 
   async setPlayersStore(gameId: string, data: IPlayersStore) {
-    await this.set(gameId, 'players', data);
+    await this.set(gameId, storeNames.players, data);
   }
 
   async getPlayersStore(gameId: string): Promise<IPlayersStore> {
-    return (await this.get(gameId, 'players')) as IPlayersStore;
+    return (await this.get(gameId, storeNames.players)) as IPlayersStore;
   }
 
   private async set(gameId: string, serviceName: string, data: any) {

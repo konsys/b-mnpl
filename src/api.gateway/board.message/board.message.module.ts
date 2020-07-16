@@ -10,4 +10,5 @@ import { OutcomeMessageService } from '../outcome-message/outcome-message.servic
 })
 export class BoardMessageModule {
   imports: [OutcomeMessageService];
+  providers: [OutcomeMessageService];
 }

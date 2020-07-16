@@ -60,7 +60,6 @@ export class UsersService {
 
   async getUsersByIds(userIds: number[]): Promise<UsersEntity[]> {
     try {
-      
       const res = await this.proxy
         .send<any>({ cmd: MsPatterns.GET_USERS_BY_IDS }, { userIds })
         .toPromise();

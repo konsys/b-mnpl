@@ -6,6 +6,7 @@ import { UsersService } from './users.service';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from 'src/modules/auth/constants';
+import { OutcomeMessageModule } from '../outcome-message/outcome-message.module';
 @Module({
   imports: [
     ClientsModule.register([

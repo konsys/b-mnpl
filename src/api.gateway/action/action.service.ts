@@ -9,8 +9,9 @@ import { FieldsService } from '../fields/fields.service';
 import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { TransactionService } from './transaction.service';
-import { UsersService } from '../users/users.service';
+import { PlayersUtilsService } from './players.utils.service';
 import { nanoid } from 'nanoid';
+import { FieldsUtilsService } from './fields.utils.service';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -22,16 +23,16 @@ export interface ICurrentAction {
 @Injectable()
 export class ActionService {
   constructor(
-    private readonly usersService: UsersService,
-    private readonly transactionService: TransactionService,
+    private readonly players: PlayersUtilsService,
+    private readonly transaction: TransactionService,
     private readonly boardService: BoardService,
     private readonly store: StoreService,
     @Inject(forwardRef(() => FieldsService))
-    private readonly fieldsService: FieldsService,
+    private readonly fields: FieldsUtilsService,
   ) {}
 
   async buyFieldModal(gameId: string) {
-    const player = await this.usersService.getActingPlayer(gameId);
+    const player = await this.players.getActingPlayer(gameId);
     const action = await this.store.getActionStore(gameId);
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,
@@ -43,14 +44,14 @@ export class ActionService {
 
   async buyField(gameId: string) {
     // Field set to player
-    const user = await this.usersService.getActingPlayer(gameId);
-    const field = await this.fieldsService.findFieldByPosition(
+    const user = await this.players.getActingPlayer(gameId);
+    const field = await this.fields.findFieldByPosition(
       gameId,
       user.meanPosition,
     );
     let sum = field.price.startPrice;
 
-    sum = await this.fieldsService.buyCompany(gameId, field);
+    sum = await this.fields.buyCompany(gameId, field);
 
     // Decrease player`s money;
     const transactionId = nanoid(4);
@@ -61,13 +62,13 @@ export class ActionService {
       transactionId,
       userId: user.userId,
     });
-    await this.transactionService.transactMoney(gameId, transactionId);
+    await this.transaction.transactMoney(gameId, transactionId);
   }
 
   async unJailModal(gameId: string) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
-      userId: (await this.usersService.getActingPlayer(gameId)).userId,
+      userId: (await this.players.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
@@ -76,7 +77,7 @@ export class ActionService {
   async payUnJailModal(gameId: string) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
-      userId: (await this.usersService.getActingPlayer(gameId)).userId,
+      userId: (await this.players.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
@@ -85,7 +86,7 @@ export class ActionService {
   async payTaxModal(gameId: string) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
-      userId: (await this.usersService.getActingPlayer(gameId)).userId,
+      userId: (await this.players.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
@@ -94,7 +95,7 @@ export class ActionService {
   async rollDicesAction(gameId: string) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
-      userId: (await this.usersService.getActingPlayer(gameId)).userId,
+      userId: (await this.players.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
@@ -103,7 +104,7 @@ export class ActionService {
   async rollDicesModal(gameId: string) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
-      userId: (await this.usersService.getActingPlayer(gameId)).userId,
+      userId: (await this.players.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
@@ -112,7 +113,7 @@ export class ActionService {
   async startAuctionModal(gameId: string) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
-      userId: (await this.usersService.getActingPlayer(gameId)).userId,
+      userId: (await this.players.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
@@ -121,8 +122,8 @@ export class ActionService {
   async switchPlayerTurn(gameId: string, unJail: boolean) {
     unJail = unJail ? unJail : false;
     const store = await this.store.getPlayersStore(gameId);
-    const index = await this.usersService.getActingPlayerIndex(gameId);
-    let player = await this.usersService.getActingPlayer(gameId);
+    const index = await this.players.getActingPlayerIndex(gameId);
+    let player = await this.players.getActingPlayer(gameId);
     let nextIndex = index;
 
     if (index === 0) {
@@ -131,12 +132,12 @@ export class ActionService {
       await this.boardService.setNewTurnEvent(gameId);
     }
     // Set Next round
-    nextIndex === 0 && (await this.fieldsService.mortgageNextRound(gameId));
+    nextIndex === 0 && (await this.fields.mortgageNextRound(gameId));
 
     // Doubled dices and jail
     if (player.movesLeft > 0) {
       nextIndex = index;
-      await this.usersService.updatePlayer(gameId, {
+      await this.players.updatePlayer(gameId, {
         ...player,
         movesLeft: --player.movesLeft,
       });
@@ -157,8 +158,8 @@ export class ActionService {
       }
     });
 
-    await this.usersService.updateAllPLayers(gameId, res);
-    player = await this.usersService.getActingPlayer(gameId);
+    await this.players.updateAllPLayers(gameId, res);
+    player = await this.players.getActingPlayer(gameId);
     player.jailed
       ? await this.unJailModal(gameId)
       : await this.rollDicesModal(gameId);

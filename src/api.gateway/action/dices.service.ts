@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { IDicesStore, StoreService } from './store.service';
+
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { StoreService, IDicesStore } from './store.service';
+import { Injectable } from '@nestjs/common';
+import { PlayersUtilsService } from './players.utils.service';
 
 @Injectable()
 export class DicesService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly players: PlayersUtilsService,
     private readonly store: StoreService,
   ) {}
 
@@ -18,7 +19,7 @@ export class DicesService {
   }
 
   async randDices(gameId: string, actionId: string): Promise<IDicesStore> {
-    const player = await this.usersService.getActingPlayer(gameId);
+    const player = await this.players.getActingPlayer(gameId);
     const currenPosition = player.meanPosition;
 
     const dice1 = 1;
@@ -48,7 +49,7 @@ export class DicesService {
     gameId: string,
     dices: IDicesStore,
   ): Promise<void> {
-    const player = await this.usersService.getActingPlayer(gameId);
+    const player = await this.players.getActingPlayer(gameId);
     let jailed = 0;
     let movesLeft = 0;
     let meanPosition = dices.meanPosition;
@@ -60,7 +61,7 @@ export class DicesService {
         movesLeft = 0;
         doublesRolledAsCombo = 0;
       } else {
-        await this.usersService.updatePlayer(gameId, {
+        await this.players.updatePlayer(gameId, {
           ...player,
           unjailAttempts: ++player.unjailAttempts,
         });
@@ -76,11 +77,11 @@ export class DicesService {
     }
 
     if (doublesRolledAsCombo >= BOARD_PARAMS.JAIL_TURNS) {
-      await this.usersService.jailPlayer(gameId);
+      await this.players.jailPlayer(gameId);
       return;
     }
 
-    await this.usersService.updatePlayer(gameId, {
+    await this.players.updatePlayer(gameId, {
       ...player,
       movesLeft,
       doublesRolledAsCombo,

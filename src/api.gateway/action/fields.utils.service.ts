@@ -10,16 +10,16 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { ChecksService } from './checks.service';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { Injectable } from '@nestjs/common';
+import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionService } from './transaction.service';
-import { UsersService } from '../users/users.service';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 
 @Injectable()
 export class FieldsUtilsService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly players: PlayersUtilsService,
     private readonly checksService: ChecksService,
     private readonly actionService: ActionService,
     private readonly transactionService: TransactionService,
@@ -33,7 +33,7 @@ export class FieldsUtilsService {
   }
 
   async getActingField(gameId: string): Promise<IField> {
-    const user = await this.usersService.getActingPlayer(gameId);
+    const user = await this.players.getActingPlayer(gameId);
     const field = this.findFieldByPosition(gameId, user.meanPosition);
     if (!field) throw Error(`Field not found: position: ${user.meanPosition}`);
     return field;
@@ -59,7 +59,7 @@ export class FieldsUtilsService {
 
   async moneyTransactionParams(gameId: string): Promise<IMoneyTransaction> {
     const field = await this.getActingField(gameId);
-    const p = await this.usersService.getActingPlayer(gameId);
+    const p = await this.players.getActingPlayer(gameId);
     return {
       sum: -field.price,
       userId: p.userId,
@@ -93,7 +93,7 @@ export class FieldsUtilsService {
       const group = await this.getPlayerGroupFields(
         gameId,
         field,
-        await this.usersService.getPlayerById(gameId, field.status.userId),
+        await this.players.getPlayerById(gameId, field.status.userId),
       );
       const dices = await this.store.getDicesStore(gameId);
       return (
@@ -159,7 +159,7 @@ export class FieldsUtilsService {
   }
 
   async buyCompany(gameId: string, f: IField): Promise<number> {
-    const p = await this.usersService.getActingPlayer(gameId);
+    const p = await this.players.getActingPlayer(gameId);
     const sameGroup = _.concat(
       await this.getPlayerGroupFields(gameId, f, p),
       f,
@@ -198,7 +198,7 @@ export class FieldsUtilsService {
 
   async mortgage(gameId: string, fieldId: number): Promise<void> {
     const f = await this.getFieldById(gameId, fieldId);
-    const p = await this.usersService.getActingPlayer(gameId);
+    const p = await this.players.getActingPlayer(gameId);
 
     await this.actionService.setPlayerActionEvent(gameId, {
       userId: p.userId,
@@ -279,7 +279,7 @@ export class FieldsUtilsService {
 
   async unMortgage(gameId: string, fieldId: number): Promise<void> {
     const f = await this.getFieldById(gameId, fieldId);
-    const p = await this.usersService.getActingPlayer(gameId);
+    const p = await this.players.getActingPlayer(gameId);
 
     await this.actionService.setPlayerActionEvent(gameId, {
       userId: p.userId,
@@ -317,7 +317,7 @@ export class FieldsUtilsService {
 
   async levelUpField(gameId: string, fieldId: number): Promise<void> {
     const f = await this.getFieldById(gameId, fieldId);
-    const p = await this.usersService.getActingPlayer(gameId);
+    const p = await this.players.getActingPlayer(gameId);
 
     await this.actionService.setPlayerActionEvent(gameId, {
       userId: p.userId,
@@ -354,7 +354,7 @@ export class FieldsUtilsService {
 
   async levelDownField(gameId: string, fieldId: number): Promise<void> {
     const f = await this.getFieldById(gameId, fieldId);
-    const p = await this.usersService.getActingPlayer(gameId);
+    const p = await this.players.getActingPlayer(gameId);
 
     await this.actionService.setPlayerActionEvent(gameId, {
       userId: p.userId,

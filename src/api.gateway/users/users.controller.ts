@@ -18,11 +18,13 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { OutcomeMessageType } from 'src/types/Board/board.types';
 import { nanoid } from 'nanoid';
 import { StoreService } from '../action/store.service';
+import { PlayersUtilsService } from '../action/players.utils.service';
 
 @Controller(MsNames.USERS)
 export class UsersController {
   constructor(
     private readonly service: UsersService,
+    private readonly players: PlayersUtilsService,
     private readonly authService: AuthService,
     private readonly store: StoreService,
   ) {}
@@ -90,7 +92,7 @@ export class UsersController {
     }
 
     const id = nanoid();
-    this.service.updateAllPLayers(id, resultPlayers);
+    await this.players.updateAllPLayers(id, resultPlayers);
     const st = await this.store.getPlayersStore(id);
 
     return st.players;

@@ -11,24 +11,24 @@ import {
 } from 'src/types/Board/board.types';
 
 import { DicesService } from './dices.service';
-import { FieldsService } from '../fields/fields.service';
+import { FieldsUtilsService } from './fields.utils.service';
 import { Injectable } from '@nestjs/common';
+import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
-import { UsersService } from '../users/users.service';
 import { nanoid } from 'nanoid';
 
 @Injectable()
 export class OutcomeMessageService {
   constructor(
-    private readonly fieldsService: FieldsService,
+    private readonly fields: FieldsUtilsService,
     private readonly store: StoreService,
     private readonly dices: DicesService,
-    private readonly usersService: UsersService,
+    private readonly players: PlayersUtilsService,
   ) {}
 
   rollDicesModalMessage = async (gameId: string): Promise<IDicesModal> => ({
     type: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
-    userId: (await this.usersService.getActingPlayer(gameId)).userId,
+    userId: (await this.players.getActingPlayer(gameId)).userId,
     title: 'Кидайте кубики',
     text: 'Мы болеем за вас',
     _id: (await this.store.getActionStore(gameId)).actionId,
@@ -37,7 +37,7 @@ export class OutcomeMessageService {
 
   unJailModalMesage = async (gameId: string): Promise<IUnJailModal> => ({
     type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
-    userId: (await this.usersService.getActingPlayer(gameId)).userId,
+    userId: (await this.players.getActingPlayer(gameId)).userId,
     title: 'Заплатить залог',
     text: 'Заплатить за выход из тюрьмы',
     _id: (await this.store.getActionStore(gameId)).actionId,
@@ -50,7 +50,7 @@ export class OutcomeMessageService {
     const transaction = await this.store.getTransaction(gameId);
     return {
       type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
-      userId: (await this.usersService.getActingPlayer(gameId)).userId,
+      userId: (await this.players.getActingPlayer(gameId)).userId,
       title: 'Заплатить залог',
       text: 'Заплатить за выход из тюрьмы',
       _id: (await this.store.getActionStore(gameId)).actionId,
@@ -62,22 +62,19 @@ export class OutcomeMessageService {
   doNothingMessage = async (gameId: string): Promise<IDoNothing> => ({
     type: OutcomeMessageType.DO_NOTHING,
     _id: nanoid(),
-    userId: (await this.usersService.getActingPlayer(gameId)).userId,
+    userId: (await this.players.getActingPlayer(gameId)).userId,
     isModal: false,
   });
 
   buyModalHandler = async (gameId: string): Promise<IShowCanBuyModal> => {
-    const player = await this.usersService.getActingPlayer(gameId);
+    const player = await this.players.getActingPlayer(gameId);
 
     return {
       type: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,
       userId: player.userId,
       title: 'Купить поле',
       text: 'Вы можете купить поле или поставить его на аукцион',
-      field: await this.fieldsService.findFieldByPosition(
-        gameId,
-        player.meanPosition,
-      ),
+      field: await this.fields.findFieldByPosition(gameId, player.meanPosition),
       money: player.money,
       _id: (await this.store.getActionStore(gameId)).actionId,
       isModal: true,
@@ -85,8 +82,8 @@ export class OutcomeMessageService {
   };
 
   payModalHandler = async (gameId: string): Promise<IPayRentModal> => {
-    const player = await this.usersService.getActingPlayer(gameId);
-    const field = await this.fieldsService.getActingField(gameId);
+    const player = await this.players.getActingPlayer(gameId);
+    const field = await this.fields.getActingField(gameId);
     const action = await this.store.getActionStore(gameId);
     const transaction = await this.store.getTransaction(gameId);
     const sum = (transaction && transaction.sum) || 0;
@@ -113,7 +110,7 @@ export class OutcomeMessageService {
 
     return {
       type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
-      userId: (await this.usersService.getActingPlayer(gameId)).userId,
+      userId: (await this.players.getActingPlayer(gameId)).userId,
       dices: dicesState.dices,
       meanPosition: dicesState.meanPosition,
       isDouble: dicesState.isDouble,

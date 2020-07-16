@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { BOARD_PARAMS } from 'src/params/board.params';
 import { ErrorCode } from 'src/utils/error.code';
-import { setError } from 'src/stores/error.store';
-import { UsersService } from '../users/users.service';
 import { IMoneyTransaction } from 'src/types/Board/board.types';
+import { Injectable } from '@nestjs/common';
+import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { nanoid } from 'nanoid';
-import { BOARD_PARAMS } from 'src/params/board.params';
+import { setError } from 'src/stores/error.store';
 
 @Injectable()
 export class TransactionService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly players: PlayersUtilsService,
     private readonly store: StoreService,
   ) {}
 
@@ -20,10 +20,7 @@ export class TransactionService {
 
   async transactMoney(gameId: string, transactionId: string) {
     const transaction = await this.store.getTransaction(gameId);
-    const player = await this.usersService.getPlayerById(
-      gameId,
-      transaction.userId,
-    );
+    const player = await this.players.getPlayerById(gameId, transaction.userId);
     if (transaction.sum > player.money) {
       setError({
         code: ErrorCode.NotEnoughMoney,
@@ -51,21 +48,21 @@ export class TransactionService {
     gameId: string,
     transaction: IMoneyTransaction,
   ): Promise<boolean> {
-    const player1 = await this.usersService.getPlayerById(
+    const player1 = await this.players.getPlayerById(
       gameId,
       transaction.userId,
     );
-    const player2 = await this.usersService.getPlayerById(
+    const player2 = await this.players.getPlayerById(
       gameId,
       transaction.toUserId,
     );
 
     return (
-      (await this.usersService.updatePlayer(gameId, {
+      (await this.players.updatePlayer(gameId, {
         ...player1,
         money: player1.money - transaction.sum,
       })) &&
-      (await this.usersService.updatePlayer(gameId, {
+      (await this.players.updatePlayer(gameId, {
         ...player2,
         money: player2.money + transaction.sum,
       }))

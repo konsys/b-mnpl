@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
 import { BoardMessage } from 'src/types/Board/board.types';
+import { FieldsUtilsService } from './fields.utils.service';
 import { IBoardEvent } from 'src/types/Board/board.types';
-import { FieldsService } from '../fields/fields.service';
-import { StoreService } from './store.service';
+import { Injectable } from '@nestjs/common';
 import { OutcomeMessageService } from './outcome-message.service';
+import { StoreService } from './store.service';
 
 @Injectable()
 export class BoardMessageService {
   constructor(
-    private readonly fieldsClient: FieldsService,
+    private readonly fields: FieldsUtilsService,
     private readonly store: StoreService,
     private readonly outcomeMessage: OutcomeMessageService,
   ) {}
@@ -34,7 +34,7 @@ export class BoardMessageService {
         event,
         boardStatus: {
           players: players.players,
-          fields: await this.fieldsClient.getBoughtFields(gameId),
+          fields: await this.fields.getBoughtFields(gameId),
         },
       },
     };

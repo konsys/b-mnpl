@@ -7,6 +7,8 @@ import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from 'src/modules/auth/constants';
 import { OutcomeMessageModule } from '../outcome-message/outcome-message.module';
+import { StoreModule } from '../store/store.module';
+import { StoreService } from '../store/store.service';
 @Module({
   imports: [
     ClientsModule.register([
@@ -20,9 +22,10 @@ import { OutcomeMessageModule } from '../outcome-message/outcome-message.module'
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
     }),
+    StoreModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, AuthService],
+  providers: [UsersService, AuthService, StoreService],
   exports: [UsersService],
 })
 export class UsersModule {}

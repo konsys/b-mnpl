@@ -19,10 +19,11 @@ import { DicesService } from '../dices/dices.service';
 @Injectable()
 export class OutcomeMessageService {
   constructor(
-    private readonly usersService: UsersService,
+    @Inject(forwardRef(() => FieldsService))
     private readonly fieldsService: FieldsService,
     private readonly store: StoreService,
     private readonly dices: DicesService,
+    private readonly usersService: UsersService,
   ) {}
 
   rollDicesModalMessage = async (gameId: string): Promise<IDicesModal> => ({

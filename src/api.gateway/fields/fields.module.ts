@@ -3,6 +3,7 @@ import { FieldsController } from './fields.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MsNames } from 'src/types/MS/ms.types';
 import { FieldsService } from './fields.service';
+import { UsersService } from '../users/users.service';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { FieldsService } from './fields.service';
         transport: Transport.NATS,
       },
     ]),
+    UsersService,
   ],
   providers: [FieldsService],
   controllers: [FieldsController],

@@ -50,7 +50,7 @@ const bank: IPlayer = {
 
 @Injectable()
 export class UsersService {
-  private logger: Logger = new Logger('UsersService');
+  // private logger: Logger = new Logger('UsersService');
   constructor(
     // private readonly proxy: ClientProxy,
     private readonly store: StoreService,

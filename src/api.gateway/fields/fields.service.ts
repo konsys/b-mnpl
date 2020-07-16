@@ -24,7 +24,7 @@ export class FieldsService {
   private logger: Logger = new Logger('FieldsService');
   constructor(
     @Inject(MsNames.FIELDS)
-    private readonly fieldsClient: ClientProxy,
+    private readonly proxy: ClientProxy,
     private readonly usersService: UsersService,
     @Inject(forwardRef(() => ChecksService))
     private readonly checksService: ChecksService,
@@ -36,7 +36,7 @@ export class FieldsService {
 
   async getInitialFields(filter?: FindManyOptions) {
     try {
-      const res = await this.fieldsClient
+      const res = await this.proxy
         .send<any>({ cmd: MsPatterns.GET_INIT_FIELDS }, filter || {})
         .toPromise();
 
@@ -50,7 +50,7 @@ export class FieldsService {
     try {
       const fields = fieldsForSave();
 
-      const res = await this.fieldsClient
+      const res = await this.proxy
         .send<any>({ cmd: MsPatterns.SAVE_FIELDS }, fields)
         .toPromise();
       return res;

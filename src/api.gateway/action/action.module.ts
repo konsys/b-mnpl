@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common';
 import { ActionController } from './action.controller';
 import { ActionService } from './action.service';
-import { DicesService } from './dices.service';
-import { StoreService } from './store.service';
-import { FieldsService } from '../fields/fields.service';
 import { BoardService } from './board.service';
+import { DicesService } from './dices.service';
+import { FieldsService } from '../fields/fields.service';
+import { Module } from '@nestjs/common';
+import { StoreService } from './store.service';
+import { TransactionService } from './transaction.service';
+import { UsersService } from '../users/users.service';
 
 @Module({
   imports: [],
@@ -16,6 +18,8 @@ import { BoardService } from './board.service';
     FieldsService,
     BoardService,
     StoreService,
+    UsersService,
+    TransactionService,
   ],
   exports: [],
 })

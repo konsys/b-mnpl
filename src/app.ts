@@ -1,9 +1,12 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Connection } from 'typeorm';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+import { ActionModule } from './api.gateway/action/action.module';
 import { BoardSocketModule } from './modules/socket/board.socket.module';
+import { Connection } from 'typeorm';
+import { FieldsModule } from './api.gateway/fields/fields.module';
+import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './api.gateway/users/users.module';
+import { join } from 'path';
 const rootPath = join(__dirname, '../', 'assets/');
 
 @Module({
@@ -22,7 +25,7 @@ const rootPath = join(__dirname, '../', 'assets/');
     ServeStaticModule.forRoot({
       rootPath,
     }),
-    BoardSocketModule,
+    ActionModule,
   ],
   controllers: [],
   providers: [],

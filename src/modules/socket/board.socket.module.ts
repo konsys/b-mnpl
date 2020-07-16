@@ -17,30 +17,30 @@ import { UsersService } from '../../api.gateway/users/users.service';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: MsNames.USERS,
-        transport: Transport.NATS,
-      },
-      {
-        name: MsNames.FIELDS,
-        transport: Transport.NATS,
-      },
-    ]),
+    // ClientsModule.register([
+    //   {
+    //     name: MsNames.USERS,
+    //     transport: Transport.NATS,
+    //   },
+    //   {
+    //     name: MsNames.FIELDS,
+    //     transport: Transport.NATS,
+    //   },
+    // ]),
   ],
   providers: [
-    BoardSocket,
-    IncomeSocketMessage,
-    ChecksService,
-    UsersService,
-    FieldsService,
-    BoardMessageService,
-    ActionService,
-    TransactionService,
-    StoreService,
-    OutcomeMessageService,
-    BoardService,
-    DicesService,
+    // BoardSocket,
+    // IncomeSocketMessage,
+    // ChecksService,
+    // UsersService,
+    // FieldsService,
+    // BoardMessageService,
+    // ActionService,
+    // TransactionService,
+    // StoreService,
+    // OutcomeMessageService,
+    // BoardService,
+    // DicesService,
   ],
   controllers: [],
 })

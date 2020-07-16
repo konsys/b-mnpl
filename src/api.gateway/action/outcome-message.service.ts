@@ -1,25 +1,25 @@
-import { Injectable, forwardRef, Inject } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { StoreService } from './store.service';
 import {
-  OutcomeMessageType,
   IDicesModal,
-  IUnJailModal,
-  IUnJailPayingModal,
   IDoNothing,
-  IShowCanBuyModal,
   IPayRentModal,
   IRollDicesMessage,
+  IShowCanBuyModal,
+  IUnJailModal,
+  IUnJailPayingModal,
   IncomeMessageType,
+  OutcomeMessageType,
 } from 'src/types/Board/board.types';
-import { nanoid } from 'nanoid';
-import { FieldsService } from '../fields/fields.service';
+
 import { DicesService } from './dices.service';
+import { FieldsService } from '../fields/fields.service';
+import { Injectable } from '@nestjs/common';
+import { StoreService } from './store.service';
+import { UsersService } from '../users/users.service';
+import { nanoid } from 'nanoid';
 
 @Injectable()
 export class OutcomeMessageService {
   constructor(
-    @Inject(forwardRef(() => FieldsService))
     private readonly fieldsService: FieldsService,
     private readonly store: StoreService,
     private readonly dices: DicesService,

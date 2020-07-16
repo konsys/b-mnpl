@@ -44,7 +44,7 @@ export class ActionService {
   async buyField(gameId: string) {
     // Field set to player
     const user = await this.players.getActingPlayer(gameId);
-    const field = await this.fields.findFieldByPosition(
+    const field = await this.fields.getFieldByPosition(
       gameId,
       user.meanPosition,
     );

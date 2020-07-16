@@ -74,7 +74,7 @@ export class OutcomeMessageService {
       userId: player.userId,
       title: 'Купить поле',
       text: 'Вы можете купить поле или поставить его на аукцион',
-      field: await this.fields.findFieldByPosition(gameId, player.meanPosition),
+      field: await this.fields.getFieldByPosition(gameId, player.meanPosition),
       money: player.money,
       _id: (await this.store.getActionStore(gameId)).actionId,
       isModal: true,

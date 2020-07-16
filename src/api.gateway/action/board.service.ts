@@ -19,7 +19,6 @@ export class BoardService {
   async setNewTurnEvent(gameId: string) {
     const prev = await this.store.getBoardStore(gameId);
 
-    console.log(1111, prev);
     await this.store.setBoardStore(gameId, {
       isNewRound: false,
       gameRound: prev.gameRound,

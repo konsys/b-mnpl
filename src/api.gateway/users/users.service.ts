@@ -1,15 +1,15 @@
-import { Logger, Injectable } from '@nestjs/common';
+import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
+import { Injectable, Logger } from '@nestjs/common';
+
+import { BOARD_PARAMS } from 'src/params/board.params';
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
 import { MsPatterns } from 'src/types/MS/ms.types';
-
-import { users } from 'src/entities/dbData';
-import { UsersEntity } from 'src/entities/users.entity';
-import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
-import { redis } from 'src/main';
-import { BOARD_PARAMS } from 'src/params/board.params';
-import { nanoid } from 'nanoid';
 import { StoreService } from '../action/store.service';
+import { UsersEntity } from 'src/entities/users.entity';
+import { nanoid } from 'nanoid';
+import { redis } from 'src/main';
+import { users } from 'src/entities/dbData';
 
 export interface IPlayersStore {
   version: number;

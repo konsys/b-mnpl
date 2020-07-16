@@ -91,10 +91,10 @@ export class UsersController {
       });
     }
 
-    const id = nanoid();
-    await this.players.updateAllPLayers(id, resultPlayers);
-    const st = await this.store.getPlayersStore(id);
+    await this.players.updateAllPLayers('kkk', resultPlayers);
 
+    const st = await this.store.getPlayersStore('kkk');
+    console.log(st.players);
     return st.players;
   }
 

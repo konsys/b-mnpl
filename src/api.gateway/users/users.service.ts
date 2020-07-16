@@ -1,11 +1,9 @@
 import { IPlayer } from 'src/types/Board/board.types';
 import { Injectable, Logger, Inject } from '@nestjs/common';
 
-import { BOARD_PARAMS } from 'src/params/board.params';
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
 import { MsPatterns, MsNames } from 'src/types/MS/ms.types';
-import { StoreService } from '../action/store.service';
 import { UsersEntity } from 'src/entities/users.entity';
 import { users } from 'src/entities/dbData';
 

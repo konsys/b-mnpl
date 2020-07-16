@@ -46,9 +46,10 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async get(@Query() ids): Promise<UsersEntity[]> {
-    ids = !!ids.ids ? ids.ids : [1];
+    const  ids1 = !!ids.ids ? ids.ids : [1];
 
-    let players = await this.service.getUsersByIds(ids);
+ console.log(11111, ids, ids1);  
+   let players = await this.service.getUsersByIds(ids1);
 
     const resultPlayers = [];
     if (players.length > 0) {

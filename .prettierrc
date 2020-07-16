@@ -1,11 +1,4 @@
 {
-  "plugins": ["./node_modules/prettier-plugin-import-sort/src"],
-  "singleQuote": true,
-  "trailingComma": "all",
-  "arrowParens": "always",
-  "bracketSpacing": true,
-  "printWidth": 120,
-  "semi": true,
   "tabWidth": 2,
   "useTabs": false
 }

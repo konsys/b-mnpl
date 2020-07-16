@@ -29,9 +29,9 @@ export class FieldsUtilsService {
   ) {}
 
   async findFieldByPosition(gameId: string, fieldPosition: number) {
-    return (await this.store.getFieldsStore(gameId)).fields.find(
-      (v) => v.fieldPosition === fieldPosition,
-    );
+    const f = await this.store.getFieldsStore(gameId);
+    const fields = f && f.fields;
+    return fields.find((v) => v.fieldPosition === fieldPosition);
   }
 
   async getActingField(gameId: string): Promise<IField> {
@@ -151,7 +151,9 @@ export class FieldsUtilsService {
     group: number,
     user: IPlayer,
   ) {
-    (await this.store.getFieldsStore(gameId)).fields.filter(
+    const f = await this.store.getFieldsStore(gameId);
+    const fields = f && f.fields;
+    fields.filter(
       (v: IField) =>
         v.fieldGroup === group &&
         v.status &&
@@ -237,7 +239,8 @@ export class FieldsUtilsService {
   }
 
   async mortgageNextRound(gameId: string) {
-    const fields = (await this.store.getFieldsStore(gameId)).fields;
+    const f = await this.store.getFieldsStore(gameId);
+    const fields = f && f.fields;
     const res = fields.map((v: IField) => {
       if (v.status && v.status.mortgaged > 1) {
         return {

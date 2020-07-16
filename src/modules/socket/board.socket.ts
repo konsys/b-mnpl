@@ -37,8 +37,8 @@ export class BoardSocket
   public static socketServer: Server;
 
   async onModuleInit() {
-    console.log(123123123);
-    await this.initStores('kkk');
+    const r = await this.initStores('kkk');
+    console.log(11111, r);
     try {
       setInterval(() => {
         // BoardSocket.emitMessage();

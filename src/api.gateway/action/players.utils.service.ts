@@ -54,9 +54,10 @@ export class PlayersUtilsService {
   }
 
   async getActingPlayer(gameId: string): Promise<IPlayer> {
-    const state = await this.store.getBankStore(gameId);
-    const user = Array.isArray(state) && state.find((v) => v.isActing);
-    return user;
+    const players = await this.getPlayers(gameId);
+    const acting = Array.isArray(players) && players.find((v) => v.isActing);
+
+    return acting;
   }
 
   async getActingPlayerIndex(gameId: string): Promise<number> {

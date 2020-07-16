@@ -1,21 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { redis } from 'src/main';
-import { IBoardStore } from './store.service';
+import { StoreService } from './store.service';
 
 @Injectable()
 export class BoardService {
-  async setBoardStore(gameId: string, board: IBoardStore) {
-    await redis.set(`${gameId}-board`, JSON.stringify(board));
-  }
-
-  async getBoardStore(gameId: string): Promise<IBoardStore> {
-    return JSON.parse(await redis.get(`${gameId}-board`)) as IBoardStore;
-  }
+  constructor(private readonly store: StoreService) {}
 
   async setNewRoundEvent(gameId: string) {
-    const prev = await this.getBoardStore(gameId);
+    const prev = await this.store.getBoardStore(gameId);
 
-    await this.setBoardStore(gameId, {
+    await this.store.setBoardStore(gameId, {
       isNewRound: true,
       gameRound: ++prev.gameRound,
       playersTurn: ++prev.playersTurn,
@@ -24,9 +17,10 @@ export class BoardService {
   }
 
   async setNewTurnEvent(gameId: string) {
-    const prev = await this.getBoardStore(gameId);
+    const prev = await this.store.getBoardStore(gameId);
 
-    await this.setBoardStore(gameId, {
+    console.log(1111, prev);
+    await this.store.setBoardStore(gameId, {
       isNewRound: false,
       gameRound: prev.gameRound,
       playersTurn: ++prev.playersTurn,
@@ -35,9 +29,9 @@ export class BoardService {
   }
 
   async setNextRound(gameId: string) {
-    const prev = await this.getBoardStore(gameId);
+    const prev = await this.store.getBoardStore(gameId);
 
-    await this.setBoardStore(gameId, {
+    await this.store.setBoardStore(gameId, {
       ...prev,
       isNewRound: false,
       playersTurn: ++prev.playersTurn,

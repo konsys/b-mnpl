@@ -33,7 +33,7 @@ export class BoardMessageService {
         id: (actionState && actionState.moveId) || 0,
         event,
         boardStatus: {
-          players: players.players,
+          players: players ? players.players : [],
           fields: await this.fields.getBoughtFields(gameId),
         },
       },

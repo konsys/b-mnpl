@@ -6,13 +6,13 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardSocket } from 'src/params/board.init';
 import { ChecksService } from 'src/api.gateway/action/checks.service';
 import { ErrorCode } from 'src/utils/error.code';
-import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
 import { IActionId } from 'src/types/Board/board.types';
 import { PlayersUtilsService } from 'src/api.gateway/action/players.utils.service';
 import { Socket } from 'socket.io';
 import { StoreService } from 'src/api.gateway/action/store.service';
 import { TransactionService } from 'src/api.gateway/action/transaction.service';
+import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import { setError } from 'src/stores/error.store';
 

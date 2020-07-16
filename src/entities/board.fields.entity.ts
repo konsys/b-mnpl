@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { IFieldPrice, IFieldRent } from 'src/types/Board/board.types';
 
 export enum FieldGroupName {

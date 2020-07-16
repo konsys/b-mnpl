@@ -20,9 +20,9 @@ import { nanoid } from 'nanoid';
 export class FieldsUtilsService {
   constructor(
     private readonly players: PlayersUtilsService,
-    private readonly checksService: ChecksService,
+    private readonly checks: ChecksService,
     private readonly actionService: ActionService,
-    private readonly transactionService: TransactionService,
+    private readonly transaction: TransactionService,
     private readonly store: StoreService,
   ) {}
 
@@ -165,7 +165,7 @@ export class FieldsUtilsService {
       f,
     );
 
-    if (this.checksService.canBuyField(gameId, f.fieldId, p)) {
+    if (this.checks.canBuyField(gameId, f.fieldId, p)) {
       this.updateField(gameId, {
         ...f,
 
@@ -207,7 +207,7 @@ export class FieldsUtilsService {
       fieldAction: IFieldAction.MORTGAGE,
     });
 
-    (await this.checksService.canMortgage(gameId, f.fieldId)) &&
+    (await this.checks.canMortgage(gameId, f.fieldId)) &&
       (await this.updateField(gameId, {
         ...f,
         status: { ...f.status, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },
@@ -231,7 +231,7 @@ export class FieldsUtilsService {
       transactionId,
       userId: BOARD_PARAMS.BANK_PLAYER_ID,
     });
-    await this.transactionService.transactMoney(gameId, transactionId);
+    await this.transaction.transactMoney(gameId, transactionId);
   }
 
   async mortgageNextRound(gameId: string) {
@@ -255,22 +255,22 @@ export class FieldsUtilsService {
     fieldId: number,
   ): Promise<IFieldAction[]> {
     if (
-      (await this.checksService.canMortgage(gameId, fieldId)) &&
-      (await this.checksService.canLevelUp(gameId, fieldId))
+      (await this.checks.canMortgage(gameId, fieldId)) &&
+      (await this.checks.canLevelUp(gameId, fieldId))
     ) {
       return [IFieldAction.MORTGAGE, IFieldAction.LEVEL_UP];
-    } else if (await this.checksService.canUnMortgage(gameId, fieldId)) {
+    } else if (await this.checks.canUnMortgage(gameId, fieldId)) {
       return [IFieldAction.UNMORTGAGE];
     } else if (
-      (await this.checksService.canLevelUp(gameId, fieldId)) &&
-      (await this.checksService.canLevelDown(gameId, fieldId))
+      (await this.checks.canLevelUp(gameId, fieldId)) &&
+      (await this.checks.canLevelDown(gameId, fieldId))
     ) {
       return [IFieldAction.LEVEL_UP, IFieldAction.LEVEL_DOWN];
-    } else if (await this.checksService.canLevelDown(gameId, fieldId)) {
+    } else if (await this.checks.canLevelDown(gameId, fieldId)) {
       return [IFieldAction.LEVEL_DOWN];
-    } else if (await this.checksService.canMortgage(gameId, fieldId)) {
+    } else if (await this.checks.canMortgage(gameId, fieldId)) {
       return [IFieldAction.MORTGAGE];
-    } else if (await this.checksService.canLevelUp(gameId, fieldId)) {
+    } else if (await this.checks.canLevelUp(gameId, fieldId)) {
       return [IFieldAction.LEVEL_UP];
     }
 
@@ -288,7 +288,7 @@ export class FieldsUtilsService {
       fieldAction: IFieldAction.UNMORTGAGE,
     });
 
-    (await this.checksService.canUnMortgage(gameId, f.fieldId)) &&
+    (await this.checks.canUnMortgage(gameId, f.fieldId)) &&
       (await this.updateField(gameId, {
         ...f,
         status: { ...f.status, mortgaged: 0 },
@@ -312,7 +312,7 @@ export class FieldsUtilsService {
       transactionId,
       userId: p.userId,
     });
-    await this.transactionService.transactMoney(gameId, transactionId);
+    await this.transaction.transactMoney(gameId, transactionId);
   }
 
   async levelUpField(gameId: string, fieldId: number): Promise<void> {
@@ -349,7 +349,7 @@ export class FieldsUtilsService {
       transactionId,
       userId: p.userId,
     });
-    await this.transactionService.transactMoney(gameId, transactionId);
+    await this.transaction.transactMoney(gameId, transactionId);
   }
 
   async levelDownField(gameId: string, fieldId: number): Promise<void> {
@@ -363,7 +363,7 @@ export class FieldsUtilsService {
       fieldAction: IFieldAction.LEVEL_DOWN,
     });
 
-    (await this.checksService.canLevelDown(gameId, f.fieldId)) &&
+    (await this.checks.canLevelDown(gameId, f.fieldId)) &&
       (await this.updateField(gameId, {
         ...f,
         status: {
@@ -388,6 +388,6 @@ export class FieldsUtilsService {
       transactionId,
       userId: p.userId,
     });
-    await this.transactionService.transactMoney(gameId, transactionId);
+    await this.transaction.transactMoney(gameId, transactionId);
   }
 }

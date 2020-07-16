@@ -4,14 +4,12 @@ import { ActionController } from './action.controller';
 import { ActionService } from './action.service';
 import { BoardService } from './board.service';
 import { DicesService } from './dices.service';
-import { FieldsService } from '../fields/fields.service';
+import { FieldsUtilsService } from './fields.utils.service';
 import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/MS/ms.types';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionService } from './transaction.service';
-import { UsersModule } from '../users/users.module';
-import { UsersService } from '../users/users.service';
 
 @Module({
   imports: [
@@ -27,12 +25,11 @@ import { UsersService } from '../users/users.service';
     ActionService,
     DicesService,
     StoreService,
-    // FieldsService,
     BoardService,
     StoreService,
-    // UsersService,
     TransactionService,
     PlayersUtilsService,
+    FieldsUtilsService,
   ],
   exports: [ActionService],
 })

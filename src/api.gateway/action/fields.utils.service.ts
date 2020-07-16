@@ -30,13 +30,14 @@ export class FieldsUtilsService {
 
   async getFieldByPosition(gameId: string, fieldPosition: number) {
     const fields = await this.getFields(gameId);
+
     return fields.find((v) => v.fieldPosition === fieldPosition);
   }
 
   async getActingField(gameId: string): Promise<IField> {
     const user = await this.players.getActingPlayer(gameId);
-    console.log(1111, user.meanPosition);
-    const field = this.getFieldByPosition(gameId, user.meanPosition);
+
+    const field = await this.getFieldByPosition(gameId, user.meanPosition);
 
     if (!field) throw Error(`Field not found: position: ${user.meanPosition}`);
     return field;
@@ -393,6 +394,6 @@ export class FieldsUtilsService {
 
   private async getFields(gameId: string): Promise<IField[]> {
     const fields = await this.store.getFieldsStore(gameId);
-    return isArray(fields) ? fields : [];
+    return isArray(fields.fields) ? fields.fields : [];
   }
 }

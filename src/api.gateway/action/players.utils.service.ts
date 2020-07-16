@@ -140,7 +140,7 @@ export class PlayersUtilsService {
     return true;
   }
 
-  private async getPlayers(gameId: string): Promise<IPlayer[] | []> {
+  private async getPlayers(gameId: string): Promise<IPlayer[]> {
     const playersState = await this.store.getPlayersStore(gameId);
     return playersState ? playersState.players : [];
   }

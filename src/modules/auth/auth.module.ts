@@ -13,7 +13,7 @@ import { jwtConstants } from './constants';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn:jwtConstants.expires},
+      signOptions: { expiresIn: jwtConstants.expires },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],

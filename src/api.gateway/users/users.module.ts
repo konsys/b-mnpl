@@ -28,6 +28,6 @@ import { jwtConstants } from 'src/modules/auth/constants';
   ],
   controllers: [UsersController],
   providers: [UsersService, AuthService, PlayersUtilsService, StoreService],
-  exports: [],
+  exports: [UsersService],
 })
 export class UsersModule {}

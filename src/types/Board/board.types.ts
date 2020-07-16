@@ -1,5 +1,5 @@
-import { UsersEntity } from 'src/entities/users.entity';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
+import { UsersEntity } from 'src/entities/users.entity';
 
 export enum ResponceCode {
   ok = 0,

@@ -7,8 +7,10 @@ import { DicesService } from './dices.service';
 import { FieldsService } from '../fields/fields.service';
 import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/MS/ms.types';
+import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionService } from './transaction.service';
+import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 
 @Module({
@@ -25,11 +27,12 @@ import { UsersService } from '../users/users.service';
     ActionService,
     DicesService,
     StoreService,
-    FieldsService,
+    // FieldsService,
     BoardService,
     StoreService,
-    UsersService,
+    // UsersService,
     TransactionService,
+    PlayersUtilsService,
   ],
   exports: [ActionService],
 })

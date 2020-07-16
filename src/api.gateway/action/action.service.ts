@@ -6,12 +6,12 @@ import {
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardService } from './board.service';
 import { FieldsService } from '../fields/fields.service';
-import { Injectable, forwardRef, Inject } from '@nestjs/common';
+import { FieldsUtilsService } from './fields.utils.service';
+import { Injectable } from '@nestjs/common';
+import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionService } from './transaction.service';
-import { PlayersUtilsService } from './players.utils.service';
 import { nanoid } from 'nanoid';
-import { FieldsUtilsService } from './fields.utils.service';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -27,7 +27,6 @@ export class ActionService {
     private readonly transaction: TransactionService,
     private readonly boardService: BoardService,
     private readonly store: StoreService,
-    @Inject(forwardRef(() => FieldsService))
     private readonly fields: FieldsUtilsService,
   ) {}
 

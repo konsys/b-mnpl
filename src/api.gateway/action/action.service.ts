@@ -6,7 +6,7 @@ import {
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardService } from './board.service';
 import { FieldsService } from '../fields/fields.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { TransactionService } from './transaction.service';
 import { UsersService } from '../users/users.service';
@@ -26,6 +26,7 @@ export class ActionService {
     private readonly transactionService: TransactionService,
     private readonly boardService: BoardService,
     private readonly store: StoreService,
+    @Inject(forwardRef(() => FieldsService))
     private readonly fieldsService: FieldsService,
   ) {}
 

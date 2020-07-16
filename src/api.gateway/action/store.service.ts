@@ -1,8 +1,9 @@
+import { IField, IFieldAction, IPlayer } from 'src/types/Board/board.types';
+
+import { ICurrentAction } from './action.service';
+import { IPlayersStore } from '../users/users.service';
 import { Injectable } from '@nestjs/common';
 import { redis } from 'src/main';
-import { IField, IFieldAction } from 'src/types/Board/board.types';
-import { IPlayersStore } from '../users/users.service';
-import { ICurrentAction } from './action.service';
 
 export interface IPlayerAction {
   userId: number;
@@ -43,6 +44,14 @@ export interface IDicesStore {
 
 @Injectable()
 export class StoreService {
+  async setBankStore(gameId: string, data: IPlayer) {
+    await this.set(gameId, 'dices', data);
+  }
+
+  async getBankStore(gameId: string): Promise<IPlayer> {
+    return (await this.get(gameId, 'dices')) as IPlayer;
+  }
+
   async setDicesStore(gameId: string, data: IDicesStore) {
     await this.set(gameId, 'dices', data);
   }

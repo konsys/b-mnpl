@@ -26,6 +26,7 @@ const rootPath = join(__dirname, '../', 'assets/');
       rootPath,
     }),
     ActionModule,
+    FieldsModule,
   ],
   controllers: [],
   providers: [],

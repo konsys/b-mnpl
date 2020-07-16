@@ -1,25 +1,27 @@
+import { IFieldId, IncomeMessageType } from 'src/types/Board/board.types';
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { IncomeMessageType, IFieldId } from 'src/types/Board/board.types';
-import { Socket } from 'socket.io';
-import { IActionId } from 'src/types/Board/board.types';
-import { setError } from 'src/stores/error.store';
-import { ErrorCode } from 'src/utils/error.code';
-import { BoardSocket } from 'src/params/board.init';
-import { nanoid } from 'nanoid';
-import { BOARD_PARAMS } from 'src/params/board.params';
-import { UsersService } from 'src/api.gateway/users/users.service';
-import { FieldsService } from 'src/api.gateway/fields/fields.service';
-import { ChecksService } from 'src/api.gateway/action/checks.service';
-import { TransactionService } from 'src/api.gateway/action/transaction.service';
+
 import { ActionService } from 'src/api.gateway/action/action.service';
+import { BOARD_PARAMS } from 'src/params/board.params';
+import { BoardSocket } from 'src/params/board.init';
+import { ChecksService } from 'src/api.gateway/action/checks.service';
+import { ErrorCode } from 'src/utils/error.code';
+import { FieldsService } from 'src/api.gateway/fields/fields.service';
+import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
+import { IActionId } from 'src/types/Board/board.types';
+import { PlayersUtilsService } from 'src/api.gateway/action/players.utils.service';
+import { Socket } from 'socket.io';
 import { StoreService } from 'src/api.gateway/action/store.service';
+import { TransactionService } from 'src/api.gateway/action/transaction.service';
+import { nanoid } from 'nanoid';
+import { setError } from 'src/stores/error.store';
 
 @WebSocketGateway()
 export class IncomeSocketMessage {
   constructor(
     private readonly service: BoardSocket,
-    private readonly usersService: UsersService,
-    private readonly fieldsService: FieldsService,
+    private readonly playersService: PlayersUtilsService,
+    private readonly fieldsService: FieldsUtilsService,
     private readonly actionsService: ActionService,
     private readonly checksService: ChecksService,
     private readonly transactionService: TransactionService,
@@ -42,7 +44,7 @@ export class IncomeSocketMessage {
 
   async tokenMovedAfterClick(gameId: string) {
     try {
-      const player = await this.usersService.getActingPlayer(gameId);
+      const player = await this.playersService.getActingPlayer(gameId);
       const field = await this.fieldsService.getActingField(gameId);
 
       if (!player.jailed) {
@@ -88,7 +90,7 @@ export class IncomeSocketMessage {
           });
           await this.actionsService.payTaxModal(gameId);
         } else if (await this.checksService.isJail(gameId)) {
-          (await this.usersService.jailPlayer(gameId)) &&
+          (await this.playersService.jailPlayer(gameId)) &&
             (await this.actionsService.switchPlayerTurn(gameId, false));
         } else if (await this.checksService.isTax(gameId)) {
           // TODO написать нормальный текст на налоги
@@ -133,7 +135,7 @@ export class IncomeSocketMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
     const f = await this.fieldsService.getActingField('kkk');
-    const p = await this.usersService.getActingPlayer('kkk');
+    const p = await this.playersService.getActingPlayer('kkk');
     if (await this.checksService.canBuyField('kkk', f.fieldId, p)) {
       await this.actionsService.buyField('kkk');
       await this.actionsService.switchPlayerTurn('kkk', false);
@@ -165,7 +167,7 @@ export class IncomeSocketMessage {
   async payment(client: Socket, payload: IActionId): Promise<void> {
     if (
       (await this.transactionService.getCurrentTransaction('kkk')).sum <
-      (await this.usersService.getActingPlayer('kkk')).money
+      (await this.playersService.getActingPlayer('kkk')).money
     ) {
       await this.transactionService.transactMoney(
         'kkk',
@@ -184,7 +186,7 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED)
   async unJailPayment(client: Socket, payload: IActionId): Promise<void> {
-    await this.usersService.unjailPlayer('kkk');
+    await this.playersService.unjailPlayer('kkk');
     await this.service.emitMessage();
     setTimeout(async () => {
       await this.actionsService.rollDicesModal('kkk');

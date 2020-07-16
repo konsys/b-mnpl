@@ -1,9 +1,12 @@
-import { Module } from '@nestjs/common';
-import { FieldsController } from './fields.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { MsNames } from 'src/types/MS/ms.types';
+
+import { ActionModule } from '../action/action.module';
+import { ActionService } from '../action/action.service';
+import { ChecksService } from '../action/checks.service';
+import { FieldsController } from './fields.controller';
 import { FieldsService } from './fields.service';
-import { UsersService } from '../users/users.service';
+import { Module } from '@nestjs/common';
+import { MsNames } from 'src/types/MS/ms.types';
 
 @Module({
   imports: [
@@ -13,9 +16,9 @@ import { UsersService } from '../users/users.service';
         transport: Transport.NATS,
       },
     ]),
-    UsersService,
+    ActionModule,
   ],
-  providers: [FieldsService],
+  providers: [FieldsService, ActionService, ChecksService],
   controllers: [FieldsController],
   exports: [FieldsService],
 })

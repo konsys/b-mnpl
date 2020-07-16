@@ -3,6 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ActionController } from './action.controller';
 import { ActionService } from './action.service';
 import { BoardService } from './board.service';
+import { ChecksService } from './checks.service';
 import { DicesService } from './dices.service';
 import { FieldsUtilsService } from './fields.utils.service';
 import { Module } from '@nestjs/common';
@@ -24,6 +25,7 @@ import { TransactionService } from './transaction.service';
   providers: [
     ActionService,
     DicesService,
+    ChecksService,
     StoreService,
     BoardService,
     StoreService,

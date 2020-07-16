@@ -7,7 +7,7 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardService } from './board.service';
 import { FieldsService } from '../fields/fields.service';
 import { FieldsUtilsService } from './fields.utils.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionService } from './transaction.service';
@@ -27,6 +27,7 @@ export class ActionService {
     private readonly transaction: TransactionService,
     private readonly boardService: BoardService,
     private readonly store: StoreService,
+    @Inject(forwardRef(() => FieldsUtilsService))
     private readonly fields: FieldsUtilsService,
   ) {}
 

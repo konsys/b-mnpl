@@ -3,7 +3,7 @@ import { IField, IFieldAction, IPlayer } from 'src/types/Board/board.types';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { FieldsUtilsService } from './fields.utils.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from 'src/api.gateway/action/store.service';
 
@@ -11,6 +11,7 @@ import { StoreService } from 'src/api.gateway/action/store.service';
 export class ChecksService {
   constructor(
     private readonly players: PlayersUtilsService,
+    @Inject(forwardRef(() => FieldsUtilsService))
     private readonly fields: FieldsUtilsService,
     private readonly store: StoreService,
   ) {}

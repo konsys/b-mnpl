@@ -13,7 +13,7 @@ export class FieldsMsController {
   ) {}
 
   @MessagePattern({ cmd: MsPatterns.GET_INIT_FIELDS })
-  async getFields(): Promise<BoardFieldsEntity[]> {
+  async getFields(): Promise<any[]> {
     return await this.fieldsRepository.find();
   }
 

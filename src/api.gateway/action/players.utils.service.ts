@@ -136,7 +136,7 @@ export class PlayersUtilsService {
     let state = await this.store.getPlayersStore(gameId);
     await this.store.setPlayersStore(gameId, {
       players,
-      version: ++state.version,
+      version: state && state.version ? ++state.version : 1,
     });
     return true;
   }

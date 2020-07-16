@@ -47,10 +47,10 @@ export class PlayersUtilsService {
 
   async getPlayerById(gameId: string, userId: number): Promise<IPlayer> {
     const bank = await this.store.getBankStore(gameId);
-    const players = await this.store.getPlayersStore(gameId);
+    const players = await this.getPlayers(gameId);
     return userId === BOARD_PARAMS.BANK_PLAYER_ID
       ? bank
-      : players.players.find((v) => v.userId === userId);
+      : players.find((v) => v.userId === userId);
   }
 
   async getActingPlayer(gameId: string): Promise<IPlayer> {
@@ -117,7 +117,7 @@ export class PlayersUtilsService {
       return this.store.setBankStore(gameId, player) && true;
     }
 
-    const playersState = await this.store.getPlayersStore(gameId);
+    const players = await this.getPlayers(gameId);
     const currentPLayerIndex = await this.getPlayerIndexById(
       gameId,
       player.userId,
@@ -127,9 +127,9 @@ export class PlayersUtilsService {
     if (currentPLayerIndex === -1)
       throw Error(`Not found player with id: ${player.userId}`);
 
-    playersState.players[currentPLayerIndex] = player;
+    players[currentPLayerIndex] = player;
 
-    return await this.updateAllPLayers(gameId, playersState.players);
+    return await this.updateAllPLayers(gameId, players);
   }
 
   async updateAllPLayers(gameId: string, players: IPlayer[]): Promise<boolean> {
@@ -139,7 +139,8 @@ export class PlayersUtilsService {
     return true;
   }
 
-  private async getPlayers(gameId: string) {
+  private async getPlayers(gameId: string): Promise<IPlayer[] | []> {
     const playersState = await this.store.getPlayersStore(gameId);
+    return playersState ? playersState.players : [];
   }
 }

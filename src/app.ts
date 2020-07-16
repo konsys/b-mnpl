@@ -1,4 +1,5 @@
 import { ActionModule } from './api.gateway/action/action.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { BoardSocketModule } from './modules/socket/board.socket.module';
 import { Connection } from 'typeorm';
 import { FieldsModule } from './api.gateway/fields/fields.module';
@@ -28,6 +29,7 @@ const rootPath = join(__dirname, '../', 'assets/');
     ActionModule,
     FieldsModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

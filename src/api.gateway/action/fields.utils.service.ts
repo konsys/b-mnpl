@@ -13,7 +13,7 @@ import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionService } from './transaction.service';
-import _ from 'lodash';
+import _, { isArray } from 'lodash';
 import { nanoid } from 'nanoid';
 
 @Injectable()
@@ -29,8 +29,7 @@ export class FieldsUtilsService {
   ) {}
 
   async findFieldByPosition(gameId: string, fieldPosition: number) {
-    const f = await this.store.getFieldsStore(gameId);
-    const fields = f && f.fields;
+    const fields = await this.getFields(gameId);
     return fields.find((v) => v.fieldPosition === fieldPosition);
   }
 
@@ -42,19 +41,18 @@ export class FieldsUtilsService {
   }
 
   async getFieldById(gameId: string, fieldId: number) {
-    return (await this.store.getFieldsStore(gameId)).fields.find(
-      (v) => v.fieldId === fieldId,
-    );
+    const fields = await this.getFields(gameId);
+    return fields.find((v) => v.fieldId === fieldId);
   }
 
   async getFieldIndexById(gameId: string, fieldId: number) {
-    return (await this.store.getFieldsStore(gameId)).fields.findIndex(
-      (v) => v.fieldId === fieldId,
-    );
+    const fields = await this.getFields(gameId);
+    return fields.findIndex((v) => v.fieldId === fieldId);
   }
 
   async getBoughtFields(gameId: string) {
-    return (await this.store.getFieldsStore(gameId)).fields
+    const fields = await this.getFields(gameId);
+    return fields
       .filter((v) => v.status && v.status.userId > 0)
       .map((v) => v.status);
   }
@@ -70,14 +68,12 @@ export class FieldsUtilsService {
   }
 
   async getFieldIndex(gameId: string, field: IField): Promise<number> {
-    return (await this.store.getFieldsStore(gameId)).fields.findIndex(
-      (v: any) => v.fieldId === field.fieldId,
-    );
+    const fields = await this.getFields(gameId);
+    return fields.findIndex((v: any) => v.fieldId === field.fieldId);
   }
 
   async updateField(gameId: string, field: IField) {
-    const fields = (await this.store.getFieldsStore(gameId)).fields;
-
+    const fields = await this.getFields(gameId);
     fields[await this.getFieldIndex(gameId, field)] = field;
     this.updateAllFields(gameId, fields);
   }
@@ -132,7 +128,8 @@ export class FieldsUtilsService {
     field: IField,
     player: IPlayer,
   ): Promise<IField[]> {
-    return (await this.store.getFieldsStore(gameId)).fields.filter(
+    const fields = await this.getFields(gameId);
+    return fields.filter(
       (v) =>
         v.fieldGroup === field.fieldGroup &&
         v.status &&
@@ -141,9 +138,8 @@ export class FieldsUtilsService {
   }
 
   async getFieldsByGroup(gameId: string, group: number): Promise<IField[]> {
-    return (await this.store.getFieldsStore(gameId)).fields.filter(
-      (v: IField) => v.fieldGroup === group,
-    );
+    const fields = await this.getFields(gameId);
+    return fields.filter((v: IField) => v.fieldGroup === group);
   }
 
   async getNotMortgagedFieldsByGroup(
@@ -151,8 +147,7 @@ export class FieldsUtilsService {
     group: number,
     user: IPlayer,
   ) {
-    const f = await this.store.getFieldsStore(gameId);
-    const fields = f && f.fields;
+    const fields = await this.getFields(gameId);
     fields.filter(
       (v: IField) =>
         v.fieldGroup === group &&
@@ -239,8 +234,8 @@ export class FieldsUtilsService {
   }
 
   async mortgageNextRound(gameId: string) {
-    const f = await this.store.getFieldsStore(gameId);
-    const fields = f && f.fields;
+    const fields = await this.getFields(gameId);
+
     const res = fields.map((v: IField) => {
       if (v.status && v.status.mortgaged > 1) {
         return {
@@ -394,5 +389,10 @@ export class FieldsUtilsService {
       userId: p.userId,
     });
     await this.transaction.transactMoney(gameId, transactionId);
+  }
+
+  private async getFields(gameId: string): Promise<IField[]> {
+    const fields = await this.store.getFieldsStore(gameId);
+    return isArray(fields) ? fields : [];
   }
 }

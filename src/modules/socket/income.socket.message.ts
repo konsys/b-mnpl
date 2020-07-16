@@ -9,10 +9,10 @@ import { nanoid } from 'nanoid';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { UsersService } from 'src/api.gateway/users/users.service';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
-import { ChecksService } from 'src/api.gateway/checks/checks.service';
-import { TransactionService } from 'src/api.gateway/transaction/transaction.service';
+import { ChecksService } from 'src/api.gateway/action/checks.service';
+import { TransactionService } from 'src/api.gateway/action/transaction.service';
 import { ActionService } from 'src/api.gateway/action/action.service';
-import { StoreService } from 'src/api.gateway/store/store.service';
+import { StoreService } from 'src/api.gateway/action/store.service';
 
 @WebSocketGateway()
 export class IncomeSocketMessage {

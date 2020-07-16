@@ -12,12 +12,12 @@ import {
 import { UsersService } from '../users/users.service';
 import _ from 'lodash';
 import { FieldType } from 'src/entities/board.fields.entity';
-import { ChecksService } from 'src/api.gateway/checks/checks.service';
+import { ChecksService } from 'src/api.gateway/action/checks.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { nanoid } from 'nanoid';
-import { StoreService } from '../store/store.service';
+import { StoreService } from '../action/store.service';
 import { ActionService } from '../action/action.service';
-import { TransactionService } from '../transaction/transaction.service';
+import { TransactionService } from '../action/transaction.service';
 
 @Injectable()
 export class FieldsService {

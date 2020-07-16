@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { redis } from 'src/main';
-import { IBoardStore } from '../store/store.service';
+import { IBoardStore } from './store.service';
 
 @Injectable()
 export class BoardService {

@@ -18,7 +18,7 @@ import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { errorStore, IErrorMessage } from 'src/stores/error.store';
 import _ from 'lodash';
 import { FieldType } from 'src/entities/board.fields.entity';
-import { BoardMessageService } from 'src/api.gateway/board.message/board.message.service';
+import { BoardMessageService } from 'src/api.gateway/action/board.message.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()

@@ -6,9 +6,9 @@ import {
 import { nanoid } from 'nanoid';
 import { UsersService } from '../users/users.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { TransactionService } from '../transaction/transaction.service';
-import { StoreService } from '../store/store.service';
-import { BoardService } from '../board/board.service';
+import { TransactionService } from './transaction.service';
+import { StoreService } from './store.service';
+import { BoardService } from './board.service';
 import { FieldsService } from '../fields/fields.service';
 
 export interface ICurrentAction {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { StoreService, IDicesStore } from '../store/store.service';
+import { StoreService, IDicesStore } from './store.service';
 
 @Injectable()
 export class DicesService {

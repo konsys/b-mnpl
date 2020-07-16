@@ -1,6 +1,6 @@
 import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { StoreService } from '../store/store.service';
+import { StoreService } from './store.service';
 import {
   OutcomeMessageType,
   IDicesModal,
@@ -14,7 +14,7 @@ import {
 } from 'src/types/Board/board.types';
 import { nanoid } from 'nanoid';
 import { FieldsService } from '../fields/fields.service';
-import { DicesService } from '../dices/dices.service';
+import { DicesService } from './dices.service';
 
 @Injectable()
 export class OutcomeMessageService {

@@ -5,11 +5,11 @@ import { UsersService } from '../../api.gateway/users/users.service';
 import { FieldsService } from '../../api.gateway/fields/fields.service';
 import { BoardSocket } from '../../params/board.init';
 import { IncomeSocketMessage } from 'src/modules/socket/income.socket.message';
-import { BoardMessageService } from 'src/api.gateway/board.message/board.message.service';
+import { BoardMessageService } from 'src/api.gateway/action/board.message.service';
 import { ActionService } from 'src/api.gateway/action/action.service';
-import { ChecksService } from 'src/api.gateway/checks/checks.service';
-import { TransactionService } from 'src/api.gateway/transaction/transaction.service';
-import { StoreService } from 'src/api.gateway/store/store.service';
+import { ChecksService } from 'src/api.gateway/action/checks.service';
+import { TransactionService } from 'src/api.gateway/action/transaction.service';
+import { StoreService } from 'src/api.gateway/action/store.service';
 import { OutcomeMessageModule } from 'src/api.gateway/outcome-message/outcome-message.module';
 
 @Module({

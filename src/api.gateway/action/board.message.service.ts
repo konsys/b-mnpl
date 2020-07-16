@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { BoardMessage } from 'src/types/Board/board.types';
 import { IBoardEvent } from 'src/types/Board/board.types';
 import { FieldsService } from '../fields/fields.service';
-import { StoreService } from '../store/store.service';
-import { OutcomeMessageService } from '../outcome-message/outcome-message.service';
+import { StoreService } from './store.service';
+import { OutcomeMessageService } from './outcome-message.service';
 
 @Injectable()
 export class BoardMessageService {

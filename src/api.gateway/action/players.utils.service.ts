@@ -62,18 +62,22 @@ export class PlayersUtilsService {
   }
 
   async getActingPlayerIndex(gameId: string): Promise<number> {
-    const state = await this.store.getBankStore(gameId);
+    const state = await this.store.getPlayersStore(gameId);
     const index = Array.isArray(state) && state.findIndex((v) => v.isActing);
     return index;
   }
 
   async getPlayerIndexById(gameId: string, userId: number) {
-    const state = await this.store.getBankStore(gameId);
-    return Array.isArray(state) && state.findIndex((v) => v.userId === userId);
+    const state = await this.store.getPlayersStore(gameId);
+    return (
+      state &&
+      Array.isArray(state.players) &&
+      state.players.findIndex((v) => v.userId === userId)
+    );
   }
 
   async getPlayerMoneyById(gameId: string, userId: number): Promise<number> {
-    const state = await this.store.getBankStore(gameId);
+    const state = await this.store.getPlayersStore(gameId);
     const player =
       Array.isArray(state) && state.find((v) => v.userId === userId);
     return (player && player.money) || 0;
@@ -143,12 +147,10 @@ export class PlayersUtilsService {
       throw Error(`Not found player with id: ${player.userId}`);
 
     players[currentPLayerIndex] = player;
-
     return await this.updateAllPLayers(gameId, players);
   }
 
   async updateAllPLayers(gameId: string, players: IPlayer[]): Promise<boolean> {
-    console.log(5555, players);
     await this.store.setPlayersStore(gameId, {
       players,
     });

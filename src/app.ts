@@ -14,6 +14,10 @@ const rootPath = join(__dirname, '../', 'assets/');
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath,
+    }),
+
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '0.0.0.0',
@@ -25,15 +29,14 @@ const rootPath = join(__dirname, '../', 'assets/');
       synchronize: true,
       logging: ['error'],
     }),
-    ServeStaticModule.forRoot({
-      rootPath,
-    }),
+
     ActionModule,
+    AuthModule,
+    BoardSocketModule,
     FieldsModule,
     FieldsMsModule,
     UsersModule,
     UsersMsModule,
-    AuthModule,
   ],
   controllers: [],
   providers: [],

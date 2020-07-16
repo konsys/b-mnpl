@@ -4,7 +4,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { IErrorMessage, errorStore } from 'src/stores/error.store';
-import { IField, IFieldAction, IPlayer } from 'src/types/Board/board.types';
+import { IField, IFieldAction } from 'src/types/Board/board.types';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -18,9 +18,7 @@ import { BoardMessageService } from 'src/api.gateway/action/board.message.servic
 import { FieldType } from 'src/entities/board.fields.entity';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
-import { PlayersUtilsService } from 'src/api.gateway/action/players.utils.service';
 import { SocketActions } from 'src/types/Game/game.types';
-import { UsersService } from 'src/api.gateway/users/users.service';
 import _ from 'lodash';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -39,6 +37,7 @@ export class BoardSocket
   public static socketServer: Server;
 
   async onModuleInit() {
+    console.log(123123123);
     await this.initStores('kkk');
     try {
       setInterval(() => {

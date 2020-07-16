@@ -30,6 +30,7 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
+    console.log(21212);
     const action = await this.store.getActionStore('kkk');
 
     if (payload.actionId === action.actionId) {

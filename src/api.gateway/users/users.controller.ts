@@ -94,7 +94,7 @@ export class UsersController {
     await this.players.updateAllPLayers('kkk', resultPlayers);
 
     const st = await this.store.getPlayersStore('kkk');
-    console.log(st.players);
+
     return st.players;
   }
 

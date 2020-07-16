@@ -1,6 +1,7 @@
 import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
+import { IPlayersStore } from '../users/users.service';
 import { Injectable } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { nanoid } from 'nanoid';
@@ -88,37 +89,50 @@ export class PlayersUtilsService {
       userId: player.userId,
     });
 
-    return this.updatePlayer(gameId, {
-      ...player,
-      // if there is position then unjailed by rolling dices
-      money: newPosition
-        ? player.money
-        : player.money - BOARD_PARAMS.UN_JAIL_PRICE,
-      meanPosition: newPosition || BOARD_PARAMS.JAIL_POSITION,
-      jailed: 0,
-      unjailAttempts: 0,
-    });
+    return this.updatePlayer(
+      gameId,
+      {
+        ...player,
+        // if there is position then unjailed by rolling dices
+        money: newPosition
+          ? player.money
+          : player.money - BOARD_PARAMS.UN_JAIL_PRICE,
+        meanPosition: newPosition || BOARD_PARAMS.JAIL_POSITION,
+        jailed: 0,
+        unjailAttempts: 0,
+      },
+      'unjail',
+    );
   }
 
   async jailPlayer(gameId: string): Promise<boolean> {
     const player = await this.getActingPlayer(gameId);
-    return await this.updatePlayer(gameId, {
-      ...player,
-      jailed: BOARD_PARAMS.JAIL_TURNS,
-      unjailAttempts: 0,
-      doublesRolledAsCombo: 0,
-      movesLeft: 0,
-      meanPosition: BOARD_PARAMS.JAIL_POSITION,
-    });
+    return await this.updatePlayer(
+      gameId,
+      {
+        ...player,
+        jailed: BOARD_PARAMS.JAIL_TURNS,
+        unjailAttempts: 0,
+        doublesRolledAsCombo: 0,
+        movesLeft: 0,
+        meanPosition: BOARD_PARAMS.JAIL_POSITION,
+      },
+      'jail',
+    );
   }
 
-  async updatePlayer(gameId: string, player: IPlayer): Promise<boolean> {
+  async updatePlayer(
+    gameId: string,
+    player: IPlayer,
+    where: string,
+  ): Promise<boolean> {
     // Update BANK
     if (player.userId === BOARD_PARAMS.BANK_PLAYER_ID) {
       return this.store.setBankStore(gameId, player) && true;
     }
 
     const players = await this.getPlayers(gameId);
+
     const currentPLayerIndex = await this.getPlayerIndexById(
       gameId,
       player.userId,
@@ -134,9 +148,11 @@ export class PlayersUtilsService {
   }
 
   async updateAllPLayers(gameId: string, players: IPlayer[]): Promise<boolean> {
+    console.log(5555, players);
     await this.store.setPlayersStore(gameId, {
       players,
     });
+
     return true;
   }
 

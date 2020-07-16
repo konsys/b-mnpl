@@ -92,9 +92,10 @@ export class ActionService {
   }
 
   async rollDicesAction(gameId: string) {
+    const p = await this.players.getActingPlayer(gameId);
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
-      userId: (await this.players.getActingPlayer(gameId)).userId,
+      userId: p.userId,
       actionId: nanoid(4),
       moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
@@ -136,10 +137,14 @@ export class ActionService {
     // Doubled dices and jail
     if (player.movesLeft > 0) {
       nextIndex = index;
-      await this.players.updatePlayer(gameId, {
-        ...player,
-        movesLeft: --player.movesLeft,
-      });
+      await this.players.updatePlayer(
+        gameId,
+        {
+          ...player,
+          movesLeft: --player.movesLeft,
+        },
+        'switchTurn',
+      );
     } else {
       nextIndex = await this.getNextArrayIndex(index, store.players);
     }

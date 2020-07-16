@@ -33,6 +33,8 @@ export class DicesService {
     const sum = dice1 + dice2 + dice3 + currenPosition;
     const meanPosition = sum < 40 ? sum : sum - 40;
 
+    // await this.players.updatePlayer(gameId, { ...player, meanPosition });
+
     return {
       userId: player.userId,
       dices: [dice1, dice2, dice3],
@@ -61,10 +63,14 @@ export class DicesService {
         movesLeft = 0;
         doublesRolledAsCombo = 0;
       } else {
-        await this.players.updatePlayer(gameId, {
-          ...player,
-          unjailAttempts: ++player.unjailAttempts,
-        });
+        await this.players.updatePlayer(
+          gameId,
+          {
+            ...player,
+            unjailAttempts: ++player.unjailAttempts,
+          },
+          'fromDices',
+        );
         return;
       }
     } else {
@@ -81,12 +87,16 @@ export class DicesService {
       return;
     }
 
-    await this.players.updatePlayer(gameId, {
-      ...player,
-      movesLeft,
-      doublesRolledAsCombo,
-      jailed,
-      meanPosition,
-    });
+    await this.players.updatePlayer(
+      gameId,
+      {
+        ...player,
+        movesLeft,
+        doublesRolledAsCombo,
+        jailed,
+        meanPosition,
+      },
+      'fromDices2',
+    );
   }
 }

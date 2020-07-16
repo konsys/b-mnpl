@@ -81,6 +81,13 @@ export class BoardSocket
 
       await this.fields.updateAllFields(gameId, r);
 
+      await this.store.setBoardStore(gameId, {
+        isNewRound: false,
+        gameRound: 0,
+        playersTurn: 0,
+        playerActions: [],
+      });
+
       errorStore.updates.watch((error) => this.emitError(error));
     } catch (err) {
       this.logger.error(`Error on initStores: ${JSON.stringify(err)}`);

@@ -34,17 +34,14 @@ export class IncomeSocketMessage {
     const gameId = 'kkk';
     const action = await this.store.getActionStore(gameId);
 
-    console.log(1111, action);
-    // if (payload.actionId === action.actionId) {
-    await this.actionsService.rollDicesAction(gameId);
-    this.service.emitMessage();
-    this.tokenMovedAfterClick(gameId);
-    console.log(222, await this.store.getActionStore(gameId));
-    console.log(333, await this.store.getFieldsStore(gameId));
-    setTimeout(() => {
+    if (payload.actionId === action.actionId) {
+      await this.actionsService.rollDicesAction(gameId);
       this.service.emitMessage();
-    }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
-    // }
+      this.tokenMovedAfterClick(gameId);
+      setTimeout(() => {
+        this.service.emitMessage();
+      }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
+    }
   }
 
   async tokenMovedAfterClick(gameId: string) {

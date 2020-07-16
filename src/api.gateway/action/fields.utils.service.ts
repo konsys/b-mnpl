@@ -35,6 +35,7 @@ export class FieldsUtilsService {
 
   async getActingField(gameId: string): Promise<IField> {
     const user = await this.players.getActingPlayer(gameId);
+
     const field = this.findFieldByPosition(gameId, user.meanPosition);
     if (!field) throw Error(`Field not found: position: ${user.meanPosition}`);
     return field;

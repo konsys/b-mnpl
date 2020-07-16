@@ -18,6 +18,7 @@ async function bootstrap() {
   redis.on('error', (err) => {
     console.log('Redis Error ' + err);
   });
+  redis.set('key', 100, 'ex', 10);
   const app = await NestFactory.create(App, {
     logger: ['error', 'warn'],
   });

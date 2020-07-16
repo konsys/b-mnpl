@@ -83,6 +83,7 @@ export class ChecksService {
 
   async noActionField(gameId: string): Promise<boolean> {
     const field = await this.fields.getActingField(gameId);
+
     return (
       field.type === FieldType.TAKE_REST || field.type === FieldType.CASINO
     );

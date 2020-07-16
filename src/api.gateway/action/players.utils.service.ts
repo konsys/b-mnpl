@@ -42,7 +42,7 @@ export class PlayersUtilsService {
   constructor(private readonly store: StoreService) {}
 
   onModuleInit() {
-    this.store.setBankStore('bankStore', bank);
+    this.store.setBankStore('kkk', bank);
   }
 
   async getPlayerById(gameId: string, userId: number): Promise<IPlayer> {

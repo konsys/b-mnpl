@@ -6,8 +6,6 @@ import { UsersService } from './users.service';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from 'src/modules/auth/constants';
-import { StoreModule } from '../store/store.module';
-import { StoreService } from '../action/store.service';
 @Module({
   imports: [
     ClientsModule.register([

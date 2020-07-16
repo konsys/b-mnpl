@@ -10,7 +10,9 @@ import { ActionService } from 'src/api.gateway/action/action.service';
 import { ChecksService } from 'src/api.gateway/action/checks.service';
 import { TransactionService } from 'src/api.gateway/action/transaction.service';
 import { StoreService } from 'src/api.gateway/action/store.service';
-import { OutcomeMessageModule } from 'src/api.gateway/outcome-message/outcome-message.module';
+import { OutcomeMessageService } from 'src/api.gateway/action/outcome-message.service';
+import { BoardService } from 'src/api.gateway/action/board.service';
+import { DicesService } from 'src/api.gateway/action/dices.service';
 
 @Module({
   imports: [
@@ -24,7 +26,6 @@ import { OutcomeMessageModule } from 'src/api.gateway/outcome-message/outcome-me
         transport: Transport.NATS,
       },
     ]),
-    OutcomeMessageModule,
   ],
   providers: [
     BoardSocket,
@@ -36,6 +37,9 @@ import { OutcomeMessageModule } from 'src/api.gateway/outcome-message/outcome-me
     ActionService,
     TransactionService,
     StoreService,
+    OutcomeMessageService,
+    BoardService,
+    DicesService,
   ],
   controllers: [],
 })

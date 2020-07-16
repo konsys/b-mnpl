@@ -20,7 +20,6 @@ export interface IBoardStore {
 }
 
 export interface IFieldsStore {
-  version: number;
   fields: IField[];
 }
 

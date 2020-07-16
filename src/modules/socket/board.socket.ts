@@ -38,13 +38,12 @@ export class BoardSocket
 
   async onModuleInit() {
     const r = await this.initStores('kkk');
-    console.log(11111, r);
     try {
       setInterval(() => {
         // BoardSocket.emitMessage();
       }, 8000);
     } catch (err) {
-      this.logger.error('Error' + err);
+      this.logger.error('Error on onModuleInit' + err);
     }
   }
 
@@ -75,11 +74,12 @@ export class BoardSocket
             fieldActions: [IFieldAction.MORTGAGE],
           },
       }));
+
       await this.fields.updateAllFields(gameId, r);
 
       errorStore.updates.watch((error) => this.emitError(error));
     } catch (err) {
-      this.logger.error(`Error: ${JSON.stringify(err)}`);
+      this.logger.error(`Error on initStores: ${JSON.stringify(err)}`);
     }
   }
 

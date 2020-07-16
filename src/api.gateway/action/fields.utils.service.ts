@@ -79,9 +79,7 @@ export class FieldsUtilsService {
   }
 
   async updateAllFields(gameId: string, fields: IField[]) {
-    const version = (await this.store.getFieldsStore(gameId)).version + 1;
     await this.store.setFieldsStore(gameId, {
-      version,
       fields,
     });
   }

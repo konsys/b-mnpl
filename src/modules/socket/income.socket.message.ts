@@ -29,21 +29,18 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
+    console.log(121212);
     const gameId = 'kkk';
-    const action = await this.store.getActionStore(gameId);
+    try {
+      await this.actionsService.rollDicesAction(gameId);
+      this.service.emitMessage();
+      this.tokenMovedAfterClick(gameId);
 
-    if (payload.actionId === action.actionId) {
-      try {
-        await this.actionsService.rollDicesAction(gameId);
+      setTimeout(() => {
         this.service.emitMessage();
-        this.tokenMovedAfterClick(gameId);
-
-        setTimeout(() => {
-          this.service.emitMessage();
-        }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
-      } catch (err) {
-        console.log('Error in dicesModal', err);
-      }
+      }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
+    } catch (err) {
+      console.log('Error in dicesModal', err);
     }
   }
 

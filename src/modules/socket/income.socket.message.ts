@@ -14,7 +14,6 @@ import { StoreService } from 'src/api.gateway/action/store.service';
 import { TransactionService } from 'src/api.gateway/action/transaction.service';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import { setError } from 'src/stores/error.store';
 
 @WebSocketGateway()
 export class IncomeSocketMessage {
@@ -31,22 +30,21 @@ export class IncomeSocketMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const gameId = 'kkk';
-    // const action = await this.store.getActionStore(gameId);
+    const action = await this.store.getActionStore(gameId);
 
-    // if (payload.actionId === action.actionId) {
-    try {
-      await this.actionsService.rollDicesAction(gameId);
-      this.service.emitMessage();
-      this.tokenMovedAfterClick(gameId);
-
-      setTimeout(() => {
+    if (payload.actionId === action.actionId) {
+      try {
+        await this.actionsService.rollDicesAction(gameId);
         this.service.emitMessage();
-      }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
-    } catch (err) {
-      console.log('Error in dicesModal', err);
-    }
+        this.tokenMovedAfterClick(gameId);
 
-    // }
+        setTimeout(() => {
+          this.service.emitMessage();
+        }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
+      } catch (err) {
+        console.log('Error in dicesModal', err);
+      }
+    }
   }
 
   async tokenMovedAfterClick(gameId: string) {
@@ -148,15 +146,15 @@ export class IncomeSocketMessage {
       await this.actionsService.switchPlayerTurn('kkk', false);
     } else {
       !(await this.checksService.isCompanyForSale('kkk', f.fieldId)) &&
-        setError({
+        (await this.store.setError('kkk', {
           code: ErrorCode.CompanyHasOwner,
           message: 'Oops!',
-        });
+        }));
       !(await this.checksService.canBuyField('kkk', f.fieldId, p)) &&
-        setError({
+        (await this.store.setError('kkk', {
           code: ErrorCode.NotEnoughMoney,
           message: 'Oops!',
-        });
+        }));
     }
 
     await this.service.emitMessage();
@@ -183,7 +181,7 @@ export class IncomeSocketMessage {
       );
       await this.actionsService.switchPlayerTurn('kkk', false);
     } else {
-      setError({
+      await this.store.setError('kkk', {
         code: ErrorCode.NotEnoughMoney,
         message: 'Oops!',
       });
@@ -204,7 +202,7 @@ export class IncomeSocketMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED)
   async mortgageField(client: Socket, payload: IFieldId): Promise<void> {
     if (!(await this.checksService.canMortgage('kkk', payload.fieldId))) {
-      setError({
+      await this.store.setError('kkk', {
         code: ErrorCode.CannotMortgageField,
         message: 'Oops!',
       });
@@ -217,7 +215,7 @@ export class IncomeSocketMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED)
   async unMortgageField(client: Socket, payload: IFieldId): Promise<void> {
     if (!(await this.checksService.canUnMortgage('kkk', payload.fieldId))) {
-      setError({
+      await this.store.setError('kkk', {
         code: ErrorCode.CannotUnMortgageField,
         message: 'Oops!',
       });
@@ -230,7 +228,7 @@ export class IncomeSocketMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED)
   async levelUpField(client: Socket, payload: IFieldId): Promise<void> {
     if (!(await this.checksService.canLevelUp('kkk', payload.fieldId))) {
-      setError({
+      await this.store.setError('kkk', {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
@@ -243,7 +241,7 @@ export class IncomeSocketMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED)
   async levelDownField(client: Socket, payload: IFieldId): Promise<void> {
     if (!(await this.checksService.canLevelDown('kkk', payload.fieldId))) {
-      setError({
+      await this.store.setError('kkk', {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });

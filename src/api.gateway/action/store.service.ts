@@ -49,6 +49,7 @@ export interface IStore {
   fields: string;
   transaction: string;
   players: string;
+  error: string;
 }
 
 const storeNames: IStore = {
@@ -59,7 +60,13 @@ const storeNames: IStore = {
   fields: 'fields',
   transaction: 'transaction',
   players: 'players',
+  error: 'error',
 };
+
+export interface IErrorMessage {
+  code: number;
+  message: string;
+}
 @Injectable()
 export class StoreService {
   async flushGame(gameId: string) {
@@ -131,6 +138,19 @@ export class StoreService {
 
   async getPlayersStore(gameId: string): Promise<IPlayersStore> {
     return (await this.get(gameId, storeNames.players)) as IPlayersStore;
+  }
+
+  async setError(gameId: string, data: IErrorMessage) {
+    await this.set(gameId, storeNames.error, data);
+  }
+
+  async getError(gameId: string): Promise<IErrorMessage> {
+    return (await this.get(gameId, storeNames.error)) as IErrorMessage;
+  }
+
+  async resetError(gameId: string) {
+    const pipeline = redis.pipeline();
+    await pipeline.del(`${gameId}-${storeNames.error}`);
   }
 
   private async set(gameId: string, serviceName: string, data: any) {

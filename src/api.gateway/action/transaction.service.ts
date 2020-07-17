@@ -5,7 +5,6 @@ import { Injectable } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { nanoid } from 'nanoid';
-import { setError } from 'src/stores/error.store';
 
 @Injectable()
 export class TransactionService {
@@ -22,7 +21,7 @@ export class TransactionService {
     const transaction = await this.store.getTransaction(gameId);
     const player = await this.players.getPlayerById(gameId, transaction.userId);
     if (transaction.sum > player.money) {
-      setError({
+      await this.store.setError('kkk', {
         code: ErrorCode.NotEnoughMoney,
         message: 'Oops!',
       });
@@ -37,7 +36,7 @@ export class TransactionService {
       });
       await this.store.resetTransactionsEvent(gameId);
     } else {
-      setError({
+      await this.store.setError('kkk', {
         code: ErrorCode.WrongTranactionId,
         message: 'Oops!',
       });

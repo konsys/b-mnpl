@@ -3,7 +3,10 @@ import {
   Logger,
   UseInterceptors,
 } from '@nestjs/common';
-import { IErrorMessage, errorStore } from 'src/stores/error.store';
+import {
+  IErrorMessage,
+  StoreService,
+} from 'src/api.gateway/action/store.service';
 import { IField, IFieldAction } from 'src/types/Board/board.types';
 import {
   OnGatewayConnection,
@@ -19,7 +22,6 @@ import { FieldType } from 'src/entities/board.fields.entity';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
 import { SocketActions } from 'src/types/Game/game.types';
-import { StoreService } from 'src/api.gateway/action/store.service';
 import _ from 'lodash';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -57,9 +59,9 @@ export class BoardSocket
     );
   }
 
-  public emitError(error: IErrorMessage) {
+  public async emitError(error: IErrorMessage) {
     BoardSocket.socketServer.emit(SocketActions.ERROR_MESSAGE, error);
-    errorStore.reset();
+    await this.store.resetError('kkk');
   }
 
   private async initStores(gameId: string) {

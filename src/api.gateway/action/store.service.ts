@@ -73,9 +73,6 @@ export const ERROR_CHANEL = `${storeNames.error}`;
 @Injectable()
 export class StoreService {
   async flushGame(gameId: string) {
-    await redis.del('kkk-bank');
-
-    process.exit();
     for (const k of Object.values(storeNames)) {
       await redis.del(`${gameId}-${k}`, (v: any) => console.log('delDone', v));
     }

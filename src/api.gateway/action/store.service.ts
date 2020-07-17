@@ -79,7 +79,6 @@ export class StoreService {
   }
 
   async setBankStore(gameId: string, data: IPlayer) {
-    console.log(12312313123);
     await this.set(gameId, storeNames.bank, data);
   }
 

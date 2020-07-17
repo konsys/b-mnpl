@@ -16,5 +16,6 @@ export const BOARD_PARAMS = {
     BUILD_QEUEU: true,
     ONE_BRANCH_PER_TURN: false,
   },
-  REDIS_TTL: 3600*3;
+  // 3 hours TTl
+  REDIS_TTL: 3600 * 3,
 };

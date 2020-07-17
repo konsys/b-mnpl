@@ -158,11 +158,8 @@ export class StoreService {
 
   private async set(gameId: string, serviceName: string, data: any) {
     await redis.set(`${gameId}-${serviceName}`, JSON.stringify(data));
-    // 3 hours TTl
-    await redis.expire(
-      [`${gameId}-${serviceName}`, BOARD_PARAMS.REDIS_TTL],
-      (v) => console.log('TTL', v),
-    );
+
+    await redis.expire([`${gameId}-${serviceName}`, BOARD_PARAMS.REDIS_TTL]);
   }
 
   private async get(gameId: string, serviceName: string): Promise<any> {

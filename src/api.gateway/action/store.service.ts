@@ -143,6 +143,7 @@ export class StoreService {
   }
 
   async setError(gameId: string, data: IErrorMessage) {
+    console.log(123123123, data);
     await redis.publish(`${gameId}-${storeNames.error}`, JSON.stringify(data));
     await this.set(gameId, storeNames.error, data);
   }

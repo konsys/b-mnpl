@@ -17,6 +17,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { redis, subscriber } from 'src/main';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardMessageService } from 'src/api.gateway/action/board.message.service';
@@ -25,7 +26,6 @@ import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
 import { SocketActions } from 'src/types/Game/game.types';
 import _ from 'lodash';
-import { redis } from 'src/main';
 
 const bank: IPlayer = {
   userId: BOARD_PARAMS.BANK_PLAYER_ID,
@@ -127,11 +127,11 @@ export class BoardSocket
       });
       this.store.setBankStore('kkk', bank);
 
-      redis.on('message', async (chanel: any, error: string) => {
-        console.log(234234234, chanel, error);
-        chanel === `kkk-${ERROR_CHANEL}` &&
-          (await this.emitError(JSON.parse(error)));
+      const ch = `kkk-${ERROR_CHANEL}`;
+      subscriber.on('message', async (chanel: any, message: string) => {
+        await this.emitError(JSON.parse(message));
       });
+      subscriber.subscribe(ch);
     } catch (err) {
       this.logger.error(`Error on initStores: ${JSON.stringify(err)}`);
     }

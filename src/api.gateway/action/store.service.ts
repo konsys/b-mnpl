@@ -67,6 +67,9 @@ export interface IErrorMessage {
   code: number;
   message: string;
 }
+
+export const ERROR_CHANEL = `${storeNames.error}`;
+
 @Injectable()
 export class StoreService {
   async flushGame(gameId: string) {
@@ -141,6 +144,7 @@ export class StoreService {
   }
 
   async setError(gameId: string, data: IErrorMessage) {
+    await redis.publish(`${gameId}-${storeNames.error}`, JSON.stringify(data));
     await this.set(gameId, storeNames.error, data);
   }
 

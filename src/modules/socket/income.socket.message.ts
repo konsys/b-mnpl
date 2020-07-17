@@ -3,7 +3,7 @@ import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 
 import { ActionService } from 'src/api.gateway/action/action.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { BoardSocket } from 'src/params/board.init';
+import { BoardSocket } from './board.socket';
 import { ChecksService } from 'src/api.gateway/action/checks.service';
 import { ErrorCode } from 'src/utils/error.code';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';

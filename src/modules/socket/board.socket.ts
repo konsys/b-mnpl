@@ -4,6 +4,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import {
+  ERROR_CHANEL,
   IErrorMessage,
   StoreService,
 } from 'src/api.gateway/action/store.service';
@@ -23,6 +24,7 @@ import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
 import { SocketActions } from 'src/types/Game/game.types';
 import _ from 'lodash';
+import { redis } from 'src/main';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -90,7 +92,10 @@ export class BoardSocket
         playerActions: [],
       });
 
-      errorStore.updates.watch((error) => this.emitError(error));
+      redis.on('message', async (chanel: any, error: string) => {
+        chanel === `kkk-${ERROR_CHANEL}` &&
+          (await this.emitError(JSON.parse(error)));
+      });
     } catch (err) {
       this.logger.error(`Error on initStores: ${JSON.stringify(err)}`);
     }

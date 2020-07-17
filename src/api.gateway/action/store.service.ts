@@ -74,7 +74,7 @@ export const ERROR_CHANEL = `${storeNames.error}`;
 export class StoreService {
   async flushGame(gameId: string) {
     for (const k of Object.values(storeNames)) {
-      await redis.del(`${gameId}-${k}`, (v: any) => console.log('delDone', v));
+      await redis.del(`${gameId}-${k}`);
     }
   }
 
@@ -157,6 +157,10 @@ export class StoreService {
 
   private async set(gameId: string, serviceName: string, data: any) {
     await redis.set(`${gameId}-${serviceName}`, JSON.stringify(data));
+    // 3 hours TTl
+    await redis.expire([`${gameId}-${serviceName}`, 60 * 60 * 3], (v) =>
+      console.log('TTL', v),
+    );
   }
 
   private async get(gameId: string, serviceName: string): Promise<any> {

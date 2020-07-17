@@ -77,9 +77,6 @@ export class BoardSocket
 
   async onModuleInit() {
     await this.store.flushGame('kkk');
-
-    process.exit();
-
     await this.initStores('kkk');
 
     try {

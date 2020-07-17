@@ -6,45 +6,9 @@ import { Injectable } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { nanoid } from 'nanoid';
 
-const bank: IPlayer = {
-  userId: BOARD_PARAMS.BANK_PLAYER_ID,
-  money: 100000,
-  password: 'bank',
-  vip: true,
-  registrationType: 'none',
-  name: 'BANK',
-  email: 'b@b.ru',
-  team: null,
-  avatar: '',
-  createdAt: new Date('2020-06-17T12:08:38.000Z'),
-  updatedAt: new Date('2020-06-17T12:08:38.000Z'),
-  isActive: false,
-  isBlocked: true,
-  isActing: false,
-  gameId: '',
-  doublesRolledAsCombo: 0,
-  jailed: 0,
-  unjailAttempts: 0,
-  meanPosition: 0,
-  creditPayRound: false,
-  creditNextTakeRound: 0,
-  score: 0,
-  additionalTime: 0,
-  timeReduceLevel: 0,
-  creditToPay: 0,
-  canUseCredit: false,
-  moveOrder: 0,
-  isAlive: false,
-  movesLeft: 0,
-};
-
 @Injectable()
 export class PlayersUtilsService {
   constructor(private readonly store: StoreService) {}
-
-  onModuleInit() {
-    this.store.setBankStore('kkk', bank);
-  }
 
   async getPlayerById(gameId: string, userId: number): Promise<IPlayer> {
     const bank = await this.store.getBankStore(gameId);

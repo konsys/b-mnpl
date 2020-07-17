@@ -13,15 +13,15 @@ export let redis = null;
 
 async function bootstrap() {
   redis = new Redis('redis://localhost:6379');
-  // await redis.connect(() => console.log('Redis connected'));
 
   redis.on('error', (err) => {
     console.log('Redis Error ' + err);
   });
-  redis.set('key', 100, 'ex', 10);
+
   const app = await NestFactory.create(App, {
     logger: ['error', 'warn'],
   });
+
   const options = new DocumentBuilder()
     // .setBasePath('api')
     .setTitle('M Api')

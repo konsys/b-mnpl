@@ -8,7 +8,7 @@ import {
   IErrorMessage,
   StoreService,
 } from 'src/api.gateway/action/store.service';
-import { IField, IFieldAction } from 'src/types/Board/board.types';
+import { IField, IFieldAction, IPlayer } from 'src/types/Board/board.types';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -18,6 +18,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
+import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardMessageService } from 'src/api.gateway/action/board.message.service';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
@@ -25,6 +26,38 @@ import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service'
 import { SocketActions } from 'src/types/Game/game.types';
 import _ from 'lodash';
 import { redis } from 'src/main';
+
+const bank: IPlayer = {
+  userId: BOARD_PARAMS.BANK_PLAYER_ID,
+  money: 100000,
+  password: 'bank',
+  vip: true,
+  registrationType: 'none',
+  name: 'BANK',
+  email: 'b@b.ru',
+  team: null,
+  avatar: '',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  isActive: false,
+  isBlocked: true,
+  isActing: false,
+  gameId: '',
+  doublesRolledAsCombo: 0,
+  jailed: 0,
+  unjailAttempts: 0,
+  meanPosition: 0,
+  creditPayRound: false,
+  creditNextTakeRound: 0,
+  score: 0,
+  additionalTime: 0,
+  timeReduceLevel: 0,
+  creditToPay: 0,
+  canUseCredit: false,
+  moveOrder: 0,
+  isAlive: false,
+  movesLeft: 0,
+};
 
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
@@ -45,6 +78,7 @@ export class BoardSocket
   async onModuleInit() {
     await this.store.flushGame('kkk');
     await this.initStores('kkk');
+    this.store.setBankStore('kkk', bank);
     try {
       setInterval(() => {
         // BoardSocket.emitMessage();

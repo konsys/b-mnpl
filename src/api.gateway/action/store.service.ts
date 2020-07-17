@@ -69,18 +69,20 @@ export interface IErrorMessage {
 }
 
 export const ERROR_CHANEL = `${storeNames.error}`;
-
+// Redis Commands https://github.com/NodeRedis/node-redis/tree/master/test/commands
 @Injectable()
 export class StoreService {
   async flushGame(gameId: string) {
-    const pipeline = redis.pipeline();
+    await redis.del('kkk-bank');
 
+    process.exit();
     for (const k of Object.values(storeNames)) {
-      await pipeline.del(`${gameId}-${k}`);
+      await redis.del(`${gameId}-${k}`, (v: any) => console.log('delDone', v));
     }
   }
 
   async setBankStore(gameId: string, data: IPlayer) {
+    console.log(12312313123);
     await this.set(gameId, storeNames.bank, data);
   }
 
@@ -132,7 +134,7 @@ export class StoreService {
   }
 
   async resetTransactionsEvent(gameId: string) {
-    await redis.pipeline().del(`${gameId}-${storeNames.transaction}`);
+    await redis.del(`${gameId}-${storeNames.transaction}`);
   }
 
   async setPlayersStore(gameId: string, data: IPlayersStore) {

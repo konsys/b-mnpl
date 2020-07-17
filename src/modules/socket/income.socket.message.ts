@@ -35,7 +35,6 @@ export class IncomeSocketMessage {
       await this.service.emitMessage();
 
       await this.tokenMovedAfterClick(gameId);
-
       setTimeout(() => {
         this.service.emitMessage();
       }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);

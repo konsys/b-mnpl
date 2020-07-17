@@ -128,6 +128,7 @@ export class BoardSocket
       this.store.setBankStore('kkk', bank);
 
       redis.on('message', async (chanel: any, error: string) => {
+        console.log(234234234, chanel, error);
         chanel === `kkk-${ERROR_CHANEL}` &&
           (await this.emitError(JSON.parse(error)));
       });

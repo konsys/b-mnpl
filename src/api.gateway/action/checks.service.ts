@@ -24,7 +24,7 @@ export class ChecksService {
     const dices = await this.store.getDicesStore(gameId);
     const player = await this.players.getActingPlayer(gameId);
 
-    return dices.sum > 0 && player.meanPosition - dices.sum < 0;
+    return dices && dices.sum > 0 && player.meanPosition - dices.sum < 0;
   }
 
   async isJail(gameId: string): Promise<boolean> {

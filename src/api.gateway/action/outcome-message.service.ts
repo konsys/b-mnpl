@@ -107,7 +107,7 @@ export class OutcomeMessageService {
     const dicesState = await this.dices.randDices(gameId, action.actionId);
     await this.store.setDicesStore(gameId, dicesState);
 
-    this.dices.dicesUpdatePlayerToken(gameId, dicesState);
+    await this.dices.dicesUpdatePlayerToken(gameId, dicesState);
 
     return {
       type: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,

@@ -146,6 +146,7 @@ export class IncomeSocketMessage {
           code: ErrorCode.CompanyHasOwner,
           message: 'Oops!',
         }));
+
       !(await this.checksService.canBuyField('kkk', f.fieldId, p)) &&
         (await this.store.setError('kkk', {
           code: ErrorCode.NotEnoughMoney,
@@ -167,7 +168,7 @@ export class IncomeSocketMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
     if (
-      (await this.transactionService.getCurrentTransaction('kkk')).sum <
+      (await this.transactionService.getCurrentTransaction('kkk')).sum <=
       (await this.playersService.getActingPlayer('kkk')).money
     ) {
       await this.transactionService.transactMoney(

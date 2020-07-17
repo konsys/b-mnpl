@@ -20,6 +20,7 @@ export class TransactionService {
   async transactMoney(gameId: string, transactionId: string) {
     const transaction = await this.store.getTransaction(gameId);
     const player = await this.players.getPlayerById(gameId, transaction.userId);
+
     if (transaction.sum > player.money) {
       await this.store.setError('kkk', {
         code: ErrorCode.NotEnoughMoney,

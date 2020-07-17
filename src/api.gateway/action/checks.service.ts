@@ -38,6 +38,7 @@ export class ChecksService {
 
   async isCompany(gameId: string, fieldId: number) {
     const type = (await this.fields.getFieldById(gameId, fieldId)).type;
+
     return (
       type &&
       (type === FieldType.COMPANY ||
@@ -51,7 +52,9 @@ export class ChecksService {
 
   async isCompanyForSale(gameId: string, fieldId: number): Promise<boolean> {
     const f = await this.fields.getFieldById(gameId, fieldId);
-    return (await this.isCompany(gameId, f.fieldId)) && f && !f.status;
+    const isCompany = await this.isCompany(gameId, f.fieldId);
+
+    return isCompany && f && !f.status;
   }
 
   async isMyField(gameId: string, fieldId: number): Promise<boolean> {

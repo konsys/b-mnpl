@@ -29,12 +29,12 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
-    console.log(121212);
     const gameId = 'kkk';
     try {
       await this.actionsService.rollDicesAction(gameId);
-      this.service.emitMessage();
-      this.tokenMovedAfterClick(gameId);
+      await this.service.emitMessage();
+
+      await this.tokenMovedAfterClick(gameId);
 
       setTimeout(() => {
         this.service.emitMessage();
@@ -65,24 +65,29 @@ export class IncomeSocketMessage {
 
           await this.actionsService.switchPlayerTurn(gameId, false);
         }
-
+        console.log(0, player.meanPosition);
         if (await this.checksService.noActionField(gameId)) {
+          console.log(1);
           await this.actionsService.switchPlayerTurn(gameId, false);
         } else if (await this.checksService.isMyField(gameId, field.fieldId)) {
+          console.log(2);
           await this.actionsService.switchPlayerTurn(gameId, false);
         } else if (
           await this.checksService.isCompanyForSale(gameId, field.fieldId)
         ) {
+          console.log(3);
           await this.actionsService.buyFieldModal(gameId);
         } else if (
           !(await this.checksService.isCompanyForSale(gameId, field.fieldId)) &&
           (await this.checksService.isMyField(gameId, field.fieldId))
         ) {
+          console.log(4);
           await this.actionsService.switchPlayerTurn(gameId, false);
         } else if (
           (await this.checksService.whosField(gameId)) &&
           !(await this.checksService.isMyField(gameId, field.fieldId))
         ) {
+          console.log(5);
           await this.store.setTransaction(gameId, {
             sum: await this.fieldsService.getFieldRent(gameId, field),
             userId: player.userId,
@@ -92,9 +97,11 @@ export class IncomeSocketMessage {
           });
           await this.actionsService.payTaxModal(gameId);
         } else if (await this.checksService.isJail(gameId)) {
+          console.log(6);
           (await this.playersService.jailPlayer(gameId)) &&
             (await this.actionsService.switchPlayerTurn(gameId, false));
         } else if (await this.checksService.isTax(gameId)) {
+          console.log(7);
           // TODO написать нормальный текст на налоги
           await this.store.setTransaction(gameId, {
             sum: await this.fieldsService.getFieldRent(gameId, field),
@@ -105,6 +112,7 @@ export class IncomeSocketMessage {
           });
           await this.actionsService.payTaxModal(gameId);
         } else if (await this.checksService.isChance(gameId)) {
+          console.log(8);
           // TODO Make a real chance field await this.actionsService
           await this.store.setTransaction(gameId, {
             sum: 1000,
@@ -116,6 +124,7 @@ export class IncomeSocketMessage {
           await this.actionsService.payTaxModal(gameId);
         }
       } else {
+        console.log(9);
         if (player.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {
           await this.actionsService.switchPlayerTurn(gameId, false);
         } else {

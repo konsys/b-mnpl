@@ -1,5 +1,6 @@
 import { IField, IFieldAction, IPlayer } from 'src/types/Board/board.types';
 
+import { BOARD_PARAMS } from 'src/params/board.params';
 import { ICurrentAction } from './action.service';
 import { IPlayersStore } from '../users/users.service';
 import { Injectable } from '@nestjs/common';
@@ -158,8 +159,9 @@ export class StoreService {
   private async set(gameId: string, serviceName: string, data: any) {
     await redis.set(`${gameId}-${serviceName}`, JSON.stringify(data));
     // 3 hours TTl
-    await redis.expire([`${gameId}-${serviceName}`, 60 * 60 * 3], (v) =>
-      console.log('TTL', v),
+    await redis.expire(
+      [`${gameId}-${serviceName}`, BOARD_PARAMS.REDIS_TTL],
+      (v) => console.log('TTL', v),
     );
   }
 

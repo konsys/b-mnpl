@@ -81,7 +81,7 @@ export class BoardSocket
     process.exit();
 
     await this.initStores('kkk');
-    this.store.setBankStore('kkk', bank);
+
     try {
       setInterval(() => {
         // BoardSocket.emitMessage();
@@ -128,6 +128,7 @@ export class BoardSocket
         playersTurn: 0,
         playerActions: [],
       });
+      this.store.setBankStore('kkk', bank);
 
       redis.on('message', async (chanel: any, error: string) => {
         chanel === `kkk-${ERROR_CHANEL}` &&

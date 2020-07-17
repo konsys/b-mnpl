@@ -121,8 +121,9 @@ export class ActionService {
 
   async switchPlayerTurn(gameId: string, unJail: boolean) {
     unJail = unJail ? unJail : false;
-    const store = await this.store.getPlayersStore(gameId);
+    const players = (await this.store.getPlayersStore(gameId)).players;
     const index = await this.players.getActingPlayerIndex(gameId);
+
     let player = await this.players.getActingPlayer(gameId);
     let nextIndex = index;
 
@@ -146,10 +147,10 @@ export class ActionService {
         'switchTurn',
       );
     } else {
-      nextIndex = await this.getNextArrayIndex(index, store.players);
+      nextIndex = this.getNextArrayIndex(index, players);
     }
 
-    const res = store.players.map((v, k) => {
+    const res = players.map((v, k) => {
       if (k === nextIndex) {
         if (unJail) {
           v.movesLeft = 0;

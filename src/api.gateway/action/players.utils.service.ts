@@ -27,7 +27,10 @@ export class PlayersUtilsService {
 
   async getActingPlayerIndex(gameId: string): Promise<number> {
     const state = await this.store.getPlayersStore(gameId);
-    const index = Array.isArray(state) && state.findIndex((v) => v.isActing);
+
+    const index =
+      Array.isArray(state.players) &&
+      state.players.findIndex((v) => v.isActing);
     return index;
   }
 
@@ -43,7 +46,8 @@ export class PlayersUtilsService {
   async getPlayerMoneyById(gameId: string, userId: number): Promise<number> {
     const state = await this.store.getPlayersStore(gameId);
     const player =
-      Array.isArray(state) && state.find((v) => v.userId === userId);
+      Array.isArray(state.players) &&
+      state.players.find((v) => v.userId === userId);
     return (player && player.money) || 0;
   }
 

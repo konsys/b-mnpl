@@ -82,10 +82,10 @@ export class ActionService {
     });
   }
 
-  async payTaxModal(gameId: string) {
+  async payTaxModal(gameId: string, playerId: number) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
-      userId: (await this.players.getActingPlayer(gameId)).userId,
+      userId: (await this.players.getPlayerById(gameId, playerId)).userId,
       actionId: nanoid(4),
       moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });

@@ -100,7 +100,7 @@ export class IncomeSocketMessage {
             reason: 'Пришло время платить по счетам',
             transactionId: nanoid(4),
           });
-          await this.actionsService.payTaxModal(gameId);
+          await this.actionsService.payTaxModal(gameId, player.userId);
         } else if (await this.checksService.isJail(gameId, field.fieldId)) {
           console.log(6);
           (await this.playersService.jailPlayer(gameId)) &&
@@ -115,7 +115,7 @@ export class IncomeSocketMessage {
             reason: 'Самое время заплатить налоги',
             transactionId: nanoid(4),
           });
-          await this.actionsService.payTaxModal(gameId);
+          await this.actionsService.payTaxModal(gameId, player.userId);
         } else if (await this.checksService.isChance(gameId, field.fieldId)) {
           console.log(8);
           // TODO Make a real chance field await this.actionsService
@@ -126,7 +126,7 @@ export class IncomeSocketMessage {
             reason: 'Хитрый шанс',
             transactionId: nanoid(4),
           });
-          await this.actionsService.payTaxModal(gameId);
+          await this.actionsService.payTaxModal(gameId, player.userId);
         }
       } else {
         if (player.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {

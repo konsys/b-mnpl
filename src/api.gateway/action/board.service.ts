@@ -37,37 +37,3 @@ export class BoardService {
     });
   }
 }
-
-//   // Update field actions on new round
-//   setNewRoundEvent.watch((v) => updateFieldActionsEvent());
-
-//   export const boardStore = BoardDomain.store<IBoardStore>({
-//     gameRound: 0,
-//     isNewRound: false,
-//     playersTurn: 0,
-//     playerActions: [],
-//   })
-//     .on(setNewRoundEvent, (prev) => {
-//       return {
-//         isNewRound: true,
-//         gameRound: ++prev.gameRound,
-//         playersTurn: ++prev.playersTurn,
-//         playerActions: [],
-//       };
-//     })
-//     .on(setNewTurnEvent, (prev) => ({
-//       isNewRound: false,
-//       gameRound: prev.gameRound,
-//       playersTurn: ++prev.playersTurn,
-//       playerActions: [],
-//     }))
-//     .on(setPlayerActionEvent, (prev, playerActions) => ({
-//       ...prev,
-//       playerActions: [...prev.playerActions, playerActions],
-//     }))
-//     .on(setNextRound, (prev) => ({
-//       ...prev,
-//       isNewRound: false,
-//       playersTurn: ++prev.playersTurn,
-//     }))
-//     .reset(resetBoardStoreEvent);

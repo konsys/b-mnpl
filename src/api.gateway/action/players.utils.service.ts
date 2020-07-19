@@ -61,7 +61,7 @@ export class PlayersUtilsService {
       userId: player.userId,
     });
 
-    return this.updatePlayer(
+    return await this.updatePlayer(
       gameId,
       {
         ...player,
@@ -100,7 +100,8 @@ export class PlayersUtilsService {
   ): Promise<boolean> {
     // Update BANK
     if (player.userId === BOARD_PARAMS.BANK_PLAYER_ID) {
-      return this.store.setBankStore(gameId, player) && true;
+      await this.store.setBankStore(gameId, player);
+      return true;
     }
 
     const players = await this.getPlayers(gameId);

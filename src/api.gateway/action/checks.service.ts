@@ -60,7 +60,7 @@ export class ChecksService {
   async isMyField(gameId: string, fieldId: number): Promise<boolean> {
     const field = await this.fields.getFieldById(gameId, fieldId);
     return (
-      this.isCompany(gameId, fieldId) &&
+      (await this.isCompany(gameId, fieldId)) &&
       field.status &&
       field.status.userId === (await this.players.getActingPlayer('kkk')).userId
     );

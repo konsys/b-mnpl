@@ -32,7 +32,7 @@ export class UsersController {
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req) {
-    return this.authService.login(req.user);
+    return await this.authService.login(req.user);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

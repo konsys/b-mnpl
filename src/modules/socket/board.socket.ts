@@ -146,9 +146,9 @@ export class BoardSocket
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  async handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id} args: ${args}`);
 
-    this.emitMessage();
+    await this.emitMessage();
   }
 }

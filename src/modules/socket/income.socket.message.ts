@@ -35,8 +35,8 @@ export class IncomeSocketMessage {
       await this.service.emitMessage();
 
       await this.tokenMovedAfterClick(gameId);
-      setTimeout(() => {
-        this.service.emitMessage();
+      setTimeout(async () => {
+        await this.service.emitMessage();
       }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
     } catch (err) {
       console.log('Error in dicesModal', err);
@@ -162,7 +162,7 @@ export class IncomeSocketMessage {
     await this.actionsService.startAuctionModal('kkk');
     await this.actionsService.switchPlayerTurn('kkk', false);
 
-    this.service.emitMessage();
+    await this.service.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)

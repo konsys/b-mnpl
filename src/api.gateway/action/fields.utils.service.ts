@@ -78,7 +78,7 @@ export class FieldsUtilsService {
   async updateField(gameId: string, field: IField) {
     const fields = await this.getFields(gameId);
     fields[await this.getFieldIndex(gameId, field)] = field;
-    this.updateAllFields(gameId, fields);
+    await this.updateAllFields(gameId, fields);
   }
 
   async updateAllFields(gameId: string, fields: IField[]) {
@@ -166,7 +166,7 @@ export class FieldsUtilsService {
     );
 
     if (this.checks.canBuyField(gameId, f.fieldId, p)) {
-      this.updateField(gameId, {
+      await this.updateField(gameId, {
         ...f,
 
         status: {

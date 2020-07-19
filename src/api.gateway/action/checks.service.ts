@@ -16,8 +16,10 @@ export class ChecksService {
     private readonly store: StoreService,
   ) {}
 
-  async isTax(gameId: string): Promise<boolean> {
-    return (await this.fields.getActingField(gameId)).type === FieldType.TAX;
+  async isTax(gameId: string, fieldId: number): Promise<boolean> {
+    const f = await this.fields.getFieldById(gameId, fieldId);
+
+    return f.type === FieldType.TAX;
   }
 
   async isStartPass(gameId: string): Promise<boolean> {
@@ -27,8 +29,10 @@ export class ChecksService {
     return dices && dices.sum > 0 && player.meanPosition - dices.sum < 0;
   }
 
-  async isJail(gameId: string): Promise<boolean> {
-    return (await this.fields.getActingField(gameId)).type === FieldType.JAIL;
+  async isJail(gameId: string, fieldId: number): Promise<boolean> {
+    return (
+      (await this.fields.getFieldById(gameId, fieldId)).type === FieldType.JAIL
+    );
   }
 
   async isFieldMortgaged(gameId: string, fieldId: number): Promise<boolean> {
@@ -46,8 +50,11 @@ export class ChecksService {
         type === FieldType.IT)
     );
   }
-  async isChance(gameId: string): Promise<boolean> {
-    return (await this.fields.getActingField(gameId)).type === FieldType.CHANCE;
+  async isChance(gameId: string, fieldId: number): Promise<boolean> {
+    return (
+      (await this.fields.getFieldById(gameId, fieldId)).type ===
+      FieldType.CHANCE
+    );
   }
 
   async isCompanyForSale(gameId: string, fieldId: number): Promise<boolean> {
@@ -78,14 +85,14 @@ export class ChecksService {
     );
   }
 
-  async whosField(gameId: string): Promise<number> {
-    const p = await this.fields.getActingField(gameId);
+  async whosField(gameId: string, fieldId: number): Promise<number> {
+    const f = await this.fields.getFieldById(gameId, fieldId);
 
-    return (p.status && p.status.userId) || BOARD_PARAMS.BANK_PLAYER_ID;
+    return (f.status && f.status.userId) || BOARD_PARAMS.BANK_PLAYER_ID;
   }
 
-  async noActionField(gameId: string): Promise<boolean> {
-    const field = await this.fields.getActingField(gameId);
+  async noActionField(gameId: string, fieldId: number): Promise<boolean> {
+    const field = await this.fields.getFieldById(gameId, fieldId);
 
     return (
       field.type === FieldType.TAKE_REST || field.type === FieldType.CASINO

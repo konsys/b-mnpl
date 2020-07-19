@@ -65,36 +65,49 @@ export class IncomeSocketMessage {
           await this.actionsService.switchPlayerTurn(gameId, false);
         }
 
-        if (await this.checksService.noActionField(gameId)) {
+        console.log(
+          0,
+          player.name,
+          player.meanPosition,
+          (await this.fieldsService.getActingField(gameId)).fieldId,
+        );
+        if (await this.checksService.noActionField(gameId, field.fieldId)) {
+          console.log(1);
           await this.actionsService.switchPlayerTurn(gameId, false);
         } else if (await this.checksService.isMyField(gameId, field.fieldId)) {
+          console.log(2);
           await this.actionsService.switchPlayerTurn(gameId, false);
         } else if (
           await this.checksService.isCompanyForSale(gameId, field.fieldId)
         ) {
+          console.log(3);
           await this.actionsService.buyFieldModal(gameId);
         } else if (
           !(await this.checksService.isCompanyForSale(gameId, field.fieldId)) &&
           (await this.checksService.isMyField(gameId, field.fieldId))
         ) {
           await this.actionsService.switchPlayerTurn(gameId, false);
+          console.log(4);
         } else if (
-          (await this.checksService.whosField(gameId)) &&
+          (await this.checksService.isCompany(gameId, field.fieldId)) &&
+          (await this.checksService.whosField(gameId, field.fieldId)) &&
           !(await this.checksService.isMyField(gameId, field.fieldId))
         ) {
+          console.log(5);
           await this.store.setTransaction(gameId, {
             sum: await this.fieldsService.getFieldRent(gameId, field),
             userId: player.userId,
-            toUserId: await this.checksService.whosField(gameId),
+            toUserId: await this.checksService.whosField(gameId, field.fieldId),
             reason: 'Пришло время платить по счетам',
             transactionId: nanoid(4),
           });
           await this.actionsService.payTaxModal(gameId);
-        } else if (await this.checksService.isJail(gameId)) {
+        } else if (await this.checksService.isJail(gameId, field.fieldId)) {
+          console.log(6);
           (await this.playersService.jailPlayer(gameId)) &&
             (await this.actionsService.switchPlayerTurn(gameId, false));
-        } else if (await this.checksService.isTax(gameId)) {
-          console.log(1111111111);
+        } else if (await this.checksService.isTax(gameId, field.fieldId)) {
+          console.log(7, player.name);
           // TODO написать нормальный текст на налоги
           await this.store.setTransaction(gameId, {
             sum: await this.fieldsService.getFieldRent(gameId, field),
@@ -104,12 +117,13 @@ export class IncomeSocketMessage {
             transactionId: nanoid(4),
           });
           await this.actionsService.payTaxModal(gameId);
-        } else if (await this.checksService.isChance(gameId)) {
+        } else if (await this.checksService.isChance(gameId, field.fieldId)) {
+          console.log(8);
           // TODO Make a real chance field await this.actionsService
           await this.store.setTransaction(gameId, {
             sum: 1000,
             userId: player.userId,
-            toUserId: await this.checksService.whosField(gameId),
+            toUserId: await this.checksService.whosField(gameId, field.fieldId),
             reason: 'Хитрый шанс',
             transactionId: nanoid(4),
           });
@@ -122,7 +136,7 @@ export class IncomeSocketMessage {
           await this.store.setTransaction(gameId, {
             sum: 500,
             userId: player.userId,
-            toUserId: await this.checksService.whosField(gameId),
+            toUserId: await this.checksService.whosField(gameId, field.fieldId),
             reason: 'Залог за выход из тюрьмы',
             transactionId: nanoid(4),
           });

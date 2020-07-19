@@ -1,7 +1,6 @@
 import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { IPlayersStore } from '../users/users.service';
 import { Injectable } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { nanoid } from 'nanoid';

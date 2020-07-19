@@ -106,7 +106,7 @@ export class IncomeSocketMessage {
           (await this.playersService.jailPlayer(gameId)) &&
             (await this.actionsService.switchPlayerTurn(gameId, false));
         } else if (await this.checksService.isTax(gameId, field.fieldId)) {
-          console.log(7, player.name);
+          console.log(7, player.name, player.userId);
           // TODO написать нормальный текст на налоги
           await this.store.setTransaction(gameId, {
             sum: await this.fieldsService.getFieldRent(gameId, field),

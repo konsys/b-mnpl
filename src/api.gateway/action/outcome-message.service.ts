@@ -83,7 +83,10 @@ export class OutcomeMessageService {
 
   payModalHandler = async (gameId: string): Promise<IPayRentModal> => {
     const player = await this.players.getActingPlayer(gameId);
-    const field = await this.fields.getActingField(gameId);
+    const field = await this.fields.getFieldByPosition(
+      gameId,
+      player.meanPosition,
+    );
     const action = await this.store.getActionStore(gameId);
     const transaction = await this.store.getTransaction(gameId);
     const sum = (transaction && transaction.sum) || 0;

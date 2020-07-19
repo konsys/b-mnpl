@@ -19,7 +19,7 @@ export class PlayersUtilsService {
 
   async getActingPlayer(gameId: string): Promise<IPlayer> {
     const players = await this.getPlayers(gameId);
-    const acting = Array.isArray(players) && players.find((v) => v.isActing);
+    const acting = players.find((v) => v.isActing);
 
     return acting;
   }

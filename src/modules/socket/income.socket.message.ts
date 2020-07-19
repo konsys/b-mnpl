@@ -46,7 +46,10 @@ export class IncomeSocketMessage {
   async tokenMovedAfterClick(gameId: string) {
     try {
       const player = await this.playersService.getActingPlayer(gameId);
-      const field = await this.fieldsService.getActingField(gameId);
+      const field = await this.fieldsService.getFieldByPosition(
+        gameId,
+        player.meanPosition,
+      );
 
       if (!player.jailed) {
         if (await this.checksService.isStartPass(gameId)) {
@@ -65,12 +68,8 @@ export class IncomeSocketMessage {
           await this.actionsService.switchPlayerTurn(gameId, false);
         }
 
-        console.log(
-          0,
-          player.name,
-          player.meanPosition,
-          (await this.fieldsService.getActingField(gameId)).fieldId,
-        );
+        console.log(0, player.name, player.meanPosition, field.name);
+
         if (await this.checksService.noActionField(gameId, field.fieldId)) {
           console.log(1);
           await this.actionsService.switchPlayerTurn(gameId, false);

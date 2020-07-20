@@ -1,9 +1,10 @@
 import {
   BoardFieldsEntity,
-  FieldType,
   CurrencyType,
   FieldGroupName,
+  FieldType,
 } from './board.fields.entity';
+
 import { UsersEntity } from './users.entity';
 
 // const calcRent = (price: number, stars: number) =>
@@ -162,7 +163,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       },
       price: {
         startPrice: 1000,
-        pledgePrice: 50,
+        pledgePrice: 500,
         buyoutPrice: 600,
         branchPrice: 500,
       },

@@ -10,6 +10,7 @@ import {
   OutcomeMessageType,
 } from 'src/types/Board/board.types';
 
+import { BOARD_PARAMS } from 'src/params/board.params';
 import { DicesService } from './dices.service';
 import { FieldsUtilsService } from './fields.utils.service';
 import { Injectable } from '@nestjs/common';
@@ -90,6 +91,7 @@ export class OutcomeMessageService {
     const action = await this.store.getActionStore(gameId);
     const transaction = await this.store.getTransaction(gameId);
     const sum = (transaction && transaction.sum) || 0;
+
     return {
       type: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
       userId: player.userId,
@@ -97,7 +99,8 @@ export class OutcomeMessageService {
       text: `${transaction && transaction.reason + '. '}`,
       field: field,
       money: sum,
-      toUserId: field.status && field.status.userId,
+      toUserId:
+        (field.status && field.status.userId) || BOARD_PARAMS.BANK_PLAYER_ID,
       _id: action.actionId,
       isModal: true,
     };

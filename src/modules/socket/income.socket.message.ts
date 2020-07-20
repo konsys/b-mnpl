@@ -64,35 +64,26 @@ export class IncomeSocketMessage {
                 gameId,
                 player.userId,
               );
-
-          await this.actionsService.switchPlayerTurn(gameId, false);
         }
 
-        console.log(0, player.name, player.meanPosition, field.name);
-
         if (await this.checksService.noActionField(gameId, field.fieldId)) {
-          console.log(1);
           await this.actionsService.switchPlayerTurn(gameId, false);
         } else if (await this.checksService.isMyField(gameId, field.fieldId)) {
-          console.log(2);
           await this.actionsService.switchPlayerTurn(gameId, false);
         } else if (
           await this.checksService.isCompanyForSale(gameId, field.fieldId)
         ) {
-          console.log(3);
           await this.actionsService.buyFieldModal(gameId);
         } else if (
           !(await this.checksService.isCompanyForSale(gameId, field.fieldId)) &&
           (await this.checksService.isMyField(gameId, field.fieldId))
         ) {
           await this.actionsService.switchPlayerTurn(gameId, false);
-          console.log(4);
         } else if (
           (await this.checksService.isCompany(gameId, field.fieldId)) &&
           (await this.checksService.whosField(gameId, field.fieldId)) &&
           !(await this.checksService.isMyField(gameId, field.fieldId))
         ) {
-          console.log(5);
           await this.store.setTransaction(gameId, {
             sum: await this.fieldsService.getFieldRent(gameId, field),
             userId: player.userId,
@@ -102,7 +93,6 @@ export class IncomeSocketMessage {
           });
           await this.actionsService.payTaxModal(gameId, player.userId);
         } else if (await this.checksService.isJail(gameId, field.fieldId)) {
-          console.log(6);
           (await this.playersService.jailPlayer(gameId)) &&
             (await this.actionsService.switchPlayerTurn(gameId, false));
         } else if (await this.checksService.isTax(gameId, field.fieldId)) {
@@ -112,12 +102,11 @@ export class IncomeSocketMessage {
             sum: await this.fieldsService.getFieldRent(gameId, field),
             userId: player.userId,
             toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
-            reason: 'Самое время заплатить налоги',
+            reason: 'Самое время заплатить налоги' + player.name,
             transactionId: nanoid(4),
           });
           await this.actionsService.payTaxModal(gameId, player.userId);
         } else if (await this.checksService.isChance(gameId, field.fieldId)) {
-          console.log(8);
           // TODO Make a real chance field await this.actionsService
           await this.store.setTransaction(gameId, {
             sum: 1000,

@@ -201,7 +201,6 @@ export class IncomeSocketMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED)
   async mortgageField(client: Socket, payload: IFieldId): Promise<void> {
     const action = await this.store.getActionStore('kkk');
-    console.log(12313123, action);
     if (!(await this.checksService.canMortgage('kkk', payload.fieldId))) {
       await this.store.setError('kkk', {
         code: ErrorCode.CannotMortgageField,

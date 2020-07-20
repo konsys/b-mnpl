@@ -10,7 +10,7 @@ export const BOARD_PARAMS = {
   BANK_PLAYER_ID: 0,
   MORTGAGE_TURNS: 3,
 
-  INIT_MONEY: 15000,
+  INIT_MONEY: 1000,
 
   BRANCHES: {
     BUILD_QEUEU: true,

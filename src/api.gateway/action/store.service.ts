@@ -96,6 +96,7 @@ export class StoreService {
   }
 
   async setActionStore(gameId: string, data: ICurrentAction) {
+    console.log(123123123123, data);
     await this.set(gameId, storeNames.action, data);
   }
 

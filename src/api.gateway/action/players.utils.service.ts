@@ -48,7 +48,6 @@ export class PlayersUtilsService {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.DO_NOTHING,
       actionId: nanoid(4),
-      moveId: 1,
       userId: player.userId,
     });
 

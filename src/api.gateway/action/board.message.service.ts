@@ -15,7 +15,7 @@ export class BoardMessageService {
 
   async createBoardMessage(gameId: string): Promise<BoardMessage> {
     const actionState = await this.store.getActionStore(gameId);
-
+    console.log(actionState);
     let event: IBoardEvent = {
       // Adapt from actionStore to send to client
       action:
@@ -30,7 +30,7 @@ export class BoardMessageService {
     const message: BoardMessage = {
       code: 0,
       data: {
-        id: (actionState && actionState.moveId) || 0,
+        id: 0,
         event,
         boardStatus: {
           players: players ? players.players : [],

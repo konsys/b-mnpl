@@ -86,7 +86,6 @@ export class UsersController {
       await this.store.setActionStore('kkk', {
         action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
         userId: resultPlayers.find((v) => v.moveOrder === 0).userId,
-        moveId: 0,
         actionId: nanoid(4),
       });
     }

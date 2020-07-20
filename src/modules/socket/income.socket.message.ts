@@ -34,7 +34,7 @@ export class IncomeSocketMessage {
       await this.actionsService.rollDicesAction(gameId);
       await this.service.emitMessage();
 
-      await this.tokenMovedAfterClick(gameId);
+      await this.getNextAction(gameId);
       setTimeout(async () => {
         await this.service.emitMessage();
       }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
@@ -43,7 +43,7 @@ export class IncomeSocketMessage {
     }
   }
 
-  async tokenMovedAfterClick(gameId: string) {
+  async getNextAction(gameId: string) {
     try {
       const player = await this.playersService.getActingPlayer(gameId);
       const field = await this.fieldsService.getFieldByPosition(
@@ -200,7 +200,6 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED)
   async mortgageField(client: Socket, payload: IFieldId): Promise<void> {
-    const action = await this.store.getActionStore('kkk');
     if (!(await this.checksService.canMortgage('kkk', payload.fieldId))) {
       await this.store.setError('kkk', {
         code: ErrorCode.CannotMortgageField,
@@ -208,7 +207,7 @@ export class IncomeSocketMessage {
       });
     } else {
       await this.fieldsService.mortgage('kkk', payload.fieldId);
-      await this.actionsService.rollDicesModal('kkk');
+      await this.getNextAction('kkk');
     }
     await this.service.emitMessage();
   }
@@ -222,7 +221,7 @@ export class IncomeSocketMessage {
       });
     } else {
       await this.fieldsService.unMortgage('kkk', payload.fieldId);
-      await this.actionsService.rollDicesModal('kkk');
+      await this.getNextAction('kkk');
     }
     await this.service.emitMessage();
   }

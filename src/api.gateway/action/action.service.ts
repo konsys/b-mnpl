@@ -16,7 +16,6 @@ export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
   userId: number;
   actionId: string;
-  moveId: number;
 }
 
 @Injectable()
@@ -33,11 +32,11 @@ export class ActionService {
   async buyFieldModal(gameId: string) {
     const player = await this.players.getActingPlayer(gameId);
     const action = await this.store.getActionStore(gameId);
+
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,
       userId: player.userId,
       actionId: nanoid(4),
-      moveId: action.moveId + 1,
     });
   }
 
@@ -69,7 +68,6 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
-      moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
   }
 
@@ -78,7 +76,6 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
-      moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
   }
 
@@ -87,7 +84,6 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
       userId: playerId,
       actionId: nanoid(4),
-      moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
   }
 
@@ -97,7 +93,6 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
       userId: p.userId,
       actionId: nanoid(4),
-      moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
   }
 
@@ -106,7 +101,6 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
-      moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
   }
 
@@ -115,7 +109,6 @@ export class ActionService {
       action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
       actionId: nanoid(4),
-      moveId: ++(await this.store.getActionStore(gameId)).moveId,
     });
   }
 

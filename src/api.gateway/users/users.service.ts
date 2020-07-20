@@ -23,7 +23,7 @@ export class UsersService {
   async getAllUsers(filter?: FindManyOptions) {
     try {
       const res = await this.proxy
-        .send<any>({ cmd: MsPatterns.GET_ALL_USERS }, filter || { take: 2 })
+        .send<any>({ cmd: MsPatterns.GET_ALL_USERS }, filter)
         .toPromise();
       return res;
     } catch (err) {

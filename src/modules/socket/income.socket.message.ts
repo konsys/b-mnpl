@@ -96,7 +96,6 @@ export class IncomeSocketMessage {
           (await this.playersService.jailPlayer(gameId)) &&
             (await this.actionsService.switchPlayerTurn(gameId, false));
         } else if (await this.checksService.isTax(gameId, field.fieldId)) {
-          console.log(7, player.name, player.userId);
           // TODO написать нормальный текст на налоги
           await this.store.setTransaction(gameId, {
             sum: await this.fieldsService.getFieldRent(gameId, field),
@@ -201,6 +200,8 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED)
   async mortgageField(client: Socket, payload: IFieldId): Promise<void> {
+    const action = await this.store.getActionStore('kkk');
+    console.log(12313123, action);
     if (!(await this.checksService.canMortgage('kkk', payload.fieldId))) {
       await this.store.setError('kkk', {
         code: ErrorCode.CannotMortgageField,
@@ -208,6 +209,7 @@ export class IncomeSocketMessage {
       });
     } else {
       await this.fieldsService.mortgage('kkk', payload.fieldId);
+      await this.actionsService.rollDicesModal('kkk');
     }
     await this.service.emitMessage();
   }
@@ -221,6 +223,7 @@ export class IncomeSocketMessage {
       });
     } else {
       await this.fieldsService.unMortgage('kkk', payload.fieldId);
+      await this.actionsService.rollDicesModal('kkk');
     }
     await this.service.emitMessage();
   }

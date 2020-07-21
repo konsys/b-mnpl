@@ -105,7 +105,8 @@ export class ActionService {
   }
 
   async startAuctionModal(gameId: string) {
-    const players = await this.players.getPlayerById;
+    const players = await this.players.getPlayers('kkk');
+    console.log(players);
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,

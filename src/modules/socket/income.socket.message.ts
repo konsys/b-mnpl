@@ -152,7 +152,6 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_START_CLICKED)
   async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
-    const players = await this.players;
     await this.actions.startAuctionModal('kkk');
     // await this.actions.switchPlayerTurn('kkk', false);
 

@@ -19,7 +19,7 @@ export class TransactionsService {
 
   async transactMoney(gameId: string, transactionId: string) {
     const transaction = await this.store.getTransaction(gameId);
-    const player = await this.players.getPlayerById(gameId, transaction.userId);
+    const player = await this.players.getOnePlayer(gameId, transaction.userId);
 
     if (transaction.sum > player.money) {
       await this.store.setError('kkk', {
@@ -48,11 +48,8 @@ export class TransactionsService {
     gameId: string,
     transaction: IMoneyTransaction,
   ): Promise<boolean> {
-    const player1 = await this.players.getPlayerById(
-      gameId,
-      transaction.userId,
-    );
-    const player2 = await this.players.getPlayerById(
+    const player1 = await this.players.getOnePlayer(gameId, transaction.userId);
+    const player2 = await this.players.getOnePlayer(
       gameId,
       transaction.toUserId,
     );

@@ -29,6 +29,7 @@ export interface IAuctionStore {
   bet: number;
   field: BoardFieldsEntity;
   userId: number;
+  participants: number[];
   isEnded: boolean;
 }
 
@@ -158,6 +159,10 @@ export class StoreService {
 
   async getAuctionStore(gameId: string): Promise<IAuctionStore> {
     return (await this.get(gameId, storeNames.auction)) as IAuctionStore;
+  }
+
+  async clearAuctionStore(gameId: string) {
+    return await redis.del(`${gameId}-${storeNames.auction}`);
   }
 
   async setError(gameId: string, data: IErrorMessage) {

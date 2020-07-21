@@ -11,7 +11,7 @@ import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
-import { throwIfEmpty } from 'rxjs/operators';
+import _ from 'lodash';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -108,13 +108,28 @@ export class ActionService {
   async startAuctionModal(gameId: string) {
     const players = await this.players.getPlayers('kkk');
     const actingIndex = await this.players.getActingPlayerIndex('kkk');
-    const f = await this.fields.getActingField('kkk');
+    const actingPlayer = await this.players.getActingPlayer('kkk');
+    const field = await this.fields.getActingField('kkk');
+    const startPrice = field.price.startPrice;
     const auction = await this.store.getAuctionStore('kkk');
+    const participants = _.filter(
+      await this.players.getPlayersWealthierThan('kkk', startPrice),
+      (v) => v !== actingPlayer.userId,
+    );
+
+    await this.store.setAuctionStore('kkk', {
+      field,
+      bet: startPrice + 100,
+      isEnded: false,
+      participants,
+      userId: actingPlayer.userId,
+    });
+
     let nextIndex = this.getNextArrayIndex(actingIndex, players);
 
     while (nextIndex !== actingIndex) {
       const player = players[nextIndex];
-      if (f.price.startPrice < player.money) {
+      if (field.price.startPrice < player.money) {
         await this.store.setActionStore(gameId, {
           action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
           userId: players[nextIndex].userId,

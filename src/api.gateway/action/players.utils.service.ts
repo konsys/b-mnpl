@@ -3,6 +3,7 @@ import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { Injectable } from '@nestjs/common';
 import { StoreService } from './store.service';
+import _ from 'lodash';
 import { nanoid } from 'nanoid';
 
 @Injectable()
@@ -29,6 +30,14 @@ export class PlayersUtilsService {
 
     const index = state.findIndex((v) => v.isActing);
     return index;
+  }
+
+  async getPlayersWealthierThan(
+    gameId: string,
+    sum: number,
+  ): Promise<number[]> {
+    const players = await this.getPlayers(gameId);
+    return _.filter(players, (v) => v.money >= sum).map((v) => v.userId);
   }
 
   async getPlayerIndexById(gameId: string, userId: number) {

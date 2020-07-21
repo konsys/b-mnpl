@@ -10,7 +10,7 @@ import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/MS/ms.types';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
-import { TransactionService } from './transaction.service';
+import { TransactionsService } from './transactions.service';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { TransactionService } from './transaction.service';
     StoreService,
     BoardService,
     StoreService,
-    TransactionService,
+    TransactionsService,
     PlayersUtilsService,
     FieldsUtilsService,
   ],

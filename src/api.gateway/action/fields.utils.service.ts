@@ -12,7 +12,7 @@ import { FieldType } from 'src/entities/board.fields.entity';
 import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
-import { TransactionService } from './transaction.service';
+import { TransactionsService } from './transactions.service';
 import _, { isArray } from 'lodash';
 import { nanoid } from 'nanoid';
 
@@ -24,7 +24,7 @@ export class FieldsUtilsService {
     private readonly checks: ChecksService,
     @Inject(forwardRef(() => ActionService))
     private readonly actionService: ActionService,
-    private readonly transaction: TransactionService,
+    private readonly transaction: TransactionsService,
     private readonly store: StoreService,
   ) {}
 

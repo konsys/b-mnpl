@@ -7,7 +7,7 @@ import { StoreService } from './store.service';
 import { nanoid } from 'nanoid';
 
 @Injectable()
-export class TransactionService {
+export class TransactionsService {
   constructor(
     private readonly players: PlayersUtilsService,
     private readonly store: StoreService,

@@ -9,7 +9,7 @@ import { FieldsUtilsService } from './fields.utils.service';
 import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
-import { TransactionService } from './transaction.service';
+import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
 
 export interface ICurrentAction {
@@ -22,7 +22,7 @@ export interface ICurrentAction {
 export class ActionService {
   constructor(
     private readonly players: PlayersUtilsService,
-    private readonly transaction: TransactionService,
+    private readonly transaction: TransactionsService,
     private readonly boardService: BoardService,
     private readonly store: StoreService,
     @Inject(forwardRef(() => FieldsUtilsService))
@@ -105,6 +105,7 @@ export class ActionService {
   }
 
   async startAuctionModal(gameId: string) {
+    const players = await this.players.getPlayerById;
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,

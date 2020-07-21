@@ -11,7 +11,7 @@ import { IActionId } from 'src/types/Board/board.types';
 import { PlayersUtilsService } from 'src/api.gateway/action/players.utils.service';
 import { Socket } from 'socket.io';
 import { StoreService } from 'src/api.gateway/action/store.service';
-import { TransactionService } from 'src/api.gateway/action/transaction.service';
+import { TransactionsService } from 'src/api.gateway/action/transactions.service';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 
@@ -19,11 +19,11 @@ import { nanoid } from 'nanoid';
 export class IncomeSocketMessage {
   constructor(
     private readonly service: BoardSocket,
-    private readonly playersService: PlayersUtilsService,
-    private readonly fieldsService: FieldsUtilsService,
-    private readonly actionsService: ActionService,
-    private readonly checksService: ChecksService,
-    private readonly transactionService: TransactionService,
+    private readonly players: PlayersUtilsService,
+    private readonly fields: FieldsUtilsService,
+    private readonly actions: ActionService,
+    private readonly checks: ChecksService,
+    private readonly transactions: TransactionsService,
     private readonly store: StoreService,
   ) {}
 
@@ -31,7 +31,7 @@ export class IncomeSocketMessage {
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
     const gameId = 'kkk';
     try {
-      await this.actionsService.rollDicesAction(gameId);
+      await this.actions.rollDicesAction(gameId);
       await this.service.emitMessage();
 
       await this.getNextAction(gameId);
@@ -45,89 +45,80 @@ export class IncomeSocketMessage {
 
   async getNextAction(gameId: string) {
     try {
-      const player = await this.playersService.getActingPlayer(gameId);
-      const field = await this.fieldsService.getFieldByPosition(
+      const player = await this.players.getActingPlayer(gameId);
+      const field = await this.fields.getFieldByPosition(
         gameId,
         player.meanPosition,
       );
 
       if (!player.jailed) {
-        if (await this.checksService.isStartPass(gameId)) {
+        if (await this.checks.isStartPass(gameId)) {
           // Bonus for start passing
           player.meanPosition === 0
-            ? await this.transactionService.getStartBonus(
-                gameId,
-                player.userId,
-                true,
-              )
-            : await this.transactionService.getStartBonus(
-                gameId,
-                player.userId,
-              );
+            ? await this.transactions.getStartBonus(gameId, player.userId, true)
+            : await this.transactions.getStartBonus(gameId, player.userId);
         }
 
-        if (await this.checksService.noActionField(gameId, field.fieldId)) {
-          await this.actionsService.switchPlayerTurn(gameId, false);
-        } else if (await this.checksService.isMyField(gameId, field.fieldId)) {
-          await this.actionsService.switchPlayerTurn(gameId, false);
+        if (await this.checks.noActionField(gameId, field.fieldId)) {
+          await this.actions.switchPlayerTurn(gameId, false);
+        } else if (await this.checks.isMyField(gameId, field.fieldId)) {
+          await this.actions.switchPlayerTurn(gameId, false);
+        } else if (await this.checks.isCompanyForSale(gameId, field.fieldId)) {
+          await this.actions.buyFieldModal(gameId);
         } else if (
-          await this.checksService.isCompanyForSale(gameId, field.fieldId)
+          !(await this.checks.isCompanyForSale(gameId, field.fieldId)) &&
+          (await this.checks.isMyField(gameId, field.fieldId))
         ) {
-          await this.actionsService.buyFieldModal(gameId);
+          await this.actions.switchPlayerTurn(gameId, false);
         } else if (
-          !(await this.checksService.isCompanyForSale(gameId, field.fieldId)) &&
-          (await this.checksService.isMyField(gameId, field.fieldId))
-        ) {
-          await this.actionsService.switchPlayerTurn(gameId, false);
-        } else if (
-          (await this.checksService.isCompany(gameId, field.fieldId)) &&
-          (await this.checksService.whosField(gameId, field.fieldId)) &&
-          !(await this.checksService.isMyField(gameId, field.fieldId))
+          (await this.checks.isCompany(gameId, field.fieldId)) &&
+          (await this.checks.whosField(gameId, field.fieldId)) &&
+          !(await this.checks.isMyField(gameId, field.fieldId))
         ) {
           await this.store.setTransaction(gameId, {
-            sum: await this.fieldsService.getFieldRent(gameId, field),
+            sum: await this.fields.getFieldRent(gameId, field),
             userId: player.userId,
-            toUserId: await this.checksService.whosField(gameId, field.fieldId),
+            toUserId: await this.checks.whosField(gameId, field.fieldId),
             reason: 'Пришло время платить по счетам',
             transactionId: nanoid(4),
           });
-          await this.actionsService.payTaxModal(gameId, player.userId);
-        } else if (await this.checksService.isJail(gameId, field.fieldId)) {
-          (await this.playersService.jailPlayer(gameId)) &&
-            (await this.actionsService.switchPlayerTurn(gameId, false));
-        } else if (await this.checksService.isTax(gameId, field.fieldId)) {
+          await this.actions.payTaxModal(gameId, player.userId);
+        } else if (await this.checks.isJail(gameId, field.fieldId)) {
+          (await this.players.jailPlayer(gameId)) &&
+            (await this.actions.switchPlayerTurn(gameId, false));
+        } else if (await this.checks.isTax(gameId, field.fieldId)) {
           // TODO написать нормальный текст на налоги
           await this.store.setTransaction(gameId, {
-            sum: await this.fieldsService.getFieldRent(gameId, field),
+            sum: await this.fields.getFieldRent(gameId, field),
             userId: player.userId,
             toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
             reason: 'Самое время заплатить налоги' + player.name,
             transactionId: nanoid(4),
           });
-          await this.actionsService.payTaxModal(gameId, player.userId);
-        } else if (await this.checksService.isChance(gameId, field.fieldId)) {
-          // TODO Make a real chance field await this.actionsService
+          await this.actions.payTaxModal(gameId, player.userId);
+        } else if (await this.checks.isChance(gameId, field.fieldId)) {
+          // TODO Make a real chance field await this.actions
           await this.store.setTransaction(gameId, {
             sum: 1000,
             userId: player.userId,
-            toUserId: await this.checksService.whosField(gameId, field.fieldId),
+            toUserId: await this.checks.whosField(gameId, field.fieldId),
             reason: 'Хитрый шанс',
             transactionId: nanoid(4),
           });
-          await this.actionsService.payTaxModal(gameId, player.userId);
+          await this.actions.payTaxModal(gameId, player.userId);
         }
       } else {
         if (player.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {
-          await this.actionsService.switchPlayerTurn(gameId, false);
+          await this.actions.switchPlayerTurn(gameId, false);
         } else {
           await this.store.setTransaction(gameId, {
             sum: 500,
             userId: player.userId,
-            toUserId: await this.checksService.whosField(gameId, field.fieldId),
+            toUserId: await this.checks.whosField(gameId, field.fieldId),
             reason: 'Залог за выход из тюрьмы',
             transactionId: nanoid(4),
           });
-          await this.actionsService.payUnJailModal(gameId);
+          await this.actions.payUnJailModal(gameId);
         }
       }
     } catch (e) {
@@ -137,19 +128,19 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    const f = await this.fieldsService.getActingField('kkk');
-    const p = await this.playersService.getActingPlayer('kkk');
-    if (await this.checksService.canBuyField('kkk', f.fieldId, p)) {
-      await this.actionsService.buyField('kkk');
-      await this.actionsService.switchPlayerTurn('kkk', false);
+    const f = await this.fields.getActingField('kkk');
+    const p = await this.players.getActingPlayer('kkk');
+    if (await this.checks.canBuyField('kkk', f.fieldId, p)) {
+      await this.actions.buyField('kkk');
+      await this.actions.switchPlayerTurn('kkk', false);
     } else {
-      !(await this.checksService.isCompanyForSale('kkk', f.fieldId)) &&
+      !(await this.checks.isCompanyForSale('kkk', f.fieldId)) &&
         (await this.store.setError('kkk', {
           code: ErrorCode.CompanyHasOwner,
           message: 'Oops!',
         }));
 
-      !(await this.checksService.canBuyField('kkk', f.fieldId, p)) &&
+      !(await this.checks.canBuyField('kkk', f.fieldId, p)) &&
         (await this.store.setError('kkk', {
           code: ErrorCode.NotEnoughMoney,
           message: 'Oops!',
@@ -161,8 +152,9 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_START_CLICKED)
   async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
-    await this.actionsService.startAuctionModal('kkk');
-    await this.actionsService.switchPlayerTurn('kkk', false);
+    const players = await this.players;
+    await this.actions.startAuctionModal('kkk');
+    // await this.actions.switchPlayerTurn('kkk', false);
 
     await this.service.emitMessage();
   }
@@ -170,15 +162,14 @@ export class IncomeSocketMessage {
   @SubscribeMessage(IncomeMessageType.INCOME_TAX_PAID_CLICKED)
   async payment(client: Socket, payload: IActionId): Promise<void> {
     if (
-      (await this.transactionService.getCurrentTransaction('kkk')).sum <=
-      (await this.playersService.getActingPlayer('kkk')).money
+      (await this.transactions.getCurrentTransaction('kkk')).sum <=
+      (await this.players.getActingPlayer('kkk')).money
     ) {
-      await this.transactionService.transactMoney(
+      await this.transactions.transactMoney(
         'kkk',
-        (await this.transactionService.getCurrentTransaction('kkk'))
-          .transactionId,
+        (await this.transactions.getCurrentTransaction('kkk')).transactionId,
       );
-      await this.actionsService.switchPlayerTurn('kkk', false);
+      await this.actions.switchPlayerTurn('kkk', false);
     } else {
       await this.store.setError('kkk', {
         code: ErrorCode.NotEnoughMoney,
@@ -190,23 +181,23 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED)
   async unJailPayment(client: Socket, payload: IActionId): Promise<void> {
-    await this.playersService.unjailPlayer('kkk');
+    await this.players.unjailPlayer('kkk');
     await this.service.emitMessage();
     setTimeout(async () => {
-      await this.actionsService.rollDicesModal('kkk');
+      await this.actions.rollDicesModal('kkk');
       await this.service.emitMessage();
     }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 2);
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED)
   async mortgageField(client: Socket, payload: IFieldId): Promise<void> {
-    if (!(await this.checksService.canMortgage('kkk', payload.fieldId))) {
+    if (!(await this.checks.canMortgage('kkk', payload.fieldId))) {
       await this.store.setError('kkk', {
         code: ErrorCode.CannotMortgageField,
         message: 'Oops!',
       });
     } else {
-      await this.fieldsService.mortgage('kkk', payload.fieldId);
+      await this.fields.mortgage('kkk', payload.fieldId);
       await this.getNextAction('kkk');
     }
     await this.service.emitMessage();
@@ -214,13 +205,13 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED)
   async unMortgageField(client: Socket, payload: IFieldId): Promise<void> {
-    if (!(await this.checksService.canUnMortgage('kkk', payload.fieldId))) {
+    if (!(await this.checks.canUnMortgage('kkk', payload.fieldId))) {
       await this.store.setError('kkk', {
         code: ErrorCode.CannotUnMortgageField,
         message: 'Oops!',
       });
     } else {
-      await this.fieldsService.unMortgage('kkk', payload.fieldId);
+      await this.fields.unMortgage('kkk', payload.fieldId);
       await this.getNextAction('kkk');
     }
     await this.service.emitMessage();
@@ -228,26 +219,26 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED)
   async levelUpField(client: Socket, payload: IFieldId): Promise<void> {
-    if (!(await this.checksService.canLevelUp('kkk', payload.fieldId))) {
+    if (!(await this.checks.canLevelUp('kkk', payload.fieldId))) {
       await this.store.setError('kkk', {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
     } else {
-      await this.fieldsService.levelUpField('kkk', payload.fieldId);
+      await this.fields.levelUpField('kkk', payload.fieldId);
     }
     await this.service.emitMessage();
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED)
   async levelDownField(client: Socket, payload: IFieldId): Promise<void> {
-    if (!(await this.checksService.canLevelDown('kkk', payload.fieldId))) {
+    if (!(await this.checks.canLevelDown('kkk', payload.fieldId))) {
       await this.store.setError('kkk', {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
     } else {
-      await this.fieldsService.levelDownField('kkk', payload.fieldId);
+      await this.fields.levelDownField('kkk', payload.fieldId);
     }
     await this.service.emitMessage();
   }

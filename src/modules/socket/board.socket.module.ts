@@ -15,7 +15,7 @@ import { MsNames } from 'src/types/MS/ms.types';
 import { OutcomeMessageService } from 'src/api.gateway/action/outcome-message.service';
 import { PlayersUtilsService } from 'src/api.gateway/action/players.utils.service';
 import { StoreService } from 'src/api.gateway/action/store.service';
-import { TransactionService } from 'src/api.gateway/action/transaction.service';
+import { TransactionsService } from 'src/api.gateway/action/transactions.service';
 
 @Module({
   imports: [
@@ -35,7 +35,7 @@ import { TransactionService } from 'src/api.gateway/action/transaction.service';
     PlayersUtilsService,
     ChecksService,
     ActionService,
-    TransactionService,
+    TransactionsService,
     StoreService,
     OutcomeMessageService,
     BoardService,

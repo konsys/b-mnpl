@@ -123,27 +123,59 @@ export class ActionService {
       userId: actingPlayer.userId,
     });
     if (!participants.length) {
+      await this.store.flushAuctionStore('kkk');
       await this.switchPlayerTurn('kkk', false);
       return;
     }
 
     auction = await this.store.getAuctionStore('kkk');
 
-    let userId = auction.participants[0];
+    const userId = auction.participants[0];
 
+    await this.store.setAuctionStore(gameId, {
+      ...auction,
+      participants,
+      userId,
+    });
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
-      userId: userId,
+      userId,
       actionId: nanoid(4),
     });
   }
 
   async acceptAuctionModal(gameId: string) {
-    console.log('accept');
+    const auction = await this.store.getAuctionStore('kkk');
+    console.log('accept', auction.userId);
   }
 
   async declineAuctionModal(gameId: string) {
-    console.log('decline');
+    const actingPlayer = await this.players.getActingPlayer('kkk');
+    const auction = await this.store.getAuctionStore('kkk');
+    const userId = this.getNextArrayValue(auction.userId, auction.participants);
+
+    const participants = _.filter(
+      auction.participants,
+      (v) => v !== auction.userId,
+    );
+
+    if (!participants.length) {
+      await this.store.flushAuctionStore('kkk');
+      await this.switchPlayerTurn('kkk', false);
+      return;
+    }
+
+    await this.store.setAuctionStore('kkk', {
+      ...auction,
+      participants,
+      userId,
+    });
+
+    await this.store.setActionStore(gameId, {
+      action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
+      userId,
+      actionId: nanoid(4),
+    });
   }
 
   async switchPlayerTurn(gameId: string, unJail: boolean) {
@@ -208,5 +240,11 @@ export class ActionService {
 
   private getNextArrayIndex(index: number, array: any[]) {
     return index < array.length - 1 ? index + 1 : 0;
+  }
+
+  private getNextArrayValue(value: any, array: any[]) {
+    const index = _.findIndex(array, (v) => v === value);
+    const ind = index < array.length - 1 ? index + 1 : 0;
+    return array[ind];
   }
 }

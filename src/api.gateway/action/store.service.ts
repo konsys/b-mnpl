@@ -161,7 +161,7 @@ export class StoreService {
     return (await this.get(gameId, storeNames.auction)) as IAuctionStore;
   }
 
-  async clearAuctionStore(gameId: string) {
+  async flushAuctionStore(gameId: string) {
     return await redis.del(`${gameId}-${storeNames.auction}`);
   }
 

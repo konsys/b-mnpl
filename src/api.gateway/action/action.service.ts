@@ -106,12 +106,10 @@ export class ActionService {
   }
 
   async startAuctionModal(gameId: string) {
-    const players = await this.players.getPlayers('kkk');
-    const actingIndex = await this.players.getActingPlayerIndex('kkk');
     const actingPlayer = await this.players.getActingPlayer('kkk');
     const field = await this.fields.getActingField('kkk');
     const startPrice = field.price.startPrice;
-    const auction = await this.store.getAuctionStore('kkk');
+    let auction = await this.store.getAuctionStore('kkk');
     const participants = _.filter(
       await this.players.getPlayersWealthierThan('kkk', startPrice),
       (v) => v !== actingPlayer.userId,
@@ -124,28 +122,32 @@ export class ActionService {
       participants,
       userId: actingPlayer.userId,
     });
-
-    let nextIndex = this.getNextArrayIndex(actingIndex, players);
-
-    while (nextIndex !== actingIndex) {
-      const player = players[nextIndex];
-      if (field.price.startPrice < player.money) {
-        await this.store.setActionStore(gameId, {
-          action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
-          userId: players[nextIndex].userId,
-          actionId: nanoid(4),
-        });
-        break;
-      }
-      nextIndex = this.getNextArrayIndex(nextIndex, players);
-      if (nextIndex === actingIndex) {
-        await this.store.setAuctionStore(gameId, {
-          ...auction,
-          isEnded: true,
-        });
-        await this.switchPlayerTurn('kkk', false);
-      }
+    if (!participants.length) {
+      await this.switchPlayerTurn('kkk', false);
+      return;
     }
+
+    auction = await this.store.getAuctionStore('kkk');
+
+    let userId = auction.participants[0];
+
+    // const player = await this.players.getPlayer('kkk', userId);
+
+    console.log(1111, userId, auction.participants);
+
+    await this.store.setActionStore(gameId, {
+      action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
+      userId: userId,
+      actionId: nanoid(4),
+    });
+
+    // nextIndex = this.getNextArrayIndex(nextIndex, players);
+    // if (nextIndex === actingIndex) {
+    //   await this.store.setAuctionStore(gameId, {
+    //     ...auction,
+    //     isEnded: true,
+    //   });
+    // }
   }
 
   async switchPlayerTurn(gameId: string, unJail: boolean) {

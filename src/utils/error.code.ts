@@ -10,4 +10,5 @@ export enum ErrorCode {
   'MaxFieldLevel' = 109,
   'CannotBuildBranch' = 110,
   'NoMonopoly' = 111,
+  'CannotStartAuction' = 112,
 }

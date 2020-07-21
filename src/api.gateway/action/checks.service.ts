@@ -50,6 +50,7 @@ export class ChecksService {
         type === FieldType.IT)
     );
   }
+
   async isChance(gameId: string, fieldId: number): Promise<boolean> {
     return (
       (await this.fields.getField(gameId, fieldId)).type === FieldType.CHANCE

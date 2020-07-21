@@ -141,6 +141,9 @@ export interface IDoNothing extends IOutcameBoardAction {
 
 export interface IAuctionModal extends IOutcameBoardAction {
   type: OutcomeMessageType.OUTCOME_AUCTION_MODAL;
+  field: BoardFieldsEntity;
+  auctionPrice: number;
+  auctionRound: number;
 }
 
 export interface IBoardEvent {

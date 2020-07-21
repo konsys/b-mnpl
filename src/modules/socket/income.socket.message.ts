@@ -152,8 +152,14 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_START_CLICKED)
   async fieldAuction(client: Socket, payload: IActionId): Promise<void> {
-    await this.actions.startAuctionModal('kkk');
-    // await this.actions.switchPlayerTurn('kkk', false);
+    const f = await this.fields.getActingField('kkk');
+    const canStart = await this.checks.isCompanyForSale('kkk', f.fieldId);
+    canStart
+      ? await this.actions.startAuctionModal('kkk')
+      : await this.store.setError('kkk', {
+          code: ErrorCode.CannotStartAuction,
+          message: 'Oops!',
+        });
 
     await this.service.emitMessage();
   }

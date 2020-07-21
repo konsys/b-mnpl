@@ -1,6 +1,7 @@
 import { IField, IFieldAction, IPlayer } from 'src/types/Board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
+import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { ICurrentAction } from './action.service';
 import { IPlayersStore } from '../users/users.service';
 import { Injectable } from '@nestjs/common';
@@ -22,6 +23,13 @@ export interface IBoardStore {
 
 export interface IFieldsStore {
   fields: IField[];
+}
+
+export interface IAuctionStore {
+  auctionRound: number;
+  auctionPrice: number;
+  field: BoardFieldsEntity;
+  userId: number;
 }
 
 export interface ITransactionStore {
@@ -50,6 +58,7 @@ export interface IStore {
   fields: string;
   transaction: string;
   players: string;
+  auction: string;
   error: string;
 }
 
@@ -61,6 +70,7 @@ const storeNames: IStore = {
   fields: 'fields',
   transaction: 'transaction',
   players: 'players',
+  auction: 'auction',
   error: 'error',
 };
 
@@ -140,6 +150,14 @@ export class StoreService {
 
   async getPlayersStore(gameId: string): Promise<IPlayersStore> {
     return (await this.get(gameId, storeNames.players)) as IPlayersStore;
+  }
+
+  async setAuction(gameId: string, data: IAuctionStore) {
+    await this.set(gameId, storeNames.auction, data);
+  }
+
+  async getAuction(gameId: string): Promise<IAuctionStore> {
+    return (await this.get(gameId, storeNames.auction)) as IAuctionStore;
   }
 
   async setError(gameId: string, data: IErrorMessage) {

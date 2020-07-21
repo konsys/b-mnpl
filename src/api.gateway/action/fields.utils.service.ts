@@ -42,7 +42,7 @@ export class FieldsUtilsService {
     return field;
   }
 
-  async getFieldById(gameId: string, fieldId: number) {
+  async getField(gameId: string, fieldId: number) {
     const fields = await this.getFields(gameId);
     return fields.find((v) => v.fieldId === fieldId);
   }
@@ -91,7 +91,7 @@ export class FieldsUtilsService {
       const group = await this.getPlayerGroupFields(
         gameId,
         field,
-        await this.players.getOnePlayer(gameId, field.status.userId),
+        await this.players.getPlayer(gameId, field.status.userId),
       );
       const dices = await this.store.getDicesStore(gameId);
       return (
@@ -196,7 +196,7 @@ export class FieldsUtilsService {
   }
 
   async mortgage(gameId: string, fieldId: number): Promise<void> {
-    const f = await this.getFieldById(gameId, fieldId);
+    const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
     await this.actionService.setPlayerActionEvent(gameId, {
@@ -278,7 +278,7 @@ export class FieldsUtilsService {
   }
 
   async unMortgage(gameId: string, fieldId: number): Promise<void> {
-    const f = await this.getFieldById(gameId, fieldId);
+    const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
     await this.actionService.setPlayerActionEvent(gameId, {
@@ -316,7 +316,7 @@ export class FieldsUtilsService {
   }
 
   async levelUpField(gameId: string, fieldId: number): Promise<void> {
-    const f = await this.getFieldById(gameId, fieldId);
+    const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
     await this.actionService.setPlayerActionEvent(gameId, {
@@ -353,7 +353,7 @@ export class FieldsUtilsService {
   }
 
   async levelDownField(gameId: string, fieldId: number): Promise<void> {
-    const f = await this.getFieldById(gameId, fieldId);
+    const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
     await this.actionService.setPlayerActionEvent(gameId, {

@@ -17,7 +17,7 @@ export class ChecksService {
   ) {}
 
   async isTax(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fields.getFieldById(gameId, fieldId);
+    const f = await this.fields.getField(gameId, fieldId);
 
     return f.type === FieldType.TAX;
   }
@@ -31,17 +31,17 @@ export class ChecksService {
 
   async isJail(gameId: string, fieldId: number): Promise<boolean> {
     return (
-      (await this.fields.getFieldById(gameId, fieldId)).type === FieldType.JAIL
+      (await this.fields.getField(gameId, fieldId)).type === FieldType.JAIL
     );
   }
 
   async isFieldMortgaged(gameId: string, fieldId: number): Promise<boolean> {
-    const field = await this.fields.getFieldById(gameId, fieldId);
+    const field = await this.fields.getField(gameId, fieldId);
     return field && field.status && field.status.mortgaged > 0;
   }
 
   async isCompany(gameId: string, fieldId: number) {
-    const type = (await this.fields.getFieldById(gameId, fieldId)).type;
+    const type = (await this.fields.getField(gameId, fieldId)).type;
 
     return (
       type &&
@@ -52,20 +52,19 @@ export class ChecksService {
   }
   async isChance(gameId: string, fieldId: number): Promise<boolean> {
     return (
-      (await this.fields.getFieldById(gameId, fieldId)).type ===
-      FieldType.CHANCE
+      (await this.fields.getField(gameId, fieldId)).type === FieldType.CHANCE
     );
   }
 
   async isCompanyForSale(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fields.getFieldById(gameId, fieldId);
+    const f = await this.fields.getField(gameId, fieldId);
     const isCompany = await this.isCompany(gameId, f.fieldId);
 
     return isCompany && f && !f.status;
   }
 
   async isMyField(gameId: string, fieldId: number): Promise<boolean> {
-    const field = await this.fields.getFieldById(gameId, fieldId);
+    const field = await this.fields.getField(gameId, fieldId);
     return (
       (await this.isCompany(gameId, fieldId)) &&
       field.status &&
@@ -80,19 +79,18 @@ export class ChecksService {
   ): Promise<boolean> {
     return (
       (await this.isCompany(gameId, fieldId)) &&
-      (await this.fields.getFieldById(gameId, fieldId)).price.startPrice <=
-        p.money
+      (await this.fields.getField(gameId, fieldId)).price.startPrice <= p.money
     );
   }
 
   async whosField(gameId: string, fieldId: number): Promise<number> {
-    const f = await this.fields.getFieldById(gameId, fieldId);
+    const f = await this.fields.getField(gameId, fieldId);
 
     return (f.status && f.status.userId) || BOARD_PARAMS.BANK_PLAYER_ID;
   }
 
   async noActionField(gameId: string, fieldId: number): Promise<boolean> {
-    const field = await this.fields.getFieldById(gameId, fieldId);
+    const field = await this.fields.getField(gameId, fieldId);
 
     return (
       field.type === FieldType.TAKE_REST || field.type === FieldType.CASINO
@@ -122,7 +120,7 @@ export class ChecksService {
   }
 
   async canMortgage(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fields.getFieldById(gameId, fieldId);
+    const f = await this.fields.getField(gameId, fieldId);
     const hasBranches = await this.groupHasBranches(gameId, f);
 
     return (
@@ -135,7 +133,7 @@ export class ChecksService {
   }
 
   async canUnMortgage(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fields.getFieldById(gameId, fieldId);
+    const f = await this.fields.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
     return (
       f &&
@@ -147,7 +145,7 @@ export class ChecksService {
   }
 
   async canLevelUp(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fields.getFieldById(gameId, fieldId);
+    const f = await this.fields.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
     const m = await this.playerHasMonopoly(gameId, f, p);
     const isMortgaged = await this.isGroupMortgaged(gameId, f);
@@ -184,7 +182,7 @@ export class ChecksService {
   }
 
   async canLevelDown(gameId: string, fieldId: number): Promise<boolean> {
-    const f = await this.fields.getFieldById(gameId, fieldId);
+    const f = await this.fields.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
     const hasMonopoly = await this.playerHasMonopoly(gameId, f, p);
     const isMortgaged = await this.isGroupMortgaged(gameId, f);

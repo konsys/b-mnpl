@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid';
 export class PlayersUtilsService {
   constructor(private readonly store: StoreService) {}
 
-  async getOnePlayer(gameId: string, userId: number): Promise<IPlayer> {
+  async getPlayer(gameId: string, userId: number): Promise<IPlayer> {
     const bank = await this.store.getBankStore(gameId);
     const players = await this.getPlayers(gameId);
     return userId === BOARD_PARAMS.BANK_PLAYER_ID

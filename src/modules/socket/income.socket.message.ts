@@ -164,12 +164,26 @@ export class IncomeSocketMessage {
     await this.service.emitMessage();
   }
 
-  @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_START_CLICKED)
-  async fieldAcceptAuction(client: Socket, payload: IActionId): Promise<void> {
+  @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_ACCEPT_CLICKED)
+  async acceptAuction(client: Socket, payload: IActionId): Promise<void> {
     const f = await this.fields.getActingField('kkk');
     const canStart = await this.checks.isCompanyForSale('kkk', f.fieldId);
     canStart
-      ? await this.actions.startAuctionModal('kkk')
+      ? await this.actions.acceptAuctionModal('kkk')
+      : await this.store.setError('kkk', {
+          code: ErrorCode.CannotStartAuction,
+          message: 'Oops!',
+        });
+
+    await this.service.emitMessage();
+  }
+
+  @SubscribeMessage(IncomeMessageType.INCOME_AUCTION_DECLINE_CLICKED)
+  async declineAuction(client: Socket, payload: IActionId): Promise<void> {
+    const f = await this.fields.getActingField('kkk');
+    const canStart = await this.checks.isCompanyForSale('kkk', f.fieldId);
+    canStart
+      ? await this.actions.declineAuctionModal('kkk')
       : await this.store.setError('kkk', {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',

@@ -131,23 +131,19 @@ export class ActionService {
 
     let userId = auction.participants[0];
 
-    // const player = await this.players.getPlayer('kkk', userId);
-
-    console.log(1111, userId, auction.participants);
-
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
       userId: userId,
       actionId: nanoid(4),
     });
+  }
 
-    // nextIndex = this.getNextArrayIndex(nextIndex, players);
-    // if (nextIndex === actingIndex) {
-    //   await this.store.setAuctionStore(gameId, {
-    //     ...auction,
-    //     isEnded: true,
-    //   });
-    // }
+  async acceptAuctionModal(gameId: string) {
+    console.log('accept');
+  }
+
+  async declineAuctionModal(gameId: string) {
+    console.log('decline');
   }
 
   async switchPlayerTurn(gameId: string, unJail: boolean) {

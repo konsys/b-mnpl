@@ -29,6 +29,7 @@ export interface IAuctionStore {
   bet: number;
   field: BoardFieldsEntity;
   userId: number;
+  isEnded: boolean;
 }
 
 export interface ITransactionStore {

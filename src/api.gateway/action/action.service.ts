@@ -108,13 +108,28 @@ export class ActionService {
   async startAuctionModal(gameId: string) {
     const players = await this.players.getPlayers('kkk');
     const actingIndex = await this.players.getActingPlayerIndex('kkk');
-    console.log(players);
-    const nextIndex = this.getNextArrayIndex(actingIndex, players);
-    await this.store.setActionStore(gameId, {
-      action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
-      userId: players[nextIndex].userId,
-      actionId: nanoid(4),
-    });
+    const f = await this.fields.getActingField('kkk');
+    const auction = await this.store.getAuctionStore('kkk');
+    let nextIndex = this.getNextArrayIndex(actingIndex, players);
+    while (nextIndex !== actingIndex) {
+      nextIndex = this.getNextArrayIndex(actingIndex, players);
+      const player = players[nextIndex];
+      if (f.price.startPrice < player.money) {
+        await this.store.setActionStore(gameId, {
+          action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
+          userId: players[nextIndex].userId,
+          actionId: nanoid(4),
+        });
+        break;
+      }
+      if (nextIndex === actingIndex) {
+        await this.store.setAuctionStore(gameId, {
+          ...auction,
+          isEnded: true,
+        });
+        await this.switchPlayerTurn('kkk', false);
+      }
+    }
   }
 
   async switchPlayerTurn(gameId: string, unJail: boolean) {

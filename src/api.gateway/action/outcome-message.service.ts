@@ -139,6 +139,7 @@ export class OutcomeMessageService {
         field,
         bet: field.price.startPrice,
         userId: action.userId,
+        isEnded: false,
       });
     }
     auction = await this.store.getAuctionStore(gameId);

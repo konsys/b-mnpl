@@ -152,11 +152,11 @@ export class StoreService {
     return (await this.get(gameId, storeNames.players)) as IPlayersStore;
   }
 
-  async setAuction(gameId: string, data: IAuctionStore) {
+  async setAuctionStore(gameId: string, data: IAuctionStore) {
     await this.set(gameId, storeNames.auction, data);
   }
 
-  async getAuction(gameId: string): Promise<IAuctionStore> {
+  async getAuctionStore(gameId: string): Promise<IAuctionStore> {
     return (await this.get(gameId, storeNames.auction)) as IAuctionStore;
   }
 

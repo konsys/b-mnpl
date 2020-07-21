@@ -133,22 +133,24 @@ export class OutcomeMessageService {
   auctionMessage = async (gameId: string): Promise<IAuctionModal> => {
     const action = await this.actions.getAction(gameId);
     const field = await this.fields.getActingField(gameId);
-    const auction = await this.store.getActionStore(gameId);
+    let auction = await this.store.getAuctionStore(gameId);
     if (!auction) {
-      await this.store.setAuction(gameId, {
+      await this.store.setAuctionStore(gameId, {
         field,
         auctionRound: 1,
         auctionPrice: field.price.startPrice,
         userId: action.userId,
       });
     }
+    auction = await this.store.getAuctionStore(gameId);
+
     return {
       type: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
       _id: nanoid(),
       userId: action.userId,
       field,
-      auctionPrice: 1000,
-      auctionRound: 1,
+      auctionPrice: auction.auctionPrice,
+      auctionRound: auction.auctionRound,
       isModal: true,
     };
   };

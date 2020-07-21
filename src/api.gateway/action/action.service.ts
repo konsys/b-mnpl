@@ -111,8 +111,8 @@ export class ActionService {
     const f = await this.fields.getActingField('kkk');
     const auction = await this.store.getAuctionStore('kkk');
     let nextIndex = this.getNextArrayIndex(actingIndex, players);
+
     while (nextIndex !== actingIndex) {
-      nextIndex = this.getNextArrayIndex(actingIndex, players);
       const player = players[nextIndex];
       if (f.price.startPrice < player.money) {
         await this.store.setActionStore(gameId, {
@@ -122,6 +122,7 @@ export class ActionService {
         });
         break;
       }
+      nextIndex = this.getNextArrayIndex(nextIndex, players);
       if (nextIndex === actingIndex) {
         await this.store.setAuctionStore(gameId, {
           ...auction,

@@ -148,6 +148,8 @@ export class OutcomeMessageService {
       type: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
       _id: nanoid(),
       userId: action.userId,
+      title: 'Аукцион начался',
+      text: `Поле ${field.name} выставлено на аукцион. Цена ${auction.auctionPrice}$`,
       field,
       auctionPrice: auction.auctionPrice,
       auctionRound: auction.auctionRound,

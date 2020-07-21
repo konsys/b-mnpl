@@ -144,6 +144,8 @@ export interface IAuctionModal extends IOutcameBoardAction {
   field: BoardFieldsEntity;
   auctionPrice: number;
   auctionRound: number;
+  title: string;
+  text: string;
 }
 
 export interface IBoardEvent {

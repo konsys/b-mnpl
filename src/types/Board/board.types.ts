@@ -138,6 +138,11 @@ export interface IShowCanBuyModal extends IOutcameBoardAction {
 export interface IDoNothing extends IOutcameBoardAction {
   type: OutcomeMessageType.DO_NOTHING;
 }
+
+export interface IAuctionModal extends IOutcameBoardAction {
+  type: OutcomeMessageType.OUTCOME_AUCTION_MODAL;
+}
+
 export interface IBoardEvent {
   action:
     | IDicesModal
@@ -147,7 +152,8 @@ export interface IBoardEvent {
     | IUnJailModal
     | IUnJailPayingModal
     | IRollDicesMessage
-    | IDoNothing;
+    | IDoNothing
+    | IAuctionModal;
 }
 
 interface IBoardEventData {

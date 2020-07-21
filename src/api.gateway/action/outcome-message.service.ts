@@ -1,4 +1,5 @@
 import {
+  IAuctionModal,
   IDicesModal,
   IDoNothing,
   IPayRentModal,
@@ -10,6 +11,7 @@ import {
   OutcomeMessageType,
 } from 'src/types/Board/board.types';
 
+import { ActionService } from './action.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { DicesService } from './dices.service';
 import { FieldsUtilsService } from './fields.utils.service';
@@ -25,6 +27,7 @@ export class OutcomeMessageService {
     private readonly store: StoreService,
     private readonly dices: DicesService,
     private readonly players: PlayersUtilsService,
+    private readonly actions: ActionService,
   ) {}
 
   rollDicesModalMessage = async (gameId: string): Promise<IDicesModal> => ({
@@ -127,6 +130,17 @@ export class OutcomeMessageService {
     };
   };
 
+  auctionMessage = async (gameId: string): Promise<IAuctionModal> => {
+    const action = await this.actions.getAction(gameId);
+    console.log(action);
+    return {
+      type: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
+      _id: nanoid(),
+      userId: action.userId,
+      isModal: false,
+    };
+  };
+
   // When emit message action store to action message adapter
   actionTypeToEventAdapter = async (
     gameId: string,
@@ -153,6 +167,9 @@ export class OutcomeMessageService {
 
       case OutcomeMessageType.DO_NOTHING:
         return await this.doNothingMessage(gameId);
+
+      case OutcomeMessageType.OUTCOME_AUCTION_MODAL:
+        return await this.auctionMessage(gameId);
     }
   };
 }

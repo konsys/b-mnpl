@@ -11,6 +11,7 @@ import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
+import { throwIfEmpty } from 'rxjs/operators';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -106,10 +107,12 @@ export class ActionService {
 
   async startAuctionModal(gameId: string) {
     const players = await this.players.getPlayers('kkk');
+    const actingIndex = await this.players.getActingPlayerIndex('kkk');
     console.log(players);
+    const nextIndex = this.getNextArrayIndex(actingIndex, players);
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
-      userId: (await this.players.getActingPlayer(gameId)).userId,
+      userId: players[nextIndex].userId,
       actionId: nanoid(4),
     });
   }
@@ -168,6 +171,10 @@ export class ActionService {
   async setPlayerActionEvent(gameId: string, playerActions: any) {
     const prev = await this.store.getActionStore(gameId);
     await this.store.setActionStore(gameId, playerActions);
+  }
+
+  async getAction(gameId: string) {
+    return await this.store.getActionStore(gameId);
   }
 
   private getNextArrayIndex(index: number, array: any[]) {

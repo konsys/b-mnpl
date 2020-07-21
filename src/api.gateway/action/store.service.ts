@@ -26,8 +26,7 @@ export interface IFieldsStore {
 }
 
 export interface IAuctionStore {
-  auctionRound: number;
-  auctionPrice: number;
+  bet: number;
   field: BoardFieldsEntity;
   userId: number;
 }

@@ -137,8 +137,7 @@ export class OutcomeMessageService {
     if (!auction) {
       await this.store.setAuctionStore(gameId, {
         field,
-        auctionRound: 1,
-        auctionPrice: field.price.startPrice,
+        bet: field.price.startPrice,
         userId: action.userId,
       });
     }
@@ -149,10 +148,9 @@ export class OutcomeMessageService {
       _id: nanoid(),
       userId: action.userId,
       title: 'Аукцион начался',
-      text: `Поле ${field.name} выставлено на аукцион. Цена ${auction.auctionPrice}$`,
+      text: `Поле ${field.name} выставлено на аукцион. Цена ${auction.bet}$`,
       field,
-      auctionPrice: auction.auctionPrice,
-      auctionRound: auction.auctionRound,
+      bet: auction.bet,
       isModal: true,
     };
   };

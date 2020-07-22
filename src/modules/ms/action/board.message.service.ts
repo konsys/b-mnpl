@@ -87,6 +87,7 @@ export class BoardMessageService {
   }
 
   async onModuleInit() {
+    await this.store.flushGame('kkk');
     await this.initStores('kkk');
     const message = await this.createBoardMessage('kkk');
 

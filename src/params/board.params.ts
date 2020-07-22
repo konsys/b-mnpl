@@ -21,5 +21,5 @@ export const BOARD_PARAMS = {
   REDIS_TTL: 3600 * 3,
 
   ERROR_CHANNEL: 'errorChannel',
-  MESSAGE_CHANNEL: 'errorChannel',
+  MESSAGE_CHANNEL: 'messageChannel',
 };

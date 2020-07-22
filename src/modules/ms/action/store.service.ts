@@ -182,16 +182,17 @@ export class StoreService {
   }
 
   async sendMessage(gameId: string, data: BoardMessage) {
+    console.log(44444, data);
     await redis.publish(
       `${BOARD_PARAMS.MESSAGE_CHANNEL}`,
       JSON.stringify(data),
     );
+
     await this.set(gameId, storeNames.message, data);
   }
 
   async resetError(gameId: string) {
-    const pipeline = redis.pipeline();
-    await pipeline.del(`${gameId}-${storeNames.error}`);
+    await redis.del(`${gameId}-${storeNames.error}`);
   }
 
   private async set(gameId: string, serviceName: string, data: any) {

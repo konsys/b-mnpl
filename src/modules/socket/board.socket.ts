@@ -38,20 +38,22 @@ export class BoardSocket
     BoardSocket.socketServer.emit(SocketActions.ERROR_MESSAGE, error);
   }
 
-  afterInit(server: Server) {
-    BoardSocket.socketServer = server;
-    this.logger.log('Init: ' + server);
-
+  beforeInit() {
     errorSubscriber.on('message', async (chanel: any, message: string) => {
-      console.log(234234234);
+      console.log(22222);
       await this.emitError(JSON.parse(message));
     });
     errorSubscriber.subscribe(BOARD_PARAMS.ERROR_CHANNEL);
 
     messageSubscriber.on('message', async (chanel: any, message: string) => {
+      console.log(11111);
       await this.emitError(JSON.parse(message));
     });
     messageSubscriber.subscribe(BOARD_PARAMS.MESSAGE_CHANNEL);
+  }
+  afterInit(server: Server) {
+    BoardSocket.socketServer = server;
+    this.logger.log('Init: ' + server);
   }
 
   handleDisconnect(client: Socket) {

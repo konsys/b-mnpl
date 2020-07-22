@@ -12,6 +12,11 @@ export class ActionMsController {
   ) {}
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED })
+  async initPlayers(gameId: string) {
+    await this.message.initPlayers(gameId, []);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED })
   async rollDices(gameId: string) {
     await this.service.dicesModal(gameId);
     await this.message.createBoardMessage(gameId);

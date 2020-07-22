@@ -164,7 +164,7 @@ export class IncomeMessageService {
   async dicesModal(gameId: string): Promise<void> {
     try {
       await this.actions.rollDicesAction(gameId);
-
+      await this.store.sendMessage(gameId);
       await this.getNextAction(gameId);
       setTimeout(async () => {}, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
     } catch (err) {

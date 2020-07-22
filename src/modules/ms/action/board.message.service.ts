@@ -16,6 +16,8 @@ import { StoreService } from './store.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { nanoid } from 'nanoid';
+import { UsersEntity } from 'src/entities/users.entity';
+import { PlayersUtilsService } from './players.utils.service';
 
 const bank: IPlayer = {
   userId: BOARD_PARAMS.BANK_PLAYER_ID,
@@ -54,6 +56,7 @@ export class BoardMessageService {
     private readonly fields: FieldsUtilsService,
     private readonly store: StoreService,
     private readonly outcomeMessage: OutcomeMessageService,
+    private readonly players: PlayersUtilsService,
     @Inject(MsNames.FIELDS)
     private readonly fieldsMs: ClientProxy,
   ) {}
@@ -91,7 +94,7 @@ export class BoardMessageService {
     await this.initStores('kkk');
     const message = await this.createBoardMessage('kkk');
 
-    await this.store.sendMessage('kkk', message);
+    await this.store.sendMessage('kkk');
   }
 
   async initStores(gameId: string) {
@@ -132,5 +135,53 @@ export class BoardMessageService {
     } catch (err) {
       console.log('ERROR ERROR', err);
     }
+  }
+
+  async initPlayers(gameId: string, players: UsersEntity[]) {
+    const resultPlayers = [];
+    if (players.length > 0) {
+      // Случайная очередь ходов
+      const ids = players.map((v) => v.userId).sort(() => Math.random() - 0.5);
+
+      // Заполняем статус
+      players = players.map((v, k) => {
+        v = new UsersEntity(v);
+        return {
+          ...v,
+          gameId,
+          doublesRolledAsCombo: 0,
+          jailed: 0,
+          unjailAttempts: 0,
+          meanPosition: 0,
+          money: BOARD_PARAMS.INIT_MONEY,
+          creditPayRound: false,
+          creditNextTakeRound: 0,
+          score: 0,
+          timeReduceLevel: 0,
+          creditToPay: 0,
+          frags: '',
+          additionalTime: 0,
+          canUseCredit: v.vip,
+          moveOrder: ids.findIndex((id) => id === v.userId),
+          isActing: ids[0] === v.userId,
+          movesLeft: 0,
+        };
+      });
+
+      // Заполняем массив в порядке очереди ходов
+      ids.map((id) => {
+        resultPlayers.push(players.find((v) => v.userId === id));
+      });
+
+      await this.store.setActionStore(gameId, {
+        action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
+        userId: resultPlayers.find((v) => v.moveOrder === 0).userId,
+        actionId: nanoid(4),
+      });
+    }
+
+    await this.players.updateAllPLayers('kkk', resultPlayers);
+
+    const st = await this.store.getPlayersStore('kkk');
   }
 }

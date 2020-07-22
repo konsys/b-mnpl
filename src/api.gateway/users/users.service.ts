@@ -3,7 +3,7 @@ import { Injectable, Logger, Inject } from '@nestjs/common';
 
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
-import { MsPatterns, MsNames } from 'src/types/ms/ms.types';
+import { MsPatterns, MsNames, MsPatternsActions } from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { users } from 'src/entities/dbData';
 
@@ -49,6 +49,21 @@ export class UsersService {
     try {
       const res = await this.proxy
         .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
+        .toPromise();
+
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
+  async initPlayers(players: UsersEntity[]): Promise<any> {
+    try {
+      const res = await this.proxy
+        .send<any>(
+          { cmd: MsPatternsActions.INIT_PLAYERS },
+          { gameId: 'kkk', players },
+        )
         .toPromise();
 
       return res;

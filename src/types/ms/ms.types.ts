@@ -13,4 +13,6 @@ export enum MsPatterns {
   SAVE_USERS = 'saveUsers',
 }
 
-export enum MsPatternsActions {}
+export enum MsPatternsActions {
+  INIT_PLAYERS = 'initPlayers',
+}

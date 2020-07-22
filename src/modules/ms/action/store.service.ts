@@ -1,4 +1,9 @@
-import { IField, IFieldAction, IPlayer } from 'src/types/board/board.types';
+import {
+  BoardMessage,
+  IField,
+  IFieldAction,
+  IPlayer,
+} from 'src/types/board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
@@ -61,6 +66,7 @@ export interface IStore {
   players: string;
   auction: string;
   error: string;
+  message: string;
 }
 
 const storeNames: IStore = {
@@ -73,6 +79,7 @@ const storeNames: IStore = {
   players: 'players',
   auction: 'auction',
   error: 'error',
+  message: 'message',
 };
 
 export interface IErrorMessage {
@@ -172,6 +179,14 @@ export class StoreService {
 
   async getError(gameId: string): Promise<IErrorMessage> {
     return (await this.get(gameId, storeNames.error)) as IErrorMessage;
+  }
+
+  async sendMessage(gameId: string, data: BoardMessage) {
+    await redis.publish(
+      `${gameId}-${storeNames.message}`,
+      JSON.stringify(data),
+    );
+    await this.set(gameId, storeNames.message, data);
   }
 
   async resetError(gameId: string) {

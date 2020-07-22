@@ -182,7 +182,6 @@ export class StoreService {
   }
 
   async sendMessage(gameId: string, data: BoardMessage) {
-    console.log(44444, data);
     await redis.publish(
       `${BOARD_PARAMS.MESSAGE_CHANNEL}`,
       JSON.stringify(data),

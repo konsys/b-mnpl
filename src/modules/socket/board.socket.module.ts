@@ -9,7 +9,7 @@ import { DicesService } from 'src/modules/ms/action/dices.service';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/modules/ms/action/fields.utils.service';
 import { IncomeMessageService } from 'src/modules/ms/action/income-message.service';
-import { IncomeSocketMessage } from './income.socket.message';
+// import { IncomeSocketMessage } from './income.socket.message';
 import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
 import { OutcomeMessageService } from 'src/modules/ms/action/outcome-message.service';
@@ -40,7 +40,7 @@ import { TransactionsService } from 'src/modules/ms/action/transactions.service'
     OutcomeMessageService,
     BoardService,
     DicesService,
-    IncomeSocketMessage,
+    // IncomeSocketMessage,
   ],
   controllers: [],
 })

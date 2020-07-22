@@ -1,17 +1,55 @@
 import {
   IncomeMessageType,
   OutcomeMessageType,
+  IFieldAction,
+  IField,
+  IPlayer,
 } from 'src/types/board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardService } from './board.service';
 import { FieldsUtilsService } from './fields.utils.service';
-import { Injectable, forwardRef, Inject } from '@nestjs/common';
+import { Injectable, forwardRef, Inject, Logger } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
-import { StoreService } from './store.service';
+import { StoreService, ERROR_CHANEL } from './store.service';
 import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
 import _ from 'lodash';
+import { FieldType } from 'src/entities/board.fields.entity';
+import { subscriber } from 'src/main';
+import { IncomeMessageService } from './income-message.service';
+
+const bank: IPlayer = {
+  userId: BOARD_PARAMS.BANK_PLAYER_ID,
+  money: 100000,
+  password: 'bank',
+  vip: true,
+  registrationType: 'none',
+  name: 'BANK',
+  email: 'b@b.ru',
+  team: null,
+  avatar: '',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  isActive: false,
+  isBlocked: true,
+  isActing: false,
+  gameId: '',
+  doublesRolledAsCombo: 0,
+  jailed: 0,
+  unjailAttempts: 0,
+  meanPosition: 0,
+  creditPayRound: false,
+  creditNextTakeRound: 0,
+  score: 0,
+  additionalTime: 0,
+  timeReduceLevel: 0,
+  creditToPay: 0,
+  canUseCredit: false,
+  moveOrder: 0,
+  isAlive: false,
+  movesLeft: 0,
+};
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -21,11 +59,14 @@ export interface ICurrentAction {
 
 @Injectable()
 export class ActionService {
+  private logger: Logger = new Logger('ActionService');
+
   constructor(
     private readonly players: PlayersUtilsService,
     private readonly transaction: TransactionsService,
     private readonly boardService: BoardService,
     private readonly store: StoreService,
+    private readonly income: IncomeMessageService,
     @Inject(forwardRef(() => FieldsUtilsService))
     private readonly fields: FieldsUtilsService,
   ) {}
@@ -257,4 +298,42 @@ export class ActionService {
     const ind = index < array.length - 1 ? index + 1 : 0;
     return array[ind];
   }
+
+  // private async initStores(gameId: string) {
+  //   this.store;
+  //   try {
+  //     const fields: IField[] = await this.fieldsService.getInitialFields();
+
+  //     const r = fields.map((v: IField, k) => ({
+  //       ...v,
+  //       status: v.type === FieldType.COMPANY &&
+  //         v.fieldGroup === 1 &&
+  //         k < 4 && {
+  //           fieldId: v.fieldId,
+  //           userId: 2,
+  //           branches: 0,
+  //           mortgaged: 0,
+  //           fieldActions: [IFieldAction.MORTGAGE],
+  //         },
+  //     }));
+
+  //     await this.fields.updateAllFields(gameId, r);
+
+  //     await this.store.setBoardStore(gameId, {
+  //       isNewRound: false,
+  //       gameRound: 0,
+  //       playersTurn: 0,
+  //       playerActions: [],
+  //     });
+  //     this.store.setBankStore('kkk', bank);
+
+  //     const ch = `kkk-${ERROR_CHANEL}`;
+  //     subscriber.on('message', async (chanel: any, message: string) => {
+  //       await this.income.emitError(JSON.parse(message));
+  //     });
+  //     subscriber.subscribe(ch);
+  //   } catch (err) {
+  //     this.logger.error(`Error on initStores: ${JSON.stringify(err)}`);
+  //   }
+  // }
 }

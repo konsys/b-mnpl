@@ -1,3 +1,5 @@
+import { IErrorMessage, StoreService } from './store.service';
+
 import { ActionService } from './action.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardSocket } from 'src/modules/socket/board.socket';
@@ -7,12 +9,24 @@ import { FieldsUtilsService } from './fields.utils.service';
 import { IFieldId } from 'src/types/board/board.types';
 import { Injectable } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
-import { StoreService } from './store.service';
+import { SocketActions } from 'src/types/game/game.types';
 import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
 
 @Injectable()
 export class IncomeMessageService {
+  async onModuleInit() {
+    await this.store.flushGame('kkk');
+
+    try {
+      setInterval(() => {
+        // BoardSocket.emitMessage();
+      }, 8000);
+    } catch (err) {
+      console.error('Error on onModuleInit' + err);
+    }
+  }
+
   constructor(
     private readonly service: BoardSocket,
     private readonly players: PlayersUtilsService,
@@ -264,5 +278,10 @@ export class IncomeMessageService {
     } catch (e) {
       console.log('Error', e);
     }
+  }
+
+  public async emitError(error: IErrorMessage) {
+    BoardSocket.socketServer.emit(SocketActions.ERROR_MESSAGE, error);
+    await this.store.resetError('kkk');
   }
 }

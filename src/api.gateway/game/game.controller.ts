@@ -4,7 +4,7 @@ import { GameService } from './game.service';
 
 @Controller('game')
 export class GameController {
-  constructor(private readonly income: GameService) {}
+  constructor(private readonly service: GameService) {}
 
   @Post('action')
   @HttpCode(200)
@@ -15,37 +15,37 @@ export class GameController {
   ): Promise<string> {
     switch (action) {
       case IncomeMessageType.INCOME_ROLL_DICES_CLICKED:
-        await this.income.dicesModal();
+        await this.service.dicesModal();
 
       case IncomeMessageType.INCOME_BUY_FIELD_CLICKED:
-        await this.income.fieldBought();
+        await this.service.fieldBought();
 
       case IncomeMessageType.INCOME_AUCTION_START_CLICKED:
-        await this.income.fieldAuction();
+        await this.service.fieldAuction();
 
       case IncomeMessageType.INCOME_AUCTION_ACCEPT_CLICKED:
-        await this.income.acceptAuction();
+        await this.service.acceptAuction();
 
       case IncomeMessageType.INCOME_AUCTION_DECLINE_CLICKED:
-        await this.income.declineAuction();
+        await this.service.declineAuction();
 
       case IncomeMessageType.INCOME_TAX_PAID_CLICKED:
-        await this.income.payment();
+        await this.service.payment();
 
       case IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED:
-        await this.income.unJailPayment();
+        await this.service.unJailPayment();
 
       case IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED:
-        await this.income.mortgageField(payload);
+        await this.service.mortgageField(payload);
 
       case IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED:
-        await this.income.unMortgageField(payload);
+        await this.service.unMortgageField(payload);
 
       case IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED:
-        await this.income.levelUpField(payload);
+        await this.service.levelUpField(payload);
 
       case IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED:
-        await this.income.levelDownField(payload);
+        await this.service.levelDownField(payload);
     }
 
     return JSON.stringify({ code: 0 });

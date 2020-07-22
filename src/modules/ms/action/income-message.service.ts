@@ -17,18 +17,9 @@ import { nanoid } from 'nanoid';
 export class IncomeMessageService {
   async onModuleInit() {
     await this.store.flushGame('kkk');
-
-    try {
-      setInterval(() => {
-        // BoardSocket.emitMessage();
-      }, 8000);
-    } catch (err) {
-      console.error('Error on onModuleInit' + err);
-    }
   }
 
   constructor(
-    private readonly service: BoardSocket,
     private readonly players: PlayersUtilsService,
     private readonly fields: FieldsUtilsService,
     private readonly actions: ActionService,
@@ -46,7 +37,6 @@ export class IncomeMessageService {
     } else {
       await this.fields.levelDownField('kkk', payload.fieldId);
     }
-    await this.service.emitMessage();
   }
 
   async levelUpField(payload: IFieldId): Promise<void> {
@@ -58,7 +48,6 @@ export class IncomeMessageService {
     } else {
       await this.fields.levelUpField('kkk', payload.fieldId);
     }
-    await this.service.emitMessage();
   }
 
   async unMortgageField(payload: IFieldId): Promise<void> {
@@ -71,7 +60,6 @@ export class IncomeMessageService {
       await this.fields.unMortgage('kkk', payload.fieldId);
       await this.getNextAction('kkk');
     }
-    await this.service.emitMessage();
   }
 
   async mortgageField(payload: IFieldId): Promise<void> {
@@ -84,15 +72,13 @@ export class IncomeMessageService {
       await this.fields.mortgage('kkk', payload.fieldId);
       await this.getNextAction('kkk');
     }
-    await this.service.emitMessage();
   }
 
   async unJailPayment(): Promise<void> {
     await this.players.unjailPlayer('kkk');
-    await this.service.emitMessage();
+
     setTimeout(async () => {
       await this.actions.rollDicesModal('kkk');
-      await this.service.emitMessage();
     }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 2);
   }
 
@@ -112,7 +98,6 @@ export class IncomeMessageService {
         message: 'Oops!',
       });
     }
-    await this.service.emitMessage();
   }
 
   async declineAuction(): Promise<void> {
@@ -124,8 +109,6 @@ export class IncomeMessageService {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',
         });
-
-    await this.service.emitMessage();
   }
 
   async acceptAuction(): Promise<void> {
@@ -137,8 +120,6 @@ export class IncomeMessageService {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',
         });
-
-    await this.service.emitMessage();
   }
 
   async fieldAuction(): Promise<void> {
@@ -150,8 +131,6 @@ export class IncomeMessageService {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',
         });
-
-    await this.service.emitMessage();
   }
 
   async fieldBought(): Promise<void> {
@@ -180,18 +159,14 @@ export class IncomeMessageService {
         message: 'Oops!',
       });
     }
-    await this.service.emitMessage();
   }
 
   async dicesModal(gameId: string): Promise<void> {
     try {
       await this.actions.rollDicesAction(gameId);
-      await this.service.emitMessage();
 
       await this.getNextAction(gameId);
-      setTimeout(async () => {
-        await this.service.emitMessage();
-      }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
+      setTimeout(async () => {}, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
     } catch (err) {
       console.log('Error in dicesModal', err);
     }

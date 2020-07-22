@@ -27,7 +27,6 @@ export class ActionService {
     private readonly players: PlayersUtilsService,
     private readonly transaction: TransactionsService,
     private readonly boardService: BoardService,
-    @Inject(forwardRef(() => StoreService))
     private readonly store: StoreService,
     @Inject(forwardRef(() => FieldsUtilsService))
     private readonly fields: FieldsUtilsService,

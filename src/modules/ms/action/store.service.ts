@@ -4,7 +4,7 @@ import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { BoardMessageService } from './board.message.service';
-import { ICurrentAction } from './action.service';
+import { ICurrentAction, ActionService } from './action.service';
 import { IPlayersStore } from '../../../api.gateway/users/users.service';
 import { redis } from 'src/main';
 
@@ -87,9 +87,15 @@ export const ERROR_CHANEL = `${storeNames.error}`;
 // Redis Commands https://github.com/NodeRedis/node-redis/tree/master/test/commands
 @Injectable()
 export class StoreService {
-  constructor(private readonly message: BoardMessageService) {}
+  constructor(
+    @Inject(forwardRef(() => ActionService))
+    private readonly action: ActionService,
+    @Inject(forwardRef(() => BoardMessageService))
+    private readonly message: BoardMessageService,
+  ) {}
 
   async flushGame(gameId: string) {
+    await this.action.getAction('kkk');
     for (const k of Object.values(storeNames)) {
       await redis.del(`${gameId}-${k}`);
     }

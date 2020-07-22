@@ -54,6 +54,7 @@ const bank: IPlayer = {
 export class BoardMessageService {
   constructor(
     private readonly fields: FieldsUtilsService,
+    @Inject(forwardRef(() => StoreService))
     private readonly store: StoreService,
     private readonly outcomeMessage: OutcomeMessageService,
     private readonly players: PlayersUtilsService,

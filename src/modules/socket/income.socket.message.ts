@@ -128,25 +128,31 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)
   async fieldBought(client: Socket, payload: IActionId): Promise<void> {
-    const f = await this.fields.getActingField('kkk');
-    const p = await this.players.getActingPlayer('kkk');
-    if (await this.checks.canBuyField('kkk', f.fieldId, p)) {
-      await this.actions.buyField('kkk');
-      await this.actions.switchPlayerTurn('kkk', false);
-    } else {
-      !(await this.checks.isCompanyForSale('kkk', f.fieldId)) &&
-        (await this.store.setError('kkk', {
-          code: ErrorCode.CompanyHasOwner,
-          message: 'Oops!',
-        }));
-
-      !(await this.checks.canBuyField('kkk', f.fieldId, p)) &&
-        (await this.store.setError('kkk', {
-          code: ErrorCode.NotEnoughMoney,
-          message: 'Oops!',
-        }));
+    const gameId = 'kkk';
+    const f = await this.fields.getActingField(gameId);
+    const p = await this.players.getActingPlayer(gameId);
+    if (
+      (await this.checks.isCompanyForSale(gameId, f.fieldId)) &&
+      (await this.checks.canBuyField(gameId, f.fieldId, p))
+    ) {
+      await this.actions.buyField(
+        gameId,
+        f.fieldId,
+        p.userId,
+        f.price.startPrice,
+      );
+      await this.actions.switchPlayerTurn(gameId, false);
+    } else if (!(await this.checks.isCompanyForSale(gameId, f.fieldId))) {
+      await this.store.setError(gameId, {
+        code: ErrorCode.CompanyHasOwner,
+        message: 'Oops!',
+      });
+    } else if (!(await this.checks.canBuyField(gameId, f.fieldId, p))) {
+      await this.store.setError(gameId, {
+        code: ErrorCode.NotEnoughMoney,
+        message: 'Oops!',
+      });
     }
-
     await this.service.emitMessage();
   }
 

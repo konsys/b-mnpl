@@ -23,7 +23,7 @@ export class FieldsUtilsService {
     @Inject(forwardRef(() => ChecksService))
     private readonly checks: ChecksService,
     @Inject(forwardRef(() => ActionService))
-    private readonly actionService: ActionService,
+    private readonly actions: ActionService,
     private readonly transaction: TransactionsService,
     private readonly store: StoreService,
   ) {}
@@ -199,7 +199,7 @@ export class FieldsUtilsService {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actionService.setPlayerActionEvent(gameId, {
+    await this.actions.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
@@ -281,7 +281,7 @@ export class FieldsUtilsService {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actionService.setPlayerActionEvent(gameId, {
+    await this.actions.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
@@ -319,7 +319,7 @@ export class FieldsUtilsService {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actionService.setPlayerActionEvent(gameId, {
+    await this.actions.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
@@ -356,7 +356,7 @@ export class FieldsUtilsService {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actionService.setPlayerActionEvent(gameId, {
+    await this.actions.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,

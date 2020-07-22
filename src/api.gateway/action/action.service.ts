@@ -12,6 +12,7 @@ import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
 import _ from 'lodash';
+import { ChecksService } from './checks.service';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -28,6 +29,7 @@ export class ActionService {
     private readonly store: StoreService,
     @Inject(forwardRef(() => FieldsUtilsService))
     private readonly fields: FieldsUtilsService,
+    private readonly checks: ChecksService,
   ) {}
 
   async buyFieldModal(gameId: string) {
@@ -41,16 +43,12 @@ export class ActionService {
     });
   }
 
-  async buyField(gameId: string) {
+  async buyField(gameId: string, fieldId: number, userId: number, sum: number) {
     // Field set to player
-    const user = await this.players.getActingPlayer(gameId);
-    const field = await this.fields.getFieldByPosition(
-      gameId,
-      user.meanPosition,
-    );
-    let sum = field.price.startPrice;
+    const user = await this.players.getPlayer(gameId, userId);
+    const field = await this.fields.getField(gameId, fieldId);
 
-    sum = await this.fields.buyCompany(gameId, field);
+    await this.fields.buyCompany(gameId, field);
 
     // Decrease player`s money;
     const transactionId = nanoid(4);
@@ -147,30 +145,33 @@ export class ActionService {
   async acceptAuctionModal(gameId: string) {
     const auction = await this.store.getAuctionStore('kkk');
     const userId = this.getNextArrayValue(auction.userId, auction.participants);
-    if (auction.participants.length) {
-      await this.store.setAuctionStore('kkk', {
-        ...auction,
-        bet: auction.bet + BOARD_PARAMS.AUCTION_BET_INCREASE,
-        userId,
-      });
-      await this.store.setActionStore(gameId, {
-        action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
-        userId,
-        actionId: nanoid(4),
-      });
-    }
+
+    await this.store.setAuctionStore('kkk', {
+      ...auction,
+      bet: auction.bet + BOARD_PARAMS.AUCTION_BET_INCREASE,
+      userId,
+    });
+    await this.store.setActionStore(gameId, {
+      action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
+      userId,
+      actionId: nanoid(4),
+    });
   }
 
   async declineAuctionModal(gameId: string) {
     const auction = await this.store.getAuctionStore('kkk');
     const userId = this.getNextArrayValue(auction.userId, auction.participants);
+    const f = await this.fields.getActingField('kkk');
+    const p = await this.players.getPlayer('kkk', auction.userId);
 
     const participants = _.filter(
       auction.participants,
       (v) => v !== auction.userId,
     );
 
-    if (!participants.length) {
+    if (participants.length < 2) {
+      await this.buyField(gameId, f.fieldId, p.userId, auction.bet);
+
       await this.store.flushAuctionStore('kkk');
       await this.switchPlayerTurn('kkk', false);
       return;

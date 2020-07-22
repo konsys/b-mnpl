@@ -91,7 +91,7 @@ export class BoardMessageService {
     await this.initStores('kkk');
     const message = await this.createBoardMessage('kkk');
 
-    setTimeout(async () => await this.store.sendMessage('kkk', message), 3000);
+    await this.store.sendMessage('kkk', message);
   }
 
   async initStores(gameId: string) {
@@ -123,11 +123,7 @@ export class BoardMessageService {
         playerActions: [],
       });
       await this.store.setBankStore('kkk', bank);
-      await this.store.setActionStore('kkk', {
-        action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
-        actionId: nanoid(4),
-        userId: 2,
-      });
+
       // const ch = `kkk-${ERROR_CHANEL}`;
       // errorSubscriber.on('message', async (chanel: any, message: string) => {
       //   await this.emitError(JSON.parse(message));

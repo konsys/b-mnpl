@@ -23,10 +23,10 @@ import { TransactionsService } from './transactions.service';
         name: MsNames.ACTIONS,
         transport: Transport.NATS,
       },
-      // {
-      //   name: MsNames.FIELDS,
-      //   transport: Transport.NATS,
-      // },
+      {
+        name: MsNames.FIELDS,
+        transport: Transport.NATS,
+      },
     ]),
   ],
   controllers: [ActionMsController],

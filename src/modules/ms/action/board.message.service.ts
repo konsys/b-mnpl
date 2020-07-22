@@ -1,11 +1,13 @@
-import { BoardMessage, IPlayer } from 'src/types/board/board.types';
+import { BoardMessage, IField, IPlayer } from 'src/types/board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { FieldsUtilsService } from './fields.utils.service';
 import { IBoardEvent } from 'src/types/board/board.types';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { MsPatterns, MsNames } from 'src/types/ms/ms.types';
 import { OutcomeMessageService } from './outcome-message.service';
 import { StoreService } from './store.service';
+import { ClientProxy } from '@nestjs/microservices';
 
 const bank: IPlayer = {
   userId: BOARD_PARAMS.BANK_PLAYER_ID,
@@ -44,6 +46,8 @@ export class BoardMessageService {
     private readonly fields: FieldsUtilsService,
     private readonly store: StoreService,
     private readonly outcomeMessage: OutcomeMessageService,
+    @Inject(MsNames.FIELDS)
+    private readonly fieldsMs: ClientProxy,
   ) {}
 
   async createBoardMessage(gameId: string): Promise<BoardMessage> {
@@ -75,7 +79,6 @@ export class BoardMessageService {
   }
 
   async onModuleInit() {
-    console.log(23424234);
     const message = await this.createBoardMessage('kkk');
 
     await this.store.sendMessage('kkk', message);
@@ -84,7 +87,12 @@ export class BoardMessageService {
   async initStores(gameId: string) {
     this.store;
     try {
-      // const fields: IField[] = await this.fieldsService.getInitialFields();
+      const res = await this.fieldsMs
+        .send<any>({ cmd: MsPatterns.GET_INIT_FIELDS }, {})
+        .toPromise();
+
+      console.log(23424234, res);
+      // return res;
 
       // const r = fields.map((v: IField, k) => ({
       //   ...v,

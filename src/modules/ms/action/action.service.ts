@@ -29,14 +29,12 @@ export class ActionService {
     private readonly transaction: TransactionsService,
     private readonly boardService: BoardService,
     private readonly store: StoreService,
-    private readonly income: IncomeMessageService,
     @Inject(forwardRef(() => FieldsUtilsService))
     private readonly fields: FieldsUtilsService,
   ) {}
 
   async buyFieldModal(gameId: string) {
     const player = await this.players.getActingPlayer(gameId);
-    const action = await this.store.getActionStore(gameId);
 
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_CAN_BUY_MODAL,

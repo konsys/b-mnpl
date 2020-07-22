@@ -1,5 +1,6 @@
 import {
   ClassSerializerInterceptor,
+  Injectable,
   Logger,
   UseInterceptors,
 } from '@nestjs/common';
@@ -17,7 +18,6 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { redis, subscriber } from 'src/main';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardMessageService } from 'src/api.gateway/action/board.message.service';
@@ -26,6 +26,7 @@ import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
 import { SocketActions } from 'src/types/Game/game.types';
 import _ from 'lodash';
+import { subscriber } from 'src/main';
 
 const bank: IPlayer = {
   userId: BOARD_PARAMS.BANK_PLAYER_ID,
@@ -59,6 +60,7 @@ const bank: IPlayer = {
   movesLeft: 0,
 };
 
+@Injectable()
 @UseInterceptors(ClassSerializerInterceptor)
 @WebSocketGateway()
 export class BoardSocket

@@ -8,6 +8,7 @@ import { ChecksService } from 'src/api.gateway/action/checks.service';
 import { ErrorCode } from 'src/utils/error.code';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
 import { IActionId } from 'src/types/Board/board.types';
+import { IncomeMessageService } from 'src/api.gateway/action/income-message.service';
 import { PlayersUtilsService } from 'src/api.gateway/action/players.utils.service';
 import { Socket } from 'socket.io';
 import { StoreService } from 'src/api.gateway/action/store.service';
@@ -25,6 +26,7 @@ export class IncomeSocketMessage {
     private readonly checks: ChecksService,
     private readonly transactions: TransactionsService,
     private readonly store: StoreService,
+    private readonly income: IncomeMessageService,
   ) {}
 
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
@@ -34,95 +36,12 @@ export class IncomeSocketMessage {
       await this.actions.rollDicesAction(gameId);
       await this.service.emitMessage();
 
-      await this.getNextAction(gameId);
+      await this.income.getNextAction(gameId);
       setTimeout(async () => {
         await this.service.emitMessage();
       }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
     } catch (err) {
       console.log('Error in dicesModal', err);
-    }
-  }
-
-  async getNextAction(gameId: string) {
-    try {
-      const player = await this.players.getActingPlayer(gameId);
-      const field = await this.fields.getFieldByPosition(
-        gameId,
-        player.meanPosition,
-      );
-
-      if (!player.jailed) {
-        if (await this.checks.isStartPass(gameId)) {
-          // Bonus for start passing
-          player.meanPosition === 0
-            ? await this.transactions.getStartBonus(gameId, player.userId, true)
-            : await this.transactions.getStartBonus(gameId, player.userId);
-        }
-
-        if (await this.checks.noActionField(gameId, field.fieldId)) {
-          await this.actions.switchPlayerTurn(gameId, false);
-        } else if (await this.checks.isMyField(gameId, field.fieldId)) {
-          await this.actions.switchPlayerTurn(gameId, false);
-        } else if (await this.checks.isCompanyForSale(gameId, field.fieldId)) {
-          await this.actions.buyFieldModal(gameId);
-        } else if (
-          !(await this.checks.isCompanyForSale(gameId, field.fieldId)) &&
-          (await this.checks.isMyField(gameId, field.fieldId))
-        ) {
-          await this.actions.switchPlayerTurn(gameId, false);
-        } else if (
-          (await this.checks.isCompany(gameId, field.fieldId)) &&
-          (await this.checks.whosField(gameId, field.fieldId)) &&
-          !(await this.checks.isMyField(gameId, field.fieldId))
-        ) {
-          await this.store.setTransaction(gameId, {
-            sum: await this.fields.getFieldRent(gameId, field),
-            userId: player.userId,
-            toUserId: await this.checks.whosField(gameId, field.fieldId),
-            reason: 'Пришло время платить по счетам',
-            transactionId: nanoid(4),
-          });
-          await this.actions.payTaxModal(gameId, player.userId);
-        } else if (await this.checks.isJail(gameId, field.fieldId)) {
-          (await this.players.jailPlayer(gameId)) &&
-            (await this.actions.switchPlayerTurn(gameId, false));
-        } else if (await this.checks.isTax(gameId, field.fieldId)) {
-          // TODO написать нормальный текст на налоги
-          await this.store.setTransaction(gameId, {
-            sum: await this.fields.getFieldRent(gameId, field),
-            userId: player.userId,
-            toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
-            reason: 'Самое время заплатить налоги' + player.name,
-            transactionId: nanoid(4),
-          });
-          await this.actions.payTaxModal(gameId, player.userId);
-        } else if (await this.checks.isChance(gameId, field.fieldId)) {
-          // TODO Make a real chance field await this.actions
-          await this.store.setTransaction(gameId, {
-            sum: 1000,
-            userId: player.userId,
-            toUserId: await this.checks.whosField(gameId, field.fieldId),
-            reason: 'Хитрый шанс',
-            transactionId: nanoid(4),
-          });
-          await this.actions.payTaxModal(gameId, player.userId);
-        }
-      } else {
-        if (player.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {
-          await this.actions.switchPlayerTurn(gameId, false);
-        } else {
-          await this.store.setTransaction(gameId, {
-            sum: 500,
-            userId: player.userId,
-            toUserId: await this.checks.whosField(gameId, field.fieldId),
-            reason: 'Залог за выход из тюрьмы',
-            transactionId: nanoid(4),
-          });
-          await this.actions.payUnJailModal(gameId);
-        }
-      }
-    } catch (e) {
-      console.log('Error', e);
     }
   }
 
@@ -237,7 +156,7 @@ export class IncomeSocketMessage {
       });
     } else {
       await this.fields.mortgage('kkk', payload.fieldId);
-      await this.getNextAction('kkk');
+      await this.income.getNextAction('kkk');
     }
     await this.service.emitMessage();
   }
@@ -251,7 +170,7 @@ export class IncomeSocketMessage {
       });
     } else {
       await this.fields.unMortgage('kkk', payload.fieldId);
-      await this.getNextAction('kkk');
+      await this.income.getNextAction('kkk');
     }
     await this.service.emitMessage();
   }

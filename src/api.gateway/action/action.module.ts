@@ -2,12 +2,17 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { ActionController } from './action.controller';
 import { ActionService } from './action.service';
+import { BoardMessageService } from './board.message.service';
 import { BoardService } from './board.service';
+import { BoardSocket } from 'src/modules/socket/board.socket';
 import { ChecksService } from './checks.service';
 import { DicesService } from './dices.service';
+import { FieldsService } from '../fields/fields.service';
 import { FieldsUtilsService } from './fields.utils.service';
+import { IncomeMessageService } from './income-message.service';
 import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/MS/ms.types';
+import { OutcomeMessageService } from './outcome-message.service';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
@@ -28,10 +33,15 @@ import { TransactionsService } from './transactions.service';
     ChecksService,
     StoreService,
     BoardService,
+    BoardMessageService,
     StoreService,
     TransactionsService,
     PlayersUtilsService,
     FieldsUtilsService,
+    IncomeMessageService,
+    BoardSocket,
+    OutcomeMessageService,
+    FieldsService,
   ],
   exports: [ActionService],
 })

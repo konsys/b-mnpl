@@ -8,8 +8,8 @@ import { ChecksService } from 'src/api.gateway/action/checks.service';
 import { DicesService } from 'src/api.gateway/action/dices.service';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
+import { IncomeMessageService } from 'src/api.gateway/action/income-message.service';
 import { IncomeSocketMessage } from './income.socket.message';
-import { IncomingMessage } from 'http';
 import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/MS/ms.types';
 import { OutcomeMessageService } from 'src/api.gateway/action/outcome-message.service';
@@ -28,7 +28,7 @@ import { TransactionsService } from 'src/api.gateway/action/transactions.service
   ],
   providers: [
     BoardSocket,
-    IncomingMessage,
+    IncomeMessageService,
     FieldsService,
     FieldsUtilsService,
     BoardMessageService,

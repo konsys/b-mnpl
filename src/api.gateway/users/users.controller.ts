@@ -43,7 +43,7 @@ export class UsersController {
   @Get()
   async get(@Query('ids') ids): Promise<UsersEntity[]> {
     let players = await this.service.getUsersByIds(ids);
-    console.log(2222, players);
+
     players = await this.service.initPlayers('kkk', players);
 
     return players;

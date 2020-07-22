@@ -14,6 +14,7 @@ export class ActionMsController {
 
   @MessagePattern({ cmd: MsPatternsActions })
   async initPlayers(gameId: string) {
+    console.log(2222, gameId);
     return await this.message.initPlayers(gameId, []);
   }
 

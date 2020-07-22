@@ -46,7 +46,6 @@ export class BoardSocket
     errorSubscriber.subscribe(BOARD_PARAMS.ERROR_CHANNEL);
 
     messageSubscriber.on('message', async (chanel: any, message: string) => {
-      console.log(11111, message);
       await this.emitMessage(JSON.parse(message));
     });
     messageSubscriber.subscribe(BOARD_PARAMS.MESSAGE_CHANNEL);

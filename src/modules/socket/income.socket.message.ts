@@ -11,7 +11,7 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
-    return await this.income.dicesModal();
+    return await this.income.dicesModal(payload.gameId);
   }
 
   @SubscribeMessage(IncomeMessageType.INCOME_BUY_FIELD_CLICKED)

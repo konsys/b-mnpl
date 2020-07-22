@@ -169,8 +169,7 @@ export class IncomeMessageService {
     await this.service.emitMessage();
   }
 
-  async dicesModal(): Promise<void> {
-    const gameId = 'kkk';
+  async dicesModal(gameId: string): Promise<void> {
     try {
       await this.actions.rollDicesAction(gameId);
       await this.service.emitMessage();

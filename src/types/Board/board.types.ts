@@ -7,6 +7,7 @@ export enum ResponceCode {
 }
 export interface IActionId {
   actionId: string;
+  gameId: string;
 }
 
 export interface IFieldId {

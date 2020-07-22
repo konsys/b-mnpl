@@ -1,6 +1,7 @@
 export enum MsNames {
   USERS = 'users',
   FIELDS = 'fields',
+  ACTIONS = 'actions',
 }
 export enum MsPatterns {
   GET_ALL_USERS = 'getAllUsers',
@@ -11,3 +12,5 @@ export enum MsPatterns {
   SAVE_FIELDS = 'saveFields',
   SAVE_USERS = 'saveUsers',
 }
+
+export enum MsPatternsActions {}

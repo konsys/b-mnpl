@@ -181,8 +181,9 @@ export class StoreService {
     return (await this.get(gameId, storeNames.error)) as IErrorMessage;
   }
 
-  async sendMessage(gameId: string) {
+  async emitMessage(gameId: string) {
     const data = await this.getBoardStore(gameId);
+    console.log(1111, data);
     await redis.publish(
       `${BOARD_PARAMS.MESSAGE_CHANNEL}`,
       JSON.stringify(data),

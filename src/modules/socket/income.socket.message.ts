@@ -1,36 +1,17 @@
 import { IFieldId, IncomeMessageType } from 'src/types/Board/board.types';
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 
-import { ActionService } from 'src/api.gateway/action/action.service';
-import { BOARD_PARAMS } from 'src/params/board.params';
-import { BoardSocket } from './board.socket';
-import { ChecksService } from 'src/api.gateway/action/checks.service';
-import { ErrorCode } from 'src/utils/error.code';
-import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
 import { IActionId } from 'src/types/Board/board.types';
 import { IncomeMessageService } from 'src/api.gateway/action/income-message.service';
-import { PlayersUtilsService } from 'src/api.gateway/action/players.utils.service';
 import { Socket } from 'socket.io';
-import { StoreService } from 'src/api.gateway/action/store.service';
-import { TransactionsService } from 'src/api.gateway/action/transactions.service';
-import _ from 'lodash';
-import { nanoid } from 'nanoid';
 
 @WebSocketGateway()
 export class IncomeSocketMessage {
-  constructor(
-    private readonly service: BoardSocket,
-    private readonly players: PlayersUtilsService,
-    private readonly fields: FieldsUtilsService,
-    private readonly actions: ActionService,
-    private readonly checks: ChecksService,
-    private readonly transactions: TransactionsService,
-    private readonly store: StoreService,
-    private readonly income: IncomeMessageService,
-  ) {}
+  constructor(private readonly income: IncomeMessageService) {}
 
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
+    console.log(12312312);
     return await this.income.dicesModal();
   }
 

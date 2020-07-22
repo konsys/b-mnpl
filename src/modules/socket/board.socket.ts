@@ -14,6 +14,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { errorSubscriber, messageSubscriber } from 'src/main';
 
+import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardMessage } from 'src/types/board/board.types';
 import { IErrorMessage } from '../ms/action/store.service';
 import { SocketActions } from 'src/types/game/game.types';
@@ -44,12 +45,12 @@ export class BoardSocket
     errorSubscriber.on('message', async (chanel: any, message: string) => {
       await this.emitError(JSON.parse(message));
     });
-    errorSubscriber.subscribe('error');
+    errorSubscriber.subscribe(BOARD_PARAMS.ERROR_CHANNEL);
 
     messageSubscriber.on('message', async (chanel: any, message: string) => {
       await this.emitError(JSON.parse(message));
     });
-    messageSubscriber.subscribe('message');
+    messageSubscriber.subscribe(BOARD_PARAMS.MESSAGE_CHANNEL);
   }
 
   handleDisconnect(client: Socket) {

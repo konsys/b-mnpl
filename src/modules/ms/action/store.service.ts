@@ -173,7 +173,7 @@ export class StoreService {
   }
 
   async setError(gameId: string, data: IErrorMessage) {
-    await redis.publish(`${gameId}-${storeNames.error}`, JSON.stringify(data));
+    await redis.publish(`${BOARD_PARAMS.ERROR_CHANNEL}`, JSON.stringify(data));
     await this.set(gameId, storeNames.error, data);
   }
 
@@ -183,7 +183,7 @@ export class StoreService {
 
   async sendMessage(gameId: string, data: BoardMessage) {
     await redis.publish(
-      `${gameId}-${storeNames.message}`,
+      `${BOARD_PARAMS.MESSAGE_CHANNEL}`,
       JSON.stringify(data),
     );
     await this.set(gameId, storeNames.message, data);

@@ -4,6 +4,7 @@ import { BoardSocketModule } from './modules/socket/board.socket.module';
 import { Connection } from 'typeorm';
 import { FieldsModule } from './api.gateway/fields/fields.module';
 import { FieldsMsModule } from './modules/ms/fields/fields.ms.module';
+import { GameModule } from './api.gateway/game/game.module';
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -33,6 +34,7 @@ const rootPath = join(__dirname, '../', 'assets/');
     ActionModule,
     AuthModule,
     BoardSocketModule,
+    GameModule,
     FieldsModule,
     FieldsMsModule,
     UsersModule,

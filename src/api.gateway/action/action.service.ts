@@ -170,7 +170,7 @@ export class ActionService {
     );
 
     if (participants.length < 2) {
-      await this.buyField(gameId, f.fieldId, p.userId, auction.bet);
+      await this.buyField(gameId, f.fieldId, userId, auction.bet);
 
       await this.store.flushAuctionStore('kkk');
       await this.switchPlayerTurn('kkk', false);

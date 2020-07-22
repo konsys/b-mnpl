@@ -392,6 +392,6 @@ export class FieldsUtilsService {
 
   private async getFields(gameId: string): Promise<IField[]> {
     const fields = await this.store.getFieldsStore(gameId);
-    return isArray(fields.fields) ? fields.fields : [];
+    return fields && isArray(fields.fields) ? fields.fields : [];
   }
 }

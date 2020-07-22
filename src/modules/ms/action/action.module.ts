@@ -7,7 +7,7 @@ import { BoardService } from './board.service';
 import { BoardSocket } from 'src/modules/socket/board.socket';
 import { ChecksService } from './checks.service';
 import { DicesService } from './dices.service';
-import { FieldsService } from '../fields/fields.service';
+import { FieldsService } from '../../../api.gateway/fields/fields.service';
 import { FieldsUtilsService } from './fields.utils.service';
 import { IncomeMessageService } from './income-message.service';
 import { Module } from '@nestjs/common';

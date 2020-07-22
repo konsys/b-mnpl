@@ -5,7 +5,7 @@ import { FieldType } from 'src/entities/board.fields.entity';
 import { FieldsUtilsService } from './fields.utils.service';
 import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
-import { StoreService } from 'src/api.gateway/action/store.service';
+import { StoreService } from 'src/modules/ms/action/store.service';
 
 @Injectable()
 export class ChecksService {

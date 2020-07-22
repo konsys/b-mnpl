@@ -1,4 +1,4 @@
-import { ActionModule } from './api.gateway/action/action.module';
+import { ActionModule } from './modules/ms/action/action.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BoardSocketModule } from './modules/socket/board.socket.module';
 import { Connection } from 'typeorm';

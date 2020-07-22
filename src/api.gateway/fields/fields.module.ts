@@ -1,6 +1,6 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import { ActionModule } from '../action/action.module';
+import { ActionModule } from '../../modules/ms/action/action.module';
 import { FieldsController } from './fields.controller';
 import { FieldsService } from './fields.service';
 import { Module } from '@nestjs/common';

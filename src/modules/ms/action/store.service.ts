@@ -3,7 +3,7 @@ import { IField, IFieldAction, IPlayer } from 'src/types/Board/board.types';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { ICurrentAction } from './action.service';
-import { IPlayersStore } from '../users/users.service';
+import { IPlayersStore } from '../../../api.gateway/users/users.service';
 import { Injectable } from '@nestjs/common';
 import { redis } from 'src/main';
 

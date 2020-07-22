@@ -17,8 +17,8 @@ import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { OutcomeMessageType } from 'src/types/Board/board.types';
 import { nanoid } from 'nanoid';
-import { StoreService } from '../action/store.service';
-import { PlayersUtilsService } from '../action/players.utils.service';
+import { StoreService } from '../../modules/ms/action/store.service';
+import { PlayersUtilsService } from '../../modules/ms/action/players.utils.service';
 
 @Controller(MsNames.USERS)
 export class UsersController {

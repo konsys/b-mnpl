@@ -1,21 +1,21 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import { ActionService } from 'src/api.gateway/action/action.service';
-import { BoardMessageService } from 'src/api.gateway/action/board.message.service';
-import { BoardService } from 'src/api.gateway/action/board.service';
+import { ActionService } from 'src/modules/ms/action/action.service';
+import { BoardMessageService } from 'src/modules/ms/action/board.message.service';
+import { BoardService } from 'src/modules/ms/action/board.service';
 import { BoardSocket } from './board.socket';
-import { ChecksService } from 'src/api.gateway/action/checks.service';
-import { DicesService } from 'src/api.gateway/action/dices.service';
+import { ChecksService } from 'src/modules/ms/action/checks.service';
+import { DicesService } from 'src/modules/ms/action/dices.service';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
-import { FieldsUtilsService } from 'src/api.gateway/action/fields.utils.service';
-import { IncomeMessageService } from 'src/api.gateway/action/income-message.service';
+import { FieldsUtilsService } from 'src/modules/ms/action/fields.utils.service';
+import { IncomeMessageService } from 'src/modules/ms/action/income-message.service';
 import { IncomeSocketMessage } from './income.socket.message';
 import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/MS/ms.types';
-import { OutcomeMessageService } from 'src/api.gateway/action/outcome-message.service';
-import { PlayersUtilsService } from 'src/api.gateway/action/players.utils.service';
-import { StoreService } from 'src/api.gateway/action/store.service';
-import { TransactionsService } from 'src/api.gateway/action/transactions.service';
+import { OutcomeMessageService } from 'src/modules/ms/action/outcome-message.service';
+import { PlayersUtilsService } from 'src/modules/ms/action/players.utils.service';
+import { StoreService } from 'src/modules/ms/action/store.service';
+import { TransactionsService } from 'src/modules/ms/action/transactions.service';
 
 @Module({
   imports: [

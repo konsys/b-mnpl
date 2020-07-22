@@ -18,6 +18,8 @@ export class UsersService {
   constructor(
     @Inject(MsNames.USERS)
     private readonly proxy: ClientProxy,
+    @Inject(MsNames.ACTIONS)
+    private readonly actionsMs: ClientProxy,
   ) {}
 
   async getAllUsers(filter?: FindManyOptions) {
@@ -57,13 +59,10 @@ export class UsersService {
     }
   }
 
-  async initPlayers(players: UsersEntity[]): Promise<any> {
+  async initPlayers(gameId: string, players: UsersEntity[]): Promise<any> {
     try {
-      const res = await this.proxy
-        .send<any>(
-          { cmd: MsPatternsActions.INIT_PLAYERS },
-          { gameId: 'kkk', players },
-        )
+      const res = await this.actionsMs
+        .send<any>({ cmd: MsPatternsActions.INIT_PLAYERS }, { gameId, players })
         .toPromise();
 
       return res;

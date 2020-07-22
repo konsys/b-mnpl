@@ -18,6 +18,10 @@ import { jwtConstants } from 'src/modules/auth/constants';
         name: MsNames.USERS,
         transport: Transport.NATS,
       },
+      {
+        name: MsNames.ACTIONS,
+        transport: Transport.NATS,
+      },
     ]),
     // TODO Remove doubling import module with auth module
     JwtModule.register({

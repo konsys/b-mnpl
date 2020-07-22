@@ -256,9 +256,4 @@ export class IncomeMessageService {
       console.log('Error', e);
     }
   }
-
-  public async emitError(error: IErrorMessage) {
-    BoardSocket.socketServer.emit(SocketActions.ERROR_MESSAGE, error);
-    await this.store.resetError('kkk');
-  }
 }

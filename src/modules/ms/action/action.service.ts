@@ -1,9 +1,6 @@
 import {
   IncomeMessageType,
   OutcomeMessageType,
-  IFieldAction,
-  IField,
-  IPlayer,
 } from 'src/types/board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
@@ -11,45 +8,11 @@ import { BoardService } from './board.service';
 import { FieldsUtilsService } from './fields.utils.service';
 import { Injectable, forwardRef, Inject, Logger } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
-import { StoreService, ERROR_CHANEL } from './store.service';
+import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
 import _ from 'lodash';
-import { FieldType } from 'src/entities/board.fields.entity';
-import { subscriber } from 'src/main';
 import { IncomeMessageService } from './income-message.service';
-
-const bank: IPlayer = {
-  userId: BOARD_PARAMS.BANK_PLAYER_ID,
-  money: 100000,
-  password: 'bank',
-  vip: true,
-  registrationType: 'none',
-  name: 'BANK',
-  email: 'b@b.ru',
-  team: null,
-  avatar: '',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  isActive: false,
-  isBlocked: true,
-  isActing: false,
-  gameId: '',
-  doublesRolledAsCombo: 0,
-  jailed: 0,
-  unjailAttempts: 0,
-  meanPosition: 0,
-  creditPayRound: false,
-  creditNextTakeRound: 0,
-  score: 0,
-  additionalTime: 0,
-  timeReduceLevel: 0,
-  creditToPay: 0,
-  canUseCredit: false,
-  moveOrder: 0,
-  isAlive: false,
-  movesLeft: 0,
-};
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;

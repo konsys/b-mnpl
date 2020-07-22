@@ -12,6 +12,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { errorSubscriber, messageSubscriber } from 'src/main';
 
 import { BoardMessage } from 'src/types/board/board.types';
 import { IErrorMessage } from '../ms/action/store.service';
@@ -39,6 +40,16 @@ export class BoardSocket
   afterInit(server: Server) {
     BoardSocket.socketServer = server;
     this.logger.log('Init: ' + server);
+
+    errorSubscriber.on('message', async (chanel: any, message: string) => {
+      await this.emitError(JSON.parse(message));
+    });
+    errorSubscriber.subscribe('error');
+
+    messageSubscriber.on('message', async (chanel: any, message: string) => {
+      await this.emitError(JSON.parse(message));
+    });
+    messageSubscriber.subscribe('message');
   }
 
   handleDisconnect(client: Socket) {

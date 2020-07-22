@@ -37,7 +37,6 @@ import { TransactionsService } from './transactions.service';
     StoreService,
     BoardService,
     BoardMessageService,
-    StoreService,
     TransactionsService,
     PlayersUtilsService,
     FieldsUtilsService,

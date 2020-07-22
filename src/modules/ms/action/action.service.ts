@@ -12,7 +12,6 @@ import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
 import _ from 'lodash';
-import { IncomeMessageService } from './income-message.service';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -28,6 +27,7 @@ export class ActionService {
     private readonly players: PlayersUtilsService,
     private readonly transaction: TransactionsService,
     private readonly boardService: BoardService,
+    @Inject(forwardRef(() => StoreService))
     private readonly store: StoreService,
     @Inject(forwardRef(() => FieldsUtilsService))
     private readonly fields: FieldsUtilsService,

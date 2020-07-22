@@ -1,15 +1,11 @@
-import {
-  BoardMessage,
-  IField,
-  IFieldAction,
-  IPlayer,
-} from 'src/types/board/board.types';
+import { IField, IFieldAction, IPlayer } from 'src/types/board/board.types';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
+import { BoardMessageService } from './board.message.service';
 import { ICurrentAction } from './action.service';
 import { IPlayersStore } from '../../../api.gateway/users/users.service';
-import { Injectable } from '@nestjs/common';
 import { redis } from 'src/main';
 
 export interface IPlayerAction {
@@ -91,6 +87,8 @@ export const ERROR_CHANEL = `${storeNames.error}`;
 // Redis Commands https://github.com/NodeRedis/node-redis/tree/master/test/commands
 @Injectable()
 export class StoreService {
+  constructor(private readonly message: BoardMessageService) {}
+
   async flushGame(gameId: string) {
     for (const k of Object.values(storeNames)) {
       await redis.del(`${gameId}-${k}`);
@@ -182,7 +180,7 @@ export class StoreService {
   }
 
   async emitMessage(gameId: string) {
-    const data = await this.getBoardStore(gameId);
+    const data = await this.message.createBoardMessage(gameId);
     console.log(1111, data);
     await redis.publish(
       `${BOARD_PARAMS.MESSAGE_CHANNEL}`,

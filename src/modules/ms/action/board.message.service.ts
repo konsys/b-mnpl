@@ -9,7 +9,7 @@ import {
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { FieldsUtilsService } from './fields.utils.service';
 import { IBoardEvent } from 'src/types/board/board.types';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { MsPatterns, MsNames } from 'src/types/ms/ms.types';
 import { OutcomeMessageService } from './outcome-message.service';
 import { StoreService } from './store.service';
@@ -123,12 +123,6 @@ export class BoardMessageService {
         playerActions: [],
       });
       await this.store.setBankStore('kkk', bank);
-
-      // const ch = `kkk-${ERROR_CHANEL}`;
-      // errorSubscriber.on('message', async (chanel: any, message: string) => {
-      //   await this.emitError(JSON.parse(message));
-      // });
-      // errorSubscriber.subscribe(ch);
     } catch (err) {
       console.log('ERROR ERROR', err);
     }

@@ -157,8 +157,7 @@ export class FieldsUtilsService {
     );
   }
 
-  async buyCompany(gameId: string, f: IField): Promise<number> {
-    const p = await this.players.getActingPlayer(gameId);
+  async buyCompany(gameId: string, f: IField, p: IPlayer): Promise<number> {
     const sameGroup = _.concat(
       await this.getPlayerGroupFields(gameId, f, p),
       f,

@@ -45,19 +45,19 @@ export class ActionService {
 
   async buyField(gameId: string, fieldId: number, userId: number, sum: number) {
     // Field set to player
-    const user = await this.players.getPlayer(gameId, userId);
-    const field = await this.fields.getField(gameId, fieldId);
+    const p = await this.players.getPlayer(gameId, userId);
+    const f = await this.fields.getField(gameId, fieldId);
 
-    await this.fields.buyCompany(gameId, field);
+    await this.fields.buyCompany(gameId, f, p);
 
     // Decrease player`s money;
     const transactionId = nanoid(4);
     await this.store.setTransaction(gameId, {
       sum,
-      reason: `Купить ${field.name}`,
+      reason: `Купить ${f.name}`,
       toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
       transactionId,
-      userId: user.userId,
+      userId: p.userId,
     });
     await this.transaction.transactMoney(gameId, transactionId);
   }

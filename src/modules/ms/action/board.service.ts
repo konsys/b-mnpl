@@ -1,5 +1,6 @@
+import { BoardMessage, IPlayer } from 'src/types/board/board.types';
+
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { IPlayer } from 'src/types/board/board.types';
 import { Injectable } from '@nestjs/common';
 import { StoreService } from './store.service';
 

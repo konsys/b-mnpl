@@ -40,4 +40,11 @@ export class BoardMessageService {
 
     return message;
   }
+
+  async onModuleInit() {
+    console.log(23424234);
+    const message = await this.createBoardMessage('kkk');
+
+    await this.store.sendMessage('kkk', message);
+  }
 }

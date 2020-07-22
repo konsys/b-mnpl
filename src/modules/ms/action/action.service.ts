@@ -261,42 +261,4 @@ export class ActionService {
     const ind = index < array.length - 1 ? index + 1 : 0;
     return array[ind];
   }
-
-  // private async initStores(gameId: string) {
-  //   this.store;
-  //   try {
-  //     const fields: IField[] = await this.fieldsService.getInitialFields();
-
-  //     const r = fields.map((v: IField, k) => ({
-  //       ...v,
-  //       status: v.type === FieldType.COMPANY &&
-  //         v.fieldGroup === 1 &&
-  //         k < 4 && {
-  //           fieldId: v.fieldId,
-  //           userId: 2,
-  //           branches: 0,
-  //           mortgaged: 0,
-  //           fieldActions: [IFieldAction.MORTGAGE],
-  //         },
-  //     }));
-
-  //     await this.fields.updateAllFields(gameId, r);
-
-  //     await this.store.setBoardStore(gameId, {
-  //       isNewRound: false,
-  //       gameRound: 0,
-  //       playersTurn: 0,
-  //       playerActions: [],
-  //     });
-  //     this.store.setBankStore('kkk', bank);
-
-  //     const ch = `kkk-${ERROR_CHANEL}`;
-  //     subscriber.on('message', async (chanel: any, message: string) => {
-  //       await this.income.emitError(JSON.parse(message));
-  //     });
-  //     subscriber.subscribe(ch);
-  //   } catch (err) {
-  //     this.logger.error(`Error on initStores: ${JSON.stringify(err)}`);
-  //   }
-  // }
 }

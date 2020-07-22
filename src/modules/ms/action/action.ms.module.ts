@@ -23,6 +23,10 @@ import { TransactionsService } from './transactions.service';
         name: MsNames.ACTIONS,
         transport: Transport.NATS,
       },
+      // {
+      //   name: MsNames.FIELDS,
+      //   transport: Transport.NATS,
+      // },
     ]),
   ],
   controllers: [ActionMsController],
@@ -38,7 +42,6 @@ import { TransactionsService } from './transactions.service';
     PlayersUtilsService,
     FieldsUtilsService,
     IncomeMessageService,
-    BoardSocket,
     OutcomeMessageService,
   ],
   exports: [ActionService],

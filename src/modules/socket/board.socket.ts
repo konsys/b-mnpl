@@ -14,7 +14,6 @@ import {
 import { Server, Socket } from 'socket.io';
 
 import { BoardMessage } from 'src/types/board/board.types';
-import { BoardMessageService } from '../ms/action/board.message.service';
 import { IErrorMessage } from '../ms/action/store.service';
 import { SocketActions } from 'src/types/game/game.types';
 import _ from 'lodash';

@@ -1,6 +1,6 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import { ActionModule } from '../../modules/ms/action/action.module';
+import { ActionModule } from '../../modules/ms/action/action.ms.module';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';

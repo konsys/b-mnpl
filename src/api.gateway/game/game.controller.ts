@@ -10,11 +10,12 @@ export class GameController {
   @HttpCode(200)
   @Header('Cache-Control', 'none')
   async action(
-    @Body() action: IncomeMessageType,
+    @Body('action') action: IncomeMessageType,
     payload: any,
   ): Promise<string> {
     switch (action) {
       case IncomeMessageType.INCOME_ROLL_DICES_CLICKED:
+        console.log(23424234, action);
         await this.service.dicesModal();
 
       case IncomeMessageType.INCOME_BUY_FIELD_CLICKED:

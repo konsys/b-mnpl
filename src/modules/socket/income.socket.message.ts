@@ -11,7 +11,6 @@ export class IncomeSocketMessage {
 
   @SubscribeMessage(IncomeMessageType.INCOME_ROLL_DICES_CLICKED)
   async dicesModal(client: Socket, payload: IActionId): Promise<void> {
-    console.log(12312312);
     return await this.income.dicesModal();
   }
 

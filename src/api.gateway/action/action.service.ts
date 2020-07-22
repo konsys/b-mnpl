@@ -146,11 +146,22 @@ export class ActionService {
 
   async acceptAuctionModal(gameId: string) {
     const auction = await this.store.getAuctionStore('kkk');
-    console.log('accept', auction.userId);
+    const userId = this.getNextArrayValue(auction.userId, auction.participants);
+    if (auction.participants.length) {
+      await this.store.setAuctionStore('kkk', {
+        ...auction,
+        bet: auction.bet + BOARD_PARAMS.AUCTION_BET_INCREASE,
+        userId,
+      });
+      await this.store.setActionStore(gameId, {
+        action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
+        userId,
+        actionId: nanoid(4),
+      });
+    }
   }
 
   async declineAuctionModal(gameId: string) {
-    const actingPlayer = await this.players.getActingPlayer('kkk');
     const auction = await this.store.getAuctionStore('kkk');
     const userId = this.getNextArrayValue(auction.userId, auction.participants);
 

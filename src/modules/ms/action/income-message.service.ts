@@ -1,15 +1,13 @@
-import { IErrorMessage, StoreService } from './store.service';
+import { StoreService } from './store.service';
 
 import { ActionService } from './action.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { BoardSocket } from 'src/modules/socket/board.socket';
 import { ChecksService } from './checks.service';
 import { ErrorCode } from 'src/utils/error.code';
 import { FieldsUtilsService } from './fields.utils.service';
 import { IFieldId } from 'src/types/board/board.types';
 import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
-import { SocketActions } from 'src/types/game/game.types';
 import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
 

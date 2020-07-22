@@ -8,6 +8,7 @@ export enum ResponceCode {
 export interface IActionId {
   actionId: string;
   gameId: string;
+  userId: number;
 }
 
 export interface IFieldId {

@@ -1,5 +1,5 @@
 import { Controller, Header, HttpCode, Post, Body } from '@nestjs/common';
-import { IncomeMessageType } from 'src/types/board/board.types';
+import { IncomeMessageType, IActionId } from 'src/types/board/board.types';
 import { GameService } from './game.service';
 
 @Controller('game')
@@ -13,10 +13,14 @@ export class GameController {
     @Body('action') action: IncomeMessageType,
     payload: any,
   ): Promise<string> {
+    const incomeAction: IActionId = {
+      gameId: 'kkk',
+      actionId: 'actionId',
+      userId: 2,
+    };
     switch (action) {
       case IncomeMessageType.INCOME_ROLL_DICES_CLICKED:
-        console.log(23424234, action);
-        await this.service.dicesModal();
+        await this.service.dicesModal(incomeAction);
 
       case IncomeMessageType.INCOME_BUY_FIELD_CLICKED:
         await this.service.fieldBought();

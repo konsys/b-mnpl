@@ -1,7 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
 import { ClientProxy } from '@nestjs/microservices';
-import { IncomeMessageType, IFieldId } from 'src/types/board/board.types';
+import {
+  IncomeMessageType,
+  IFieldId,
+  IActionId,
+} from 'src/types/board/board.types';
 
 @Injectable()
 export class GameService {
@@ -10,12 +14,9 @@ export class GameService {
     private readonly proxy: ClientProxy,
   ) {}
 
-  async dicesModal(): Promise<void> {
+  async dicesModal(action: IActionId): Promise<void> {
     const res = await this.proxy
-      .send<any>(
-        { cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED },
-        undefined,
-      )
+      .send<any>({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED }, action)
       .toPromise();
     return res;
   }

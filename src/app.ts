@@ -1,4 +1,4 @@
-import { ActionModule } from './modules/ms/action/action.ms.module';
+import { ActionMsModule } from './modules/ms/action/action.ms.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BoardSocketModule } from './modules/socket/board.socket.module';
 import { Connection } from 'typeorm';
@@ -31,7 +31,7 @@ const rootPath = join(__dirname, '../', 'assets/');
       logging: ['error'],
     }),
 
-    ActionModule,
+    ActionMsModule,
     AuthModule,
     BoardSocketModule,
     GameModule,

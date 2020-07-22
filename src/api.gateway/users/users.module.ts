@@ -1,6 +1,6 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import { ActionModule } from '../../modules/ms/action/action.ms.module';
+import { ActionMsModule } from '../../modules/ms/action/action.ms.module';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
@@ -24,7 +24,7 @@ import { jwtConstants } from 'src/modules/auth/constants';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: jwtConstants.expires },
     }),
-    ActionModule,
+    ActionMsModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, AuthService, PlayersUtilsService, StoreService],

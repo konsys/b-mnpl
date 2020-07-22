@@ -4,7 +4,7 @@ import { IncomeMessageType } from 'src/types/board/board.types';
 import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('action')
-export class ActionController {
+export class ActionMsController {
   constructor(private readonly service: IncomeMessageService) {}
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED })

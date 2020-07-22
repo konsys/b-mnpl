@@ -1,6 +1,6 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import { ActionController } from './action.ms.controller';
+import { ActionMsController } from './action.ms.controller';
 import { ActionService } from './action.service';
 import { BoardMessageService } from './board.message.service';
 import { BoardService } from './board.service';
@@ -26,7 +26,7 @@ import { TransactionsService } from './transactions.service';
       },
     ]),
   ],
-  controllers: [ActionController],
+  controllers: [ActionMsController],
   providers: [
     ActionService,
     DicesService,
@@ -45,4 +45,4 @@ import { TransactionsService } from './transactions.service';
   ],
   exports: [ActionService],
 })
-export class ActionModule {}
+export class ActionMsModule {}

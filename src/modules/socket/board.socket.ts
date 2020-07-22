@@ -43,6 +43,7 @@ export class BoardSocket
     this.logger.log('Init: ' + server);
 
     errorSubscriber.on('message', async (chanel: any, message: string) => {
+      console.log(234234234);
       await this.emitError(JSON.parse(message));
     });
     errorSubscriber.subscribe(BOARD_PARAMS.ERROR_CHANNEL);

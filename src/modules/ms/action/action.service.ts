@@ -88,6 +88,7 @@ export class ActionService {
 
   async rollDicesAction(gameId: string) {
     const p = await this.players.getActingPlayer(gameId);
+
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
       userId: p.userId,

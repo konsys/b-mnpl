@@ -92,7 +92,6 @@ export class BoardMessageService {
 
   async initStores(gameId: string) {
     await this.store.flushGame('kkk');
-    this.store;
     try {
       const fields = await this.fieldsMs
         .send<any>({ cmd: MsPatterns.GET_INIT_FIELDS }, {})
@@ -119,10 +118,10 @@ export class BoardMessageService {
         playersTurn: 0,
         playerActions: [],
       });
-      this.store.setBankStore('kkk', bank);
+      await this.store.setBankStore('kkk', bank);
 
       const message = await this.createBoardMessage('kkk');
-      this.store.sendMessage('kkk', message);
+      await this.store.sendMessage('kkk', message);
       // const ch = `kkk-${ERROR_CHANEL}`;
       // errorSubscriber.on('message', async (chanel: any, message: string) => {
       //   await this.emitError(JSON.parse(message));

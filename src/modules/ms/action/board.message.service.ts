@@ -1,4 +1,9 @@
-import { BoardMessage, IField, IPlayer } from 'src/types/board/board.types';
+import {
+  BoardMessage,
+  IField,
+  IPlayer,
+  IFieldAction,
+} from 'src/types/board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { FieldsUtilsService } from './fields.utils.service';
@@ -8,6 +13,7 @@ import { MsPatterns, MsNames } from 'src/types/ms/ms.types';
 import { OutcomeMessageService } from './outcome-message.service';
 import { StoreService } from './store.service';
 import { ClientProxy } from '@nestjs/microservices';
+import { FieldType } from 'src/entities/board.fields.entity';
 
 const bank: IPlayer = {
   userId: BOARD_PARAMS.BANK_PLAYER_ID,
@@ -80,34 +86,32 @@ export class BoardMessageService {
 
   async onModuleInit() {
     const message = await this.createBoardMessage('kkk');
-
+    await this.initStores('kkk');
     await this.store.sendMessage('kkk', message);
   }
 
   async initStores(gameId: string) {
+    await this.store.flushGame('kkk');
     this.store;
     try {
-      const res = await this.fieldsMs
+      const fields = await this.fieldsMs
         .send<any>({ cmd: MsPatterns.GET_INIT_FIELDS }, {})
         .toPromise();
 
-      console.log(23424234, res);
-      // return res;
+      const r = fields.map((v: IField, k) => ({
+        ...v,
+        status: v.type === FieldType.COMPANY &&
+          v.fieldGroup === 1 &&
+          k < 4 && {
+            fieldId: v.fieldId,
+            userId: 2,
+            branches: 0,
+            mortgaged: 0,
+            fieldActions: [IFieldAction.MORTGAGE],
+          },
+      }));
 
-      // const r = fields.map((v: IField, k) => ({
-      //   ...v,
-      //   status: v.type === FieldType.COMPANY &&
-      //     v.fieldGroup === 1 &&
-      //     k < 4 && {
-      //       fieldId: v.fieldId,
-      //       userId: 2,
-      //       branches: 0,
-      //       mortgaged: 0,
-      //       fieldActions: [IFieldAction.MORTGAGE],
-      //     },
-      // }));
-
-      // await this.fields.updateAllFields(gameId, r);
+      await this.fields.updateAllFields(gameId, r);
 
       await this.store.setBoardStore(gameId, {
         isNewRound: false,
@@ -117,6 +121,8 @@ export class BoardMessageService {
       });
       this.store.setBankStore('kkk', bank);
 
+      const message = await this.createBoardMessage('kkk');
+      this.store.sendMessage('kkk', message);
       // const ch = `kkk-${ERROR_CHANEL}`;
       // errorSubscriber.on('message', async (chanel: any, message: string) => {
       //   await this.emitError(JSON.parse(message));

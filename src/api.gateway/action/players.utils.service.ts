@@ -37,7 +37,13 @@ export class PlayersUtilsService {
     sum: number,
   ): Promise<number[]> {
     const players = await this.getPlayers(gameId);
-    return _.filter(players, (v) => v.money >= sum).map((v) => v.userId);
+    const filtered = _.filter(players, (v) => v.money >= sum);
+    const index = _.findIndex(players, (v) => v.isActing === true);
+    const res = _.concat(
+      _.slice(filtered, index, filtered.length),
+      _.slice(filtered, 0, index),
+    ).map((v) => v.userId);
+    return res;
   }
 
   async getPlayerIndexById(gameId: string, userId: number) {

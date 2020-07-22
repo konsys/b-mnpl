@@ -12,10 +12,10 @@ export class ActionMsController {
     private readonly message: BoardMessageService,
   ) {}
 
-  @MessagePattern({ cmd: MsPatternsActions })
-  async initPlayers(gameId: string) {
-    console.log(2222, gameId);
-    return await this.message.initPlayers(gameId, []);
+  @MessagePattern({ cmd: MsPatternsActions.INIT_PLAYERS })
+  async initPlayers(params: any) {
+    const res = await this.message.initPlayers(params.gameId, params.players);
+    return res;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED })

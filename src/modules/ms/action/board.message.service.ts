@@ -180,8 +180,9 @@ export class BoardMessageService {
       });
     }
 
-    await this.players.updateAllPLayers('kkk', resultPlayers);
+    await this.players.updateAllPLayers(gameId, resultPlayers);
 
-    const st = await this.store.getPlayersStore('kkk');
+    const st = await this.store.getPlayersStore(gameId);
+    return st.players;
   }
 }

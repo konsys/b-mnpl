@@ -14,6 +14,7 @@ import { MsNames } from 'src/types/ms/ms.types';
         transport: Transport.NATS,
       },
     ]),
+
     ActionMsModule,
   ],
   providers: [FieldsService],

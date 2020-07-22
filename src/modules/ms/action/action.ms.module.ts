@@ -41,7 +41,6 @@ import { TransactionsService } from './transactions.service';
     IncomeMessageService,
     BoardSocket,
     OutcomeMessageService,
-    FieldsService,
   ],
   exports: [ActionService],
 })

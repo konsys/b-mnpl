@@ -12,7 +12,6 @@ import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
 import _ from 'lodash';
-import { ChecksService } from './checks.service';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
@@ -29,7 +28,6 @@ export class ActionService {
     private readonly store: StoreService,
     @Inject(forwardRef(() => FieldsUtilsService))
     private readonly fields: FieldsUtilsService,
-    private readonly checks: ChecksService,
   ) {}
 
   async buyFieldModal(gameId: string) {

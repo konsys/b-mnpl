@@ -127,6 +127,8 @@ export class BoardMessageService {
       //   await this.emitError(JSON.parse(message));
       // });
       // errorSubscriber.subscribe(ch);
-    } catch (err) {}
+    } catch (err) {
+      console.log('ERROR ERROR', err);
+    }
   }
 }

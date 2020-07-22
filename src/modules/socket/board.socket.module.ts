@@ -11,7 +11,7 @@ import { FieldsUtilsService } from 'src/modules/ms/action/fields.utils.service';
 import { IncomeMessageService } from 'src/modules/ms/action/income-message.service';
 import { IncomeSocketMessage } from './income.socket.message';
 import { Module } from '@nestjs/common';
-import { MsNames } from 'src/types/MS/ms.types';
+import { MsNames } from 'src/types/ms/ms.types';
 import { OutcomeMessageService } from 'src/modules/ms/action/outcome-message.service';
 import { PlayersUtilsService } from 'src/modules/ms/action/players.utils.service';
 import { StoreService } from 'src/modules/ms/action/store.service';

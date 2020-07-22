@@ -9,7 +9,7 @@ import {
   IErrorMessage,
   StoreService,
 } from 'src/modules/ms/action/store.service';
-import { IField, IFieldAction, IPlayer } from 'src/types/Board/board.types';
+import { IField, IFieldAction, IPlayer } from 'src/types/board/board.types';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -24,7 +24,7 @@ import { BoardMessageService } from 'src/modules/ms/action/board.message.service
 import { FieldType } from 'src/entities/board.fields.entity';
 import { FieldsService } from 'src/api.gateway/fields/fields.service';
 import { FieldsUtilsService } from 'src/modules/ms/action/fields.utils.service';
-import { SocketActions } from 'src/types/Game/game.types';
+import { SocketActions } from 'src/types/game/game.types';
 import _ from 'lodash';
 import { subscriber } from 'src/main';
 

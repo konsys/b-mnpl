@@ -1,6 +1,6 @@
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { ErrorCode } from 'src/utils/error.code';
-import { IMoneyTransaction } from 'src/types/Board/board.types';
+import { IMoneyTransaction } from 'src/types/board/board.types';
 import { Injectable } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';

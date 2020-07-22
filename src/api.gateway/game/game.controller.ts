@@ -1,5 +1,5 @@
 import { Controller, Header, HttpCode, Post, Body } from '@nestjs/common';
-import { IncomeMessageType } from 'src/types/Board/board.types';
+import { IncomeMessageType } from 'src/types/board/board.types';
 import { GameService } from './game.service';
 
 @Controller('game')

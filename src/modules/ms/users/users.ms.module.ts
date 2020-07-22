@@ -1,7 +1,7 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { Module } from '@nestjs/common';
-import { MsNames } from 'src/types/MS/ms.types';
+import { MsNames } from 'src/types/ms/ms.types';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersMsController } from './users.ms.controller';

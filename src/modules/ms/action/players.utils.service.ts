@@ -1,4 +1,4 @@
-import { IPlayer, OutcomeMessageType } from 'src/types/Board/board.types';
+import { IPlayer, OutcomeMessageType } from 'src/types/board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { Injectable } from '@nestjs/common';

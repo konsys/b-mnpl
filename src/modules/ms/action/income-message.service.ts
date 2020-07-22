@@ -4,7 +4,7 @@ import { BoardSocket } from 'src/modules/socket/board.socket';
 import { ChecksService } from './checks.service';
 import { ErrorCode } from 'src/utils/error.code';
 import { FieldsUtilsService } from './fields.utils.service';
-import { IFieldId } from 'src/types/Board/board.types';
+import { IFieldId } from 'src/types/board/board.types';
 import { Injectable } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';

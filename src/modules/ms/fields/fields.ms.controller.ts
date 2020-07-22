@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common';
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MsPatterns } from 'src/types/MS/ms.types';
+import { MsPatterns } from 'src/types/ms/ms.types';
 import { MessagePattern } from '@nestjs/microservices';
 
 @Controller()

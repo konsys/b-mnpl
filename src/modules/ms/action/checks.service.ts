@@ -1,4 +1,4 @@
-import { IField, IFieldAction, IPlayer } from 'src/types/Board/board.types';
+import { IField, IFieldAction, IPlayer } from 'src/types/board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { FieldType } from 'src/entities/board.fields.entity';

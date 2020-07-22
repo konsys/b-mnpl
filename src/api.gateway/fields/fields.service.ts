@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { MsNames, MsPatterns } from 'src/types/MS/ms.types';
+import { MsNames, MsPatterns } from 'src/types/ms/ms.types';
 
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';

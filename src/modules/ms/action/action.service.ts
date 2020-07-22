@@ -1,7 +1,7 @@
 import {
   IncomeMessageType,
   OutcomeMessageType,
-} from 'src/types/Board/board.types';
+} from 'src/types/board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardService } from './board.service';

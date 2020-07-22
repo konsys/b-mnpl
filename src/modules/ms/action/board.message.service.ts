@@ -1,6 +1,6 @@
-import { BoardMessage } from 'src/types/Board/board.types';
+import { BoardMessage } from 'src/types/board/board.types';
 import { FieldsUtilsService } from './fields.utils.service';
-import { IBoardEvent } from 'src/types/Board/board.types';
+import { IBoardEvent } from 'src/types/board/board.types';
 import { Injectable } from '@nestjs/common';
 import { OutcomeMessageService } from './outcome-message.service';
 import { StoreService } from './store.service';

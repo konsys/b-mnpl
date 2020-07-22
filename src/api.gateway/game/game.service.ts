@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { MsNames } from 'src/types/MS/ms.types';
+import { MsNames } from 'src/types/ms/ms.types';
 import { ClientProxy } from '@nestjs/microservices';
-import { IncomeMessageType, IFieldId } from 'src/types/Board/board.types';
+import { IncomeMessageType, IFieldId } from 'src/types/board/board.types';
 
 @Injectable()
 export class GameService {

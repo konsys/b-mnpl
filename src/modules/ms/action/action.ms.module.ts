@@ -11,7 +11,7 @@ import { FieldsService } from '../../../api.gateway/fields/fields.service';
 import { FieldsUtilsService } from './fields.utils.service';
 import { IncomeMessageService } from './income-message.service';
 import { Module } from '@nestjs/common';
-import { MsNames } from 'src/types/MS/ms.types';
+import { MsNames } from 'src/types/ms/ms.types';
 import { OutcomeMessageService } from './outcome-message.service';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
@@ -21,7 +21,7 @@ import { TransactionsService } from './transactions.service';
   imports: [
     ClientsModule.register([
       {
-        name: MsNames.FIELDS,
+        name: MsNames.ACTIONS,
         transport: Transport.NATS,
       },
     ]),

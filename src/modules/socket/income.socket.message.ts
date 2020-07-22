@@ -1,7 +1,7 @@
-import { IFieldId, IncomeMessageType } from 'src/types/Board/board.types';
+import { IFieldId, IncomeMessageType } from 'src/types/board/board.types';
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 
-import { IActionId } from 'src/types/Board/board.types';
+import { IActionId } from 'src/types/board/board.types';
 import { IncomeMessageService } from 'src/modules/ms/action/income-message.service';
 import { Socket } from 'socket.io';
 

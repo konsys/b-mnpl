@@ -9,7 +9,7 @@ import { Repository, FindManyOptions, In } from 'typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { MsPatterns } from 'src/types/MS/ms.types';
+import { MsPatterns } from 'src/types/ms/ms.types';
 
 @Controller()
 export class UsersMsController {

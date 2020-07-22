@@ -4,7 +4,7 @@ import { ActionModule } from '../../modules/ms/action/action.ms.module';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
-import { MsNames } from 'src/types/MS/ms.types';
+import { MsNames } from 'src/types/ms/ms.types';
 import { PlayersUtilsService } from '../../modules/ms/action/players.utils.service';
 import { StoreService } from '../../modules/ms/action/store.service';
 import { UsersController } from './users.controller';

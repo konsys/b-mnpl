@@ -9,7 +9,7 @@ import {
   IUnJailPayingModal,
   IncomeMessageType,
   OutcomeMessageType,
-} from 'src/types/Board/board.types';
+} from 'src/types/board/board.types';
 
 import { ActionService } from './action.service';
 import { BOARD_PARAMS } from 'src/params/board.params';

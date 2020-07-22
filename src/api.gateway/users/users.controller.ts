@@ -8,14 +8,14 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { MsNames } from 'src/types/MS/ms.types';
+import { MsNames } from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from './users.service';
 import { LocalAuthGuard } from 'src/modules/auth/local-auth.guard';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { OutcomeMessageType } from 'src/types/Board/board.types';
+import { OutcomeMessageType } from 'src/types/board/board.types';
 import { nanoid } from 'nanoid';
 import { StoreService } from '../../modules/ms/action/store.service';
 import { PlayersUtilsService } from '../../modules/ms/action/players.utils.service';

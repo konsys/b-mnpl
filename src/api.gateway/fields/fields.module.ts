@@ -4,7 +4,7 @@ import { ActionModule } from '../../modules/ms/action/action.ms.module';
 import { FieldsController } from './fields.controller';
 import { FieldsService } from './fields.service';
 import { Module } from '@nestjs/common';
-import { MsNames } from 'src/types/MS/ms.types';
+import { MsNames } from 'src/types/ms/ms.types';
 
 @Module({
   imports: [

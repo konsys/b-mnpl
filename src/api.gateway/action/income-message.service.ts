@@ -2,7 +2,9 @@ import { ActionService } from './action.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardSocket } from 'src/modules/socket/board.socket';
 import { ChecksService } from './checks.service';
+import { ErrorCode } from 'src/utils/error.code';
 import { FieldsUtilsService } from './fields.utils.service';
+import { IFieldId } from 'src/types/Board/board.types';
 import { Injectable } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
@@ -20,6 +22,152 @@ export class IncomeMessageService {
     private readonly transactions: TransactionsService,
     private readonly store: StoreService,
   ) {}
+
+  async levelDownField(payload: IFieldId): Promise<void> {
+    if (!(await this.checks.canLevelDown('kkk', payload.fieldId))) {
+      await this.store.setError('kkk', {
+        code: ErrorCode.CannotBuildBranch,
+        message: 'Oops!',
+      });
+    } else {
+      await this.fields.levelDownField('kkk', payload.fieldId);
+    }
+    await this.service.emitMessage();
+  }
+
+  async levelUpField(payload: IFieldId): Promise<void> {
+    if (!(await this.checks.canLevelUp('kkk', payload.fieldId))) {
+      await this.store.setError('kkk', {
+        code: ErrorCode.CannotBuildBranch,
+        message: 'Oops!',
+      });
+    } else {
+      await this.fields.levelUpField('kkk', payload.fieldId);
+    }
+    await this.service.emitMessage();
+  }
+
+  async unMortgageField(payload: IFieldId): Promise<void> {
+    if (!(await this.checks.canUnMortgage('kkk', payload.fieldId))) {
+      await this.store.setError('kkk', {
+        code: ErrorCode.CannotUnMortgageField,
+        message: 'Oops!',
+      });
+    } else {
+      await this.fields.unMortgage('kkk', payload.fieldId);
+      await this.getNextAction('kkk');
+    }
+    await this.service.emitMessage();
+  }
+
+  async mortgageField(payload: IFieldId): Promise<void> {
+    if (!(await this.checks.canMortgage('kkk', payload.fieldId))) {
+      await this.store.setError('kkk', {
+        code: ErrorCode.CannotMortgageField,
+        message: 'Oops!',
+      });
+    } else {
+      await this.fields.mortgage('kkk', payload.fieldId);
+      await this.getNextAction('kkk');
+    }
+    await this.service.emitMessage();
+  }
+
+  async unJailPayment(): Promise<void> {
+    await this.players.unjailPlayer('kkk');
+    await this.service.emitMessage();
+    setTimeout(async () => {
+      await this.actions.rollDicesModal('kkk');
+      await this.service.emitMessage();
+    }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 2);
+  }
+
+  async payment(): Promise<void> {
+    if (
+      (await this.transactions.getCurrentTransaction('kkk')).sum <=
+      (await this.players.getActingPlayer('kkk')).money
+    ) {
+      await this.transactions.transactMoney(
+        'kkk',
+        (await this.transactions.getCurrentTransaction('kkk')).transactionId,
+      );
+      await this.actions.switchPlayerTurn('kkk', false);
+    } else {
+      await this.store.setError('kkk', {
+        code: ErrorCode.NotEnoughMoney,
+        message: 'Oops!',
+      });
+    }
+    await this.service.emitMessage();
+  }
+
+  async declineAuction(): Promise<void> {
+    const f = await this.fields.getActingField('kkk');
+    const canStart = await this.checks.isCompanyForSale('kkk', f.fieldId);
+    canStart
+      ? await this.actions.declineAuctionModal('kkk')
+      : await this.store.setError('kkk', {
+          code: ErrorCode.CannotStartAuction,
+          message: 'Oops!',
+        });
+
+    await this.service.emitMessage();
+  }
+
+  async acceptAuction(): Promise<void> {
+    const f = await this.fields.getActingField('kkk');
+    const canStart = await this.checks.isCompanyForSale('kkk', f.fieldId);
+    canStart
+      ? await this.actions.acceptAuctionModal('kkk')
+      : await this.store.setError('kkk', {
+          code: ErrorCode.CannotStartAuction,
+          message: 'Oops!',
+        });
+
+    await this.service.emitMessage();
+  }
+
+  async fieldAuction(): Promise<void> {
+    const f = await this.fields.getActingField('kkk');
+    const canStart = await this.checks.isCompanyForSale('kkk', f.fieldId);
+    canStart
+      ? await this.actions.startAuctionModal('kkk')
+      : await this.store.setError('kkk', {
+          code: ErrorCode.CannotStartAuction,
+          message: 'Oops!',
+        });
+
+    await this.service.emitMessage();
+  }
+
+  async fieldBought(): Promise<void> {
+    const gameId = 'kkk';
+    const f = await this.fields.getActingField(gameId);
+    const p = await this.players.getActingPlayer(gameId);
+    if (
+      (await this.checks.isCompanyForSale(gameId, f.fieldId)) &&
+      (await this.checks.canBuyField(gameId, f.fieldId, p))
+    ) {
+      await this.actions.buyField(
+        gameId,
+        f.fieldId,
+        p.userId,
+        f.price.startPrice,
+      );
+      await this.actions.switchPlayerTurn(gameId, false);
+    } else if (!(await this.checks.isCompanyForSale(gameId, f.fieldId))) {
+      await this.store.setError(gameId, {
+        code: ErrorCode.CompanyHasOwner,
+        message: 'Oops!',
+      });
+    } else if (!(await this.checks.canBuyField(gameId, f.fieldId, p))) {
+      await this.store.setError(gameId, {
+        code: ErrorCode.NotEnoughMoney,
+        message: 'Oops!',
+      });
+    }
+    await this.service.emitMessage();
+  }
 
   async dicesModal(): Promise<void> {
     const gameId = 'kkk';

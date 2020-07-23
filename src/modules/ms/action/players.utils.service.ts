@@ -1,14 +1,17 @@
 import { IPlayer, OutcomeMessageType } from 'src/types/board/board.types';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { StoreService } from './store.service';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 
 @Injectable()
 export class PlayersUtilsService {
-  constructor(private readonly store: StoreService) {}
+  constructor(
+    @Inject(forwardRef(() => StoreService))
+    private readonly store: StoreService,
+  ) {}
 
   async getPlayer(gameId: string, userId: number): Promise<IPlayer> {
     const bank = await this.store.getBankStore(gameId);

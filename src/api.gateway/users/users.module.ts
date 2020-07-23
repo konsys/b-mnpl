@@ -4,7 +4,6 @@ import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
-import { PlayersUtilsService } from '../../modules/ms/action/players.utils.service';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { jwtConstants } from 'src/modules/auth/constants';
@@ -28,7 +27,7 @@ import { jwtConstants } from 'src/modules/auth/constants';
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService, AuthService, PlayersUtilsService],
+  providers: [UsersService, AuthService],
   exports: [UsersService],
 })
 export class UsersModule {}

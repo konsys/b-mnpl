@@ -1,5 +1,9 @@
 import { Controller, Header, HttpCode, Post, Body } from '@nestjs/common';
-import { IncomeMessageType, IActionId } from 'src/types/board/board.types';
+import {
+  IncomeMessageType,
+  IActionId,
+  IFieldId,
+} from 'src/types/board/board.types';
 import { GameService } from './game.service';
 
 @Controller('game')
@@ -11,9 +15,9 @@ export class GameController {
   @Header('Cache-Control', 'none')
   async action(
     @Body('action') action: IncomeMessageType,
-    payload: any,
+    @Body('payload') payload?: IFieldId,
   ): Promise<string> {
-    console.log(11111, action);
+    console.log(11111, action, payload);
     const incomeAction: IActionId = {
       gameId: 'kkk',
       actionId: 'actionId',

@@ -1,23 +1,34 @@
-import { Controller, Header, HttpCode, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Header,
+  HttpCode,
+  Post,
+  Body,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import {
   IncomeMessageType,
   IActionId,
   IFieldId,
 } from 'src/types/board/board.types';
 import { GameService } from './game.service';
+import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 
 @Controller('game')
 export class GameController {
   constructor(private readonly service: GameService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post('action')
   @HttpCode(200)
   @Header('Cache-Control', 'none')
   async action(
+    @Request() req,
     @Body('action') action: IncomeMessageType,
     @Body('payload') payload?: IFieldId,
   ): Promise<string> {
-    console.log(11111, action, payload);
+    console.log(11111, action, req.user);
     const incomeAction: IActionId = {
       gameId: 'kkk',
       actionId: 'actionId',

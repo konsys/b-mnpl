@@ -5,5 +5,5 @@ export interface IJwtSettings {
 
 export const jwtConstants: IJwtSettings = {
   secret: 'secretKey',
-  expires: '60s',
+  expires: '60d',
 };

@@ -1,9 +1,9 @@
 import { IField, IFieldAction, IPlayer } from 'src/types/board/board.types';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { FieldType } from 'src/entities/board.fields.entity';
 import { FieldsUtilsService } from './fields.utils.service';
-import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from 'src/modules/ms/action/store.service';
 

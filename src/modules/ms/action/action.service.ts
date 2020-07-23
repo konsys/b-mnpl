@@ -2,16 +2,16 @@ import {
   IncomeMessageType,
   OutcomeMessageType,
 } from 'src/types/board/board.types';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { BoardService } from './board.service';
 import { FieldsUtilsService } from './fields.utils.service';
-import { Injectable, forwardRef, Inject, Logger } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
-import { nanoid } from 'nanoid';
 import _ from 'lodash';
+import { nanoid } from 'nanoid';
 
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;

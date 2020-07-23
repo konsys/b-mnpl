@@ -1,13 +1,12 @@
-import { StoreService } from './store.service';
-
 import { ActionService } from './action.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { ChecksService } from './checks.service';
 import { ErrorCode } from 'src/utils/error.code';
 import { FieldsUtilsService } from './fields.utils.service';
 import { IFieldId } from 'src/types/board/board.types';
-import { Injectable, forwardRef, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
+import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
 import { nanoid } from 'nanoid';
 
@@ -19,9 +18,7 @@ export class IncomeMessageService {
 
   constructor(
     private readonly players: PlayersUtilsService,
-    @Inject(forwardRef(() => FieldsUtilsService))
     private readonly fields: FieldsUtilsService,
-    @Inject(forwardRef(() => ActionService))
     private readonly actions: ActionService,
     private readonly checks: ChecksService,
     private readonly transactions: TransactionsService,

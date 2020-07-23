@@ -9,7 +9,7 @@ import {
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { FieldsUtilsService } from './fields.utils.service';
 import { IBoardEvent } from 'src/types/board/board.types';
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { MsPatterns, MsNames } from 'src/types/ms/ms.types';
 import { OutcomeMessageService } from './outcome-message.service';
 import { StoreService } from './store.service';
@@ -54,7 +54,6 @@ const bank: IPlayer = {
 export class BoardMessageService {
   constructor(
     private readonly fields: FieldsUtilsService,
-    @Inject(forwardRef(() => StoreService))
     private readonly store: StoreService,
     private readonly outcomeMessage: OutcomeMessageService,
     private readonly players: PlayersUtilsService,

@@ -4,25 +4,23 @@ import {
   IMoneyTransaction,
   IPlayer,
 } from 'src/types/board/board.types';
+import _, { isArray } from 'lodash';
 
 import { ActionService } from './action.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { ChecksService } from './checks.service';
 import { FieldType } from 'src/entities/board.fields.entity';
-import { Injectable, forwardRef, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
-import _, { isArray } from 'lodash';
 import { nanoid } from 'nanoid';
 
 @Injectable()
 export class FieldsUtilsService {
   constructor(
     private readonly players: PlayersUtilsService,
-    @Inject(forwardRef(() => ChecksService))
     private readonly checks: ChecksService,
-    @Inject(forwardRef(() => ActionService))
     private readonly actions: ActionService,
     private readonly transaction: TransactionsService,
     private readonly store: StoreService,

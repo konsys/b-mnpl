@@ -87,7 +87,6 @@ export class FieldsUtilsService {
   async getFieldRent(gameId: string, field: IField): Promise<number> {
     if (field && field.rent && field.rent.paymentMultiplier) {
       const group = await this.getPlayerGroupFields(
-        gameId,
         field,
         await this.players.getPlayer(field.status.userId),
       );
@@ -202,7 +201,7 @@ export class FieldsUtilsService {
         status: { ...f.status, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },
       }));
 
-    const groupFields = await this.getPlayerGroupFields(gameId, f, p);
+    const groupFields = await this.getPlayerGroupFields(f, p);
     for (const v of groupFields) {
       v.status = {
         ...v.status,
@@ -220,7 +219,7 @@ export class FieldsUtilsService {
       transactionId,
       userId: BOARD_PARAMS.BANK_PLAYER_ID,
     });
-    await this.transaction.transactMoney(gameId, transactionId);
+    await this.transaction.transactMoney(p.userId, transactionId);
   }
 
   async mortgageNextRound(gameId: string) {
@@ -271,20 +270,20 @@ export class FieldsUtilsService {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actions.setPlayerActionEvent(gameId, {
+    await this.actions.setPlayerActionEvent(p.userId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
       fieldAction: IFieldAction.UNMORTGAGE,
     });
 
-    (await this.checks.canUnMortgage(gameId, f.fieldId)) &&
+    (await this.checks.canUnMortgage(p.userId, f.fieldId)) &&
       (await this.updateField(gameId, {
         ...f,
         status: { ...f.status, mortgaged: 0 },
       }));
 
-    const groupFields = await this.getPlayerGroupFields(gameId, f, p);
+    const groupFields = await this.getPlayerGroupFields(f, p);
     for (const v of groupFields) {
       v.status = {
         ...v.status,

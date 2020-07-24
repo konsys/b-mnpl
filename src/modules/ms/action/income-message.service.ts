@@ -23,50 +23,55 @@ export class IncomeMessageService {
 
   async levelDownField(userId: number, fieldId: number): Promise<void> {
     const p = await this.players.getPlayer(userId);
-    if (!(await this.checks.canLevelDown(p.gameId, fieldId))) {
+
+    const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
+    if (!(await this.checks.canLevelDown(p.gameId, f.fieldId))) {
       await this.store.setError(userId, {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
     } else {
-      await this.fields.levelDownField(p.gameId, fieldId);
+      await this.fields.levelDownField(p.gameId, f.fieldId);
     }
   }
 
-  async levelUpField(userId: number, fieldId: number): Promise<void> {
+  async levelUpField(userId: number): Promise<void> {
     const p = await this.players.getPlayer(userId);
-    if (!(await this.checks.canLevelUp(p.gameId, fieldId))) {
+    const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
+    if (!(await this.checks.canLevelUp(p.gameId, f.fieldId))) {
       await this.store.setError(userId, {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
     } else {
-      await this.fields.levelUpField(p.gameId, fieldId);
+      await this.fields.levelUpField(p.gameId, f.fieldId);
     }
   }
 
-  async unMortgageField(userId: number, fieldId: number): Promise<void> {
+  async unMortgageField(userId: number): Promise<void> {
     const p = await this.players.getPlayer(userId);
-    if (!(await this.checks.canUnMortgage(p.gameId, fieldId))) {
+    const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
+    if (!(await this.checks.canUnMortgage(p.gameId, f.fieldId))) {
       await this.store.setError(userId, {
         code: ErrorCode.CannotUnMortgageField,
         message: 'Oops!',
       });
     } else {
-      await this.fields.unMortgage(p.gameId, fieldId);
+      await this.fields.unMortgage(p.gameId, f.fieldId);
       await this.getNextAction(p.userId);
     }
   }
 
-  async mortgageField(userId: number, fieldId: number): Promise<void> {
+  async mortgageField(userId: number): Promise<void> {
     const p = await this.players.getPlayer(userId);
-    if (!(await this.checks.canMortgage(p.gameId, fieldId))) {
+    const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
+    if (!(await this.checks.canMortgage(p.gameId, f.fieldId))) {
       await this.store.setError(userId, {
         code: ErrorCode.CannotMortgageField,
         message: 'Oops!',
       });
     } else {
-      await this.fields.mortgage(p.gameId, fieldId);
+      await this.fields.mortgage(p.gameId, f.fieldId);
       await this.getNextAction(p.userId);
     }
   }

@@ -48,63 +48,63 @@ export class ActionMsController {
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_START_CLICKED })
   async fieldAuction({ userId }: { userId: number }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(userId);
+    await this.service.fieldAuction(userId);
     return await this.message.createBoardMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_ACCEPT_CLICKED })
   async acceptAuction({ userId }: { userId: number }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(userId);
+    await this.service.acceptAuction(userId);
     return await this.message.createBoardMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_DECLINE_CLICKED })
   async declineAuction({ userId }: { userId: number }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(userId);
+    await this.service.declineAuction(userId);
     return await this.message.createBoardMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_TAX_PAID_CLICKED })
   async payment({ userId }: { userId: number }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(userId);
+    await this.service.payment(userId);
     return await this.message.createBoardMessage(gameId);
   }
 
-  @MessagePattern({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED })
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED })
   async unJailPayment({ userId }: { userId: number }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(userId);
+    await this.service.unJailPayment(userId);
     return await this.message.createBoardMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED })
   async mortgageField({ userId }: { userId: number }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(userId);
+    await this.service.mortgageField(userId);
     return await this.message.createBoardMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED })
   async unMortgageField({ userId }: { userId: number }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(userId);
+    await this.service.unMortgageField(userId);
     return await this.message.createBoardMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED })
   async levelUpField({ userId }: { userId: number }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(userId);
+    await this.service.levelUpField(userId);
     return await this.message.createBoardMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED })
   async levelDownField({ userId }: { userId: number }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(userId);
+    await this.service.levelDownField(userId);
     return await this.message.createBoardMessage(gameId);
   }
 }

@@ -60,7 +60,7 @@ export class ChecksService {
 
   async isCompanyForSale(gameId: string, fieldId: number): Promise<boolean> {
     const f = await this.fields.getField(gameId, fieldId);
-    console.log('isCompanyForSale', f.name);
+
     const isCompany = await this.isCompany(gameId, f.fieldId);
 
     return isCompany && f && !f.status;

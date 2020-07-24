@@ -152,7 +152,6 @@ export class OutcomeMessageService {
     gameId: string,
     type: OutcomeMessageType | IncomeMessageType,
   ) => {
-    console.log(555, type);
     switch (type) {
       case OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL:
         return await this.rollDicesModalMessage(gameId);

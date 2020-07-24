@@ -89,7 +89,7 @@ export class FieldsUtilsService {
       const group = await this.getPlayerGroupFields(
         gameId,
         field,
-        await this.players.getPlayer(gameId, field.status.userId),
+        await this.players.getPlayer(field.status.userId),
       );
       const dices = await this.store.getDicesStore(gameId);
       return (

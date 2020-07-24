@@ -60,7 +60,7 @@ export class ActionService {
       transactionId,
       userId: p.userId,
     });
-    await this.transaction.transactMoney(gameId, transactionId);
+    await this.transaction.transactMoney(userId, transactionId);
   }
 
   async unJailModal(userId: number) {

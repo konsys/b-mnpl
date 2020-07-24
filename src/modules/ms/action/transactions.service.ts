@@ -49,8 +49,9 @@ export class TransactionsService {
     userId: number,
     transaction: IMoneyTransaction,
   ): Promise<boolean> {
-    const player1 = await this.players.getPlayer(gameId, transaction.userId);
-    const player2 = await this.players.getPlayer(gameId, transaction.toUserId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    const player1 = await this.players.getPlayer(transaction.userId);
+    const player2 = await this.players.getPlayer(transaction.toUserId);
 
     return (
       (await this.players.updatePlayer(
@@ -73,6 +74,7 @@ export class TransactionsService {
   }
 
   async getStartBonus(userId: number, toUserId: number, isStart = false) {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
     const transactionId = nanoid(4);
     const sum = isStart
       ? BOARD_PARAMS.START_BONUS
@@ -84,6 +86,6 @@ export class TransactionsService {
       transactionId,
       toUserId,
     });
-    await this.transactMoney(gameId, transactionId);
+    await this.transactMoney(userId, transactionId);
   }
 }

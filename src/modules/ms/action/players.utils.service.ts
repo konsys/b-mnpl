@@ -47,8 +47,9 @@ export class PlayersUtilsService {
     return res;
   }
 
-  async getPlayerIndexById(gameId: string, userId: number) {
-    const state = await this.getPlayers(gameId);
+  async getPlayerIndexById(userId: number) {
+    const p = await this.getPlayer(userId);
+    const state = await this.getPlayers(p.gameId);
     return state.findIndex((v) => v.userId === userId);
   }
 
@@ -112,10 +113,7 @@ export class PlayersUtilsService {
 
     const players = await this.getPlayers(gameId);
 
-    const currentPLayerIndex = await this.getPlayerIndexById(
-      gameId,
-      player.userId,
-    );
+    const currentPLayerIndex = await this.getPlayerIndexById(player.userId);
 
     // TODO error handler
     if (currentPLayerIndex === -1)

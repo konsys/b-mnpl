@@ -169,7 +169,7 @@ export class IncomeMessageService {
     try {
       await this.actions.rollDicesAction(userId);
       await this.store.emitMessage(p.gameId);
-      await this.getNextAction(p.userId);
+      await this.getNextAction(userId);
       setTimeout(async () => {
         await this.store.emitMessage(p.gameId);
       }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);

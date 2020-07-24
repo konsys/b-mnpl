@@ -21,7 +21,7 @@ export class IncomeMessageService {
     private readonly store: StoreService,
   ) {}
 
-  async levelDownField(userId: number, fieldId: number): Promise<void> {
+  async levelDownField(userId: number): Promise<void> {
     const p = await this.players.getPlayer(userId);
 
     const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);

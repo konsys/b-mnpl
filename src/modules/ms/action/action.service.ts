@@ -260,12 +260,10 @@ export class ActionService {
 
   async setPlayerActionEvent(userId: number, playerActions: any) {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    const prev = await this.store.getActionStore(gameId);
     await this.store.setActionStore(gameId, playerActions);
   }
 
-  async getAction(userId: number) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async getAction(gameId: string) {
     return await this.store.getActionStore(gameId);
   }
 

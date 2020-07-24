@@ -25,6 +25,6 @@ export class ActionMsController {
   async rollDices(userId: number) {
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.dicesModal(gameId);
-    return await this.message.createBoardMessage(userId);
+    return await this.message.createBoardMessage(gameId);
   }
 }

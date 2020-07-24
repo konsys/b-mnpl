@@ -61,7 +61,7 @@ export class BoardMessageService {
     private readonly fieldsMs: ClientProxy,
   ) {}
 
-  async createBoardMessage(userId: number): Promise<BoardMessage> {
+  async createBoardMessage(gameId: string): Promise<BoardMessage> {
     const actionState = await this.store.getActionStore(gameId);
     let event: IBoardEvent = {
       // Adapt from actionStore to send to client

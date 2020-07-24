@@ -17,12 +17,13 @@ export class TransactionsService {
     return await this.store.getTransaction(gameId);
   }
 
-  async transactMoney(gameId: string, transactionId: string) {
+  async transactMoney(userId: number, transactionId: string) {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
     const transaction = await this.store.getTransaction(gameId);
-    const player = await this.players.getPlayer(gameId, transaction.userId);
+    const player = await this.players.getPlayer(userId);
 
     if (transaction.sum > player.money) {
-      await this.store.setError('kkk', {
+      await this.store.setError(userId, {
         code: ErrorCode.NotEnoughMoney,
         message: 'Oops!',
       });
@@ -30,14 +31,14 @@ export class TransactionsService {
     }
 
     if (transactionId === transaction.transactionId) {
-      await this.moneyTransaction(gameId, {
+      await this.moneyTransaction(userId, {
         sum: transaction.sum,
         userId: transaction.userId,
         toUserId: transaction.toUserId,
       });
       await this.store.resetTransactionsEvent(gameId);
     } else {
-      await this.store.setError('kkk', {
+      await this.store.setError(userId, {
         code: ErrorCode.WrongTranactionId,
         message: 'Oops!',
       });
@@ -45,7 +46,7 @@ export class TransactionsService {
   }
 
   async moneyTransaction(
-    gameId: string,
+    userId: number,
     transaction: IMoneyTransaction,
   ): Promise<boolean> {
     const player1 = await this.players.getPlayer(gameId, transaction.userId);
@@ -71,7 +72,7 @@ export class TransactionsService {
     );
   }
 
-  async getStartBonus(gameId: string, toUserId: number, isStart = false) {
+  async getStartBonus(userId: number, toUserId: number, isStart = false) {
     const transactionId = nanoid(4);
     const sum = isStart
       ? BOARD_PARAMS.START_BONUS

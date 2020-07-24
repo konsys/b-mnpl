@@ -109,7 +109,7 @@ export class ChecksService {
   }
 
   async playerHasMonopoly(f: IField, p: IPlayer): Promise<boolean> {
-    const sg = await this.fields.getPlayerGroupFields(p.gameId, f, p);
+    const sg = await this.fields.getPlayerGroupFields(f, p);
     const pg = await this.fields.getFieldsByGroup(p.gameId, f.fieldGroup);
     return sg.length === pg.length;
   }
@@ -117,7 +117,7 @@ export class ChecksService {
   async isGroupMortgaged(userId: number, f: IField): Promise<boolean> {
     const gameId = await this.players.getGameIdByPlayerId(userId);
     const p = await this.players.getActingPlayer(gameId);
-    const sg = await this.fields.getPlayerGroupFields(gameId, f, p);
+    const sg = await this.fields.getPlayerGroupFields(f, p);
     return sg.some((v) => v.status && v.status.mortgaged > 0);
   }
 
@@ -214,7 +214,7 @@ export class ChecksService {
 
     return (
       f &&
-      (await this.isCompany(gameId, fieldId)) &&
+      (await this.isCompany(userId, fieldId)) &&
       f.status &&
       hasMonopoly &&
       !isMortgaged &&

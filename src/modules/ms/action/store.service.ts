@@ -211,13 +211,16 @@ export class StoreService {
     await redis.del(`${gameId}-${storeNames.error}`);
   }
 
-  private async set(gameId: string, serviceName: string, data: any) {
+  private async set(gameId: string | number, serviceName: string, data: any) {
     await redis.set(`${gameId}-${serviceName}`, JSON.stringify(data));
 
     await redis.expire([`${gameId}-${serviceName}`, BOARD_PARAMS.REDIS_TTL]);
   }
 
-  private async get(gameId: string, serviceName: string): Promise<any> {
+  private async get(
+    gameId: string | number,
+    serviceName: string,
+  ): Promise<any> {
     return JSON.parse(await redis.get(`${gameId}-${serviceName}`));
   }
 }

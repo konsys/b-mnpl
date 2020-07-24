@@ -34,11 +34,6 @@ export interface IAuctionStore {
   isEnded: boolean;
 }
 
-export interface IGameStore {
-  gameId: string;
-  usersId: number[];
-}
-
 export interface ITransactionStore {
   transactionId: string;
   reason: string;
@@ -193,21 +188,13 @@ export class StoreService {
     return (await this.get(gameId, storeNames.error)) as IErrorMessage;
   }
 
-  async setGameStore(gameId: string, data: IGameStore) {
-    await this.set(gameId, storeNames.game, data);
-  }
-
-  async getGameStore(gameId: string): Promise<IGameStore> {
-    return (await this.get(gameId, storeNames.game)) as IGameStore;
-  }
-
-  async getGameId(userId: number): Promise<string> {
+  async getGameIdByPlayerId(userId: number): Promise<string> {
     return await redis.get(userId);
   }
 
-  async setGameId(gameId: string, userId: number) {
+  async setPlayerIdToGameId(userId: number, gameId: string) {
     await redis.set(userId, gameId);
-    await redis.expire([`userId`, BOARD_PARAMS.REDIS_TTL]);
+    await redis.expire([userId, BOARD_PARAMS.REDIS_TTL]);
   }
 
   async emitMessage(gameId: string) {

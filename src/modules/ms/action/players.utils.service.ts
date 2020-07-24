@@ -136,4 +136,9 @@ export class PlayersUtilsService {
     const playersState = await this.store.getPlayersStore(gameId);
     return playersState ? playersState.players : [];
   }
+
+  public async getGameIdByPlayerId(userId: number): Promise<string> {
+    const id = await this.store.getGameIdByPlayerId(userId);
+    return id ? id : '';
+  }
 }

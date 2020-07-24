@@ -97,7 +97,7 @@ export class StoreService {
   ) {}
 
   async flushGame(gameId: string) {
-    await this.action.getAction('kkk');
+    await this.action.getAction(gameId);
 
     for (const k of Object.values(storeNames)) {
       await redis.del(`${gameId}-${k}`);
@@ -179,9 +179,9 @@ export class StoreService {
     return await redis.del(`${gameId}-${storeNames.auction}`);
   }
 
-  async setError(gameId: string, data: IErrorMessage) {
+  async setError(userId: number, data: IErrorMessage) {
     await redis.publish(`${BOARD_PARAMS.ERROR_CHANNEL}`, JSON.stringify(data));
-    await this.set(gameId, storeNames.error, data);
+    await this.set(userId, storeNames.error, data);
   }
 
   async getError(gameId: string): Promise<IErrorMessage> {

@@ -61,7 +61,7 @@ export class BoardMessageService {
     private readonly fieldsMs: ClientProxy,
   ) {}
 
-  async createBoardMessage(gameId: string): Promise<BoardMessage> {
+  async createBoardMessage(userId: number): Promise<BoardMessage> {
     const actionState = await this.store.getActionStore(gameId);
     let event: IBoardEvent = {
       // Adapt from actionStore to send to client
@@ -163,6 +163,10 @@ export class BoardMessageService {
       ids.map((id) => {
         resultPlayers.push(players.find((v) => v.userId === id));
       });
+
+      for (const player of players) {
+        await this.store.setPlayerIdToGameId(player.userId, gameId);
+      }
 
       await this.store.setActionStore(gameId, {
         action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,

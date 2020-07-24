@@ -25,9 +25,9 @@ export class IncomeMessageService {
     private readonly store: StoreService,
   ) {}
 
-  async levelDownField(payload: IFieldId): Promise<void> {
-    if (!(await this.checks.canLevelDown('kkk', payload.fieldId))) {
-      await this.store.setError('kkk', {
+  async levelDownField(userId: number, payload: IFieldId): Promise<void> {
+    if (!(await this.checks.canLevelDown(userId, payload.fieldId))) {
+      await this.store.setError(userId, {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });

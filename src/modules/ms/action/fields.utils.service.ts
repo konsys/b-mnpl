@@ -121,17 +121,13 @@ export class FieldsUtilsService {
     return 0;
   }
 
-  async getPlayerGroupFields(
-    gameId: string,
-    field: IField,
-    player: IPlayer,
-  ): Promise<IField[]> {
-    const fields = await this.getFields(gameId);
+  async getPlayerGroupFields(field: IField, p: IPlayer): Promise<IField[]> {
+    const fields = await this.getFields(p.gameId);
     return fields.filter(
       (v) =>
         v.fieldGroup === field.fieldGroup &&
         v.status &&
-        v.status.userId === player.userId,
+        v.status.userId === p.userId,
     );
   }
 
@@ -155,14 +151,11 @@ export class FieldsUtilsService {
     );
   }
 
-  async buyCompany(gameId: string, f: IField, p: IPlayer): Promise<number> {
-    const sameGroup = _.concat(
-      await this.getPlayerGroupFields(gameId, f, p),
-      f,
-    );
+  async buyCompany(f: IField, p: IPlayer): Promise<number> {
+    const sameGroup = _.concat(await this.getPlayerGroupFields(f, p), f);
 
-    if (this.checks.canBuyField(gameId, f.fieldId, p)) {
-      await this.updateField(gameId, {
+    if (this.checks.canBuyField(f.fieldId, p)) {
+      await this.updateField(p.gameId, {
         ...f,
 
         status: {
@@ -170,7 +163,7 @@ export class FieldsUtilsService {
           userId: p.userId,
           branches: f.type === FieldType.COMPANY ? 0 : sameGroup.length - 1,
           mortgaged: f.status.mortgaged || 0,
-          fieldActions: await this.getFieldActions(gameId, f.fieldId),
+          fieldActions: await this.getFieldActions(p.gameId, f.fieldId),
         },
       });
 
@@ -184,9 +177,9 @@ export class FieldsUtilsService {
               ? v.status.branches || 0
               : sameGroup.length - 1,
           mortgaged: v.status.mortgaged || 0,
-          fieldActions: await this.getFieldActions(gameId, v.fieldId),
+          fieldActions: await this.getFieldActions(p.gameId, v.fieldId),
         };
-        await this.updateField(gameId, v);
+        await this.updateField(p.gameId, v);
       }
     }
     return f.price.startPrice;
@@ -196,14 +189,14 @@ export class FieldsUtilsService {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actions.setPlayerActionEvent(gameId, {
+    await this.actions.setPlayerActionEvent(p.userId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
       fieldAction: IFieldAction.MORTGAGE,
     });
 
-    (await this.checks.canMortgage(gameId, f.fieldId)) &&
+    (await this.checks.canMortgage(p.userId, f.fieldId)) &&
       (await this.updateField(gameId, {
         ...f,
         status: { ...f.status, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },

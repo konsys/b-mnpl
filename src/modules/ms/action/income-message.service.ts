@@ -169,9 +169,8 @@ export class IncomeMessageService {
     try {
       await this.actions.rollDicesAction(userId);
       await this.store.emitMessage(p.gameId);
-
+      await this.getNextAction(p.userId);
       setTimeout(async () => {
-        await this.getNextAction(p.userId);
         await this.store.emitMessage(p.gameId);
       }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
     } catch (err) {
@@ -184,6 +183,7 @@ export class IncomeMessageService {
       const p = await this.players.getPlayer(userId);
       const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
 
+      console.log('nextAction');
       if (!p.jailed) {
         if (await this.checks.isStartPass(p.userId)) {
           // Bonus for start passing
@@ -197,6 +197,7 @@ export class IncomeMessageService {
         } else if (await this.checks.isMyField(p.userId, f.fieldId)) {
           await this.actions.switchPlayerTurn(p.userId, false);
         } else if (await this.checks.isCompanyForSale(p.gameId, f.fieldId)) {
+          console.log('isCompanyForSale');
           await this.actions.buyFieldModal(p.userId);
         } else if (
           !(await this.checks.isCompanyForSale(p.gameId, f.fieldId)) &&

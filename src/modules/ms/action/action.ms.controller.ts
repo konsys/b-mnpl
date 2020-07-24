@@ -31,11 +31,12 @@ export class ActionMsController {
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED })
   async rollDices({ userId }: { userId: number }) {
-    console.log('rollDices');
+    console.log('rollDices', userId);
     const gameId = await this.store.getGameIdByPlayerId(userId);
 
     await this.service.dicesModal(userId);
-    return await this.message.createBoardMessage(gameId);
+    // return;
+    return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_BUY_FIELD_CLICKED })
@@ -44,7 +45,7 @@ export class ActionMsController {
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.fieldBought(userId);
 
-    return await this.message.createBoardMessage(gameId);
+    return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_START_CLICKED })
@@ -52,7 +53,7 @@ export class ActionMsController {
     console.log('fieldAuction');
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.fieldAuction(userId);
-    return await this.message.createBoardMessage(gameId);
+    return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_ACCEPT_CLICKED })
@@ -60,7 +61,7 @@ export class ActionMsController {
     console.log('acceptAuction');
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.acceptAuction(userId);
-    return await this.message.createBoardMessage(gameId);
+    return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_DECLINE_CLICKED })
@@ -68,7 +69,7 @@ export class ActionMsController {
     console.log('declineAuction');
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.declineAuction(userId);
-    return await this.message.createBoardMessage(gameId);
+    return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_TAX_PAID_CLICKED })
@@ -76,7 +77,7 @@ export class ActionMsController {
     console.log('payment');
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.payment(userId);
-    return await this.message.createBoardMessage(gameId);
+    return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED })
@@ -84,7 +85,7 @@ export class ActionMsController {
     console.log('unJailPayment');
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.unJailPayment(userId);
-    return await this.message.createBoardMessage(gameId);
+    return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED })
@@ -92,7 +93,7 @@ export class ActionMsController {
     console.log('mortgageField');
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.mortgageField(userId);
-    return await this.message.createBoardMessage(gameId);
+    return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED })
@@ -100,7 +101,7 @@ export class ActionMsController {
     console.log('unMortgageField');
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.unMortgageField(userId);
-    return await this.message.createBoardMessage(gameId);
+    return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED })
@@ -108,7 +109,7 @@ export class ActionMsController {
     console.log('levelUpField');
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.levelUpField(userId);
-    return await this.message.createBoardMessage(gameId);
+    return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED })
@@ -116,6 +117,6 @@ export class ActionMsController {
     console.log('levelDownField');
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.levelDownField(userId);
-    return await this.message.createBoardMessage(gameId);
+    return;
   }
 }

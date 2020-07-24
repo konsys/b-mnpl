@@ -15,7 +15,7 @@ export class IncomeMessageService {
   async onModuleInit() {
     await this.store.flushGame('kkk');
   }
-
+  // 5089
   constructor(
     private readonly players: PlayersUtilsService,
     private readonly fields: FieldsUtilsService,
@@ -25,22 +25,21 @@ export class IncomeMessageService {
     private readonly store: StoreService,
   ) {}
 
-  async levelDownField(userId: number, payload: IFieldId): Promise<void> {
-    const p = await this.players.getPlayer(userId);
-    if (!(await this.checks.canLevelDown(userId, payload.fieldId))) {
-      await this.store.setError(userId, {
+  async levelDownField(gameId: string, payload: IFieldId): Promise<void> {
+    if (!(await this.checks.canLevelDown(gameId, payload.fieldId))) {
+      await this.store.setError(payload.userId, {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
     } else {
-      await this.fields.levelDownField(p.gameId, payload.fieldId);
+      await this.fields.levelDownField(gameId, payload.fieldId);
     }
   }
 
-  async levelUpField(userId: number, payload: IFieldId): Promise<void> {
-    const p = await this.players.getPlayer(userId);
-    if (!(await this.checks.canLevelUp(userId, payload.fieldId))) {
-      await this.store.setError(userId, {
+  async levelUpField(payload: IFieldId): Promise<void> {
+    const p = await this.players.getPlayer(payload.userId);
+    if (!(await this.checks.canLevelUp(p.gameId, payload.fieldId))) {
+      await this.store.setError(payload.userId, {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
@@ -49,52 +48,54 @@ export class IncomeMessageService {
     }
   }
 
-  async unMortgageField(userId: number, payload: IFieldId): Promise<void> {
-    const p = await this.players.getPlayer(userId);
-    if (!(await this.checks.canUnMortgage(userId, payload.fieldId))) {
-      await this.store.setError(userId, {
+  async unMortgageField(payload: IFieldId): Promise<void> {
+    const p = await this.players.getPlayer(payload.userId);
+    if (!(await this.checks.canUnMortgage(p.gameId, payload.fieldId))) {
+      await this.store.setError(payload.userId, {
         code: ErrorCode.CannotUnMortgageField,
         message: 'Oops!',
       });
     } else {
-      await this.fields.unMortgage(userId, payload.fieldId);
+      await this.fields.unMortgage(p.gameId, payload.fieldId);
       await this.getNextAction(p.gameId);
     }
   }
 
-  async mortgageField(userId: number, payload: IFieldId): Promise<void> {
-    const p = await this.players.getPlayer(userId);
-    if (!(await this.checks.canMortgage(userId, payload.fieldId))) {
-      await this.store.setError(userId, {
+  async mortgageField(payload: IFieldId): Promise<void> {
+    const p = await this.players.getPlayer(payload.userId);
+    if (!(await this.checks.canMortgage(p.gameId, payload.fieldId))) {
+      await this.store.setError(payload.userId, {
         code: ErrorCode.CannotMortgageField,
         message: 'Oops!',
       });
     } else {
-      await this.fields.mortgage(userId, payload.fieldId);
+      await this.fields.mortgage(p.gameId, payload.fieldId);
       await this.getNextAction(p.gameId);
     }
   }
 
   async unJailPayment(userId: number): Promise<void> {
-    await this.players.unjailPlayer('kkk');
+    const p = await this.players.getPlayer(userId);
+    await this.players.unjailPlayer(p.gameId);
 
     setTimeout(async () => {
-      await this.actions.rollDicesModal('kkk');
+      await this.actions.rollDicesModal(p.userId);
     }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 2);
   }
 
   async payment(userId: number): Promise<void> {
+    const p = await this.players.getPlayer(userId);
     if (
-      (await this.transactions.getCurrentTransaction('kkk')).sum <=
-      (await this.players.getActingPlayer('kkk')).money
+      (await this.transactions.getCurrentTransaction(p.gameId)).sum <=
+      (await this.players.getActingPlayer(p.gameId)).money
     ) {
       await this.transactions.transactMoney(
-        'kkk',
-        (await this.transactions.getCurrentTransaction('kkk')).transactionId,
+        userId,
+        (await this.transactions.getCurrentTransaction(p.gameId)).transactionId,
       );
-      await this.actions.switchPlayerTurn('kkk', false);
+      await this.actions.switchPlayerTurn(userId, false);
     } else {
-      await this.store.setError('kkk', {
+      await this.store.setError(userId, {
         code: ErrorCode.NotEnoughMoney,
         message: 'Oops!',
       });
@@ -102,33 +103,35 @@ export class IncomeMessageService {
   }
 
   async declineAuction(userId: number): Promise<void> {
-    const f = await this.fields.getActingField('kkk');
-    const canStart = await this.checks.isCompanyForSale('kkk', f.fieldId);
+    const p = await this.players.getPlayer(userId);
+    const f = await this.fields.getActingField(p.gameId);
+    const canStart = await this.checks.isCompanyForSale(p.gameId, f.fieldId);
     canStart
-      ? await this.actions.declineAuctionModal('kkk')
-      : await this.store.setError('kkk', {
+      ? await this.actions.declineAuctionModal(p.userId)
+      : await this.store.setError(p.userId, {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',
         });
   }
 
   async acceptAuction(userId: number): Promise<void> {
-    const f = await this.fields.getActingField('kkk');
-    const canStart = await this.checks.isCompanyForSale('kkk', f.fieldId);
+    const p = await this.players.getPlayer(userId);
+    const f = await this.fields.getActingField(p.gameId);
+    const canStart = await this.checks.isCompanyForSale(p.gameId, f.fieldId);
     canStart
-      ? await this.actions.acceptAuctionModal('kkk')
-      : await this.store.setError('kkk', {
+      ? await this.actions.acceptAuctionModal(p.gameId)
+      : await this.store.setError(p.gameId, {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',
         });
   }
 
   async fieldAuction(userId: number): Promise<void> {
-    const f = await this.fields.getActingField('kkk');
-    const canStart = await this.checks.isCompanyForSale('kkk', f.fieldId);
+    const f = await this.fields.getActingField(p.gameId);
+    const canStart = await this.checks.isCompanyForSale(p.gameId, f.fieldId);
     canStart
-      ? await this.actions.startAuctionModal('kkk')
-      : await this.store.setError('kkk', {
+      ? await this.actions.startAuctionModal(p.gameId)
+      : await this.store.setError(p.gameId, {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',
         });
@@ -138,12 +141,12 @@ export class IncomeMessageService {
     const f = await this.fields.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
     if (
-      (await this.checks.isCompanyForSale(p.userId, fieldId)) &&
+      (await this.checks.isCompanyForSale(p.gameId, fieldId)) &&
       (await this.checks.canBuyField(fieldId, p))
     ) {
       await this.actions.buyField(f.fieldId, p.userId, f.price.startPrice);
       await this.actions.switchPlayerTurn(p.userId, false);
-    } else if (!(await this.checks.isCompanyForSale(p.userId, f.fieldId))) {
+    } else if (!(await this.checks.isCompanyForSale(p.gameId, f.fieldId))) {
       await this.store.setError(p.userId, {
         code: ErrorCode.CompanyHasOwner,
         message: 'Oops!',
@@ -157,27 +160,27 @@ export class IncomeMessageService {
   }
 
   async dicesModal(userId: number): Promise<void> {
+    const p = await this.players.getPlayer(userId);
     try {
       await this.actions.rollDicesAction(userId);
-      await this.store.emitMessage(gameId);
-      await this.getNextAction(gameId);
+      await this.store.emitMessage(p.gameId);
+      await this.getNextAction(p.gameId);
       setTimeout(async () => {}, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
     } catch (err) {
       console.log('Error in dicesModal', err);
     }
   }
 
-  async getNextAction(gameId: string) {
+  async getNextAction(userId: number) {
     try {
-      const p = await this.players.getActingPlayer(gameId);
-      const f = await this.fields.getFieldByPosition(gameId, p.meanPosition);
+      const p = await this.players.getPlayer(userId);
 
       if (!p.jailed) {
-        if (await this.checks.isStartPass(p.gameId)) {
+        if (await this.checks.isStartPass(p.userId)) {
           // Bonus for start passing
           p.meanPosition === 0
             ? await this.transactions.getStartBonus(
-                p.gameId,
+                p.userId,
                 player.userId,
                 true,
               )

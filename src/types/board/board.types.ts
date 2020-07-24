@@ -12,6 +12,7 @@ export interface IActionId {
 }
 
 export interface IFieldId {
+  userId: number;
   fieldId: number;
 }
 

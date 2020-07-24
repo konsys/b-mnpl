@@ -73,7 +73,7 @@ export class TransactionsService {
     );
   }
 
-  async getStartBonus(userId: number, toUserId: number, isStart = false) {
+  async getStartBonus(userId: number, isStart = false) {
     const gameId = await this.store.getGameIdByPlayerId(userId);
     const transactionId = nanoid(4);
     const sum = isStart
@@ -84,7 +84,7 @@ export class TransactionsService {
       userId: BOARD_PARAMS.BANK_PLAYER_ID,
       reason: 'Стартовый бонус',
       transactionId,
-      toUserId,
+      toUserId: userId,
     });
     await this.transactMoney(userId, transactionId);
   }

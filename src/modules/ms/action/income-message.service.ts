@@ -3,7 +3,6 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { ChecksService } from './checks.service';
 import { ErrorCode } from 'src/utils/error.code';
 import { FieldsUtilsService } from './fields.utils.service';
-import { IFieldId } from 'src/types/board/board.types';
 import { Injectable } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
@@ -22,51 +21,52 @@ export class IncomeMessageService {
     private readonly store: StoreService,
   ) {}
 
-  async levelDownField(gameId: string, payload: IFieldId): Promise<void> {
-    if (!(await this.checks.canLevelDown(gameId, payload.fieldId))) {
-      await this.store.setError(payload.userId, {
+  async levelDownField(userId: number, fieldId: number): Promise<void> {
+    const p = await this.players.getPlayer(userId);
+    if (!(await this.checks.canLevelDown(p.gameId, fieldId))) {
+      await this.store.setError(userId, {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
     } else {
-      await this.fields.levelDownField(gameId, payload.fieldId);
+      await this.fields.levelDownField(p.gameId, fieldId);
     }
   }
 
-  async levelUpField(payload: IFieldId): Promise<void> {
-    const p = await this.players.getPlayer(payload.userId);
-    if (!(await this.checks.canLevelUp(p.gameId, payload.fieldId))) {
-      await this.store.setError(payload.userId, {
+  async levelUpField(userId: number, fieldId: number): Promise<void> {
+    const p = await this.players.getPlayer(userId);
+    if (!(await this.checks.canLevelUp(p.gameId, fieldId))) {
+      await this.store.setError(userId, {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
     } else {
-      await this.fields.levelUpField(p.gameId, payload.fieldId);
+      await this.fields.levelUpField(p.gameId, fieldId);
     }
   }
 
-  async unMortgageField(payload: IFieldId): Promise<void> {
-    const p = await this.players.getPlayer(payload.userId);
-    if (!(await this.checks.canUnMortgage(p.gameId, payload.fieldId))) {
-      await this.store.setError(payload.userId, {
+  async unMortgageField(userId: number, fieldId: number): Promise<void> {
+    const p = await this.players.getPlayer(userId);
+    if (!(await this.checks.canUnMortgage(p.gameId, fieldId))) {
+      await this.store.setError(userId, {
         code: ErrorCode.CannotUnMortgageField,
         message: 'Oops!',
       });
     } else {
-      await this.fields.unMortgage(p.gameId, payload.fieldId);
+      await this.fields.unMortgage(p.gameId, fieldId);
       await this.getNextAction(p.userId);
     }
   }
 
-  async mortgageField(payload: IFieldId): Promise<void> {
-    const p = await this.players.getPlayer(payload.userId);
-    if (!(await this.checks.canMortgage(p.gameId, payload.fieldId))) {
-      await this.store.setError(payload.userId, {
+  async mortgageField(userId: number, fieldId: number): Promise<void> {
+    const p = await this.players.getPlayer(userId);
+    if (!(await this.checks.canMortgage(p.gameId, fieldId))) {
+      await this.store.setError(userId, {
         code: ErrorCode.CannotMortgageField,
         message: 'Oops!',
       });
     } else {
-      await this.fields.mortgage(p.gameId, payload.fieldId);
+      await this.fields.mortgage(p.gameId, fieldId);
       await this.getNextAction(p.userId);
     }
   }

@@ -151,14 +151,15 @@ export class ActionService {
   }
 
   async acceptAuctionModal(userId: number) {
+    const p = await this.players.getPlayer(userId);
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    const auction = await this.store.getAuctionStore('kkk');
+    const auction = await this.store.getAuctionStore(p.gameId);
     const nextUserId = this.getNextArrayValue(
       auction.userId,
       auction.participants,
     );
 
-    await this.store.setAuctionStore('kkk', {
+    await this.store.setAuctionStore(p.gameId, {
       ...auction,
       bet: auction.bet + BOARD_PARAMS.AUCTION_BET_INCREASE,
       userId: nextUserId,

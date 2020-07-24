@@ -89,13 +89,8 @@ export class BoardMessageService {
     return message;
   }
 
-  async onModuleInit() {
-    await this.store.flushGame('kkk');
-    await this.initStores('kkk');
-  }
-
   async initStores(gameId: string) {
-    await this.store.flushGame('kkk');
+    await this.store.flushGame(gameId);
     try {
       const fields = await this.fieldsMs
         .send<any>({ cmd: MsPatterns.GET_INIT_FIELDS }, {})
@@ -122,7 +117,7 @@ export class BoardMessageService {
         playersTurn: 0,
         playerActions: [],
       });
-      await this.store.setBankStore('kkk', bank);
+      await this.store.setBankStore(gameId, bank);
     } catch (err) {
       console.log('ERROR ERROR', err);
     }

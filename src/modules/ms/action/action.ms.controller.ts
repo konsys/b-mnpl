@@ -1,7 +1,8 @@
+import { IPlayer, IncomeMessageType } from 'src/types/board/board.types';
+
 import { BoardMessageService } from './board.message.service';
 import { Controller } from '@nestjs/common';
 import { IncomeMessageService } from './income-message.service';
-import { IncomeMessageType } from 'src/types/board/board.types';
 import { MessagePattern } from '@nestjs/microservices';
 import { MsPatternsActions } from 'src/types/ms/ms.types';
 import { StoreService } from './store.service';
@@ -15,9 +16,16 @@ export class ActionMsController {
   ) {}
 
   @MessagePattern({ cmd: MsPatternsActions.INIT_PLAYERS })
-  async initPlayers(params: any) {
-    const res = await this.message.initPlayers(params.gameId, params.players);
-    await this.store.emitMessage(params.gameId);
+  async initPlayers({
+    gameId,
+    players,
+  }: {
+    gameId: string;
+    players: IPlayer[];
+  }) {
+    await this.message.initStores(gameId);
+    const res = await this.message.initPlayers(gameId, players);
+    await this.store.emitMessage(gameId);
     return res;
   }
 

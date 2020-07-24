@@ -12,9 +12,6 @@ import { nanoid } from 'nanoid';
 
 @Injectable()
 export class IncomeMessageService {
-  async onModuleInit() {
-    await this.store.flushGame('kkk');
-  }
   // 5089
   constructor(
     private readonly players: PlayersUtilsService,

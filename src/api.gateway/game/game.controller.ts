@@ -28,13 +28,13 @@ export class GameController {
     @Body('action') action: IncomeMessageType,
     @Body('payload') payload?: IFieldId,
   ): Promise<string> {
-    console.log(11111, action, req.user);
     const incomeAction: IActionId = {
       gameId: 'kkk',
       actionId: 'actionId',
       userId: req.user.userId,
     };
 
+    console.log(22222, req.user.userId);
     switch (action) {
       case IncomeMessageType.INCOME_ROLL_DICES_CLICKED:
         await this.service.dicesModal(incomeAction);

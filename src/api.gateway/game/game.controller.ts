@@ -7,7 +7,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { IncomeMessageType, IPayload } from 'src/types/board/board.types';
+import { IncomeMessageType } from 'src/types/board/board.types';
 import { GameService } from './game.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 
@@ -23,48 +23,49 @@ export class GameController {
     @Request() req,
     @Body('action') action: IncomeMessageType,
   ): Promise<string> {
+    const userId = req.user.userId;
     switch (action) {
       case IncomeMessageType.INCOME_ROLL_DICES_CLICKED:
-        await this.service.dicesModal({ userId: req.user.userId });
+        await this.service.dicesModal({ userId });
         break;
 
       case IncomeMessageType.INCOME_BUY_FIELD_CLICKED:
-        await this.service.fieldBought({ userId: req.user.userId });
+        await this.service.fieldBought({ userId });
         break;
 
       case IncomeMessageType.INCOME_AUCTION_START_CLICKED:
-        await this.service.fieldAuction({ userId: req.user.userId });
+        await this.service.fieldAuction({ userId });
         break;
 
       case IncomeMessageType.INCOME_AUCTION_ACCEPT_CLICKED:
-        await this.service.acceptAuction({ userId: req.user.userId });
+        await this.service.acceptAuction({ userId });
         break;
 
       case IncomeMessageType.INCOME_AUCTION_DECLINE_CLICKED:
-        await this.service.declineAuction({ userId: req.user.userId });
+        await this.service.declineAuction({ userId });
         break;
 
       case IncomeMessageType.INCOME_TAX_PAID_CLICKED:
-        await this.service.payment({ userId: req.user.userId });
+        await this.service.payment({ userId });
         break;
       case IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED:
-        await this.service.unJailPayment({ userId: req.user.userId });
+        await this.service.unJailPayment({ userId });
         break;
 
       case IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED:
-        await this.service.mortgageField({ userId: req.user.userId });
+        await this.service.mortgageField({ userId });
         break;
 
       case IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED:
-        await this.service.unMortgageField({ userId: req.user.userId });
+        await this.service.unMortgageField({ userId });
         break;
 
       case IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED:
-        await this.service.levelUpField({ userId: req.user.userId });
+        await this.service.levelUpField({ userId });
         break;
 
       case IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED:
-        await this.service.levelDownField({ userId: req.user.userId });
+        await this.service.levelDownField({ userId });
         break;
     }
 

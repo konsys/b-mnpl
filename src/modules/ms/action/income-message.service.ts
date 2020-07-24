@@ -181,6 +181,7 @@ export class IncomeMessageService {
   async getNextAction(userId: number) {
     try {
       const p = await this.players.getPlayer(userId);
+      console.log(44444, p.meanPosition);
       const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
 
       console.log('nextAction');
@@ -193,22 +194,27 @@ export class IncomeMessageService {
         }
 
         if (await this.checks.noActionField(p.gameId, f.fieldId)) {
+          console.log(1);
           await this.actions.switchPlayerTurn(p.userId, false);
         } else if (await this.checks.isMyField(p.userId, f.fieldId)) {
+          console.log(2);
           await this.actions.switchPlayerTurn(p.userId, false);
         } else if (await this.checks.isCompanyForSale(p.gameId, f.fieldId)) {
-          console.log('isCompanyForSale');
+          console.log(3);
+
           await this.actions.buyFieldModal(p.userId);
         } else if (
           !(await this.checks.isCompanyForSale(p.gameId, f.fieldId)) &&
           (await this.checks.isMyField(p.userId, f.fieldId))
         ) {
+          console.log(4);
           await this.actions.switchPlayerTurn(p.userId, false);
         } else if (
           (await this.checks.isCompany(p.gameId, f.fieldId)) &&
           (await this.checks.whosField(p.gameId, f.fieldId)) &&
           !(await this.checks.isMyField(p.userId, f.fieldId))
         ) {
+          console.log(5);
           await this.store.setTransaction(p.gameId, {
             sum: await this.fields.getFieldRent(p.gameId, f),
             userId: p.userId,
@@ -218,9 +224,11 @@ export class IncomeMessageService {
           });
           await this.actions.payTaxModal(p.userId);
         } else if (await this.checks.isJail(p.gameId, f.fieldId)) {
+          console.log(6);
           (await this.players.jailPlayer(p.gameId)) &&
             (await this.actions.switchPlayerTurn(p.userId, false));
         } else if (await this.checks.isTax(p.gameId, f.fieldId)) {
+          console.log(7);
           // TODO написать нормальный текст на налоги
           await this.store.setTransaction(p.gameId, {
             sum: await this.fields.getFieldRent(p.gameId, f),
@@ -231,6 +239,7 @@ export class IncomeMessageService {
           });
           await this.actions.payTaxModal(p.userId);
         } else if (await this.checks.isChance(p.gameId, f.fieldId)) {
+          console.log(8);
           // TODO Make a real chance field await this.actions
           await this.store.setTransaction(p.gameId, {
             sum: 1000,

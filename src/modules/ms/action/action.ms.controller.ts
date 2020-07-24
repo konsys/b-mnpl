@@ -36,4 +36,75 @@ export class ActionMsController {
     await this.service.dicesModal(userId);
     return await this.message.createBoardMessage(gameId);
   }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_BUY_FIELD_CLICKED })
+  async fieldBought({ userId }: { userId: number }): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.fieldBought(userId);
+
+    return await this.message.createBoardMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_START_CLICKED })
+  async fieldAuction({ userId }: { userId: number }): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.dicesModal(userId);
+    return await this.message.createBoardMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_ACCEPT_CLICKED })
+  async acceptAuction({ userId }: { userId: number }): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.dicesModal(userId);
+    return await this.message.createBoardMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_DECLINE_CLICKED })
+  async declineAuction({ userId }: { userId: number }): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.dicesModal(userId);
+    return await this.message.createBoardMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_TAX_PAID_CLICKED })
+  async payment({ userId }: { userId: number }): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.dicesModal(userId);
+    return await this.message.createBoardMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED })
+  async unJailPayment({ userId }: { userId: number }): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.dicesModal(userId);
+    return await this.message.createBoardMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED })
+  async mortgageField({ userId }: { userId: number }): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.dicesModal(userId);
+    return await this.message.createBoardMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED })
+  async unMortgageField({ userId }: { userId: number }): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.dicesModal(userId);
+    return await this.message.createBoardMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED })
+  async levelUpField({ userId }: { userId: number }): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.dicesModal(userId);
+    return await this.message.createBoardMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED })
+  async levelDownField({ userId }: { userId: number }): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.dicesModal(userId);
+    return await this.message.createBoardMessage(gameId);
+  }
 }

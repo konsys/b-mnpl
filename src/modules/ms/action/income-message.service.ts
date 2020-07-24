@@ -135,12 +135,13 @@ export class IncomeMessageService {
         });
   }
 
-  async fieldBought(gameId: string, fieldId: number): Promise<void> {
-    const f = await this.fields.getField(gameId, fieldId);
-    const p = await this.players.getActingPlayer(gameId);
+  async fieldBought(userId: number): Promise<void> {
+    const p = await this.players.getPlayer(userId);
+    const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
+
     if (
-      (await this.checks.isCompanyForSale(p.gameId, fieldId)) &&
-      (await this.checks.canBuyField(fieldId, p))
+      (await this.checks.isCompanyForSale(p.gameId, f.fieldId)) &&
+      (await this.checks.canBuyField(f.fieldId, p))
     ) {
       await this.actions.buyField(f.fieldId, p.userId, f.price.startPrice);
       await this.actions.switchPlayerTurn(p.userId, false);

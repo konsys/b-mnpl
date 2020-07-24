@@ -11,9 +11,8 @@ export interface IActionId {
   userId: number;
 }
 
-export interface IFieldId {
+export interface IPayload {
   userId: number;
-  fieldId: number;
 }
 
 export interface IPlayerMove extends IActionId {

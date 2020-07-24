@@ -7,11 +7,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import {
-  IncomeMessageType,
-  IActionId,
-  IFieldId,
-} from 'src/types/board/board.types';
+import { IncomeMessageType, IPayload } from 'src/types/board/board.types';
 import { GameService } from './game.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 
@@ -26,21 +22,14 @@ export class GameController {
   async action(
     @Request() req,
     @Body('action') action: IncomeMessageType,
-    @Body('payload') payload?: IFieldId,
+    @Body('payload') payload?: IPayload,
   ): Promise<string> {
-    const incomeAction: IActionId = {
-      gameId: 'kkk',
-      actionId: 'actionId',
-      userId: req.user.userId,
-    };
-
-    console.log(22222, req.user.userId);
     switch (action) {
       case IncomeMessageType.INCOME_ROLL_DICES_CLICKED:
-        await this.service.dicesModal(incomeAction);
+        await this.service.dicesModal(req.user.userId);
 
       case IncomeMessageType.INCOME_BUY_FIELD_CLICKED:
-        await this.service.fieldBought();
+        await this.service.fieldBought({ userId: req.user.userId });
 
       case IncomeMessageType.INCOME_AUCTION_START_CLICKED:
         await this.service.fieldAuction();

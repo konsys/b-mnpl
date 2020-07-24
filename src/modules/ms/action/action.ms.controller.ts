@@ -24,7 +24,7 @@ export class ActionMsController {
   @MessagePattern({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED })
   async rollDices(userId: number) {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(gameId);
+    await this.service.dicesModal(userId);
     return await this.message.createBoardMessage(gameId);
   }
 }

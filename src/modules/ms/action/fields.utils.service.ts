@@ -195,7 +195,7 @@ export class FieldsUtilsService {
       fieldAction: IFieldAction.MORTGAGE,
     });
 
-    (await this.checks.canMortgage(p.userId, f.fieldId)) &&
+    (await this.checks.canMortgage(gameId, f.fieldId)) &&
       (await this.updateField(gameId, {
         ...f,
         status: { ...f.status, mortgaged: BOARD_PARAMS.MORTGAGE_TURNS },
@@ -277,7 +277,7 @@ export class FieldsUtilsService {
       fieldAction: IFieldAction.UNMORTGAGE,
     });
 
-    (await this.checks.canUnMortgage(p.userId, f.fieldId)) &&
+    (await this.checks.canUnMortgage(gameId, f.fieldId)) &&
       (await this.updateField(gameId, {
         ...f,
         status: { ...f.status, mortgaged: 0 },
@@ -301,14 +301,14 @@ export class FieldsUtilsService {
       transactionId,
       userId: p.userId,
     });
-    await this.transaction.transactMoney(gameId, transactionId);
+    await this.transaction.transactMoney(p.userId, transactionId);
   }
 
   async levelUpField(gameId: string, fieldId: number): Promise<void> {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actions.setPlayerActionEvent(gameId, {
+    await this.actions.setPlayerActionEvent(p.userId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
@@ -338,14 +338,14 @@ export class FieldsUtilsService {
       transactionId,
       userId: p.userId,
     });
-    await this.transaction.transactMoney(gameId, transactionId);
+    await this.transaction.transactMoney(p.userId, transactionId);
   }
 
   async levelDownField(gameId: string, fieldId: number): Promise<void> {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actions.setPlayerActionEvent(gameId, {
+    await this.actions.setPlayerActionEvent(p.userId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
@@ -377,7 +377,7 @@ export class FieldsUtilsService {
       transactionId,
       userId: p.userId,
     });
-    await this.transaction.transactMoney(gameId, transactionId);
+    await this.transaction.transactMoney(p.userId, transactionId);
   }
 
   private async getFields(gameId: string): Promise<IField[]> {

@@ -30,6 +30,11 @@ export class ChecksService {
     return dices && dices.sum > 0 && player.meanPosition - dices.sum < 0;
   }
 
+  async isStart(gameId: string, fieldId: number): Promise<boolean> {
+    return (
+      (await this.fields.getField(gameId, fieldId)).type === FieldType.START
+    );
+  }
   async isJail(gameId: string, fieldId: number): Promise<boolean> {
     return (
       (await this.fields.getField(gameId, fieldId)).type === FieldType.JAIL

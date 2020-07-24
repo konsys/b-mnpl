@@ -183,6 +183,8 @@ export class IncomeMessageService {
       const p = await this.players.getPlayer(userId);
       const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
 
+      const p1 = await this.players.getActingPlayer(p.gameId);
+      console.log(2222, p.meanPosition, p.userId, p1.meanPosition, p1.userId);
       if (!p.jailed) {
         if (await this.checks.isStartPass(p.userId)) {
           // Bonus for start passing
@@ -190,8 +192,9 @@ export class IncomeMessageService {
             ? await this.transactions.getStartBonus(p.userId, true)
             : await this.transactions.getStartBonus(p.userId);
         }
-
-        if (await this.checks.noActionField(p.gameId, f.fieldId)) {
+        if (await this.checks.isStart(p.gameId, f.fieldId)) {
+          await this.actions.switchPlayerTurn(p.userId, false);
+        } else if (await this.checks.noActionField(p.gameId, f.fieldId)) {
           await this.actions.switchPlayerTurn(p.userId, false);
         } else if (await this.checks.isMyField(p.userId, f.fieldId)) {
           await this.actions.switchPlayerTurn(p.userId, false);

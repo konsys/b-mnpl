@@ -34,6 +34,11 @@ export interface IAuctionStore {
   isEnded: boolean;
 }
 
+export interface IGameStore {
+  gameId: string;
+  usersId: number[];
+}
+
 export interface ITransactionStore {
   transactionId: string;
   reason: string;
@@ -63,6 +68,7 @@ export interface IStore {
   auction: string;
   error: string;
   message: string;
+  game: string;
 }
 
 const storeNames: IStore = {
@@ -76,6 +82,7 @@ const storeNames: IStore = {
   auction: 'auction',
   error: 'error',
   message: 'message',
+  game: 'game',
 };
 
 export interface IErrorMessage {
@@ -96,6 +103,7 @@ export class StoreService {
 
   async flushGame(gameId: string) {
     await this.action.getAction('kkk');
+
     for (const k of Object.values(storeNames)) {
       await redis.del(`${gameId}-${k}`);
     }
@@ -183,6 +191,23 @@ export class StoreService {
 
   async getError(gameId: string): Promise<IErrorMessage> {
     return (await this.get(gameId, storeNames.error)) as IErrorMessage;
+  }
+
+  async setGameStore(gameId: string, data: IGameStore) {
+    await this.set(gameId, storeNames.game, data);
+  }
+
+  async getGameStore(gameId: string): Promise<IGameStore> {
+    return (await this.get(gameId, storeNames.game)) as IGameStore;
+  }
+
+  async getGameId(userId: number): Promise<string> {
+    return await redis.get(userId);
+  }
+
+  async setGameId(gameId: string, userId: number) {
+    await redis.set(userId, gameId);
+    await redis.expire([`userId`, BOARD_PARAMS.REDIS_TTL]);
   }
 
   async emitMessage(gameId: string) {

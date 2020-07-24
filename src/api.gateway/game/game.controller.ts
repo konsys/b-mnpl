@@ -32,7 +32,7 @@ export class GameController {
     const incomeAction: IActionId = {
       gameId: 'kkk',
       actionId: 'actionId',
-      userId: 2,
+      userId: req.user.userId,
     };
 
     switch (action) {

@@ -63,14 +63,10 @@ export class DicesService {
         movesLeft = 0;
         doublesRolledAsCombo = 0;
       } else {
-        await this.players.updatePlayer(
-          gameId,
-          {
-            ...player,
-            unjailAttempts: ++player.unjailAttempts,
-          },
-          'fromDices',
-        );
+        await this.players.updatePlayer(gameId, {
+          ...player,
+          unjailAttempts: ++player.unjailAttempts,
+        });
         return;
       }
     } else {
@@ -87,16 +83,12 @@ export class DicesService {
       return;
     }
 
-    await this.players.updatePlayer(
-      gameId,
-      {
-        ...player,
-        movesLeft,
-        doublesRolledAsCombo,
-        jailed,
-        meanPosition,
-      },
-      'fromDices2',
-    );
+    await this.players.updatePlayer(gameId, {
+      ...player,
+      movesLeft,
+      doublesRolledAsCombo,
+      jailed,
+      meanPosition,
+    });
   }
 }

@@ -31,69 +31,80 @@ export class ActionMsController {
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED })
   async rollDices({ userId }: { userId: number }) {
-    await this.service.dicesModal(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.dicesModal(gameId, userId);
     // return;
     return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_BUY_FIELD_CLICKED })
   async fieldBought({ userId }: { userId: number }): Promise<any> {
-    await this.service.fieldBought(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.fieldBought(gameId, userId);
 
     return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_START_CLICKED })
   async fieldAuction({ userId }: { userId: number }): Promise<any> {
-    await this.service.fieldAuction(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.fieldAuction(gameId, userId);
     return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_ACCEPT_CLICKED })
   async acceptAuction({ userId }: { userId: number }): Promise<any> {
-    await this.service.acceptAuction(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.acceptAuction(gameId, userId);
     return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_DECLINE_CLICKED })
   async declineAuction({ userId }: { userId: number }): Promise<any> {
-    await this.service.declineAuction(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.declineAuction(gameId, userId);
     return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_TAX_PAID_CLICKED })
   async payment({ userId }: { userId: number }): Promise<any> {
-    await this.service.payment(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.payment(gameId, userId);
     return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED })
   async unJailPayment({ userId }: { userId: number }): Promise<any> {
-    await this.service.unJailPayment(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.unJailPayment(gameId, userId);
     return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED })
   async mortgageField({ userId }: { userId: number }): Promise<any> {
-    await this.service.mortgageField(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.mortgageField(gameId, userId);
     return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED })
   async unMortgageField({ userId }: { userId: number }): Promise<any> {
-    await this.service.unMortgageField(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.unMortgageField(gameId, userId);
     return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED })
   async levelUpField({ userId }: { userId: number }): Promise<any> {
-    await this.service.levelUpField(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.levelUpField(gameId, userId);
     return;
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED })
   async levelDownField({ userId }: { userId: number }): Promise<any> {
-    await this.service.levelDownField(userId);
+    const gameId = await this.store.getGameIdByPlayerId(userId);
+    await this.service.levelDownField(gameId, userId);
     return;
   }
 }

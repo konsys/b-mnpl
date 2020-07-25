@@ -216,14 +216,10 @@ export class ActionService {
     // Doubled dices and jail
     if (player.movesLeft > 0) {
       nextIndex = index;
-      await this.players.updatePlayer(
-        gameId,
-        {
-          ...player,
-          movesLeft: --player.movesLeft,
-        },
-        'switchTurn',
-      );
+      await this.players.updatePlayer(gameId, {
+        ...player,
+        movesLeft: --player.movesLeft,
+      });
     } else {
       nextIndex = this.getNextArrayIndex(index, players);
     }

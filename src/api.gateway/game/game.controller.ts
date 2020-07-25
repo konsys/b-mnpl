@@ -22,6 +22,7 @@ export class GameController {
   async action(
     @Request() req,
     @Body('action') action: IncomeMessageType,
+    @Body('fieldId') fieldId: number,
   ): Promise<string> {
     const userId = req.user.userId;
     switch (action) {
@@ -53,19 +54,19 @@ export class GameController {
         break;
 
       case IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED:
-        await this.service.mortgageField({ userId });
+        await this.service.mortgageField({ userId, fieldId });
         break;
 
       case IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED:
-        await this.service.unMortgageField({ userId });
+        await this.service.unMortgageField({ userId, fieldId });
         break;
 
       case IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED:
-        await this.service.levelUpField({ userId });
+        await this.service.levelUpField({ userId, fieldId });
         break;
 
       case IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED:
-        await this.service.levelDownField({ userId });
+        await this.service.levelDownField({ userId, fieldId });
         break;
     }
 

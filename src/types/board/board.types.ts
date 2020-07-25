@@ -13,6 +13,7 @@ export interface IActionId {
 
 export interface IPayload {
   userId: number;
+  fieldId?: number;
 }
 
 export interface IPlayerMove extends IActionId {

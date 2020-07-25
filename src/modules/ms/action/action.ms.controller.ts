@@ -88,6 +88,7 @@ export class ActionMsController {
     userId: number;
     fieldId: number;
   }): Promise<any> {
+    console.log(111, fieldId);
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.mortgageField(gameId, userId, fieldId);
     return await this.store.emitMessage(gameId);

@@ -35,6 +35,7 @@ export class TransactionsService {
         userId: transaction.userId,
         toUserId: transaction.toUserId,
       });
+
       await this.store.resetTransactionsEvent(gameId);
     } else {
       await this.store.setError(transaction.userId, {

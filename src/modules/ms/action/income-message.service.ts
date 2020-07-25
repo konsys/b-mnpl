@@ -95,7 +95,7 @@ export class IncomeMessageService {
         p.gameId,
         (await this.transactions.getCurrentTransaction(p.gameId)).transactionId,
       );
-      await this.actions.switchPlayerTurn(gameId, userId, false);
+      await this.actions.switchPlayerTurn(gameId, false);
     } else {
       await this.store.setError(userId, {
         code: ErrorCode.NotEnoughMoney,
@@ -154,7 +154,8 @@ export class IncomeMessageService {
         p.userId,
         f.price.startPrice,
       );
-      await this.actions.switchPlayerTurn(gameId, p.userId, false);
+
+      await this.actions.switchPlayerTurn(gameId, false);
     } else if (!(await this.checks.isCompanyForSale(p.gameId, f.fieldId))) {
       await this.store.setError(p.userId, {
         code: ErrorCode.CompanyHasOwner,
@@ -197,18 +198,18 @@ export class IncomeMessageService {
             : await this.transactions.getStartBonus(p.userId);
         }
         if (await this.checks.isStart(p.gameId, f.fieldId)) {
-          await this.actions.switchPlayerTurn(gameId, p.userId, false);
+          await this.actions.switchPlayerTurn(gameId, false);
         } else if (await this.checks.noActionField(p.gameId, f.fieldId)) {
-          await this.actions.switchPlayerTurn(gameId, p.userId, false);
+          await this.actions.switchPlayerTurn(gameId, false);
         } else if (await this.checks.isMyField(p.userId, f.fieldId)) {
-          await this.actions.switchPlayerTurn(gameId, p.userId, false);
+          await this.actions.switchPlayerTurn(gameId, false);
         } else if (await this.checks.isCompanyForSale(p.gameId, f.fieldId)) {
           await this.actions.buyFieldModal(gameId, p.userId);
         } else if (
           !(await this.checks.isCompanyForSale(p.gameId, f.fieldId)) &&
           (await this.checks.isMyField(p.userId, f.fieldId))
         ) {
-          await this.actions.switchPlayerTurn(gameId, p.userId, false);
+          await this.actions.switchPlayerTurn(gameId, false);
         } else if (
           (await this.checks.isCompany(p.gameId, f.fieldId)) &&
           (await this.checks.whosField(p.gameId, f.fieldId)) &&
@@ -224,7 +225,7 @@ export class IncomeMessageService {
           await this.actions.payTaxModal(gameId, p.userId);
         } else if (await this.checks.isJail(p.gameId, f.fieldId)) {
           (await this.players.jailPlayer(p.gameId)) &&
-            (await this.actions.switchPlayerTurn(gameId, p.userId, false));
+            (await this.actions.switchPlayerTurn(gameId, false));
         } else if (await this.checks.isTax(p.gameId, f.fieldId)) {
           // TODO написать нормальный текст на налоги
           await this.store.setTransaction(p.gameId, {
@@ -248,7 +249,7 @@ export class IncomeMessageService {
         }
       } else {
         if (p.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {
-          await this.actions.switchPlayerTurn(gameId, p.userId, false);
+          await this.actions.switchPlayerTurn(gameId, false);
         } else {
           await this.store.setTransaction(p.gameId, {
             sum: 500,

@@ -122,7 +122,7 @@ export class ActionService {
     });
     if (!participants.length) {
       await this.store.flushAuctionStore(gameId);
-      await this.switchPlayerTurn(gameId, userId, false);
+      await this.switchPlayerTurn(gameId, false);
       return;
     }
 
@@ -180,7 +180,7 @@ export class ActionService {
       await this.buyField(gameId, f.fieldId, userId, auction.bet);
 
       await this.store.flushAuctionStore(gameId);
-      await this.switchPlayerTurn(gameId, userId, false);
+      await this.switchPlayerTurn(gameId, false);
       return;
     }
 
@@ -197,7 +197,7 @@ export class ActionService {
     });
   }
 
-  async switchPlayerTurn(gameId: string, userId: number, unJail: boolean) {
+  async switchPlayerTurn(gameId: string, unJail: boolean) {
     unJail = unJail ? unJail : false;
     const players = (await this.store.getPlayersStore(gameId)).players;
     const index = await this.players.getActingPlayerIndex(gameId);

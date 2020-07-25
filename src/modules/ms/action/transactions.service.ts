@@ -52,22 +52,14 @@ export class TransactionsService {
     const player2 = await this.players.getPlayer(gameId, transaction.toUserId);
 
     return (
-      (await this.players.updatePlayer(
-        gameId,
-        {
-          ...player1,
-          money: player1.money - transaction.sum,
-        },
-        'transaction',
-      )) &&
-      (await this.players.updatePlayer(
-        gameId,
-        {
-          ...player2,
-          money: player2.money + transaction.sum,
-        },
-        'transaction2' + transaction.sum,
-      ))
+      (await this.players.updatePlayer(gameId, {
+        ...player1,
+        money: player1.money - transaction.sum,
+      })) &&
+      (await this.players.updatePlayer(gameId, {
+        ...player2,
+        money: player2.money + transaction.sum,
+      }))
     );
   }
 

@@ -80,43 +80,31 @@ export class PlayersUtilsService {
       userId: player.userId,
     });
 
-    return await this.updatePlayer(
-      gameId,
-      {
-        ...player,
-        // if there is position then unjailed by rolling dices
-        money: newPosition
-          ? player.money
-          : player.money - BOARD_PARAMS.UN_JAIL_PRICE,
-        meanPosition: newPosition || BOARD_PARAMS.JAIL_POSITION,
-        jailed: 0,
-        unjailAttempts: 0,
-      },
-      'unjail',
-    );
+    return await this.updatePlayer(gameId, {
+      ...player,
+      // if there is position then unjailed by rolling dices
+      money: newPosition
+        ? player.money
+        : player.money - BOARD_PARAMS.UN_JAIL_PRICE,
+      meanPosition: newPosition || BOARD_PARAMS.JAIL_POSITION,
+      jailed: 0,
+      unjailAttempts: 0,
+    });
   }
 
   async jailPlayer(gameId: string): Promise<boolean> {
     const player = await this.getActingPlayer(gameId);
-    return await this.updatePlayer(
-      gameId,
-      {
-        ...player,
-        jailed: BOARD_PARAMS.JAIL_TURNS,
-        unjailAttempts: 0,
-        doublesRolledAsCombo: 0,
-        movesLeft: 0,
-        meanPosition: BOARD_PARAMS.JAIL_POSITION,
-      },
-      'jail',
-    );
+    return await this.updatePlayer(gameId, {
+      ...player,
+      jailed: BOARD_PARAMS.JAIL_TURNS,
+      unjailAttempts: 0,
+      doublesRolledAsCombo: 0,
+      movesLeft: 0,
+      meanPosition: BOARD_PARAMS.JAIL_POSITION,
+    });
   }
 
-  async updatePlayer(
-    gameId: string,
-    player: IPlayer,
-    where: string,
-  ): Promise<boolean> {
+  async updatePlayer(gameId: string, player: IPlayer): Promise<boolean> {
     // Update BANK
     if (player.userId === BOARD_PARAMS.BANK_PLAYER_ID) {
       await this.store.setBankStore(gameId, player);
@@ -125,7 +113,10 @@ export class PlayersUtilsService {
 
     const players = await this.getPlayers(gameId);
 
-    const currentPLayerIndex = await this.getPlayerIndexById(player.userId);
+    const currentPLayerIndex = await this.getPlayerIndexById(
+      gameId,
+      player.userId,
+    );
 
     // TODO error handler
     if (currentPLayerIndex === -1)

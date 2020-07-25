@@ -88,7 +88,7 @@ export class FieldsUtilsService {
     if (field && field.rent && field.rent.paymentMultiplier) {
       const group = await this.getPlayerGroupFields(
         field,
-        await this.players.getPlayer(field.status.userId),
+        await this.players.getPlayer(gameId, field.status.userId),
       );
       const dices = await this.store.getDicesStore(gameId);
       return (
@@ -188,7 +188,7 @@ export class FieldsUtilsService {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actions.setPlayerActionEvent(p.userId, {
+    await this.actions.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
@@ -270,7 +270,7 @@ export class FieldsUtilsService {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actions.setPlayerActionEvent(p.userId, {
+    await this.actions.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
@@ -308,7 +308,7 @@ export class FieldsUtilsService {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actions.setPlayerActionEvent(p.userId, {
+    await this.actions.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,
@@ -345,7 +345,7 @@ export class FieldsUtilsService {
     const f = await this.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
 
-    await this.actions.setPlayerActionEvent(p.userId, {
+    await this.actions.setPlayerActionEvent(gameId, {
       userId: p.userId,
       fieldGroup: f.fieldGroup,
       fieldId: f.fieldId,

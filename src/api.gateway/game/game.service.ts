@@ -10,7 +10,7 @@ export class GameService {
     private readonly proxy: ClientProxy,
   ) {}
 
-  async dicesModal(payload: IPayload): Promise<void> {
+  async dicesModalClicked(payload: IPayload): Promise<void> {
     const res = await this.proxy
       .send<any>({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED }, payload)
       .toPromise();

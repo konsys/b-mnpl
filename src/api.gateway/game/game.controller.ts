@@ -26,7 +26,7 @@ export class GameController {
     const userId = req.user.userId;
     switch (action) {
       case IncomeMessageType.INCOME_ROLL_DICES_CLICKED:
-        await this.service.dicesModal({ userId });
+        await this.service.dicesModalClicked({ userId });
         break;
 
       case IncomeMessageType.INCOME_BUY_FIELD_CLICKED:

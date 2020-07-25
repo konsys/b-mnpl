@@ -32,8 +32,7 @@ export class ActionService {
     private readonly fields: FieldsUtilsService,
   ) {}
 
-  async buyFieldModal(userId: number) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async buyFieldModal(gameId: string, userId: number) {
     const player = await this.players.getActingPlayer(gameId);
 
     await this.store.setActionStore(gameId, {
@@ -43,13 +42,10 @@ export class ActionService {
     });
   }
 
-  async buyField(fieldId: number, userId: number, sum: number) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async buyField(gameId: string, fieldId: number, userId: number, sum: number) {
     // Field set to player
-    const p = await this.players.getPlayer(userId);
+    const p = await this.players.getPlayer(gameId, userId);
     const f = await this.fields.getField(gameId, fieldId);
-
-    console.log(BOARD_PARAMS.BANK_PLAYER_ID, p.userId);
 
     await this.fields.buyCompany(f, p);
 
@@ -65,8 +61,7 @@ export class ActionService {
     await this.transaction.transactMoney(gameId, transactionId);
   }
 
-  async unJailModal(userId: number) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async unJailModal(gameId: string, userId: number) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
@@ -74,8 +69,7 @@ export class ActionService {
     });
   }
 
-  async payUnJailModal(userId: number) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async payUnJailModal(gameId: string, userId: number) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
@@ -83,8 +77,7 @@ export class ActionService {
     });
   }
 
-  async payTaxModal(userId: number) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async payTaxModal(gameId: string, userId: number) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
       userId,
@@ -92,8 +85,8 @@ export class ActionService {
     });
   }
 
-  async rollDicesAction(userId: number) {
-    const p = await this.players.getPlayer(userId);
+  async rollDicesAction(gameId: string, userId: number) {
+    const p = await this.players.getPlayer(gameId, userId);
 
     await this.store.setActionStore(p.gameId, {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_ACTION,
@@ -102,8 +95,7 @@ export class ActionService {
     });
   }
 
-  async rollDicesModal(userId: number) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async rollDicesModal(gameId: string, userId: number) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
@@ -111,8 +103,7 @@ export class ActionService {
     });
   }
 
-  async startAuctionModal(userId: number) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async startAuctionModal(gameId: string, userId: number) {
     const actingPlayer = await this.players.getActingPlayer(gameId);
     const field = await this.fields.getActingField(gameId);
     const startPrice = field.price.startPrice;
@@ -131,7 +122,7 @@ export class ActionService {
     });
     if (!participants.length) {
       await this.store.flushAuctionStore(gameId);
-      await this.switchPlayerTurn(userId, false);
+      await this.switchPlayerTurn(gameId, userId, false);
       return;
     }
 
@@ -151,9 +142,8 @@ export class ActionService {
     });
   }
 
-  async acceptAuctionModal(userId: number) {
-    const p = await this.players.getPlayer(userId);
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async acceptAuctionModal(gameId: string, userId: number) {
+    const p = await this.players.getPlayer(gameId, userId);
     const auction = await this.store.getAuctionStore(p.gameId);
     const nextUserId = this.getNextArrayValue(
       auction.userId,
@@ -172,15 +162,14 @@ export class ActionService {
     });
   }
 
-  async declineAuctionModal(userId: number) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async declineAuctionModal(gameId: string, userId: number) {
     const auction = await this.store.getAuctionStore(gameId);
     const nextUserId = this.getNextArrayValue(
       auction.userId,
       auction.participants,
     );
     const f = await this.fields.getActingField(gameId);
-    const p = await this.players.getPlayer(auction.userId);
+    const p = await this.players.getPlayer(gameId, auction.userId);
 
     const participants = _.filter(
       auction.participants,
@@ -188,10 +177,10 @@ export class ActionService {
     );
 
     if (participants.length < 2) {
-      await this.buyField(f.fieldId, userId, auction.bet);
+      await this.buyField(gameId, f.fieldId, userId, auction.bet);
 
       await this.store.flushAuctionStore(gameId);
-      await this.switchPlayerTurn(userId, false);
+      await this.switchPlayerTurn(gameId, userId, false);
       return;
     }
 
@@ -208,8 +197,7 @@ export class ActionService {
     });
   }
 
-  async switchPlayerTurn(userId: number, unJail: boolean) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async switchPlayerTurn(gameId: string, userId: number, unJail: boolean) {
     unJail = unJail ? unJail : false;
     const players = (await this.store.getPlayersStore(gameId)).players;
     const index = await this.players.getActingPlayerIndex(gameId);
@@ -256,12 +244,11 @@ export class ActionService {
     await this.players.updateAllPLayers(gameId, res);
     player = await this.players.getActingPlayer(gameId);
     player.jailed
-      ? await this.unJailModal(player.userId)
-      : await this.rollDicesModal(player.userId);
+      ? await this.unJailModal(gameId, player.userId)
+      : await this.rollDicesModal(gameId, player.userId);
   }
 
-  async setPlayerActionEvent(userId: number, playerActions: any) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async setPlayerActionEvent(gameId: string, playerActions: any) {
     await this.store.setActionStore(gameId, playerActions);
   }
 

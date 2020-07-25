@@ -10,13 +10,25 @@ import { nanoid } from 'nanoid';
 export class PlayersUtilsService {
   constructor(private readonly store: StoreService) {}
 
-  async getPlayer(userId: number): Promise<IPlayer> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    const bank = await this.store.getBankStore(gameId);
-    const players = await this.getPlayers(gameId);
-    return userId === BOARD_PARAMS.BANK_PLAYER_ID
-      ? bank
-      : players.find((v) => v.userId === userId);
+  async getPlayer(gameId: string, userId: number): Promise<IPlayer> {
+    if (userId === BOARD_PARAMS.BANK_PLAYER_ID) {
+      const bank = await this.store.getBankStore(gameId);
+
+      console.log(
+        userId,
+        userId === BOARD_PARAMS.BANK_PLAYER_ID,
+        bank,
+        await this.store.getBankStore(gameId),
+        gameId,
+      );
+      return bank;
+    } else {
+      const players = await this.getPlayers(gameId);
+      return players.find((v) => v.userId === userId);
+    }
+    // return userId === BOARD_PARAMS.BANK_PLAYER_ID
+    //   ? await this.store.getBankStore(gameId)
+    //   : players.find((v) => v.userId === userId);
   }
 
   async getActingPlayer(gameId: string): Promise<IPlayer> {
@@ -47,9 +59,9 @@ export class PlayersUtilsService {
     return res;
   }
 
-  async getPlayerIndexById(userId: number) {
-    const p = await this.getPlayer(userId);
-    const state = await this.getPlayers(p.gameId);
+  async getPlayerIndexById(gameId: string, userId: number) {
+    const p = await this.getPlayer(gameId, userId);
+    const state = await this.getPlayers(gameId);
     return state.findIndex((v) => v.userId === userId);
   }
 

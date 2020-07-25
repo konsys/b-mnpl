@@ -62,6 +62,7 @@ export class BoardMessageService {
   ) {}
 
   async createBoardMessage(gameId: string): Promise<BoardMessage> {
+    console.log(2222);
     const actionState = await this.store.getActionStore(gameId);
 
     let event: IBoardEvent = {

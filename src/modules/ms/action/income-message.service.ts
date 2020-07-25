@@ -92,7 +92,7 @@ export class IncomeMessageService {
       (await this.players.getActingPlayer(p.gameId)).money
     ) {
       await this.transactions.transactMoney(
-        userId,
+        p.gameId,
         (await this.transactions.getCurrentTransaction(p.gameId)).transactionId,
       );
       await this.actions.switchPlayerTurn(userId, false);
@@ -184,7 +184,6 @@ export class IncomeMessageService {
       const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
 
       const p1 = await this.players.getActingPlayer(p.gameId);
-      console.log(2222, p.meanPosition, p.userId, p1.meanPosition, p1.userId);
       if (!p.jailed) {
         if (await this.checks.isStartPass(p.userId)) {
           // Bonus for start passing

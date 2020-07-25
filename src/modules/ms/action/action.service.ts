@@ -49,6 +49,8 @@ export class ActionService {
     const p = await this.players.getPlayer(userId);
     const f = await this.fields.getField(gameId, fieldId);
 
+    console.log(BOARD_PARAMS.BANK_PLAYER_ID, p.userId);
+
     await this.fields.buyCompany(f, p);
 
     // Decrease player`s money;
@@ -60,7 +62,7 @@ export class ActionService {
       transactionId,
       userId: p.userId,
     });
-    await this.transaction.transactMoney(userId, transactionId);
+    await this.transaction.transactMoney(gameId, transactionId);
   }
 
   async unJailModal(userId: number) {

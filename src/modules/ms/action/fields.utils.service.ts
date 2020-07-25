@@ -219,7 +219,7 @@ export class FieldsUtilsService {
       transactionId,
       userId: BOARD_PARAMS.BANK_PLAYER_ID,
     });
-    await this.transaction.transactMoney(p.userId, transactionId);
+    await this.transaction.transactMoney(p.gameId, transactionId);
   }
 
   async mortgageNextRound(gameId: string) {
@@ -301,7 +301,7 @@ export class FieldsUtilsService {
       transactionId,
       userId: p.userId,
     });
-    await this.transaction.transactMoney(p.userId, transactionId);
+    await this.transaction.transactMoney(p.gameId, transactionId);
   }
 
   async levelUpField(gameId: string, fieldId: number): Promise<void> {
@@ -338,7 +338,7 @@ export class FieldsUtilsService {
       transactionId,
       userId: p.userId,
     });
-    await this.transaction.transactMoney(p.userId, transactionId);
+    await this.transaction.transactMoney(p.gameId, transactionId);
   }
 
   async levelDownField(gameId: string, fieldId: number): Promise<void> {
@@ -377,7 +377,7 @@ export class FieldsUtilsService {
       transactionId,
       userId: p.userId,
     });
-    await this.transaction.transactMoney(p.userId, transactionId);
+    await this.transaction.transactMoney(p.gameId, transactionId);
   }
 
   private async getFields(gameId: string): Promise<IField[]> {

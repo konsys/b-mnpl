@@ -17,13 +17,12 @@ export class TransactionsService {
     return await this.store.getTransaction(gameId);
   }
 
-  async transactMoney(userId: number, transactionId: string) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async transactMoney(gameId: string, transactionId: string) {
     const transaction = await this.store.getTransaction(gameId);
-    const player = await this.players.getPlayer(userId);
+    const player = await this.players.getPlayer(transaction.userId);
 
     if (transaction.sum > player.money) {
-      await this.store.setError(userId, {
+      await this.store.setError(transaction.userId, {
         code: ErrorCode.NotEnoughMoney,
         message: 'Oops!',
       });
@@ -31,14 +30,14 @@ export class TransactionsService {
     }
 
     if (transactionId === transaction.transactionId) {
-      await this.moneyTransaction(userId, {
+      await this.moneyTransaction(transaction.userId, {
         sum: transaction.sum,
         userId: transaction.userId,
         toUserId: transaction.toUserId,
       });
       await this.store.resetTransactionsEvent(gameId);
     } else {
-      await this.store.setError(userId, {
+      await this.store.setError(transaction.userId, {
         code: ErrorCode.WrongTranactionId,
         message: 'Oops!',
       });
@@ -86,6 +85,6 @@ export class TransactionsService {
       transactionId,
       toUserId: userId,
     });
-    await this.transactMoney(userId, transactionId);
+    await this.transactMoney(gameId, transactionId);
   }
 }

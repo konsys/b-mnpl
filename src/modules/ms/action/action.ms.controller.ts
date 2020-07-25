@@ -81,16 +81,28 @@ export class ActionMsController {
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED })
-  async mortgageField({ userId }: { userId: number }): Promise<any> {
+  async mortgageField({
+    userId,
+    fieldId,
+  }: {
+    userId: number;
+    fieldId: number;
+  }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.mortgageField(gameId, userId);
+    await this.service.mortgageField(gameId, userId, fieldId);
     return await this.store.emitMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED })
-  async unMortgageField({ userId }: { userId: number }): Promise<any> {
+  async unMortgageField({
+    userId,
+    fieldId,
+  }: {
+    userId: number;
+    fieldId: number;
+  }): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.unMortgageField(gameId, userId);
+    await this.service.unMortgageField(gameId, userId, fieldId);
     return await this.store.emitMessage(gameId);
   }
 

@@ -123,9 +123,10 @@ export class ChecksService {
   }
 
   async canMortgage(gameId: string, fieldId: number): Promise<boolean> {
+    if (!gameId || !fieldId) return false;
+
     const f = await this.fields.getField(gameId, fieldId);
     const hasBranches = await this.groupHasBranches(gameId, f);
-
     return (
       f &&
       (await this.isCompany(gameId, fieldId)) &&
@@ -136,6 +137,7 @@ export class ChecksService {
   }
 
   async canUnMortgage(gameId: string, fieldId: number): Promise<boolean> {
+    if (!gameId || !fieldId) return false;
     const f = await this.fields.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
     return (
@@ -148,6 +150,8 @@ export class ChecksService {
   }
 
   async canLevelUp(gameId: string, fieldId: number): Promise<boolean> {
+    if (!gameId || !fieldId) return false;
+
     const f = await this.fields.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
     const m = await this.playerHasMonopoly(f, p);
@@ -185,6 +189,7 @@ export class ChecksService {
   }
 
   async canLevelDown(gameId: string, fieldId: number): Promise<boolean> {
+    if (!gameId || !fieldId) return false;
     const f = await this.fields.getField(gameId, fieldId);
     const p = await this.players.getActingPlayer(gameId);
     const hasMonopoly = await this.playerHasMonopoly(f, p);

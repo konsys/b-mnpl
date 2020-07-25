@@ -48,30 +48,37 @@ export class IncomeMessageService {
     }
   }
 
-  async unMortgageField(gameId: string, userId: number): Promise<void> {
+  async unMortgageField(
+    gameId: string,
+    userId: number,
+    fieldId: number,
+  ): Promise<void> {
     const p = await this.players.getPlayer(gameId, userId);
-    const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
-    if (!(await this.checks.canUnMortgage(p.gameId, f.fieldId))) {
+    if (!(await this.checks.canUnMortgage(p.gameId, fieldId))) {
       await this.store.setError(userId, {
         code: ErrorCode.CannotUnMortgageField,
         message: 'Oops!',
       });
     } else {
-      await this.fields.unMortgage(p.gameId, f.fieldId);
+      await this.fields.unMortgage(p.gameId, fieldId);
       await this.getNextAction(gameId, p.userId);
     }
   }
 
-  async mortgageField(gameId: string, userId: number): Promise<void> {
+  async mortgageField(
+    gameId: string,
+    userId: number,
+    fieldId: number,
+  ): Promise<void> {
     const p = await this.players.getPlayer(gameId, userId);
-    const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
-    if (!(await this.checks.canMortgage(p.gameId, f.fieldId))) {
+
+    if (!(await this.checks.canMortgage(p.gameId, fieldId))) {
       await this.store.setError(userId, {
         code: ErrorCode.CannotMortgageField,
         message: 'Oops!',
       });
     } else {
-      await this.fields.mortgage(p.gameId, f.fieldId);
+      await this.fields.mortgage(p.gameId, fieldId);
       await this.getNextAction(gameId, p.userId);
     }
   }

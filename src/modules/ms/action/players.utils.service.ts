@@ -14,21 +14,11 @@ export class PlayersUtilsService {
     if (userId === BOARD_PARAMS.BANK_PLAYER_ID) {
       const bank = await this.store.getBankStore(gameId);
 
-      console.log(
-        userId,
-        userId === BOARD_PARAMS.BANK_PLAYER_ID,
-        bank,
-        await this.store.getBankStore(gameId),
-        gameId,
-      );
       return bank;
     } else {
       const players = await this.getPlayers(gameId);
       return players.find((v) => v.userId === userId);
     }
-    // return userId === BOARD_PARAMS.BANK_PLAYER_ID
-    //   ? await this.store.getBankStore(gameId)
-    //   : players.find((v) => v.userId === userId);
   }
 
   async getActingPlayer(gameId: string): Promise<IPlayer> {

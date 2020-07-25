@@ -32,7 +32,7 @@ export class ActionService {
     private readonly fields: FieldsUtilsService,
   ) {}
 
-  async buyFieldModal(gameId: string, userId: number) {
+  async buyFieldModal(gameId: string) {
     const player = await this.players.getActingPlayer(gameId);
 
     await this.store.setActionStore(gameId, {
@@ -61,7 +61,7 @@ export class ActionService {
     await this.transaction.transactMoney(gameId, transactionId);
   }
 
-  async unJailModal(gameId: string, userId: number) {
+  async unJailModal(gameId: string) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
@@ -69,7 +69,7 @@ export class ActionService {
     });
   }
 
-  async payUnJailModal(gameId: string, userId: number) {
+  async payUnJailModal(gameId: string) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
@@ -95,7 +95,7 @@ export class ActionService {
     });
   }
 
-  async rollDicesModal(gameId: string, userId: number) {
+  async rollDicesModal(gameId: string) {
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
@@ -103,7 +103,7 @@ export class ActionService {
     });
   }
 
-  async startAuctionModal(gameId: string, userId: number) {
+  async startAuctionModal(gameId: string) {
     const actingPlayer = await this.players.getActingPlayer(gameId);
     const field = await this.fields.getActingField(gameId);
     const startPrice = field.price.startPrice;
@@ -239,9 +239,10 @@ export class ActionService {
 
     await this.players.updateAllPLayers(gameId, res);
     player = await this.players.getActingPlayer(gameId);
-    player.jailed
-      ? await this.unJailModal(gameId, player.userId)
-      : await this.rollDicesModal(gameId, player.userId);
+
+    !!player.jailed
+      ? await this.unJailModal(gameId)
+      : await this.rollDicesModal(gameId);
   }
 
   async setPlayerActionEvent(gameId: string, playerActions: any) {

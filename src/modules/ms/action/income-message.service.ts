@@ -81,7 +81,7 @@ export class IncomeMessageService {
     await this.players.unjailPlayer(p.gameId);
 
     setTimeout(async () => {
-      await this.actions.rollDicesModal(gameId, p.userId);
+      await this.actions.rollDicesModal(gameId);
     }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 2);
   }
 
@@ -133,7 +133,7 @@ export class IncomeMessageService {
     const f = await this.fields.getActingField(p.gameId);
     const canStart = await this.checks.isCompanyForSale(p.gameId, f.fieldId);
     canStart
-      ? await this.actions.startAuctionModal(gameId, p.userId)
+      ? await this.actions.startAuctionModal(gameId)
       : await this.store.setError(p.userId, {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',
@@ -204,7 +204,7 @@ export class IncomeMessageService {
         } else if (await this.checks.isMyField(p.userId, f.fieldId)) {
           await this.actions.switchPlayerTurn(gameId, false);
         } else if (await this.checks.isCompanyForSale(p.gameId, f.fieldId)) {
-          await this.actions.buyFieldModal(gameId, p.userId);
+          await this.actions.buyFieldModal(gameId);
         } else if (
           !(await this.checks.isCompanyForSale(p.gameId, f.fieldId)) &&
           (await this.checks.isMyField(p.userId, f.fieldId))
@@ -258,7 +258,7 @@ export class IncomeMessageService {
             reason: 'Залог за выход из тюрьмы',
             transactionId: nanoid(4),
           });
-          await this.actions.payUnJailModal(gameId, p.userId);
+          await this.actions.payUnJailModal(gameId);
         }
       }
     } catch (e) {

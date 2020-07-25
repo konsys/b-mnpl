@@ -240,6 +240,7 @@ export class ActionService {
     await this.players.updateAllPLayers(gameId, res);
     player = await this.players.getActingPlayer(gameId);
 
+    console.log(!!player.jailed);
     !!player.jailed
       ? await this.unJailModal(gameId)
       : await this.rollDicesModal(gameId);

@@ -115,6 +115,7 @@ export interface IUnJailModal extends IOutcameBoardAction {
   type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL;
   title: string;
   text: string;
+  money: number;
 }
 
 export interface IUnJailPayingModal extends IOutcameBoardAction {

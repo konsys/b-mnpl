@@ -39,18 +39,20 @@ export class OutcomeMessageService {
     isModal: true,
   });
 
-  unJailModalMesage = async (gameId: string): Promise<IUnJailModal> => ({
-    type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
-    userId: (await this.players.getActingPlayer(gameId)).userId,
-    title: 'Заплатить залог',
-    text: 'Заплатить за выход из тюрьмы',
-    _id: (await this.store.getActionStore(gameId)).actionId,
-    isModal: true,
-  });
+  unJailModalMesage = async (gameId: string): Promise<IUnJailModal> => {
+    const transaction = await this.store.getTransaction(gameId);
+    return {
+      type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
+      userId: (await this.players.getActingPlayer(gameId)).userId,
+      title: 'Заплатить залог',
+      text: 'Заплатить за выход из тюрьмы',
+      _id: (await this.store.getActionStore(gameId)).actionId,
+      isModal: true,
+      money: (transaction && transaction.sum) || 0,
+    };
+  };
 
-  unJailPayModalMesage = async (
-    gameId: string,
-  ): Promise<IUnJailPayingModal> => {
+  unjailForMoney = async (gameId: string): Promise<IUnJailPayingModal> => {
     const transaction = await this.store.getTransaction(gameId);
     return {
       type: OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL,
@@ -169,7 +171,7 @@ export class OutcomeMessageService {
         return await this.unJailModalMesage(gameId);
 
       case OutcomeMessageType.OUTCOME_UNJAIL_PAYING_MODAL:
-        return await this.unJailPayModalMesage(gameId);
+        return await this.unjailForMoney(gameId);
 
       case OutcomeMessageType.DO_NOTHING:
         return await this.doNothingMessage(gameId);

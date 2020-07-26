@@ -40,7 +40,6 @@ export class OutcomeMessageService {
   });
 
   unJailModalMesage = async (gameId: string): Promise<IUnJailModal> => {
-    const transaction = await this.store.getTransaction(gameId);
     return {
       type: OutcomeMessageType.OUTCOME_UN_JAIL_MODAL,
       userId: (await this.players.getActingPlayer(gameId)).userId,
@@ -48,7 +47,7 @@ export class OutcomeMessageService {
       text: 'Заплатить за выход из тюрьмы',
       _id: (await this.store.getActionStore(gameId)).actionId,
       isModal: true,
-      money: (transaction && transaction.sum) || 0,
+      money: BOARD_PARAMS.UN_JAIL_PRICE,
     };
   };
 

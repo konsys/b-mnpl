@@ -97,17 +97,24 @@ export class BoardMessageService {
         .send<any>({ cmd: MsPatterns.GET_INIT_FIELDS }, {})
         .toPromise();
 
-      const r = fields.map((v: IField, k) => ({
+      const r = fields.map((v: IField, k: number) => ({
         ...v,
-        status: v.type === FieldType.COMPANY &&
-          v.fieldGroup === 1 &&
-          k < 4 && {
-            fieldId: v.fieldId,
-            userId: 2,
-            branches: 0,
-            mortgaged: 0,
-            fieldActions: [IFieldAction.MORTGAGE],
-          },
+        status:
+          v.type === FieldType.COMPANY && v.fieldGroup === 1 && k < 4
+            ? {
+                fieldId: v.fieldId,
+                userId: 2,
+                branches: 0,
+                mortgaged: 0,
+                fieldActions: [IFieldAction.MORTGAGE],
+              }
+            : v.type === FieldType.COMPANY && {
+                fieldId: v.fieldId,
+                userId: 3,
+                branches: 0,
+                mortgaged: 0,
+                fieldActions: [IFieldAction.MORTGAGE],
+              },
       }));
 
       await this.fields.updateAllFields(gameId, r);

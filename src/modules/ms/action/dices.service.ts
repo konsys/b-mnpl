@@ -24,7 +24,7 @@ export class DicesService {
 
     const dice1 = 6;
     // const dice2 = random(0, 6);
-    let dice2 = 6;
+    let dice2 = 4;
     if (player.name === 'Feodr') {
       // dice2 = random(0, 6);
       // dice2 = 5;
@@ -60,11 +60,12 @@ export class DicesService {
     if (player.jailed) {
       if (dices.isDouble) {
         jailed = 0;
-        movesLeft = 0;
+        movesLeft = 1;
         doublesRolledAsCombo = 0;
       } else {
         await this.players.updatePlayer(gameId, {
           ...player,
+          movesLeft: 0,
           unjailAttempts: ++player.unjailAttempts,
         });
         return;

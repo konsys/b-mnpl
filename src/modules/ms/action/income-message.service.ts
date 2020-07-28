@@ -257,6 +257,7 @@ export class IncomeMessageService {
         if (p.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {
           await this.actions.switchPlayerTurn(gameId, false);
         } else {
+          console.log('1!!!!!!!!!!!');
           await this.store.setTransaction(p.gameId, {
             sum: 500,
             userId: p.userId,

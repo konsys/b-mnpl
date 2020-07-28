@@ -22,9 +22,9 @@ export class DicesService {
     const player = await this.players.getActingPlayer(gameId);
     const currenPosition = player.meanPosition;
 
-    const dice1 = 1;
+    const dice1 = 6;
     // const dice2 = random(0, 6);
-    let dice2 = 5;
+    let dice2 = 6;
     if (player.name === 'Feodr') {
       // dice2 = random(0, 6);
       // dice2 = 5;

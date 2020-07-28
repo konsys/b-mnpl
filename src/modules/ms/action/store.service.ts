@@ -31,7 +31,7 @@ export interface IAuctionStore {
   field: BoardFieldsEntity;
   userId: number;
   participants: number[];
-  isEnded: boolean;
+  userAccepted: number;
 }
 
 export interface ITransactionStore {

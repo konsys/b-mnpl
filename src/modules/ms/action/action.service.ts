@@ -116,7 +116,7 @@ export class ActionService {
     await this.store.setAuctionStore(gameId, {
       field,
       bet: startPrice + 100,
-      isEnded: false,
+      userAccepted: 0,
       participants,
       userId: actingPlayer.userId,
     });
@@ -150,11 +150,27 @@ export class ActionService {
       auction.participants,
     );
 
+    if (auction.userAccepted && auction.participants.length < 2) {
+      await this.buyField(
+        gameId,
+        auction.field.fieldId,
+        auction.userAccepted,
+        auction.bet,
+      );
+
+      await this.store.flushAuctionStore(gameId);
+      await this.switchPlayerTurn(gameId, false);
+      return;
+    }
+
+    console.log(1111, auction);
     await this.store.setAuctionStore(p.gameId, {
       ...auction,
+      userAccepted: auction.userAccepted,
       bet: auction.bet + BOARD_PARAMS.AUCTION_BET_INCREASE,
       userId: nextUserId,
     });
+
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_AUCTION_MODAL,
       userId: nextUserId,
@@ -169,16 +185,19 @@ export class ActionService {
       auction.participants,
     );
     const f = await this.fields.getActingField(gameId);
-    const p = await this.players.getPlayer(gameId, auction.userId);
 
     const participants = _.filter(
       auction.participants,
       (v) => v !== auction.userId,
     );
 
-    if (participants.length < 2) {
-      await this.buyField(gameId, f.fieldId, userId, auction.bet);
+    if (auction.userAccepted && participants.length < 2) {
+      await this.buyField(gameId, f.fieldId, auction.userAccepted, auction.bet);
 
+      await this.store.flushAuctionStore(gameId);
+      await this.switchPlayerTurn(gameId, false);
+      return;
+    } else if (participants.length < 2) {
       await this.store.flushAuctionStore(gameId);
       await this.switchPlayerTurn(gameId, false);
       return;
@@ -203,37 +222,32 @@ export class ActionService {
     const index = await this.players.getActingPlayerIndex(gameId);
 
     let player = await this.players.getActingPlayer(gameId);
-    let nextIndex = index;
+    let nextIndex = this.getNextArrayIndex(index, players);
 
-    if (index === 0) {
+    if (nextIndex === 0 && index !== 0) {
       await this.boardService.setNewRoundEvent(gameId);
+      await this.fields.mortgageNextRound(gameId);
     } else {
       await this.boardService.setNewTurnEvent(gameId);
     }
-    // Set Next round
-    nextIndex === 0 && (await this.fields.mortgageNextRound(gameId));
 
-    // Doubled dices and jail
     if (player.movesLeft > 0) {
       nextIndex = index;
       await this.players.updatePlayer(gameId, {
         ...player,
         movesLeft: --player.movesLeft,
       });
-    } else {
-      nextIndex = this.getNextArrayIndex(index, players);
     }
 
     const res = players.map((v, k) => {
       if (k === nextIndex) {
         if (unJail) {
-          v.movesLeft = 0;
           v.jailed = 0;
           v.unjailAttempts = 0;
         }
-        return { ...v, isActing: true };
+        return { ...v, isActing: true, movesLeft: 1 };
       } else {
-        return { ...v, isActing: false };
+        return { ...v, isActing: false, movesLeft: 0 };
       }
     });
 

@@ -158,7 +158,7 @@ export class BoardMessageService {
           canUseCredit: v.vip,
           moveOrder: ids.findIndex((id) => id === v.userId),
           isActing: ids[0] === v.userId,
-          movesLeft: 0,
+          movesLeft: ids[0] === v.userId ? 1 : 0,
         };
       });
 

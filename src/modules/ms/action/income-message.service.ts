@@ -196,7 +196,6 @@ export class IncomeMessageService {
       const p = await this.players.getPlayer(gameId, userId);
       const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
 
-      const p1 = await this.players.getActingPlayer(p.gameId);
       if (!p.jailed) {
         if (await this.checks.isStartPass(p.userId)) {
           // Bonus for start passing

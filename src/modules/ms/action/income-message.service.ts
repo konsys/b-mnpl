@@ -86,9 +86,10 @@ export class IncomeMessageService {
   async unJailPayment(gameId: string, userId: number): Promise<void> {
     const p = await this.players.getPlayer(gameId, userId);
     await this.players.unjailPlayer(p.gameId);
-
     setTimeout(async () => {
+      console.log(22222);
       await this.actions.rollDicesModal(gameId);
+      // await this.store.emitMessage(gameId);
     }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 2);
   }
 

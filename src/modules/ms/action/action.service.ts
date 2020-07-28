@@ -150,23 +150,17 @@ export class ActionService {
       auction.participants,
     );
 
-    if (auction.userAccepted && auction.participants.length < 2) {
-      await this.buyField(
-        gameId,
-        auction.field.fieldId,
-        auction.userAccepted,
-        auction.bet,
-      );
+    if (auction.participants.length < 2) {
+      await this.buyField(gameId, auction.field.fieldId, userId, auction.bet);
 
       await this.store.flushAuctionStore(gameId);
       await this.switchPlayerTurn(gameId, false);
       return;
     }
 
-    console.log(1111, auction);
     await this.store.setAuctionStore(p.gameId, {
       ...auction,
-      userAccepted: auction.userAccepted,
+      userAccepted: userId,
       bet: auction.bet + BOARD_PARAMS.AUCTION_BET_INCREASE,
       userId: nextUserId,
     });

@@ -151,12 +151,11 @@ export class OutcomeMessageService {
 
   contractMessage = async (gameId: string): Promise<IContractModal> => {
     const contract = await this.store.getContractStore(gameId);
-    const auction = await this.store.getAuctionStore(gameId);
 
     return {
       type: OutcomeMessageType.OUTCOME_CONTRACT_MODAL,
       _id: nanoid(),
-      userId: auction.userId,
+      userId: contract.toUserId,
       isModal: true,
       contract,
     };

@@ -273,3 +273,9 @@ export interface IContract {
   moneyFrom: number;
   moneyTo: number;
 }
+export interface IGameActionRequest {
+  action: IncomeMessageType;
+  fieldId?: number;
+  userId?: number;
+  contract?: any;
+}

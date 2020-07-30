@@ -33,7 +33,7 @@ export class ActionMsController {
   async rollDices({ userId }: { userId: number }) {
     const gameId = await this.store.getGameIdByPlayerId(userId);
     await this.service.dicesModal(gameId, userId);
-    return;
+    return { code: 0 };
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_BUY_FIELD_CLICKED })

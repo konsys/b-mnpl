@@ -8,7 +8,6 @@ import {
   Request,
   BadRequestException,
 } from '@nestjs/common';
-import { IncomeMessageType } from 'src/types/board/board.types';
 import { GameService } from './game.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { IGameActionRequest } from 'src/types/board/board.types';
@@ -27,8 +26,12 @@ export class GameController {
   ): Promise<string> {
     const userId = req.user.userId;
 
-    const res = await this.service.sendToMS(data);
-
-    return JSON.stringify({ code: 0 });
+    try {
+      const res = await this.service.sendToMS({ ...data, userId });
+      console.log(res);
+      return JSON.stringify({ code: 0 });
+    } catch (err) {
+      throw new BadRequestException(`Action not found ${err}`);
+    }
   }
 }

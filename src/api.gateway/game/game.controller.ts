@@ -28,7 +28,6 @@ export class GameController {
 
     try {
       const res = await this.service.sendToMS({ ...data, userId });
-      console.log(res);
       return JSON.stringify({ code: 0 });
     } catch (err) {
       throw new BadRequestException(`Action not found ${err}`);

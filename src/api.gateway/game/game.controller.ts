@@ -6,8 +6,9 @@ import {
   Body,
   UseGuards,
   Request,
+  BadRequestException,
 } from '@nestjs/common';
-import { IncomeMessageType } from 'src/types/board/board.types';
+import { IncomeMessageType, IContract } from 'src/types/board/board.types';
 import { GameService } from './game.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 
@@ -23,6 +24,7 @@ export class GameController {
     @Request() req,
     @Body('action') action: IncomeMessageType,
     @Body('fieldId') fieldId: number,
+    @Body('contract') contract?: IContract,
   ): Promise<string> {
     const userId = req.user.userId;
     switch (action) {
@@ -65,9 +67,12 @@ export class GameController {
         await this.service.levelUpField({ userId, fieldId });
         break;
 
-      case IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED:
-        await this.service.levelDownField({ userId, fieldId });
+      case IncomeMessageType.INCOME_CONTRACT_START:
+        await this.service.contractStart(contract);
         break;
+
+      default:
+        throw new BadRequestException(`Action ${action} not found`);
     }
 
     return JSON.stringify({ code: 0 });

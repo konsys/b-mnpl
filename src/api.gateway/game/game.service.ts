@@ -1,7 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
 import { ClientProxy } from '@nestjs/microservices';
-import { IncomeMessageType, IPayload } from 'src/types/board/board.types';
+import {
+  IncomeMessageType,
+  IPayload,
+  IContract,
+} from 'src/types/board/board.types';
 
 @Injectable()
 export class GameService {
@@ -110,5 +114,16 @@ export class GameService {
       )
       .toPromise();
     return res;
+  }
+
+  async contractStart(payload: IContract): Promise<void> {
+    // const res = await this.proxy
+    //   .send<any>(
+    //     { cmd: IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED },
+    //     payload,
+    //   )
+    //   .toPromise();
+    // return res;
+    console.log(payload);
   }
 }

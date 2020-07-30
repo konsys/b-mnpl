@@ -58,6 +58,7 @@ export enum IncomeMessageType {
   INCOME_UN_MORTGAGE_FIELD_CLICKED = 'unMortgageFieldClicked',
   INCOME_LEVEL_UP_FIELD_CLICKED = 'levelUpFieldClicked',
   INCOME_LEVEL_DOWN_FIELD_CLICKED = 'levelDownFieldClicked',
+  INCOME_CONTRACT_START = 'contractStart',
 }
 
 export enum OutcomeMessageType {
@@ -260,4 +261,15 @@ export interface IMoneyTransaction {
   sum: number | null;
   userId: number;
   toUserId: number;
+}
+
+export interface IContract {
+  fromUserId: number;
+  toUserId: number;
+  fieldIdsFrom: number[];
+  fieldFromPrice: number;
+  fieldIdsTo: number[];
+  fieldToPrice: number;
+  moneyFrom: number;
+  moneyTo: number;
 }

@@ -1,4 +1,8 @@
-import { IPlayer, IncomeMessageType } from 'src/types/board/board.types';
+import {
+  IGameActionRequest,
+  IPlayer,
+  IncomeMessageType,
+} from 'src/types/board/board.types';
 
 import { BoardMessageService } from './board.message.service';
 import { Controller } from '@nestjs/common';
@@ -30,93 +34,88 @@ export class ActionMsController {
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_ROLL_DICES_CLICKED })
-  async rollDices({ userId }: { userId: number }) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.dicesModal(gameId, userId);
+  async rollDices(data: IGameActionRequest) {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.dicesModal(gameId, data.userId);
     return { code: 0 };
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_BUY_FIELD_CLICKED })
-  async fieldBought({ userId }: { userId: number }): Promise<any> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async fieldBought(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
 
-    await this.service.fieldBought(gameId, userId);
+    await this.service.fieldBought(gameId, data.userId);
 
     return await this.store.emitMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_START_CLICKED })
-  async fieldAuction({ userId }: { userId: number }): Promise<any> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.fieldAuction(gameId, userId);
+  async fieldAuction(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.fieldAuction(gameId, data.userId);
     return await this.store.emitMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_ACCEPT_CLICKED })
-  async acceptAuction({ userId }: { userId: number }): Promise<any> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.acceptAuction(gameId, userId);
+  async acceptAuction(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.acceptAuction(gameId, data.userId);
     return await this.store.emitMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_DECLINE_CLICKED })
-  async declineAuction({ userId }: { userId: number }): Promise<any> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.declineAuction(gameId, userId);
+  async declineAuction(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.declineAuction(gameId, data.userId);
     return await this.store.emitMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_TAX_PAID_CLICKED })
-  async payment({ userId }: { userId: number }): Promise<any> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.payment(gameId, userId);
+  async payment(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.payment(gameId, data.userId);
     return await this.store.emitMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_UN_JAIL_PAID_CLICKED })
-  async unJailPayment({ userId }: { userId: number }): Promise<any> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.unJailPayment(gameId, userId);
+  async unJailPayment(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.unJailPayment(gameId, data.userId);
     return await this.store.emitMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_MORTGAGE_FIELD_CLICKED })
-  async mortgageField({
-    userId,
-    fieldId,
-  }: {
-    userId: number;
-    fieldId: number;
-  }): Promise<any> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.mortgageField(gameId, userId, fieldId);
+  async mortgageField(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.mortgageField(gameId, data.userId, data.fieldId);
     return await this.store.emitMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_UN_MORTGAGE_FIELD_CLICKED })
-  async unMortgageField({
-    userId,
-    fieldId,
-  }: {
-    userId: number;
-    fieldId: number;
-  }): Promise<any> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.unMortgageField(gameId, userId, fieldId);
+  async unMortgageField(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.unMortgageField(gameId, data.userId, data.fieldId);
     return await this.store.emitMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_LEVEL_UP_FIELD_CLICKED })
-  async levelUpField({ userId }: { userId: number }): Promise<any> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.levelUpField(gameId, userId);
+  async levelUpField(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.levelUpField(gameId, data.userId);
     return await this.store.emitMessage(gameId);
   }
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_LEVEL_DOWN_FIELD_CLICKED })
-  async levelDownField({ userId }: { userId: number }): Promise<any> {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
-    await this.service.levelDownField(gameId, userId);
+  async levelDownField(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.levelDownField(gameId, data.userId);
+    return await this.store.emitMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_CONTRACT_START })
+  async contractStart(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.levelDownField(gameId, data.userId);
     return await this.store.emitMessage(gameId);
   }
 }

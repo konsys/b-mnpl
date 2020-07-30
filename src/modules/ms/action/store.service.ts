@@ -1,4 +1,9 @@
-import { IField, IFieldAction, IPlayer } from 'src/types/board/board.types';
+import {
+  IField,
+  IFieldAction,
+  IPlayer,
+  IContract,
+} from 'src/types/board/board.types';
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
@@ -64,6 +69,7 @@ export interface IStore {
   error: string;
   message: string;
   game: string;
+  contract: string;
 }
 
 const storeNames: IStore = {
@@ -78,6 +84,7 @@ const storeNames: IStore = {
   error: 'error',
   message: 'message',
   game: 'game',
+  contract: 'contract',
 };
 
 export interface IErrorMessage {
@@ -173,6 +180,14 @@ export class StoreService {
 
   async getAuctionStore(gameId: string): Promise<IAuctionStore> {
     return (await this.get(gameId, storeNames.auction)) as IAuctionStore;
+  }
+
+  async setContractStore(gameId: string, data: IContract) {
+    await this.set(gameId, storeNames.contract, data);
+  }
+
+  async getContractStore(gameId: string): Promise<IContract> {
+    return (await this.get(gameId, storeNames.contract)) as IContract;
   }
 
   async flushAuctionStore(gameId: string) {

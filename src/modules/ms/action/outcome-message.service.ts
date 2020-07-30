@@ -1,5 +1,6 @@
 import {
   IAuctionModal,
+  IContractModal,
   IDicesModal,
   IDoNothing,
   IPayRentModal,
@@ -148,6 +149,19 @@ export class OutcomeMessageService {
     };
   };
 
+  contractMessage = async (gameId: string): Promise<IContractModal> => {
+    const contract = await this.store.getContractStore(gameId);
+    const auction = await this.store.getAuctionStore(gameId);
+
+    return {
+      type: OutcomeMessageType.OUTCOME_CONTRACT_MODAL,
+      _id: nanoid(),
+      userId: auction.userId,
+      isModal: true,
+      contract,
+    };
+  };
+
   // When emit message action store to action message adapter
   actionTypeToEventAdapter = async (
     gameId: string,
@@ -177,6 +191,9 @@ export class OutcomeMessageService {
 
       case OutcomeMessageType.OUTCOME_AUCTION_MODAL:
         return await this.auctionMessage(gameId);
+
+      case OutcomeMessageType.OUTCOME_CONTRACT_MODAL:
+        return await this.contractMessage(gameId);
     }
   };
 }

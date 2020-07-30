@@ -212,11 +212,11 @@ export class ActionService {
   }
 
   async contractModal(gameId: string, contract: IContract) {
-    // await this.store.setActionStore(gameId, {
-    //   action: OutcomeMessageType.OUTCOME_CONTRACT_MODAL,
-    //   userId: contract.toUserId),
-    //   actionId: nanoid(4),
-    // });
+    await this.store.setActionStore(gameId, {
+      action: OutcomeMessageType.OUTCOME_CONTRACT_MODAL,
+      userId: contract.toUserId,
+      actionId: nanoid(4),
+    });
   }
 
   async switchPlayerTurn(gameId: string, unJail: boolean) {

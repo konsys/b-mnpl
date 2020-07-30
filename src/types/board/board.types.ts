@@ -155,6 +155,10 @@ export interface IAuctionModal extends IOutcameBoardAction {
   text: string;
 }
 
+export interface IContractModal extends IOutcameBoardAction {
+  type: OutcomeMessageType.OUTCOME_CONTRACT_MODAL;
+  contract: IContract;
+}
 export interface IBoardEvent {
   action:
     | IDicesModal
@@ -165,7 +169,8 @@ export interface IBoardEvent {
     | IUnJailPayingModal
     | IRollDicesMessage
     | IDoNothing
-    | IAuctionModal;
+    | IAuctionModal
+    | IContractModal;
 }
 
 interface IBoardEventData {

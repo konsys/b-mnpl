@@ -211,6 +211,42 @@ export class IncomeMessageService {
     await this.actions.contractModal(gameId, contract);
   }
 
+  async contractAccept(
+    gameId: string,
+    userId: number,
+    contract: IContract,
+  ): Promise<void> {
+    const p = await this.players.getPlayer(gameId, userId);
+
+    if (!(await this.checks.isContractValid(contract))) {
+      await this.store.setError(p.userId, {
+        code: ErrorCode.CompanyHasOwner,
+        message: 'Oops!',
+      });
+      return;
+    }
+
+    await this.getNextAction(gameId, userId);
+  }
+
+  async contractDecline(
+    gameId: string,
+    userId: number,
+    contract: IContract,
+  ): Promise<void> {
+    const p = await this.players.getPlayer(gameId, userId);
+
+    if (!(await this.checks.isContractValid(contract))) {
+      await this.store.setError(p.userId, {
+        code: ErrorCode.CompanyHasOwner,
+        message: 'Oops!',
+      });
+      return;
+    }
+
+    await this.getNextAction(gameId, userId);
+  }
+
   private async getNextAction(gameId: string, userId: number) {
     try {
       const p = await this.players.getPlayer(gameId, userId);

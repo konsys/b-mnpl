@@ -118,4 +118,19 @@ export class ActionMsController {
     await this.service.contractStart(gameId, data.userId, data.contract);
     return await this.store.emitMessage(gameId);
   }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_CONTRACT_ACCEPT })
+  async contractAccept(data: IGameActionRequest): Promise<any> {
+    const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    await this.service.contractStart(gameId, data.userId, data.contract);
+    return await this.store.emitMessage(gameId);
+  }
+
+  @MessagePattern({ cmd: IncomeMessageType.INCOME_CONTRACT_DECLINE })
+  async contractDecline(data: IGameActionRequest): Promise<any> {
+    console.log(2222);
+    // const gameId = await this.store.getGameIdByPlayerId(data.userId);
+    // await this.service.contractStart(gameId, data.userId, data.contract);
+    // return await this.store.emitMessage(gameId);
+  }
 }

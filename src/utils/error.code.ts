@@ -11,4 +11,5 @@ export enum ErrorCode {
   'CannotBuildBranch' = 110,
   'NoMonopoly' = 111,
   'CannotStartAuction' = 112,
+  'CannotProceedContract' = 113,
 }

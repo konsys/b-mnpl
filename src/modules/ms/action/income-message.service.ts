@@ -199,17 +199,16 @@ export class IncomeMessageService {
   ): Promise<void> {
     const p = await this.players.getPlayer(gameId, userId);
 
-    console.log(1);
-    // try {
-    //   await this.actions.rollDicesAction(gameId, userId);
-    //   await this.store.emitMessage(gameId);
-    //   await this.getNextAction(gameId, userId);
-    //   setTimeout(async () => {
-    //     await this.store.emitMessage(p.gameId);
-    //   }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
-    // } catch (err) {
-    //   console.log('Error in dicesModal', err);
-    // }
+    if (!(await this.checks.isContractValid(contract))) {
+      await this.store.setError(p.userId, {
+        code: ErrorCode.CompanyHasOwner,
+        message: 'Oops!',
+      });
+      return;
+    }
+
+    await this.actions.contractModal(gameId, contract);
+    await this.store.emitMessage(gameId);
   }
 
   private async getNextAction(gameId: string, userId: number) {

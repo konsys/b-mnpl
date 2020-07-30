@@ -1,4 +1,9 @@
-import { IField, IFieldAction, IPlayer } from 'src/types/board/board.types';
+import {
+  IField,
+  IFieldAction,
+  IPlayer,
+  IContract,
+} from 'src/types/board/board.types';
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
 import { BOARD_PARAMS } from 'src/params/board.params';
@@ -217,5 +222,9 @@ export class ChecksService {
       f.status.branches > 0 &&
       byOrder
     );
+  }
+
+  async isContractValid(constract: IContract) {
+    return true;
   }
 }

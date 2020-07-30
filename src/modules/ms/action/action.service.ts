@@ -1,6 +1,7 @@
 import {
   IncomeMessageType,
   OutcomeMessageType,
+  IContract,
 } from 'src/types/board/board.types';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 
@@ -208,6 +209,14 @@ export class ActionService {
       userId: nextUserId,
       actionId: nanoid(4),
     });
+  }
+
+  async contractModal(gameId: string, contract: IContract) {
+    // await this.store.setActionStore(gameId, {
+    //   action: OutcomeMessageType.OUTCOME_CONTRACT_MODAL,
+    //   userId: contract.toUserId),
+    //   actionId: nanoid(4),
+    // });
   }
 
   async switchPlayerTurn(gameId: string, unJail: boolean) {

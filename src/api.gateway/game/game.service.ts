@@ -11,7 +11,6 @@ export class GameService {
   ) {}
 
   async sendToMS(data: IGameActionRequest): Promise<any> {
-    console.log(data);
     const res = await this.proxy
       .send<any>({ cmd: data.action }, data)
       .toPromise();

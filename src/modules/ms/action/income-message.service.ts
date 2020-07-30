@@ -3,6 +3,7 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { ChecksService } from './checks.service';
 import { ErrorCode } from 'src/utils/error.code';
 import { FieldsUtilsService } from './fields.utils.service';
+import { IContract } from 'src/types/board/board.types';
 import { Injectable } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
@@ -87,7 +88,6 @@ export class IncomeMessageService {
     const p = await this.players.getPlayer(gameId, userId);
     await this.players.unjailPlayer(p.gameId);
     setTimeout(async () => {
-      console.log(22222);
       await this.actions.rollDicesModal(gameId);
       // await this.store.emitMessage(gameId);
     }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 2);
@@ -192,7 +192,27 @@ export class IncomeMessageService {
     }
   }
 
-  async getNextAction(gameId: string, userId: number) {
+  async contractStart(
+    gameId: string,
+    userId: number,
+    contract: IContract,
+  ): Promise<void> {
+    const p = await this.players.getPlayer(gameId, userId);
+
+    console.log(1);
+    // try {
+    //   await this.actions.rollDicesAction(gameId, userId);
+    //   await this.store.emitMessage(gameId);
+    //   await this.getNextAction(gameId, userId);
+    //   setTimeout(async () => {
+    //     await this.store.emitMessage(p.gameId);
+    //   }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
+    // } catch (err) {
+    //   console.log('Error in dicesModal', err);
+    // }
+  }
+
+  private async getNextAction(gameId: string, userId: number) {
     try {
       const p = await this.players.getPlayer(gameId, userId);
       const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
@@ -258,7 +278,6 @@ export class IncomeMessageService {
         if (p.unjailAttempts < BOARD_PARAMS.JAIL_TURNS) {
           await this.actions.switchPlayerTurn(gameId, false);
         } else {
-          console.log('1!!!!!!!!!!!');
           await this.store.setTransaction(p.gameId, {
             sum: 500,
             userId: p.userId,

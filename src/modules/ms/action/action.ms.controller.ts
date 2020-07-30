@@ -115,7 +115,7 @@ export class ActionMsController {
   @MessagePattern({ cmd: IncomeMessageType.INCOME_CONTRACT_START })
   async contractStart(data: IGameActionRequest): Promise<any> {
     const gameId = await this.store.getGameIdByPlayerId(data.userId);
-    await this.service.levelDownField(gameId, data.userId);
+    await this.service.contractStart(gameId, data.userId, data.contract);
     return await this.store.emitMessage(gameId);
   }
 }

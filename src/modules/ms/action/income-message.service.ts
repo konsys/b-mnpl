@@ -209,7 +209,6 @@ export class IncomeMessageService {
 
     await this.store.setContractStore(gameId, contract);
     await this.actions.contractModal(gameId, contract);
-    await this.store.emitMessage(gameId);
   }
 
   private async getNextAction(gameId: string, userId: number) {

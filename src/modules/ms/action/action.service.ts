@@ -219,6 +219,49 @@ export class ActionService {
     });
   }
 
+  async acceptContract(gameId: string, contract: IContract) {
+    const allFields = (await this.store.getFieldsStore(gameId)).fields;
+
+    const suggestedFields = allFields.filter(
+      (v) => v.status.userId === contract.fromUserId,
+    );
+    const requiredFields = allFields.filter(
+      (v) => v.status.userId === contract.fromUserId,
+    );
+
+    for (const f of suggestedFields) {
+      await this.fields.updateField(gameId, {
+        ...f,
+        status: { ...f.status, userId: contract.toUserId },
+      });
+    }
+
+    for (const f of requiredFields) {
+      await this.fields.updateField(gameId, {
+        ...f,
+        status: { ...f.status, userId: contract.fromUserId },
+      });
+    }
+    const transactionId = nanoid(4);
+    await this.store.setTransaction(gameId, {
+      sum: contract.moneyFrom + contract.fieldFromPrice,
+      reason: ``,
+      toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
+      transactionId,
+      userId: contract.fromUserId,
+    });
+    await this.transaction.transactMoney(gameId, transactionId);
+
+    await this.store.setTransaction(gameId, {
+      sum: contract.moneyTo + contract.fieldToPrice,
+      reason: ``,
+      toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
+      transactionId,
+      userId: contract.toUserId,
+    });
+    await this.transaction.transactMoney(gameId, transactionId);
+  }
+
   async switchPlayerTurn(gameId: string, unJail: boolean) {
     unJail = unJail ? unJail : false;
     const players = (await this.store.getPlayersStore(gameId)).players;

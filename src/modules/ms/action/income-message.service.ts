@@ -62,7 +62,7 @@ export class IncomeMessageService {
       });
     } else {
       await this.fields.unMortgage(p.gameId, fieldId);
-      await this.getNextAction(gameId, p.userId);
+      await this.getNextAction(gameId);
     }
   }
 
@@ -80,7 +80,7 @@ export class IncomeMessageService {
       });
     } else {
       await this.fields.mortgage(p.gameId, fieldId);
-      await this.getNextAction(gameId, p.userId);
+      await this.getNextAction(gameId);
     }
   }
 
@@ -183,7 +183,7 @@ export class IncomeMessageService {
     try {
       await this.actions.rollDicesAction(gameId, userId);
       await this.store.emitMessage(gameId);
-      await this.getNextAction(gameId, userId);
+      await this.getNextAction(gameId);
       setTimeout(async () => {
         await this.store.emitMessage(p.gameId);
       }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
@@ -201,7 +201,7 @@ export class IncomeMessageService {
 
     if (!(await this.checks.isContractValid(contract))) {
       await this.store.setError(p.userId, {
-        code: ErrorCode.CompanyHasOwner,
+        code: ErrorCode.CannotProceedContract,
         message: 'Oops!',
       });
       return;
@@ -220,13 +220,13 @@ export class IncomeMessageService {
 
     if (!(await this.checks.isContractValid(contract))) {
       await this.store.setError(p.userId, {
-        code: ErrorCode.CompanyHasOwner,
+        code: ErrorCode.CannotProceedContract,
         message: 'Oops!',
       });
       return;
     }
-
-    await this.getNextAction(gameId, userId);
+    await this.actions.acceptContract(gameId, contract);
+    await this.getNextAction(gameId);
   }
 
   async contractDecline(
@@ -238,18 +238,18 @@ export class IncomeMessageService {
 
     if (!(await this.checks.isContractValid(contract))) {
       await this.store.setError(p.userId, {
-        code: ErrorCode.CompanyHasOwner,
+        code: ErrorCode.CannotProceedContract,
         message: 'Oops!',
       });
       return;
     }
 
-    await this.getNextAction(gameId, userId);
+    await this.getNextAction(gameId);
   }
 
-  private async getNextAction(gameId: string, userId: number) {
+  private async getNextAction(gameId: string) {
     try {
-      const p = await this.players.getPlayer(gameId, userId);
+      const p = await this.players.getActingPlayer(gameId);
       const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
 
       if (!p.jailed) {
@@ -299,7 +299,7 @@ export class IncomeMessageService {
           });
           await this.actions.payTaxModal(gameId, p.userId);
         } else if (await this.checks.isChance(p.gameId, f.fieldId)) {
-          // TODO Make a real chance field await this.actions
+          // TODO Make an array of chance variations
           await this.store.setTransaction(p.gameId, {
             sum: 1000,
             userId: p.userId,

@@ -262,10 +262,6 @@ export class ChecksService {
       (v) => v.status.userId === contract.toUserId,
     );
 
-    console.log(fields.map((v) => v.fieldId));
-    console.log(fieldsFrom.map((v) => v.fieldId));
-    console.log(fieldsTo.map((v) => v.fieldId));
-
     for (const id of contract.fieldIdsFrom) {
       if (!fieldsFrom.find((v) => v.fieldId === id)) {
         return false;

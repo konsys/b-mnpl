@@ -11,7 +11,7 @@ import { FieldsUtilsService } from './fields.utils.service';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
-import _, { takeRight, take } from 'lodash';
+import _, { takeRight } from 'lodash';
 import { nanoid } from 'nanoid';
 import { MsNames, MsFieldsPatterns } from 'src/types/ms/ms.types';
 import { ClientProxy } from '@nestjs/microservices';

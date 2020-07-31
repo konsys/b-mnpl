@@ -11,7 +11,7 @@ import { FieldsUtilsService } from './fields.utils.service';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
-import _ from 'lodash';
+import _, { takeRight } from 'lodash';
 import { nanoid } from 'nanoid';
 
 const https = require('https');
@@ -83,6 +83,7 @@ export class ActionService {
   }
 
   async payTaxModal(gameId: string, userId: number) {
+    await this.saveImg(gameId);
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
       userId,
@@ -328,11 +329,11 @@ export class ActionService {
     const fields = (await this.store.getFieldsStore(gameId)).fields;
 
     for (const f of fields) {
-      const path2 =
-        '/home/sysuev/projects/b-mnpl/assets/fields/' + path.basename(f.imgSrc);
-      console.log(222, path2);
-      console.log(333, f.imgSrc);
-      console.log(444, path.basename(f.imgSrc));
+      const sp = f.imgSrc.split('/');
+      const jn = sp.length > 2 && takeRight(sp, 2).join('/');
+      const path2 = '/home/sysuev/projects/b-mnpl/assets/f/' + jn;
+
+      console.log(1111, path2);
       if (path.basename(f.imgSrc)) {
         const file = await fs.createWriteStream(path2);
         const request = await https.get(f.imgSrc, function (response) {

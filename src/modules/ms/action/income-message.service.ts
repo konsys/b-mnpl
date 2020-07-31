@@ -200,7 +200,7 @@ export class IncomeMessageService {
   ): Promise<void> {
     const p = await this.players.getPlayer(gameId, userId);
 
-    if (!(await this.checks.isContractValid(contract))) {
+    if (!(await this.checks.isContractValid(gameId, contract))) {
       await this.store.setError(gameId, {
         code: ErrorCode.CannotProceedContract,
         message: 'Oops!',
@@ -219,7 +219,7 @@ export class IncomeMessageService {
   ): Promise<void> {
     const p = await this.players.getPlayer(gameId, userId);
 
-    if (!(await this.checks.isContractValid(contract))) {
+    if (!(await this.checks.isContractValid(gameId, contract))) {
       await this.store.setError(gameId, {
         code: ErrorCode.CannotProceedContract,
         message: 'Oops!',
@@ -238,7 +238,7 @@ export class IncomeMessageService {
   ): Promise<void> {
     const p = await this.players.getPlayer(gameId, userId);
 
-    if (!(await this.checks.isContractValid(contract))) {
+    if (!(await this.checks.isContractValid(gameId, contract))) {
       await this.store.setError(gameId, {
         code: ErrorCode.CannotProceedContract,
         message: 'Oops!',

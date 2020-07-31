@@ -77,7 +77,7 @@ export class BoardMessageService {
     const error = await this.store.getError(gameId);
 
     const message: BoardMessage = {
-      code: error.code,
+      code: (error && error.code) || 0,
       data: {
         id: 0,
         event,

@@ -224,7 +224,59 @@ export class ChecksService {
     );
   }
 
-  async isContractValid(constract: IContract) {
+  async isContractValid(gameId: string, contract: IContract): Promise<boolean> {
+    if (!contract) {
+      return false;
+    }
+
+    const noFields =
+      !contract.fieldIdsFrom.length && !contract.fieldIdsFrom.length;
+
+    if (noFields) {
+      return false;
+    }
+
+    const muchMoney = contract.moneyFrom && contract.moneyTo;
+    if (muchMoney) {
+      return false;
+    }
+
+    const looksTricky =
+      (contract.moneyFrom + contract.fieldFromPrice) / 2 >
+        contract.moneyTo + contract.fieldToPrice ||
+      (contract.moneyTo + contract.fieldToPrice) / 2 >
+        contract.moneyFrom + contract.fieldFromPrice;
+
+    if (looksTricky) {
+      return false;
+    }
+
+    const fields = (await this.store.getFieldsStore(gameId)).fields.filter(
+      (v) => v.status,
+    );
+
+    const fieldsFrom = fields.filter(
+      (v) => v.status.userId === contract.fromUserId,
+    );
+    const fieldsTo = fields.filter(
+      (v) => v.status.userId === contract.toUserId,
+    );
+
+    console.log(fields.map((v) => v.fieldId));
+    console.log(fieldsFrom.map((v) => v.fieldId));
+    console.log(fieldsTo.map((v) => v.fieldId));
+
+    for (const id of contract.fieldIdsFrom) {
+      if (!fieldsFrom.find((v) => v.fieldId === id)) {
+        return false;
+      }
+    }
+
+    for (const id of contract.fieldIdsTo) {
+      if (!fieldsTo.find((v) => v.fieldId === id)) {
+        return false;
+      }
+    }
     return true;
   }
 }

@@ -3,7 +3,11 @@ import { Injectable, Logger, Inject } from '@nestjs/common';
 
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
-import { MsPatterns, MsNames, MsPatternsActions } from 'src/types/ms/ms.types';
+import {
+  MsUsersPatterns,
+  MsNames,
+  MsPatternsActions,
+} from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { users } from 'src/entities/dbData';
 
@@ -25,7 +29,7 @@ export class UsersService {
   async getAllUsers(filter?: FindManyOptions) {
     try {
       const res = await this.proxy
-        .send<any>({ cmd: MsPatterns.GET_ALL_USERS }, filter)
+        .send<any>({ cmd: MsUsersPatterns.GET_ALL_USERS }, filter)
         .toPromise();
       return res;
     } catch (err) {
@@ -37,7 +41,7 @@ export class UsersService {
     try {
       const res = await this.proxy
         .send<any>(
-          { cmd: MsPatterns.GET_USER_BY_CREDENTIALS },
+          { cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS },
           { email, password },
         )
         .toPromise();
@@ -50,7 +54,7 @@ export class UsersService {
   async getUser(userId: number | null): Promise<any> {
     try {
       const res = await this.proxy
-        .send<any>({ cmd: MsPatterns.GET_USER }, { userId })
+        .send<any>({ cmd: MsUsersPatterns.GET_USER }, { userId })
         .toPromise();
 
       return res;
@@ -74,7 +78,7 @@ export class UsersService {
   async getUsersByIds(userIds: number[]): Promise<UsersEntity[]> {
     try {
       const res = await this.proxy
-        .send<any>({ cmd: MsPatterns.GET_USERS_BY_IDS }, { userIds })
+        .send<any>({ cmd: MsUsersPatterns.GET_USERS_BY_IDS }, { userIds })
         .toPromise();
 
       return res;
@@ -86,7 +90,7 @@ export class UsersService {
   async saveUsers() {
     try {
       return await this.proxy
-        .send<any>({ cmd: MsPatterns.SAVE_USERS }, users)
+        .send<any>({ cmd: MsUsersPatterns.SAVE_USERS }, users)
         .toPromise();
     } catch (err) {
       this.logger.log(`Error: ${err}`);

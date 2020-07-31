@@ -10,7 +10,7 @@ import { BOARD_PARAMS } from 'src/params/board.params';
 import { FieldsUtilsService } from './fields.utils.service';
 import { IBoardEvent } from 'src/types/board/board.types';
 import { Injectable, Inject } from '@nestjs/common';
-import { MsPatterns, MsNames } from 'src/types/ms/ms.types';
+import { MsNames, MsFieldsPatterns } from 'src/types/ms/ms.types';
 import { OutcomeMessageService } from './outcome-message.service';
 import { StoreService } from './store.service';
 import { ClientProxy } from '@nestjs/microservices';
@@ -94,7 +94,7 @@ export class BoardMessageService {
     await this.store.flushGame(gameId);
     try {
       const fields = await this.fieldsMs
-        .send<any>({ cmd: MsPatterns.GET_INIT_FIELDS }, {})
+        .send<any>({ cmd: MsFieldsPatterns.GET_INIT_FIELDS }, {})
         .toPromise();
 
       const r = fields.map((v: IField, k: number) => ({

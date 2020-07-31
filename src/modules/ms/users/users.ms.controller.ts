@@ -9,7 +9,7 @@ import { Repository, FindManyOptions, In } from 'typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { MsPatterns } from 'src/types/ms/ms.types';
+import { MsUsersPatterns } from 'src/types/ms/ms.types';
 
 @Controller()
 export class UsersMsController {
@@ -18,7 +18,7 @@ export class UsersMsController {
     private readonly users: Repository<UsersEntity>,
   ) {}
 
-  @MessagePattern({ cmd: MsPatterns.GET_ALL_USERS })
+  @MessagePattern({ cmd: MsUsersPatterns.GET_ALL_USERS })
   async allUsers(filter: FindManyOptions) {
     filter = { ...filter, skip: 1 };
     const users: any = await this.users.find(filter);
@@ -26,7 +26,7 @@ export class UsersMsController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @MessagePattern({ cmd: MsPatterns.GET_USER })
+  @MessagePattern({ cmd: MsUsersPatterns.GET_USER })
   async getUser(userId: number) {
     const user: UsersEntity = await this.users.findOne(userId);
 
@@ -34,7 +34,7 @@ export class UsersMsController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @MessagePattern({ cmd: MsPatterns.GET_USERS_BY_IDS })
+  @MessagePattern({ cmd: MsUsersPatterns.GET_USERS_BY_IDS })
   async getUsers(userIds: { userIds: number[] }) {
     // https://github.com/typeorm/typeorm/blob/master/docs/find-options.md
     const users: UsersEntity[] = await this.users.find({
@@ -45,14 +45,14 @@ export class UsersMsController {
     return of(filtered).pipe(delay(1));
   }
 
-  @MessagePattern({ cmd: MsPatterns.GET_USER_BY_CREDENTIALS })
+  @MessagePattern({ cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS })
   async verifyUsers(filter: any) {
     const user: UsersEntity = await this.users.findOne({ email: filter.email });
 
     return of(user).pipe(delay(1));
   }
 
-  @MessagePattern({ cmd: MsPatterns.SAVE_USERS })
+  @MessagePattern({ cmd: MsUsersPatterns.SAVE_USERS })
   async saveUsers(users: UsersEntity[]) {
     const allUsers: UsersEntity[] = await this.users.save(users);
     return of(allUsers).pipe(delay(1));

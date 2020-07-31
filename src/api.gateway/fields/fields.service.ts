@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { MsNames, MsPatterns } from 'src/types/ms/ms.types';
+import { MsNames, MsFieldsPatterns } from 'src/types/ms/ms.types';
 
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
@@ -17,7 +17,7 @@ export class FieldsService {
   async getInitialFields(filter?: FindManyOptions) {
     try {
       const res = await this.proxy
-        .send<any>({ cmd: MsPatterns.GET_INIT_FIELDS }, filter || {})
+        .send<any>({ cmd: MsFieldsPatterns.GET_INIT_FIELDS }, filter || {})
         .toPromise();
 
       return res;
@@ -31,7 +31,7 @@ export class FieldsService {
       const fields = fieldsForSave();
 
       const res = await this.proxy
-        .send<any>({ cmd: MsPatterns.SAVE_FIELDS }, fields)
+        .send<any>({ cmd: MsFieldsPatterns.SAVE_FIELDS }, fields)
         .toPromise();
       return res;
     } catch (err) {

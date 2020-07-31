@@ -11,7 +11,7 @@ import { FieldsUtilsService } from './fields.utils.service';
 import { PlayersUtilsService } from './players.utils.service';
 import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
-import _, { takeRight } from 'lodash';
+import _, { takeRight, take } from 'lodash';
 import { nanoid } from 'nanoid';
 
 const https = require('https');
@@ -330,16 +330,23 @@ export class ActionService {
 
     for (const f of fields) {
       const sp = f.imgSrc.split('/');
-      const jn = sp.length > 2 && takeRight(sp, 2).join('/');
-      const path2 = '/home/sysuev/projects/b-mnpl/assets/f/' + jn;
 
-      console.log(1111, path2);
-      if (path.basename(f.imgSrc)) {
-        const file = await fs.createWriteStream(path2);
-        const request = await https.get(f.imgSrc, function (response) {
-          response.pipe(file);
-        });
-      }
+      const index = sp.findIndex((v) => v === 'fields');
+
+      const fileName = takeRight(sp, 1).join('');
+
+      const dir =
+        '/home/sysuev/projects/b-mnpl/assets/' +
+        sp.slice(index, sp.length - 1).join('/');
+
+      fs.mkdir(dir, { recursive: true }, async (err) => {
+        if (sp.length > 3) {
+          const file = await fs.createWriteStream(dir + '/' + fileName);
+          const request = await https.get(f.imgSrc, function (response) {
+            response.pipe(file);
+          });
+        }
+      });
     }
   }
 }

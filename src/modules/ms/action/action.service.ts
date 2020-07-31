@@ -87,7 +87,6 @@ export class ActionService {
   }
 
   async payTaxModal(gameId: string, userId: number) {
-    await this.saveImg(gameId);
     await this.store.setActionStore(gameId, {
       action: OutcomeMessageType.OUTCOME_TAX_PAYING_MODAL,
       userId,

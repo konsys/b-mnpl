@@ -340,25 +340,32 @@ export class ActionService {
 
       const dir = sp.slice(index, sp.length - 1).join('/');
 
-      fs.mkdir(dir, { recursive: true }, async (err) => {
-        // const file = await fs.createWriteStream(dir + '/' + fileName);
-        // const request = await https.get(f.imgSrc, async (response) => {
-        // response.pipe(file);
+      if (dir) {
+        fs.mkdir('assets/' + dir, { recursive: true }, async (err) => {
+          const file = await fs.createWriteStream(
+            'assets/' + dir + '/' + fileName,
+          );
+          const request = await https.get(
+            'https://m1.dogecdn.wtf/' + dir + '/' + fileName,
+            async (response) => {
+              response.pipe(file);
 
-        const fieldId = f.fieldId;
-        delete f.fieldId;
-        delete f.status;
-        await this.fieldsMs
-          .send<any>(
-            { cmd: MsFieldsPatterns.UPDATE_FIELD },
-            {
-              fieldId,
-              data: { ...f, imgSrc: dir + '/' + fileName },
+              const fieldId = f.fieldId;
+              delete f.fieldId;
+              delete f.status;
+              await this.fieldsMs
+                .send<any>(
+                  { cmd: MsFieldsPatterns.UPDATE_FIELD },
+                  {
+                    fieldId,
+                    data: { ...f, imgSrc: dir + '/' + fileName },
+                  },
+                )
+                .toPromise();
             },
-          )
-          .toPromise();
-        // });
-      });
+          );
+        });
+      }
     }
   }
 }

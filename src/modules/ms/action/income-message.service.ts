@@ -225,6 +225,7 @@ export class IncomeMessageService {
       });
       return;
     }
+
     await this.actions.acceptContract(gameId, contract);
     await this.getNextAction(gameId);
   }

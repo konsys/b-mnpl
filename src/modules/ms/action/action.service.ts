@@ -14,6 +14,10 @@ import { TransactionsService } from './transactions.service';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
+
 export interface ICurrentAction {
   action: OutcomeMessageType | IncomeMessageType;
   userId: number;
@@ -221,45 +225,42 @@ export class ActionService {
 
   async acceptContract(gameId: string, contract: IContract) {
     const allFields = (await this.store.getFieldsStore(gameId)).fields;
-
-    const suggestedFields = allFields.filter(
-      (v) => v.status.userId === contract.fromUserId,
-    );
-    const requiredFields = allFields.filter(
-      (v) => v.status.userId === contract.fromUserId,
-    );
-
-    for (const f of suggestedFields) {
+    for (const id of contract.fieldIdsFrom) {
+      const f = await this.fields.getField(gameId, id);
       await this.fields.updateField(gameId, {
         ...f,
         status: { ...f.status, userId: contract.toUserId },
       });
     }
 
-    for (const f of requiredFields) {
+    for (const id of contract.fieldIdsTo) {
+      const f = await this.fields.getField(gameId, id);
       await this.fields.updateField(gameId, {
         ...f,
         status: { ...f.status, userId: contract.fromUserId },
       });
     }
     const transactionId = nanoid(4);
-    await this.store.setTransaction(gameId, {
-      sum: contract.moneyFrom + contract.fieldFromPrice,
-      reason: ``,
-      toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
-      transactionId,
-      userId: contract.fromUserId,
-    });
-    await this.transaction.transactMoney(gameId, transactionId);
-
-    await this.store.setTransaction(gameId, {
-      sum: contract.moneyTo + contract.fieldToPrice,
-      reason: ``,
-      toUserId: BOARD_PARAMS.BANK_PLAYER_ID,
-      transactionId,
-      userId: contract.toUserId,
-    });
-    await this.transaction.transactMoney(gameId, transactionId);
+    if (contract.moneyFrom > 0) {
+      await this.store.setTransaction(gameId, {
+        sum: contract.moneyFrom,
+        reason: ``,
+        toUserId: contract.toUserId,
+        transactionId,
+        userId: contract.fromUserId,
+      });
+      await this.transaction.transactMoney(gameId, transactionId);
+    }
+    if (contract.moneyFrom > 0 || contract.moneyTo > 0) {
+      await this.store.setTransaction(gameId, {
+        sum: contract.moneyTo,
+        reason: ``,
+        toUserId: contract.fromUserId,
+        transactionId,
+        userId: contract.toUserId,
+      });
+      await this.transaction.transactMoney(gameId, transactionId);
+    }
   }
 
   async switchPlayerTurn(gameId: string, unJail: boolean) {
@@ -321,5 +322,23 @@ export class ActionService {
     const index = _.findIndex(array, (v) => v === value);
     const ind = index < array.length - 1 ? index + 1 : 0;
     return array[ind];
+  }
+
+  private async saveImg(gameId: string) {
+    const fields = (await this.store.getFieldsStore(gameId)).fields;
+
+    for (const f of fields) {
+      const path2 =
+        '/home/sysuev/projects/b-mnpl/assets/fields/' + path.basename(f.imgSrc);
+      console.log(222, path2);
+      console.log(333, f.imgSrc);
+      console.log(444, path.basename(f.imgSrc));
+      if (path.basename(f.imgSrc)) {
+        const file = await fs.createWriteStream(path2);
+        const request = await https.get(f.imgSrc, function (response) {
+          response.pipe(file);
+        });
+      }
+    }
   }
 }

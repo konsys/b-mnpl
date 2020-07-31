@@ -13,6 +13,8 @@ import { StoreService } from './store.service';
 import { TransactionsService } from './transactions.service';
 import _, { takeRight, take } from 'lodash';
 import { nanoid } from 'nanoid';
+import { MsNames, MsFieldsPatterns } from 'src/types/ms/ms.types';
+import { ClientProxy } from '@nestjs/microservices';
 
 const https = require('https');
 const fs = require('fs');
@@ -35,6 +37,8 @@ export class ActionService {
     private readonly store: StoreService,
     @Inject(forwardRef(() => FieldsUtilsService))
     private readonly fields: FieldsUtilsService,
+    @Inject(MsNames.FIELDS)
+    private readonly fieldsMs: ClientProxy,
   ) {}
 
   async buyFieldModal(gameId: string) {
@@ -335,17 +339,26 @@ export class ActionService {
 
       const fileName = takeRight(sp, 1).join('');
 
-      const dir =
-        '/home/sysuev/projects/b-mnpl/assets/' +
-        sp.slice(index, sp.length - 1).join('/');
+      const dir = sp.slice(index, sp.length - 1).join('/');
 
       fs.mkdir(dir, { recursive: true }, async (err) => {
-        if (sp.length > 3) {
-          const file = await fs.createWriteStream(dir + '/' + fileName);
-          const request = await https.get(f.imgSrc, function (response) {
-            response.pipe(file);
-          });
-        }
+        // const file = await fs.createWriteStream(dir + '/' + fileName);
+        // const request = await https.get(f.imgSrc, async (response) => {
+        // response.pipe(file);
+
+        const fieldId = f.fieldId;
+        delete f.fieldId;
+        delete f.status;
+        await this.fieldsMs
+          .send<any>(
+            { cmd: MsFieldsPatterns.UPDATE_FIELD },
+            {
+              fieldId,
+              data: { ...f, imgSrc: dir + '/' + fileName },
+            },
+          )
+          .toPromise();
+        // });
       });
     }
   }

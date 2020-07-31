@@ -24,11 +24,18 @@ export class FieldsMsController {
   }
 
   @MessagePattern({ cmd: MsFieldsPatterns.UPDATE_FIELD })
-  async updateField(
-    fieldId: number,
-    data: BoardFieldsEntity,
-  ): Promise<BoardFieldsEntity[]> {
-    await this.fieldsRepository.update(fieldId, data);
-    return await this.fieldsRepository.find();
+  async updateField({
+    fieldId,
+    data,
+  }: {
+    fieldId: number;
+    data: BoardFieldsEntity;
+  }): Promise<BoardFieldsEntity> {
+    try {
+      await this.fieldsRepository.update(fieldId, data);
+      return await this.fieldsRepository.findOne(fieldId);
+    } catch (ex) {
+      console.log(`Error while updating ${data.name} ${ex}`);
+    }
   }
 }

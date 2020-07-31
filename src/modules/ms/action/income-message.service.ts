@@ -26,8 +26,9 @@ export class IncomeMessageService {
     const p = await this.players.getPlayer(gameId, userId);
 
     const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
+
     if (!(await this.checks.canLevelDown(p.gameId, f.fieldId))) {
-      await this.store.setError(userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
@@ -40,7 +41,7 @@ export class IncomeMessageService {
     const p = await this.players.getPlayer(gameId, userId);
     const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
     if (!(await this.checks.canLevelUp(p.gameId, f.fieldId))) {
-      await this.store.setError(userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.CannotBuildBranch,
         message: 'Oops!',
       });
@@ -56,7 +57,7 @@ export class IncomeMessageService {
   ): Promise<void> {
     const p = await this.players.getPlayer(gameId, userId);
     if (!(await this.checks.canUnMortgage(p.gameId, fieldId))) {
-      await this.store.setError(userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.CannotUnMortgageField,
         message: 'Oops!',
       });
@@ -74,7 +75,7 @@ export class IncomeMessageService {
     const p = await this.players.getPlayer(gameId, userId);
 
     if (!(await this.checks.canMortgage(p.gameId, fieldId))) {
-      await this.store.setError(userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.CannotMortgageField,
         message: 'Oops!',
       });
@@ -105,7 +106,7 @@ export class IncomeMessageService {
       );
       await this.actions.switchPlayerTurn(gameId, false);
     } else {
-      await this.store.setError(userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.NotEnoughMoney,
         message: 'Oops!',
       });
@@ -118,7 +119,7 @@ export class IncomeMessageService {
     const canStart = await this.checks.isCompanyForSale(p.gameId, f.fieldId);
     canStart
       ? await this.actions.declineAuctionModal(gameId, p.userId)
-      : await this.store.setError(p.userId, {
+      : await this.store.setError(gameId, {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',
         });
@@ -130,7 +131,7 @@ export class IncomeMessageService {
     const canStart = await this.checks.isCompanyForSale(p.gameId, f.fieldId);
     canStart
       ? await this.actions.acceptAuctionModal(gameId, p.userId)
-      : await this.store.setError(p.userId, {
+      : await this.store.setError(gameId, {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',
         });
@@ -142,7 +143,7 @@ export class IncomeMessageService {
     const canStart = await this.checks.isCompanyForSale(p.gameId, f.fieldId);
     canStart
       ? await this.actions.startAuctionModal(gameId)
-      : await this.store.setError(p.userId, {
+      : await this.store.setError(gameId, {
           code: ErrorCode.CannotStartAuction,
           message: 'Oops!',
         });
@@ -165,12 +166,12 @@ export class IncomeMessageService {
 
       await this.actions.switchPlayerTurn(gameId, false);
     } else if (!(await this.checks.isCompanyForSale(p.gameId, f.fieldId))) {
-      await this.store.setError(p.userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.CompanyHasOwner,
         message: 'Oops!',
       });
     } else if (!(await this.checks.canBuyField(f.fieldId, p))) {
-      await this.store.setError(p.userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.NotEnoughMoney,
         message: 'Oops!',
       });
@@ -200,7 +201,7 @@ export class IncomeMessageService {
     const p = await this.players.getPlayer(gameId, userId);
 
     if (!(await this.checks.isContractValid(contract))) {
-      await this.store.setError(p.userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.CannotProceedContract,
         message: 'Oops!',
       });
@@ -219,7 +220,7 @@ export class IncomeMessageService {
     const p = await this.players.getPlayer(gameId, userId);
 
     if (!(await this.checks.isContractValid(contract))) {
-      await this.store.setError(p.userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.CannotProceedContract,
         message: 'Oops!',
       });
@@ -238,7 +239,7 @@ export class IncomeMessageService {
     const p = await this.players.getPlayer(gameId, userId);
 
     if (!(await this.checks.isContractValid(contract))) {
-      await this.store.setError(p.userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.CannotProceedContract,
         message: 'Oops!',
       });

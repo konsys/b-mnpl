@@ -74,9 +74,10 @@ export class BoardMessageService {
         )),
     };
     const players = await this.store.getPlayersStore(gameId);
+    const error = await this.store.getError(gameId);
 
     const message: BoardMessage = {
-      code: 0,
+      code: error.code,
       data: {
         id: 0,
         event,
@@ -118,6 +119,8 @@ export class BoardMessageService {
       }));
 
       await this.fields.updateAllFields(gameId, r);
+
+      // await this.store.setError(gameId, {})
 
       await this.store.setBoardStore(gameId, {
         isNewRound: false,

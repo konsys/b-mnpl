@@ -6,8 +6,6 @@ docker run --name my-own-phpmyadmin -d --link testsql:db -p 8081:80 phpmyadmin/p
 
 docker run --name my-own-nats -d -p 4222:4222 nats:2.1.6
 
-docker run --name my-own-pgadmin -d --link testsql:db -p 5050:5050 -e PGADMIN_DEFAULT_EMAIL=admin@admin.ru -e PGADMIN_DEFAULT_PASSWORD=smz dpage/pgadmin4:4.20
-
 
 docker run --name my-own-redis -d -p 6379:6379 redis:6.0.5
 # docker ps -a
@@ -16,13 +14,15 @@ docker run --name my-own-redis -d -p 6379:6379 redis:6.0.5
 
 # netstat -ntlp | grep LISTEN
 
-# mkdir postgres
-# cd postgres
 
-# docker volume create --driver local --name=pgvolume
-# docker volume create --driver local --name=pga4volume
 
-# docker network create --driver bridge pgnetwork
+mkdir postgres
+cd postgres
+
+docker volume create --driver local --name=pgvolume
+docker volume create --driver local --name=pga4volume
+
+docker network create --driver bridge pgnetwork
 
 # cat << EOF > pg-env.list
 # PG_MODE=primary
@@ -50,10 +50,9 @@ EOF
 #   --detach \
 # crunchydata/crunchy-postgres:centos7-10.9-2.4.1
 
-  # --env-file=pgadmin-env.list \
 docker run --publish 5050:5050 \
-  --env-file=pgadmin-env.list \
   --volume=pga4volume:/var/lib/pgadmin \
+  --env-file=pgadmin-env.list \
   --name="pgadmin4" \
   --hostname="pgadmin4" \
   --network="pgnetwork" \

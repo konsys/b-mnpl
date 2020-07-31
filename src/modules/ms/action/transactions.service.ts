@@ -22,7 +22,7 @@ export class TransactionsService {
     const player = await this.players.getPlayer(gameId, transaction.userId);
 
     if (transaction.sum > player.money) {
-      await this.store.setError(transaction.userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.NotEnoughMoney,
         message: 'Oops!',
       });
@@ -38,7 +38,7 @@ export class TransactionsService {
 
       await this.store.resetTransactionsEvent(gameId);
     } else {
-      await this.store.setError(transaction.userId, {
+      await this.store.setError(gameId, {
         code: ErrorCode.WrongTranactionId,
         message: 'Oops!',
       });

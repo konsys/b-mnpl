@@ -194,13 +194,16 @@ export class StoreService {
     return await redis.del(`${gameId}-${storeNames.auction}`);
   }
 
-  async setError(userId: number, data: IErrorMessage) {
+  async setError(gameId: string, data: IErrorMessage) {
+    await this.set(gameId, storeNames.error, data);
     await redis.publish(`${BOARD_PARAMS.ERROR_CHANNEL}`, JSON.stringify(data));
-    await this.set(userId, storeNames.error, data);
+    await this.set(gameId, storeNames.error, data);
   }
 
   async getError(gameId: string): Promise<IErrorMessage> {
-    return (await this.get(gameId, storeNames.error)) as IErrorMessage;
+    const res = (await this.get(gameId, storeNames.error)) as IErrorMessage;
+    await redis.del(`${gameId}-${storeNames.error}`);
+    return res;
   }
 
   async getGameIdByPlayerId(userId: number): Promise<string> {

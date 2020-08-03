@@ -166,8 +166,10 @@ export class FieldsUtilsService {
         },
       });
 
+      const r = await this.getFieldsByGroup(p.gameId, f.fieldGroup);
+
+      console.log(1111, sameGroup.length, r.length);
       for (const v of sameGroup) {
-        // sameGroup.map((v: IField)  {
         v.status = {
           fieldId: v.fieldId,
           userId: p.userId,

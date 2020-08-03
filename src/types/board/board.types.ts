@@ -227,6 +227,7 @@ interface BoardStatus {
 
 export interface IFieldRent {
   baseRent: number;
+  monopolyRent: number;
   oneStar: number;
   twoStar: number;
   freeStar: number;
@@ -237,6 +238,7 @@ export interface IFieldRent {
 
 export interface IFieldPrice {
   startPrice: number;
+
   pledgePrice: number;
   buyoutPrice: number;
   branchPrice: number;

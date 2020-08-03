@@ -24,7 +24,7 @@ export class DicesService {
 
     const dice1 = 3;
     // const dice2 = random(0, 6);
-    let dice2 = 1;
+    let dice2 = 4;
     if (player.name === 'Feodr') {
       // dice2 = random(0, 6);
       // dice2 = 5;

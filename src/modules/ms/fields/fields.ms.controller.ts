@@ -19,6 +19,12 @@ export class FieldsMsController {
 
   @MessagePattern({ cmd: MsFieldsPatterns.SAVE_FIELDS })
   async saveFields(fields: BoardFieldsEntity[]): Promise<BoardFieldsEntity[]> {
+    try {
+      await this.fieldsRepository.delete('id > 0');
+    } catch (err) {
+      console.log(fields);
+    }
+
     await this.fieldsRepository.save(fields);
     return await this.fieldsRepository.find();
   }

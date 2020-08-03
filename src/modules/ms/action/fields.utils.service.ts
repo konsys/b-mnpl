@@ -160,19 +160,20 @@ export class FieldsUtilsService {
         status: {
           fieldId: f.fieldId,
           userId: p.userId,
+          isMonopoly: false,
           branches: f.type === FieldType.COMPANY ? 0 : sameGroup.length - 1,
           mortgaged: f.status.mortgaged || 0,
           fieldActions: await this.getFieldActions(p.gameId, f.fieldId),
         },
       });
 
-      const r = await this.getFieldsByGroup(p.gameId, f.fieldGroup);
+      const monopoly = await this.getFieldsByGroup(p.gameId, f.fieldGroup);
 
-      console.log(1111, sameGroup.length, r.length);
       for (const v of sameGroup) {
         v.status = {
           fieldId: v.fieldId,
           userId: p.userId,
+          isMonopoly: sameGroup.length === monopoly.length,
           branches:
             f.type === FieldType.COMPANY
               ? v.status.branches || 0

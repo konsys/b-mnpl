@@ -130,7 +130,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 5,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 0,
         baseRent: 250,
         oneStar: 500,
         twoStar: 1000,
@@ -158,7 +158,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 6,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 90,
         baseRent: 60,
         oneStar: 300,
         twoStar: 900,
@@ -194,7 +194,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 8,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 90,
         baseRent: 60,
         oneStar: 300,
         twoStar: 900,
@@ -221,7 +221,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 9,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 120,
         baseRent: 80,
         oneStar: 400,
         twoStar: 1000,
@@ -257,7 +257,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 11,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 150,
         baseRent: 100,
         oneStar: 500,
         twoStar: 1500,
@@ -284,7 +284,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 12,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 0,
         baseRent: 100,
         oneStar: 250,
         twoStar: 0,
@@ -312,7 +312,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 13,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 150,
         baseRent: 100,
         oneStar: 500,
         twoStar: 1500,
@@ -339,7 +339,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 14,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 180,
         baseRent: 120,
         oneStar: 600,
         twoStar: 1800,
@@ -366,7 +366,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 15,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 0,
         baseRent: 250,
         oneStar: 500,
         twoStar: 1000,
@@ -394,7 +394,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 16,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 210,
         baseRent: 140,
         oneStar: 700,
         twoStar: 2000,
@@ -430,7 +430,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 18,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 210,
         baseRent: 140,
         oneStar: 700,
         twoStar: 2000,
@@ -457,7 +457,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 19,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 240,
         baseRent: 160,
         oneStar: 800,
         twoStar: 2200,
@@ -493,7 +493,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 21,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 270,
         baseRent: 180,
         oneStar: 900,
         twoStar: 2500,
@@ -530,7 +530,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 23,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 270,
         baseRent: 180,
         oneStar: 900,
         twoStar: 2500,
@@ -557,7 +557,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 24,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 300,
         baseRent: 200,
         oneStar: 1000,
         twoStar: 3000,
@@ -585,7 +585,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 25,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 0,
         baseRent: 250,
         oneStar: 500,
         twoStar: 1000,
@@ -613,7 +613,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 26,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 330,
         baseRent: 220,
         oneStar: 1100,
         twoStar: 3300,
@@ -640,7 +640,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 27,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 360,
         baseRent: 240,
         oneStar: 1200,
         twoStar: 3600,
@@ -667,7 +667,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 28,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 0,
         baseRent: 100,
         oneStar: 250,
         twoStar: 0,
@@ -695,7 +695,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 29,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 360,
         baseRent: 240,
         oneStar: 1200,
         twoStar: 3600,
@@ -731,7 +731,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 31,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 390,
         baseRent: 260,
         oneStar: 1300,
         twoStar: 3600,
@@ -758,7 +758,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 32,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 390,
         baseRent: 260,
         oneStar: 1300,
         twoStar: 3900,
@@ -794,7 +794,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 34,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 420,
         baseRent: 280,
         oneStar: 1500,
         twoStar: 4500,
@@ -821,7 +821,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
     {
       fieldPosition: 35,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 0,
         baseRent: 250,
         oneStar: 500,
         twoStar: 1000,
@@ -854,7 +854,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       name: 'tax_luxury',
       level: 0,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 0,
         baseRent: 1000,
         oneStar: 0,
         twoStar: 0,
@@ -877,7 +877,7 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 3,
       fieldGroup: 8,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 500,
         baseRent: 350,
         oneStar: 1750,
         twoStar: 5000,
@@ -913,9 +913,9 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
       fieldLine: 3,
       fieldGroup: 8,
       rent: {
-        monopolyRent: 7777,
+        monopolyRent: 1000,
         baseRent: 500,
-        oneStar: 200,
+        oneStar: 2000,
         twoStar: 6000,
         freeStar: 14000,
         fourStar: 17000,

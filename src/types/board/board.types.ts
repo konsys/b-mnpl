@@ -41,6 +41,7 @@ export interface IFieldStatus {
   fieldId: number;
   userId: number;
   branches: number;
+  isMonopoly: boolean;
   mortgaged: number;
   fieldActions: IFieldAction[];
 }

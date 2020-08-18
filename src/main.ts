@@ -12,11 +12,13 @@ import helmet from 'helmet';
 export let redis = null;
 export let errorSubscriber = null;
 export let messageSubscriber = null;
+export let chatRedis = null;
 
 async function bootstrap() {
   redis = new Redis('redis://localhost:6379');
   errorSubscriber = new Redis('redis://localhost:6379');
   messageSubscriber = new Redis('redis://localhost:6379');
+  chatRedis = new Redis('redis://localhost:6379');
 
   redis.on('error', (err) => {
     console.log('Redis Error ' + err);

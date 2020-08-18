@@ -2,6 +2,7 @@ export enum MsNames {
   USERS = 'users',
   FIELDS = 'fields',
   ACTIONS = 'actions',
+  CHAT = 'chat',
 }
 export enum MsFieldsPatterns {
   GET_INIT_FIELDS = 'getInitFields',
@@ -15,6 +16,11 @@ export enum MsUsersPatterns {
   GET_USERS_BY_IDS = 'getUsersByIds',
   GET_USER_BY_CREDENTIALS = 'getUserByCredentials',
   SAVE_USERS = 'saveUsers',
+}
+
+export enum MsChatPatterns {
+  ADD_MESSAGE = 'addMessage',
+  GET_ALL_MESSAGES = 'getAllMessages',
 }
 
 export enum MsPatternsActions {

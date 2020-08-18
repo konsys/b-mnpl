@@ -1,6 +1,8 @@
 import { ActionMsModule } from './modules/ms/action/action.ms.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BoardSocketModule } from './modules/socket/board.socket.module';
+import { ChatModule } from './api.gateway/game.chat/chat.module';
+import { ChatMsModule } from './modules/ms/chat/chat.ms.module';
 import { Connection } from 'typeorm';
 import { FieldsModule } from './api.gateway/fields/fields.module';
 import { FieldsMsModule } from './modules/ms/fields/fields.ms.module';
@@ -39,6 +41,8 @@ const rootPath = join(__dirname, '../', 'assets/');
     FieldsMsModule,
     UsersModule,
     UsersMsModule,
+    ChatModule,
+    ChatMsModule,
   ],
   controllers: [],
   providers: [],

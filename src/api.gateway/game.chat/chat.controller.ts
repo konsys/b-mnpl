@@ -1,7 +1,15 @@
-import { Controller, Post, Request, Inject, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Request,
+  Inject,
+  UseGuards,
+  Body,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { MsNames, MsChatPatterns } from 'src/types/ms/ms.types';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
+import { IChatMessage } from 'src/types/game/game.types';
 
 @Controller('chat')
 export class ChatController {
@@ -12,10 +20,19 @@ export class ChatController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async addChatMessage(@Request() req) {
+  async addChatMessage(@Request() req, @Body('message') message: string) {
+    const el: IChatMessage = {
+      message,
+      name: req.user.username,
+      toName: req.user.username,
+      vip: true,
+      toVip: true,
+      time: new Date(),
+    };
+
     try {
       const res = await this.proxy
-        .send<any>({ cmd: MsChatPatterns.ADD_MESSAGE }, {})
+        .send<any>({ cmd: MsChatPatterns.ADD_MESSAGE }, el)
         .toPromise();
       return res;
     } catch (err) {

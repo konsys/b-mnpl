@@ -10,9 +10,11 @@ enum ChatName {
 @Controller('ms.chat')
 export class ChatMsController {
   @MessagePattern({ cmd: MsChatPatterns.ADD_MESSAGE })
-  async addMessage(): Promise<IChatMessage[]> {
-    const messages = JSON.parse(await chatRedis.get(ChatName.CHAT));
-    await chatRedis.set(ChatName.CHAT, JSON.stringify(messages.push('dddfw')));
+  async addMessage(message: IChatMessage): Promise<IChatMessage[]> {
+    let messages = JSON.parse(await chatRedis.get(ChatName.CHAT));
+    messages = !Array.isArray(messages) ? [] : messages;
+    console.log(1111, messages);
+    await chatRedis.set(ChatName.CHAT, JSON.stringify(messages.push(message)));
     return JSON.parse(await chatRedis.get(ChatName.CHAT));
   }
 

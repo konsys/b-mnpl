@@ -26,18 +26,23 @@ export class ChatController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async addChatMessage(@Request() req, @Body('message') message: string) {
-    const res = await this.proxy
+  async addChatMessage(
+    @Request() req,
+    @Body('message')
+    { message, toUserId }: { message: string; toUserId: number },
+  ) {
+    const fromUser = await this.proxy
       .send<any>({ cmd: MsUsersPatterns.GET_USER }, { userId: req.user.userId })
       .toPromise();
 
-    console.log(111111, req.user, res);
+    const toUser = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.GET_USER }, { userId: toUserId })
+      .toPromise();
+    console.log(111111, req.user, toUser);
     const el: IChatMessage = {
       message,
-      name: res.name,
-      toName: req.user.username,
-      vip: res.vip,
-      toVip: true,
+      fromUser,
+      toUser,
       time: new Date(),
     };
 

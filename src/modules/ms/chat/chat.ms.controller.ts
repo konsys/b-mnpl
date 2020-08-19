@@ -20,7 +20,7 @@ export class ChatMsController {
     // await chatRedis.del(ChatName.CHAT);
     await chatRedis.set(ChatName.CHAT, JSON.stringify(messages));
     // TODO add expire for chat
-    await chatRedis.expire([ChatName.CHAT, 1]);
+    await chatRedis.expire([ChatName.CHAT, 5]);
     return await chatRedis.get(ChatName.CHAT);
   }
 

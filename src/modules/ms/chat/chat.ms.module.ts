@@ -11,6 +11,10 @@ import { MsNames } from 'src/types/ms/ms.types';
         name: MsNames.CHAT,
         transport: Transport.NATS,
       },
+      {
+        name: MsNames.USERS,
+        transport: Transport.NATS,
+      },
     ]),
   ],
   controllers: [ChatMsController],

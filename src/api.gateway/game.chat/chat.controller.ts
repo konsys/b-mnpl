@@ -41,8 +41,6 @@ export class ChatController {
       replies,
       time: new Date(),
     };
-
-    console.log(111111111, replies);
     try {
       const res = await this.proxy
         .send<any>({ cmd: MsChatPatterns.ADD_MESSAGE }, el)

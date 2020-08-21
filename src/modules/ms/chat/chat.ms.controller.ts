@@ -11,7 +11,6 @@ enum ChatName {
 export class ChatMsController {
   @MessagePattern({ cmd: MsChatPatterns.ADD_MESSAGE })
   async addMessage(message: IChatMessage): Promise<IChatMessage[]> {
-    console.log(2222222, message);
     const messageString = await chatRedis.get(ChatName.CHAT);
 
     const messages = messageString ? JSON.parse(messageString) : [];
@@ -21,7 +20,7 @@ export class ChatMsController {
     // await chatRedis.del(ChatName.CHAT);
     await chatRedis.set(ChatName.CHAT, JSON.stringify(messages));
     // TODO add expire for chat
-    await chatRedis.expire([ChatName.CHAT, 5]);
+    await chatRedis.expire([ChatName.CHAT, 50]);
     return await chatRedis.get(ChatName.CHAT);
   }
 

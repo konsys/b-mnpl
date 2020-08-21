@@ -7,7 +7,7 @@ export enum SocketActions {
 
 export interface IChatMessage {
   fromUser: IPlayer;
-  toUser?: IPlayer;
+  replies: any[];
   message: string;
   time: Date;
 }

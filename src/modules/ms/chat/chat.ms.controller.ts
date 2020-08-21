@@ -11,6 +11,7 @@ enum ChatName {
 export class ChatMsController {
   @MessagePattern({ cmd: MsChatPatterns.ADD_MESSAGE })
   async addMessage(message: IChatMessage): Promise<IChatMessage[]> {
+    console.log(2222222, message);
     const messageString = await chatRedis.get(ChatName.CHAT);
 
     const messages = messageString ? JSON.parse(messageString) : [];

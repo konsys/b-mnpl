@@ -28,24 +28,21 @@ export class ChatController {
   @Post()
   async addChatMessage(
     @Request() req,
-    @Body('message')
-    { message, toUserId }: { message: string; toUserId: number },
+    @Body('message') message: string,
+    @Body('replies') replies: any,
   ) {
     const fromUser = await this.proxy
       .send<any>({ cmd: MsUsersPatterns.GET_USER }, { userId: req.user.userId })
       .toPromise();
 
-    const toUser = await this.proxy
-      .send<any>({ cmd: MsUsersPatterns.GET_USER }, { userId: toUserId })
-      .toPromise();
-    console.log(111111, req.user, toUser);
     const el: IChatMessage = {
       message,
       fromUser,
-      toUser,
+      replies,
       time: new Date(),
     };
 
+    console.log(111111111, replies);
     try {
       const res = await this.proxy
         .send<any>({ cmd: MsChatPatterns.ADD_MESSAGE }, el)

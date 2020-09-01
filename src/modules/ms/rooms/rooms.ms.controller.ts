@@ -1,7 +1,7 @@
 import { BadRequestException, Controller } from '@nestjs/common';
+import { MessagePattern, RpcException } from '@nestjs/microservices';
 
 import { IRoomState } from 'src/types/game/game.types';
-import { MessagePattern } from '@nestjs/microservices';
 import { MsRoomsPatterns } from 'src/types/ms/ms.types';
 import { roomsRedis } from 'src/main';
 
@@ -23,15 +23,16 @@ export class RoomsMsController {
 
     rooms = Array.isArray(rooms) ? rooms : new Array();
     const isGame = rooms.find((v) => v.creatorId === room.creatorId);
-    // TODO add error handler
+    // TODO add error handler https://docs.nestjs.com/microservices/exception-filters
     if (isGame) {
-      throw new BadRequestException('Game exists');
+      //   throw new BadRequestException('Game exists');
+      throw new RpcException('Game exists');
     }
     rooms.push(room);
 
     await roomsRedis.set(Rooms.ALL, JSON.stringify(rooms));
     // TODO add expire for Rooms
-    await roomsRedis.expire([Rooms.ALL, 1]);
+    await roomsRedis.expire([Rooms.ALL, 10000]);
     return JSON.parse(await roomsRedis.get(Rooms.ALL));
   }
 }

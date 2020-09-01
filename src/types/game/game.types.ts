@@ -11,3 +11,31 @@ export interface IChatMessage {
   message: string;
   time: Date;
 }
+
+export enum RoomPortalFieldType {
+  PORTAL = 'Portal',
+  NOP = 'Empty field',
+  ROULETTE = 'Roulette',
+  RUSSIAN_ROULETTE = 'Russian roulette',
+}
+
+export interface IRoomState {
+  roomId: string;
+  creatorId: number;
+  playersId: number[];
+  createTime: Date;
+  roomType: RoomType;
+  playersNumber: number;
+  autostart: boolean;
+  privateRoom: boolean;
+  restarts: boolean;
+  portalType: RoomPortalFieldType;
+}
+
+export enum RoomType {
+  REGULAR = 'regular',
+  RETRO = 'retro',
+  SHUFFLE = 'shuffle',
+  QUICK = 'quick',
+  ROULETTE = 'roulette',
+}

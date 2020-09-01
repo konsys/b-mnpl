@@ -9,16 +9,19 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 
+const redisHost = 'redis://localhost:6379';
 export let redis = null;
 export let errorSubscriber = null;
 export let messageSubscriber = null;
 export let chatRedis = null;
+export let roomsRedis = null;
 
 async function bootstrap() {
-  redis = new Redis('redis://localhost:6379');
-  errorSubscriber = new Redis('redis://localhost:6379');
-  messageSubscriber = new Redis('redis://localhost:6379');
-  chatRedis = new Redis('redis://localhost:6379');
+  redis = new Redis(redisHost);
+  errorSubscriber = new Redis(redisHost);
+  messageSubscriber = new Redis(redisHost);
+  chatRedis = new Redis(redisHost);
+  roomsRedis = new Redis(redisHost);
 
   redis.on('error', (err) => {
     console.log('Redis Error ' + err);

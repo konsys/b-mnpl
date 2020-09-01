@@ -8,6 +8,7 @@ import { FieldsModule } from './api.gateway/fields/fields.module';
 import { FieldsMsModule } from './modules/ms/fields/fields.ms.module';
 import { GameModule } from './api.gateway/game/game.module';
 import { Module } from '@nestjs/common';
+import { RoomsModule } from './api.gateway/rooms/rooms.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './api.gateway/users/users.module';
@@ -38,6 +39,7 @@ const rootPath = join(__dirname, '../', 'assets/');
     BoardSocketModule,
     GameModule,
     FieldsModule,
+    RoomsModule,
     FieldsMsModule,
     UsersModule,
     UsersMsModule,

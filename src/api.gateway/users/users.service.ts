@@ -6,7 +6,7 @@ import { FindManyOptions } from 'typeorm';
 import {
   MsUsersPatterns,
   MsNames,
-  MsPatternsActions,
+  MsActionsPatterns,
 } from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { users } from 'src/entities/dbData';
@@ -66,7 +66,7 @@ export class UsersService {
   async initPlayers(gameId: string, players: UsersEntity[]): Promise<any> {
     try {
       const res = await this.actionsMs
-        .send<any>({ cmd: MsPatternsActions.INIT_PLAYERS }, { gameId, players })
+        .send<any>({ cmd: MsActionsPatterns.INIT_PLAYERS }, { gameId, players })
         .toPromise();
 
       return res;

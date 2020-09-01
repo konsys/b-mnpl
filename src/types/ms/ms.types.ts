@@ -3,6 +3,7 @@ export enum MsNames {
   FIELDS = 'fields',
   ACTIONS = 'actions',
   CHAT = 'chat',
+  ROOMS = 'ROOMS',
 }
 export enum MsFieldsPatterns {
   GET_INIT_FIELDS = 'getInitFields',
@@ -23,6 +24,10 @@ export enum MsChatPatterns {
   GET_ALL_MESSAGES = 'getAllMessages',
 }
 
-export enum MsPatternsActions {
+export enum MsActionsPatterns {
   INIT_PLAYERS = 'initPlayers',
+}
+
+export enum MsRoomsPatterns {
+  CREATE_ROOM = 'createRoom',
 }

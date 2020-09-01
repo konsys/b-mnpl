@@ -8,7 +8,7 @@ import { BoardMessageService } from './board.message.service';
 import { Controller } from '@nestjs/common';
 import { IncomeMessageService } from './income-message.service';
 import { MessagePattern } from '@nestjs/microservices';
-import { MsPatternsActions } from 'src/types/ms/ms.types';
+import { MsActionsPatterns } from 'src/types/ms/ms.types';
 import { StoreService } from './store.service';
 
 @Controller('action')
@@ -19,7 +19,7 @@ export class ActionMsController {
     private readonly store: StoreService,
   ) {}
 
-  @MessagePattern({ cmd: MsPatternsActions.INIT_PLAYERS })
+  @MessagePattern({ cmd: MsActionsPatterns.INIT_PLAYERS })
   async initPlayers({
     gameId,
     players,

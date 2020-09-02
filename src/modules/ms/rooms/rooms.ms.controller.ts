@@ -23,12 +23,13 @@ export class RoomsMsController {
     }
 
     rooms = Array.isArray(rooms) ? rooms : new Array();
-    const isGame = rooms.find((v) => v.creatorId === room.creatorId);
-    // TODO add error handler https://docs.nestjs.com/microservices/exception-filters
-    if (isGame) {
-      //   throw new BadRequestException('Game exists');
-      throw new RpcException({ code: ErrorCode.RoomExists });
-    }
+
+    // TODO uncomment
+    // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
+
+    // if (isGame) {
+    //   throw new RpcException({ code: ErrorCode.RoomExists });
+    // }
     rooms.push(room);
 
     await roomsRedis.set(Rooms.ALL, JSON.stringify(rooms));

@@ -36,6 +36,10 @@ export class UsersMsController {
   @UseInterceptors(ClassSerializerInterceptor)
   @MessagePattern({ cmd: MsUsersPatterns.GET_USERS_BY_IDS })
   async getUsers(userIds: { userIds: number[] }) {
+    if (!userIds.userIds || !userIds.userIds.length) {
+      return [];
+    }
+
     // https://github.com/typeorm/typeorm/blob/master/docs/find-options.md
     const users: UsersEntity[] = await this.users.find({
       userId: In(userIds.userIds),

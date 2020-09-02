@@ -12,6 +12,10 @@ import { RoomsMsController } from './rooms.ms.controller';
         name: MsNames.ROOMS,
         transport: Transport.NATS,
       },
+      {
+        name: MsNames.USERS,
+        transport: Transport.NATS,
+      },
     ]),
   ],
 })

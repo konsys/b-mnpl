@@ -22,7 +22,7 @@ export enum RoomPortalFieldType {
 export interface IRoomState {
   roomId: string;
   creatorId: number;
-  playersId: number[];
+  players: IPlayer[];
   createTime: Date;
   roomType: RoomType;
   playersNumber: number;

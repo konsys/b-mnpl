@@ -1,9 +1,17 @@
-import { BadRequestException, Controller } from '@nestjs/common';
-import { MessagePattern, RpcException } from '@nestjs/microservices';
+import { BadRequestException, Controller, Inject } from '@nestjs/common';
+import {
+  MessagePattern,
+  RpcException,
+  ClientProxy,
+} from '@nestjs/microservices';
 
 import { ErrorCode } from 'src/utils/error.code';
 import { IRoomState } from 'src/types/game/game.types';
-import { MsRoomsPatterns } from 'src/types/ms/ms.types';
+import {
+  MsRoomsPatterns,
+  MsNames,
+  MsUsersPatterns,
+} from 'src/types/ms/ms.types';
 import { roomsRedis } from 'src/main';
 
 enum Rooms {
@@ -11,8 +19,16 @@ enum Rooms {
 }
 @Controller('rooms.ms')
 export class RoomsMsController {
+  constructor(
+    @Inject(MsNames.USERS)
+    private readonly proxy: ClientProxy,
+  ) {}
+
   @MessagePattern({ cmd: MsRoomsPatterns.CREATE_ROOM })
   async createRoom({ room }: { room: IRoomState }): Promise<IRoomState[]> {
+    // TODO remove line
+    await roomsRedis.del(Rooms.ALL);
+
     let str = await roomsRedis.get(Rooms.ALL);
 
     let rooms: IRoomState[] = [];
@@ -21,7 +37,14 @@ export class RoomsMsController {
     } catch (er) {
       //NOP
     }
+    const players = await this.proxy
+      .send<any>(
+        { cmd: MsUsersPatterns.GET_USERS_BY_IDS },
+        room.players.map((v) => v.userId),
+      )
+      .toPromise();
 
+    console.log(players);
     rooms = Array.isArray(rooms) ? rooms : new Array();
 
     // TODO uncomment

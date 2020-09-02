@@ -12,4 +12,5 @@ export enum ErrorCode {
   'NoMonopoly' = 111,
   'CannotStartAuction' = 112,
   'CannotProceedContract' = 113,
+  'RoomExists' = 114,
 }

@@ -1,6 +1,7 @@
 import { BadRequestException, Controller } from '@nestjs/common';
 import { MessagePattern, RpcException } from '@nestjs/microservices';
 
+import { ErrorCode } from 'src/utils/error.code';
 import { IRoomState } from 'src/types/game/game.types';
 import { MsRoomsPatterns } from 'src/types/ms/ms.types';
 import { roomsRedis } from 'src/main';
@@ -26,7 +27,7 @@ export class RoomsMsController {
     // TODO add error handler https://docs.nestjs.com/microservices/exception-filters
     if (isGame) {
       //   throw new BadRequestException('Game exists');
-      throw new RpcException('Game exists');
+      throw new RpcException({ code: ErrorCode.RoomExists });
     }
     rooms.push(room);
 

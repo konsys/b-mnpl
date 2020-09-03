@@ -44,7 +44,6 @@ export class RoomsMsController {
       )
       .toPromise();
 
-    console.log(players);
     rooms = Array.isArray(rooms) ? rooms : new Array();
 
     // TODO uncomment

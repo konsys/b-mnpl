@@ -35,14 +35,15 @@ export class UsersMsController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @MessagePattern({ cmd: MsUsersPatterns.GET_USERS_BY_IDS })
-  async getUsers(userIds: { userIds: number[] }) {
-    if (!userIds.userIds || !userIds.userIds.length) {
+  async getUsers(userIds: number[]) {
+    console.log(2222, userIds);
+    if (!userIds || !userIds.length) {
       return [];
     }
 
     // https://github.com/typeorm/typeorm/blob/master/docs/find-options.md
     const users: UsersEntity[] = await this.users.find({
-      userId: In(userIds.userIds),
+      userId: In(userIds),
     });
 
     const filtered = users.map((v) => new UsersEntity(v));

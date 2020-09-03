@@ -13,4 +13,6 @@ export enum ErrorCode {
   'CannotStartAuction' = 112,
   'CannotProceedContract' = 113,
   'RoomExists' = 114,
+  'RoomDoesntExists' = 115,
+  'RoomMaxPlayersReached' = 116,
 }

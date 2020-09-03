@@ -40,6 +40,7 @@ export class RoomsMsController {
       )
       .toPromise();
 
+    room.players = players;
     // TODO uncomment
     // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
 
@@ -60,7 +61,24 @@ export class RoomsMsController {
   }: {
     add: IAddPlayerToRoom;
   }): Promise<IRoomState[]> {
-    console.log(1212121, add);
+    const rooms = await this.get(Rooms.ALL);
+    const roomIndex = rooms.findIndex((v) => v.roomId === add.roomId);
+    if (!roomIndex) {
+      throw new RpcException({ code: ErrorCode.RoomDoesntExists });
+    }
+
+    if (rooms[roomIndex].players.length >= rooms[roomIndex].playersNumber) {
+      throw new RpcException({ code: ErrorCode.RoomMaxPlayersReached });
+    }
+
+    const player = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.GET_USER }, add.userId)
+      .toPromise();
+
+    rooms[roomIndex].players.push(player);
+    console.log(123123123, player);
+
+    await this.set(Rooms.ALL, rooms);
 
     return await this.get(Rooms.ALL);
   }
@@ -71,7 +89,7 @@ export class RoomsMsController {
     return;
   }
 
-  private async get(name: string) {
+  private async get(name: string): Promise<IRoomState[]> {
     try {
       const rooms = JSON.parse(await roomsRedis.get(name));
       return Array.isArray(rooms) ? rooms : [];

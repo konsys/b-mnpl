@@ -30,4 +30,5 @@ export enum MsActionsPatterns {
 
 export enum MsRoomsPatterns {
   CREATE_ROOM = 'createRoom',
+  ADD_PLAYER = 'addPlayer',
 }

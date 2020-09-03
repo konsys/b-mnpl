@@ -6,7 +6,7 @@ import {
 } from '@nestjs/microservices';
 
 import { ErrorCode } from 'src/utils/error.code';
-import { IRoomState } from 'src/types/game/game.types';
+import { IRoomState, IAddPlayerToRoom } from 'src/types/game/game.types';
 import {
   MsRoomsPatterns,
   MsNames,
@@ -29,14 +29,10 @@ export class RoomsMsController {
     // TODO remove line
     await roomsRedis.del(Rooms.ALL);
 
-    let str = await roomsRedis.get(Rooms.ALL);
+    let rooms = await this.get(Rooms.ALL);
 
-    let rooms: IRoomState[] = [];
-    try {
-      rooms = JSON.parse(str);
-    } catch (er) {
-      //NOP
-    }
+    console.log(rooms);
+
     const players = await this.proxy
       .send<any>(
         { cmd: MsUsersPatterns.GET_USERS_BY_IDS },
@@ -44,19 +40,43 @@ export class RoomsMsController {
       )
       .toPromise();
 
-    rooms = Array.isArray(rooms) ? rooms : new Array();
-
     // TODO uncomment
     // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
 
     // if (isGame) {
     //   throw new RpcException({ code: ErrorCode.RoomExists });
     // }
+
     rooms.push(room);
 
-    await roomsRedis.set(Rooms.ALL, JSON.stringify(rooms));
-    // TODO add expire for Rooms
+    await this.set(Rooms.ALL, rooms);
+
+    return await this.get(Rooms.ALL);
+  }
+
+  @MessagePattern({ cmd: MsRoomsPatterns.ADD_PLAYER })
+  async addPlayerToRoom({
+    add,
+  }: {
+    add: IAddPlayerToRoom;
+  }): Promise<IRoomState[]> {
+    console.log(1212121, add);
+
+    return await this.get(Rooms.ALL);
+  }
+
+  private async set(name: string, value: any) {
+    await roomsRedis.set(name, JSON.stringify(value));
     await roomsRedis.expire([Rooms.ALL, 10000]);
-    return JSON.parse(await roomsRedis.get(Rooms.ALL));
+    return;
+  }
+
+  private async get(name: string) {
+    try {
+      const rooms = JSON.parse(await roomsRedis.get(name));
+      return Array.isArray(rooms) ? rooms : [];
+    } catch (err) {
+      return [];
+    }
   }
 }

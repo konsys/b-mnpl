@@ -39,3 +39,7 @@ export enum RoomType {
   QUICK = 'quick',
   ROULETTE = 'roulette',
 }
+export interface IAddPlayerToRoom {
+  roomId: string;
+  userId: number;
+}

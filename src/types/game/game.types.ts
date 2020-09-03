@@ -19,6 +19,10 @@ export enum RoomPortalFieldType {
   RUSSIAN_ROULETTE = 'Russian roulette',
 }
 
+export interface IRoomResponce {
+  playersInRooms: number;
+  rooms: IRoomState[];
+}
 export interface IRoomState {
   roomId: string;
   creatorId: number;

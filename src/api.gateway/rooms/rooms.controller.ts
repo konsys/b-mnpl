@@ -8,7 +8,11 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { MsNames, MsRoomsPatterns } from 'src/types/ms/ms.types';
-import { IRoomState, IAddPlayerToRoom } from 'src/types/game/game.types';
+import {
+  IRoomState,
+  IAddPlayerToRoom,
+  IRoomResponce,
+} from 'src/types/game/game.types';
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 
@@ -24,7 +28,7 @@ export class RoomsController {
   async createRoom(
     @Request() req,
     @Body('room') room: IRoomState,
-  ): Promise<IRoomState[]> {
+  ): Promise<IRoomResponce> {
     try {
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.CREATE_ROOM }, { room })
@@ -40,7 +44,7 @@ export class RoomsController {
   async addPlayerToRoom(
     @Request() req,
     @Body('add') add: IAddPlayerToRoom,
-  ): Promise<IRoomState[]> {
+  ): Promise<IRoomResponce> {
     try {
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.ADD_PLAYER }, { add })

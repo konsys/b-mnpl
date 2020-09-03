@@ -6,7 +6,11 @@ import {
 } from '@nestjs/microservices';
 
 import { ErrorCode } from 'src/utils/error.code';
-import { IRoomState, IAddPlayerToRoom } from 'src/types/game/game.types';
+import {
+  IRoomState,
+  IAddPlayerToRoom,
+  IRoomResponce,
+} from 'src/types/game/game.types';
 import {
   MsRoomsPatterns,
   MsNames,
@@ -25,7 +29,7 @@ export class RoomsMsController {
   ) {}
 
   @MessagePattern({ cmd: MsRoomsPatterns.CREATE_ROOM })
-  async createRoom({ room }: { room: IRoomState }): Promise<IRoomState[]> {
+  async createRoom({ room }: { room: IRoomState }): Promise<IRoomResponce> {
     // TODO remove line
     await roomsRedis.del(Rooms.ALL);
 
@@ -49,8 +53,11 @@ export class RoomsMsController {
     rooms.push(room);
 
     await this.set(Rooms.ALL, rooms);
+    rooms = await this.get(Rooms.ALL);
 
-    return await this.get(Rooms.ALL);
+    const t = rooms.reduce((acc, v) => acc + v.players.length, 0);
+    console.log(234234234, t);
+    return { rooms, playersInRooms: 3 };
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.ADD_PLAYER })
@@ -58,8 +65,8 @@ export class RoomsMsController {
     add,
   }: {
     add: IAddPlayerToRoom;
-  }): Promise<IRoomState[]> {
-    const rooms = await this.get(Rooms.ALL);
+  }): Promise<IRoomResponce> {
+    let rooms = await this.get(Rooms.ALL);
     const roomIndex = rooms.findIndex((v) => v.roomId === add.roomId);
     if (roomIndex < 0) {
       throw new RpcException({ code: ErrorCode.RoomDoesntExist });
@@ -78,7 +85,12 @@ export class RoomsMsController {
 
     await this.set(Rooms.ALL, rooms);
 
-    return await this.get(Rooms.ALL);
+    rooms = await this.get(Rooms.ALL);
+    const num = rooms.reduce((acc, v) => acc + v.players.length, 0);
+    return {
+      rooms,
+      playersInRooms: num,
+    };
   }
 
   private async set(name: string, value: any) {

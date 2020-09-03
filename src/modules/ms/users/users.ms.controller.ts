@@ -36,7 +36,6 @@ export class UsersMsController {
   @UseInterceptors(ClassSerializerInterceptor)
   @MessagePattern({ cmd: MsUsersPatterns.GET_USERS_BY_IDS })
   async getUsers(userIds: number[]) {
-    console.log(2222, userIds);
     if (!userIds || !userIds.length) {
       return [];
     }

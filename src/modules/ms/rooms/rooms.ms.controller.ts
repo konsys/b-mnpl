@@ -31,8 +31,6 @@ export class RoomsMsController {
 
     let rooms = await this.get(Rooms.ALL);
 
-    console.log(rooms);
-
     const players = await this.proxy
       .send<any>(
         { cmd: MsUsersPatterns.GET_USERS_BY_IDS },
@@ -63,20 +61,20 @@ export class RoomsMsController {
   }): Promise<IRoomState[]> {
     const rooms = await this.get(Rooms.ALL);
     const roomIndex = rooms.findIndex((v) => v.roomId === add.roomId);
-    if (!roomIndex) {
-      throw new RpcException({ code: ErrorCode.RoomDoesntExists });
+    if (roomIndex < 0) {
+      throw new RpcException({ code: ErrorCode.RoomDoesntExist });
     }
 
     if (rooms[roomIndex].players.length >= rooms[roomIndex].playersNumber) {
       throw new RpcException({ code: ErrorCode.RoomMaxPlayersReached });
     }
 
+    // TODO add check for me in room
     const player = await this.proxy
       .send<any>({ cmd: MsUsersPatterns.GET_USER }, add.userId)
       .toPromise();
 
     rooms[roomIndex].players.push(player);
-    console.log(123123123, player);
 
     await this.set(Rooms.ALL, rooms);
 

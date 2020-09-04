@@ -13,7 +13,11 @@ import {
   MsUsersPatterns,
 } from 'src/types/ms/ms.types';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
-import { IChatMessage } from 'src/types/game/game.types';
+import {
+  IChatMessage,
+  IGameSocketMessage,
+  IGameMessageType,
+} from 'src/types/game/game.types';
 import { redis } from 'src/main';
 import { BOARD_PARAMS } from 'src/params/board.params';
 
@@ -33,10 +37,6 @@ export class ChatController {
     @Body('message') message: string,
     @Body('replies') replies: any,
   ) {
-    await redis.publish(
-      `${BOARD_PARAMS.GAME_MESSAGE_CHANNEL}`,
-      JSON.stringify({ test: 23423 }),
-    );
     const fromUser = await this.proxy
       .send<any>({ cmd: MsUsersPatterns.GET_USER }, { userId: req.user.userId })
       .toPromise();
@@ -48,10 +48,24 @@ export class ChatController {
       time: new Date(),
     };
     try {
-      const res = await this.proxy
+      const chatMessages = await this.proxy
         .send<any>({ cmd: MsChatPatterns.ADD_MESSAGE }, el)
         .toPromise();
-      return res;
+
+      const message: IGameSocketMessage = {
+        code: 0,
+        data: {
+          type: IGameMessageType.CHAT,
+          chatMessages,
+        },
+      };
+
+      await redis.publish(
+        `${BOARD_PARAMS.GAME_MESSAGE_CHANNEL}`,
+        JSON.stringify(message),
+      );
+
+      return chatMessages;
     } catch (err) {
       // TODO Logging
     }

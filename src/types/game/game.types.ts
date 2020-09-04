@@ -6,9 +6,15 @@ export enum SocketActions {
   ERROR_MESSAGE = 'errorMessage',
 }
 
+export enum IGameMessageType {
+  CHAT = 'chat',
+}
 export interface IGameSocketMessage {
   code: ResponceCode;
-  data: { text: string };
+  data: {
+    type: IGameMessageType;
+    chatMessages: IChatMessage[];
+  };
 }
 
 export interface IChatMessage {

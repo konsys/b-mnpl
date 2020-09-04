@@ -25,14 +25,8 @@ export class GameSocket
   public static socketServer: Server;
   private logger: Logger = new Logger('GameSocket');
 
-  public async emitMessage({
-    type,
-    message,
-  }: {
-    type: SocketActions;
-    message: any;
-  }) {
-    GameSocket.socketServer.emit(type, message);
+  public async emitChatMessage(message: IChatMessage[]) {
+    GameSocket.socketServer.emit(SocketActions.CHAT_MESSAGES, message);
   }
 
   afterInit(server: Server) {
@@ -40,8 +34,10 @@ export class GameSocket
 
     chatMessageSubscriber.on(
       'message',
-      async (chanel: SocketActions, message: IChatMessage[]) => {
-        await this.emitMessage({ type: chanel, message });
+      async (chanel: SocketActions, message: string) => {
+        if (chanel === SocketActions.CHAT_MESSAGES) {
+          await this.emitChatMessage(JSON.parse(message));
+        }
       },
     );
 

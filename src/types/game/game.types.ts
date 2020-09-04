@@ -11,10 +11,7 @@ export enum IGameMessageType {
 }
 export interface IGameSocketMessage {
   code: ResponceCode;
-  data: {
-    type: IGameMessageType;
-    chatMessages: IChatMessage[];
-  };
+  chatMessages: IChatMessage[];
 }
 
 export interface IChatMessage {

@@ -54,10 +54,7 @@ export class ChatController {
 
       const message: IGameSocketMessage = {
         code: 0,
-        data: {
-          type: IGameMessageType.CHAT,
-          chatMessages,
-        },
+        chatMessages,
       };
 
       await redis.publish(

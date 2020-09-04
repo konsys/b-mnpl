@@ -55,9 +55,7 @@ export class RoomsMsController {
     await this.set(Rooms.ALL, rooms);
     rooms = await this.get(Rooms.ALL);
 
-    const t = rooms.reduce((acc, v) => acc + v.players.length, 0);
-    console.log(234234234, t);
-    return { rooms, playersInRooms: 3 };
+    return { rooms, playersInRooms: this.calcPlayers(rooms) };
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.ADD_PLAYER })
@@ -86,10 +84,9 @@ export class RoomsMsController {
     await this.set(Rooms.ALL, rooms);
 
     rooms = await this.get(Rooms.ALL);
-    const num = rooms.reduce((acc, v) => acc + v.players.length, 0);
     return {
       rooms,
-      playersInRooms: num,
+      playersInRooms: this.calcPlayers(rooms),
     };
   }
 
@@ -106,5 +103,9 @@ export class RoomsMsController {
     } catch (err) {
       return [];
     }
+  }
+
+  private calcPlayers(arr: IRoomState[]): number {
+    return arr.reduce((acc, v) => acc + v.players.length, 0);
   }
 }

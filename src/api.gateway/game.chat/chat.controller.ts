@@ -14,6 +14,8 @@ import {
 } from 'src/types/ms/ms.types';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { IChatMessage } from 'src/types/game/game.types';
+import { redis } from 'src/main';
+import { BOARD_PARAMS } from 'src/params/board.params';
 
 @Controller('chat')
 export class ChatController {
@@ -31,6 +33,10 @@ export class ChatController {
     @Body('message') message: string,
     @Body('replies') replies: any,
   ) {
+    await redis.publish(
+      `${BOARD_PARAMS.GAME_MESSAGE_CHANNEL}`,
+      JSON.stringify({ test: 23423 }),
+    );
     const fromUser = await this.proxy
       .send<any>({ cmd: MsUsersPatterns.GET_USER }, { userId: req.user.userId })
       .toPromise();

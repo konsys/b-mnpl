@@ -1,8 +1,14 @@
-import { IPlayer } from '../board/board.types';
+import { IPlayer, ResponceCode } from '../board/board.types';
 
 export enum SocketActions {
+  GAME_MESSAGE = 'gameMessage',
   BOARD_MESSAGE = 'boardMessage',
   ERROR_MESSAGE = 'errorMessage',
+}
+
+export interface IGameSocketMessage {
+  code: ResponceCode;
+  data: { text: string };
 }
 
 export interface IChatMessage {

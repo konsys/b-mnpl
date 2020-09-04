@@ -4,6 +4,7 @@ import {
   Logger,
   UseInterceptors,
 } from '@nestjs/common';
+import { IChatMessage, SocketActions } from 'src/types/game/game.types';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -13,10 +14,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-import { BOARD_PARAMS } from 'src/params/board.params';
-import { IGameSocketMessage } from 'src/types/game/game.types';
-import { SocketActions } from 'src/types/game/game.types';
-import { gameMessageSubscriber } from 'src/main';
+import { chatMessageSubscriber } from 'src/main';
 
 @Injectable()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -27,21 +25,28 @@ export class GameSocket
   public static socketServer: Server;
   private logger: Logger = new Logger('GameSocket');
 
-  public async emitMessage(message: IGameSocketMessage) {
-    GameSocket.socketServer.emit(SocketActions.GAME_MESSAGE, message);
+  public async emitMessage({
+    type,
+    message,
+  }: {
+    type: SocketActions;
+    message: any;
+  }) {
+    console.log(234234234, type, message);
+    GameSocket.socketServer.emit(type, message);
   }
 
   afterInit(server: Server) {
     GameSocket.socketServer = server;
 
-    gameMessageSubscriber.on(
+    chatMessageSubscriber.on(
       'message',
-      async (chanel: any, message: string) => {
-        await this.emitMessage(JSON.parse(message));
+      async (chanel: SocketActions, message: IChatMessage[]) => {
+        await this.emitMessage({ type: chanel, message });
       },
     );
 
-    gameMessageSubscriber.subscribe(BOARD_PARAMS.GAME_MESSAGE_CHANNEL);
+    chatMessageSubscriber.subscribe(SocketActions.CHAT_MESSAGES);
 
     this.logger.log('Init: ' + server);
   }

@@ -17,6 +17,7 @@ import {
   IChatMessage,
   IGameSocketMessage,
   IGameMessageType,
+  SocketActions,
 } from 'src/types/game/game.types';
 import { redis } from 'src/main';
 import { BOARD_PARAMS } from 'src/params/board.params';
@@ -58,7 +59,7 @@ export class ChatController {
       };
 
       await redis.publish(
-        `${BOARD_PARAMS.GAME_MESSAGE_CHANNEL}`,
+        `${SocketActions.CHAT_MESSAGES}`,
         JSON.stringify(message),
       );
 

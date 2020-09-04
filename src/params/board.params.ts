@@ -22,5 +22,4 @@ export const BOARD_PARAMS = {
 
   ERROR_CHANNEL: 'errorChannel',
   BOARD_MESSAGE_CHANNEL: 'boardMessageChannel',
-  GAME_MESSAGE_CHANNEL: 'gameMessageChannel',
 };

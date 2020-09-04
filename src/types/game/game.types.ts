@@ -1,11 +1,10 @@
 import { IPlayer, ResponceCode } from '../board/board.types';
 
 export enum SocketActions {
-  GAME_MESSAGE = 'gameMessage',
+  CHAT_MESSAGES = 'chatMessage',
   BOARD_MESSAGE = 'boardMessage',
   ERROR_MESSAGE = 'errorMessage',
 }
-
 export enum IGameMessageType {
   CHAT = 'chat',
 }

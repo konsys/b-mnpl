@@ -32,7 +32,6 @@ export class GameSocket
     type: SocketActions;
     message: any;
   }) {
-    console.log(234234234, type, message);
     GameSocket.socketServer.emit(type, message);
   }
 

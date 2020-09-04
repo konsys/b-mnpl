@@ -14,14 +14,16 @@ import { settings } from 'cluster';
 const redisHost = 'redis://localhost:6379';
 export let redis = null;
 export let errorSubscriber = null;
-export let messageSubscriber = null;
+export let boardMessageSubscriber = null;
+export let gameMessageSubscriber = null;
 export let chatRedis = null;
 export let roomsRedis = null;
 
 async function bootstrap() {
   redis = new Redis(redisHost);
   errorSubscriber = new Redis(redisHost);
-  messageSubscriber = new Redis(redisHost);
+  boardMessageSubscriber = new Redis(redisHost);
+  gameMessageSubscriber = new Redis(redisHost);
   chatRedis = new Redis(redisHost);
   roomsRedis = new Redis(redisHost);
 

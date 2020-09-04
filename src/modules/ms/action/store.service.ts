@@ -218,7 +218,7 @@ export class StoreService {
   async emitMessage(gameId: string) {
     const data = await this.message.createBoardMessage(gameId);
     await redis.publish(
-      `${BOARD_PARAMS.MESSAGE_CHANNEL}`,
+      `${BOARD_PARAMS.BOARD_MESSAGE_CHANNEL}`,
       JSON.stringify(data),
     );
 

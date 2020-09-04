@@ -7,7 +7,7 @@ import { MessagePattern } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindManyOptions, In } from 'typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { MsUsersPatterns } from 'src/types/ms/ms.types';
 
@@ -35,9 +35,9 @@ export class UsersMsController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @MessagePattern({ cmd: MsUsersPatterns.GET_USERS_BY_IDS })
-  async getUsers(userIds: number[]) {
+  async getUsers(userIds: number[]): Promise<UsersEntity[]> {
     if (!userIds || !userIds.length) {
-      return [];
+      return await of([]).pipe(delay(1)).toPromise();
     }
 
     // https://github.com/typeorm/typeorm/blob/master/docs/find-options.md
@@ -46,7 +46,7 @@ export class UsersMsController {
     });
 
     const filtered = users.map((v) => new UsersEntity(v));
-    return of(filtered).pipe(delay(1));
+    return await of(filtered).pipe(delay(1)).toPromise();
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS })

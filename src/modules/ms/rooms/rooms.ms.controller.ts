@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Inject } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import {
   MessagePattern,
   RpcException,
@@ -10,6 +10,7 @@ import {
   IRoomState,
   IAddPlayerToRoom,
   IRoomResponce,
+  IRoomType,
 } from 'src/types/game/game.types';
 import {
   MsRoomsPatterns,
@@ -17,6 +18,7 @@ import {
   MsUsersPatterns,
 } from 'src/types/ms/ms.types';
 import { roomsRedis } from 'src/main';
+import { IPlayer } from 'src/types/board/board.types';
 
 enum Rooms {
   ALL = 'allRooms',
@@ -30,17 +32,27 @@ export class RoomsMsController {
 
   @MessagePattern({ cmd: MsRoomsPatterns.CREATE_ROOM })
   async createRoom({ room }: { room: IRoomState }): Promise<IRoomResponce> {
+    console.log(11111, room);
     // TODO remove line
     await roomsRedis.del(Rooms.ALL);
 
     let rooms = await this.get(Rooms.ALL);
 
-    const players = await this.proxy
+    const players: IPlayer[] = await this.proxy
       .send<any>(
         { cmd: MsUsersPatterns.GET_USERS_BY_IDS },
         room.players.map((v) => v.userId),
       )
       .toPromise();
+
+    const creator = players.find((v) => v.userId === room.creatorId);
+    if (
+      !creator.vip &&
+      room.roomType !== IRoomType.REGULAR &&
+      room.roomType !== IRoomType.SHUFFLE
+    ) {
+      throw new RpcException({ code: ErrorCode.NotVip });
+    }
 
     room.players = players;
     // TODO uncomment
@@ -66,6 +78,7 @@ export class RoomsMsController {
   }): Promise<IRoomResponce> {
     let rooms = await this.get(Rooms.ALL);
     const roomIndex = rooms.findIndex((v) => v.roomId === add.roomId);
+
     if (roomIndex < 0) {
       throw new RpcException({ code: ErrorCode.RoomDoesntExist });
     }

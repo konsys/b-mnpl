@@ -28,7 +28,7 @@ export interface IRoomState {
   creatorId: number;
   players: IPlayer[];
   createTime: Date;
-  roomType: RoomType;
+  roomType: IRoomType;
   playersNumber: number;
   autostart: boolean;
   privateRoom: boolean;
@@ -36,7 +36,7 @@ export interface IRoomState {
   portalType: RoomPortalFieldType;
 }
 
-export enum RoomType {
+export enum IRoomType {
   REGULAR = 'regular',
   RETRO = 'retro',
   SHUFFLE = 'shuffle',

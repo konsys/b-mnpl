@@ -53,14 +53,9 @@ export class ChatController {
         .send<any>({ cmd: MsChatPatterns.ADD_MESSAGE }, el)
         .toPromise();
 
-      const message: IGameSocketMessage = {
-        code: 0,
-        chatMessages,
-      };
-
       await redis.publish(
         `${SocketActions.CHAT_MESSAGES}`,
-        JSON.stringify(message),
+        JSON.stringify(chatMessages),
       );
 
       return chatMessages;

@@ -8,4 +8,4 @@ import { RoomsSocket } from './rooms.socket';
   providers: [BoardSocket, GameChatSocket, RoomsSocket],
   controllers: [],
 })
-export class BoardSocketModule {}
+export class SocketModule {}

@@ -29,6 +29,7 @@ export enum MsActionsPatterns {
 }
 
 export enum MsRoomsPatterns {
+  GET_ROOMS = 'getRooms',
   CREATE_ROOM = 'createRoom',
   ADD_PLAYER = 'addPlayer',
 }

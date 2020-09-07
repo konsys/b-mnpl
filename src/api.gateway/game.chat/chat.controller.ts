@@ -32,11 +32,12 @@ export class ChatController {
     try {
       const messages = JSON.stringify(
         await this.proxy
-          .send<any>({ cmd: MsChatPatterns.GET_ALL_MESSAGES }, null)
+          .send<any>({ cmd: MsChatPatterns.GET_ALL_MESSAGES }, {})
           .toPromise(),
       );
-
+      // TODO init message only in socket
       await redis.publish(`${SocketActions.CHAT_MESSAGES}`, messages);
+      return messages;
     } catch (err) {
       // TODO Logging
     }

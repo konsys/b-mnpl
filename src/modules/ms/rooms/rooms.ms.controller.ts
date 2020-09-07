@@ -30,6 +30,12 @@ export class RoomsMsController {
     private readonly proxy: ClientProxy,
   ) {}
 
+  @MessagePattern({ cmd: MsRoomsPatterns.GET_ROOMS })
+  async getRooms(): Promise<IRoomResponce> {
+    const rooms = await this.get(Rooms.ALL);
+    return { rooms, playersInRooms: this.calcPlayers(rooms) };
+  }
+
   @MessagePattern({ cmd: MsRoomsPatterns.CREATE_ROOM })
   async createRoom({ room }: { room: IRoomState }): Promise<IRoomResponce> {
     // TODO remove line

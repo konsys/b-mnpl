@@ -18,7 +18,7 @@ import { roomsMessageSubscriber } from 'src/main';
 
 @Injectable()
 @UseInterceptors(ClassSerializerInterceptor)
-@WebSocketGateway(8002, { namespace: 'room' })
+@WebSocketGateway(8002, { namespace: 'rooms' })
 export class RoomsSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()

@@ -68,4 +68,19 @@ export class RoomsController {
       throw new UnprocessableEntityException(e);
     }
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('removePlayer')
+  async removePlayerFromRoom(
+    @Body('remove') remove: IAddPlayerToRoom,
+  ): Promise<IRoomResponce> {
+    try {
+      const rooms = await this.proxy
+        .send<any>({ cmd: MsRoomsPatterns.REMOVE_PLAYER }, { remove })
+        .toPromise();
+      return rooms;
+    } catch (e) {
+      throw new UnprocessableEntityException(e);
+    }
+  }
 }

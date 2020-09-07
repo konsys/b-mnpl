@@ -82,11 +82,7 @@ export class RoomsMsController {
     add: IAddPlayerToRoom;
   }): Promise<IRoomResponce> {
     let rooms = await this.get(Rooms.ALL);
-    const roomIndex = rooms.findIndex((v) => v.roomId === add.roomId);
-
-    if (roomIndex < 0) {
-      throw new RpcException({ code: ErrorCode.RoomDoesntExist });
-    }
+    const roomIndex = await this.findRoomIndex(rooms, add.roomId);
 
     if (rooms[roomIndex].players.length >= rooms[roomIndex].playersNumber) {
       throw new RpcException({ code: ErrorCode.RoomMaxPlayersReached });
@@ -106,6 +102,44 @@ export class RoomsMsController {
       rooms,
       playersInRooms: this.calcPlayers(rooms),
     };
+  }
+
+  @MessagePattern({ cmd: MsRoomsPatterns.REMOVE_PLAYER })
+  async removePlayerFromRoom({
+    remove,
+  }: {
+    remove: IAddPlayerToRoom;
+  }): Promise<IRoomResponce> {
+    let rooms = await this.get(Rooms.ALL);
+    const roomIndex = await this.findRoomIndex(rooms, remove.roomId);
+
+    // TODO add check for me in room
+    const player = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.GET_USER }, remove.userId)
+      .toPromise();
+
+    rooms[roomIndex].players.push(player);
+
+    await this.set(Rooms.ALL, rooms);
+
+    rooms = await this.get(Rooms.ALL);
+    return {
+      rooms,
+      playersInRooms: this.calcPlayers(rooms),
+    };
+  }
+
+  private async findRoomIndex(rooms: IRoomState[], roomId: string) {
+    const roomIndex = rooms.findIndex((v) => v.roomId === roomId);
+
+    if (roomIndex < 0) {
+      throw new RpcException({ code: ErrorCode.RoomDoesntExist });
+    }
+
+    if (rooms[roomIndex].players.length >= rooms[roomIndex].playersNumber) {
+      throw new RpcException({ code: ErrorCode.RoomMaxPlayersReached });
+    }
+    return roomIndex;
   }
 
   private async set(name: string, value: any) {

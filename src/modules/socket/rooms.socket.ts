@@ -4,7 +4,7 @@ import {
   Logger,
   UseInterceptors,
 } from '@nestjs/common';
-import { IChatMessage, SocketActions } from 'src/types/game/game.types';
+import { IRoomState, SocketActions } from 'src/types/game/game.types';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -14,40 +14,40 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-import { chatMessageSubscriber } from 'src/main';
+import { roomsMessageSubscriber } from 'src/main';
 
 @Injectable()
 @UseInterceptors(ClassSerializerInterceptor)
-@WebSocketGateway(8001, { namespace: 'game' })
-export class GameSocket
+@WebSocketGateway(8002, { namespace: 'room' })
+export class RoomsSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   public static socketServer: Server;
-  private logger: Logger = new Logger('GameSocket');
+  private logger: Logger = new Logger('RoomsSocket');
 
-  public async emitChatMessage(message: IChatMessage[]) {
-    GameSocket.socketServer.emit(SocketActions.CHAT_MESSAGES, message);
+  public async emitRoomMessage(message: IRoomState[]) {
+    RoomsSocket.socketServer.emit(SocketActions.ROOM_MESSAGE, message);
   }
 
   afterInit(server: Server) {
-    GameSocket.socketServer = server;
+    RoomsSocket.socketServer = server;
 
-    chatMessageSubscriber.on(
+    roomsMessageSubscriber.on(
       'message',
       async (chanel: SocketActions, message: string) => {
-        if (chanel === SocketActions.CHAT_MESSAGES) {
-          await this.emitChatMessage(JSON.parse(message));
+        if (chanel === SocketActions.ROOM_MESSAGE) {
+          await this.emitRoomMessage(JSON.parse(message));
         }
       },
     );
 
-    chatMessageSubscriber.subscribe(SocketActions.CHAT_MESSAGES);
+    roomsMessageSubscriber.subscribe(SocketActions.ROOM_MESSAGE);
 
     this.logger.log('Init: ' + server);
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
+    this.logger.log(` Client disconnected: ${client.id}`);
   }
 
   async handleConnection(client: Socket, ...args: any[]) {

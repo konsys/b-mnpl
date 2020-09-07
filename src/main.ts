@@ -16,6 +16,7 @@ export let redis = null;
 export let errorSubscriber = null;
 export let boardMessageSubscriber = null;
 export let chatMessageSubscriber = null;
+export let roomsMessageSubscriber = null;
 export let chatRedis = null;
 export let roomsRedis = null;
 
@@ -24,6 +25,7 @@ async function bootstrap() {
   errorSubscriber = new Redis(redisHost);
   boardMessageSubscriber = new Redis(redisHost);
   chatMessageSubscriber = new Redis(redisHost);
+  roomsMessageSubscriber = new Redis(redisHost);
   chatRedis = new Redis(redisHost);
   roomsRedis = new Redis(redisHost);
 

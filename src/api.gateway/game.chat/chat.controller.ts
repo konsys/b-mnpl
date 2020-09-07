@@ -36,7 +36,7 @@ export class ChatController {
           .toPromise(),
       );
       // TODO init message only in socket
-      await redis.publish(`${SocketActions.CHAT_MESSAGES}`, messages);
+      await redis.publish(`${SocketActions.GAME_CHAT_MESSAGE}`, messages);
       return messages;
     } catch (err) {
       // TODO Logging
@@ -66,7 +66,7 @@ export class ChatController {
         .toPromise();
 
       await redis.publish(
-        `${SocketActions.CHAT_MESSAGES}`,
+        `${SocketActions.GAME_CHAT_MESSAGE}`,
         JSON.stringify(chatMessages),
       );
 

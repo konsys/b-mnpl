@@ -4,7 +4,7 @@ import {
   Logger,
   UseInterceptors,
 } from '@nestjs/common';
-import { IRoomState, SocketActions } from 'src/types/game/game.types';
+import { IRoomResponce, SocketActions } from 'src/types/game/game.types';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -25,8 +25,8 @@ export class RoomsSocket
   public static socketServer: Server;
   private logger: Logger = new Logger('RoomsSocket');
 
-  public async emitRoomsMessage(message: IRoomState[]) {
-    RoomsSocket.socketServer.emit(SocketActions.ROOM_MESSAGE, message);
+  public async emitRoomsMessage(message: IRoomResponce) {
+    RoomsSocket.socketServer.emit(SocketActions.GAME_CHAT_MESSAGE, message);
   }
 
   afterInit(server: Server) {
@@ -34,14 +34,13 @@ export class RoomsSocket
     roomsMessageSubscriber.on(
       'message',
       async (chanel: SocketActions, message: string) => {
-        console.log(2342423423);
-        if (chanel === SocketActions.ROOM_MESSAGE) {
+        if (chanel === SocketActions.ROOMS_MESSAGE) {
           await this.emitRoomsMessage(JSON.parse(message));
         }
       },
     );
 
-    roomsMessageSubscriber.subscribe(SocketActions.ROOM_MESSAGE);
+    roomsMessageSubscriber.subscribe(SocketActions.ROOMS_MESSAGE);
 
     this.logger.log('Init: ' + server);
   }

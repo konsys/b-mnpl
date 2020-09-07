@@ -18,7 +18,7 @@ import { chatMessageSubscriber } from 'src/main';
 
 @Injectable()
 @UseInterceptors(ClassSerializerInterceptor)
-@WebSocketGateway(8001, { namespace: 'game' })
+@WebSocketGateway(8001, { namespace: 'gameChat' })
 export class GameChatSocket
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()

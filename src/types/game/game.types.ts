@@ -2,7 +2,7 @@ import { IPlayer, ResponceCode } from '../board/board.types';
 
 export enum SocketActions {
   GAME_CHAT_MESSAGE = 'gameChatMessage',
-  ROOM_MESSAGE = 'roomMessage',
+  ROOMS_MESSAGE = 'roomsMessage',
   BOARD_MESSAGE = 'boardMessage',
   ERROR_MESSAGE = 'errorMessage',
 }

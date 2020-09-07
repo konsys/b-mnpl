@@ -82,7 +82,7 @@ export class RoomsMsController {
       rooms,
       playersInRooms: this.calcPlayers(rooms),
     };
-    await redis.publish(`${SocketActions.ROOM_MESSAGE}`, JSON.stringify(resp));
+    await redis.publish(`${SocketActions.ROOMS_MESSAGE}`, JSON.stringify(resp));
     return resp;
   }
 
@@ -113,7 +113,7 @@ export class RoomsMsController {
       rooms,
       playersInRooms: this.calcPlayers(rooms),
     };
-    await redis.publish(`${SocketActions.ROOM_MESSAGE}`, JSON.stringify(resp));
+    await redis.publish(`${SocketActions.ROOMS_MESSAGE}`, JSON.stringify(resp));
     return resp;
   }
 
@@ -145,7 +145,7 @@ export class RoomsMsController {
       rooms,
       playersInRooms: this.calcPlayers(rooms),
     };
-    await redis.publish(`${SocketActions.ROOM_MESSAGE}`, JSON.stringify(resp));
+    await redis.publish(`${SocketActions.ROOMS_MESSAGE}`, JSON.stringify(resp));
     return resp;
   }
 

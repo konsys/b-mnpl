@@ -11,13 +11,14 @@ import {
   IAddPlayerToRoom,
   IRoomResponce,
   IRoomType,
+  SocketActions,
 } from 'src/types/game/game.types';
 import {
   MsRoomsPatterns,
   MsNames,
   MsUsersPatterns,
 } from 'src/types/ms/ms.types';
-import { roomsRedis } from 'src/main';
+import { roomsRedis, redis } from 'src/main';
 import { IPlayer } from 'src/types/board/board.types';
 
 enum Rooms {
@@ -77,7 +78,12 @@ export class RoomsMsController {
     await this.set(Rooms.ALL, rooms);
     rooms = await this.get(Rooms.ALL);
 
-    return { rooms, playersInRooms: this.calcPlayers(rooms) };
+    const resp = {
+      rooms,
+      playersInRooms: this.calcPlayers(rooms),
+    };
+    await redis.publish(`${SocketActions.ROOM_MESSAGE}`, JSON.stringify(resp));
+    return resp;
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.ADD_PLAYER })
@@ -103,10 +109,12 @@ export class RoomsMsController {
     await this.set(Rooms.ALL, rooms);
 
     rooms = await this.get(Rooms.ALL);
-    return {
+    const resp = {
       rooms,
       playersInRooms: this.calcPlayers(rooms),
     };
+    await redis.publish(`${SocketActions.ROOM_MESSAGE}`, JSON.stringify(resp));
+    return resp;
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.REMOVE_PLAYER })
@@ -132,10 +140,13 @@ export class RoomsMsController {
     await this.set(Rooms.ALL, rooms);
 
     rooms = await this.get(Rooms.ALL);
-    return {
+
+    const resp = {
       rooms,
       playersInRooms: this.calcPlayers(rooms),
     };
+    await redis.publish(`${SocketActions.ROOM_MESSAGE}`, JSON.stringify(resp));
+    return resp;
   }
 
   private async findRoomIndex(rooms: IRoomState[], roomId: string) {

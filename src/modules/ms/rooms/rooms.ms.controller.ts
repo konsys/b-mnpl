@@ -111,14 +111,20 @@ export class RoomsMsController {
     remove: IAddPlayerToRoom;
   }): Promise<IRoomResponce> {
     let rooms = await this.get(Rooms.ALL);
+
     const roomIndex = await this.findRoomIndex(rooms, remove.roomId);
+    console.log(2222, roomIndex);
+    const room = rooms[roomIndex];
+    const playerIndex = room.players.findIndex(
+      (v) => v.userId === remove.userId,
+    );
 
     // TODO add check for me in room
     const player = await this.proxy
       .send<any>({ cmd: MsUsersPatterns.GET_USER }, remove.userId)
       .toPromise();
 
-    rooms[roomIndex].players.push(player);
+    rooms[roomIndex].players = room.players.splice(playerIndex, playerIndex); // push(player);
 
     await this.set(Rooms.ALL, rooms);
 
@@ -136,9 +142,6 @@ export class RoomsMsController {
       throw new RpcException({ code: ErrorCode.RoomDoesntExist });
     }
 
-    if (rooms[roomIndex].players.length >= rooms[roomIndex].playersNumber) {
-      throw new RpcException({ code: ErrorCode.RoomMaxPlayersReached });
-    }
     return roomIndex;
   }
 

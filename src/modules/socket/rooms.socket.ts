@@ -26,7 +26,7 @@ export class RoomsSocket
   private logger: Logger = new Logger('RoomsSocket');
 
   public async emitRoomsMessage(message: IRoomResponce) {
-    RoomsSocket.socketServer.emit(SocketActions.GAME_CHAT_MESSAGE, message);
+    RoomsSocket.socketServer.emit(SocketActions.ROOMS_MESSAGE, message);
   }
 
   afterInit(server: Server) {

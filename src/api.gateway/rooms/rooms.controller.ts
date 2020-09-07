@@ -13,9 +13,11 @@ import {
   IRoomState,
   IAddPlayerToRoom,
   IRoomResponce,
+  SocketActions,
 } from 'src/types/game/game.types';
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
+import { redis } from 'src/main';
 
 @Controller('rooms')
 export class RoomsController {
@@ -47,6 +49,10 @@ export class RoomsController {
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.CREATE_ROOM }, { room })
         .toPromise();
+      await redis.publish(
+        `${SocketActions.ROOM_MESSAGE}`,
+        JSON.stringify(rooms),
+      );
       return rooms;
     } catch (e) {
       throw new UnprocessableEntityException(e);

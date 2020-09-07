@@ -25,18 +25,18 @@ export class RoomsSocket
   public static socketServer: Server;
   private logger: Logger = new Logger('RoomsSocket');
 
-  public async emitRoomMessage(message: IRoomState[]) {
+  public async emitRoomsMessage(message: IRoomState[]) {
     RoomsSocket.socketServer.emit(SocketActions.ROOM_MESSAGE, message);
   }
 
   afterInit(server: Server) {
     RoomsSocket.socketServer = server;
-
     roomsMessageSubscriber.on(
       'message',
       async (chanel: SocketActions, message: string) => {
+        console.log(2342423423);
         if (chanel === SocketActions.ROOM_MESSAGE) {
-          await this.emitRoomMessage(JSON.parse(message));
+          await this.emitRoomsMessage(JSON.parse(message));
         }
       },
     );

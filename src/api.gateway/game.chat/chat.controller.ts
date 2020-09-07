@@ -5,6 +5,7 @@ import {
   Inject,
   UseGuards,
   Body,
+  Get,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import {
@@ -13,14 +14,8 @@ import {
   MsUsersPatterns,
 } from 'src/types/ms/ms.types';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
-import {
-  IChatMessage,
-  IGameSocketMessage,
-  IGameMessageType,
-  SocketActions,
-} from 'src/types/game/game.types';
+import { IChatMessage, SocketActions } from 'src/types/game/game.types';
 import { redis } from 'src/main';
-import { BOARD_PARAMS } from 'src/params/board.params';
 
 @Controller('chat')
 export class ChatController {
@@ -30,6 +25,22 @@ export class ChatController {
     @Inject(MsNames.CHAT)
     private readonly proxy: ClientProxy,
   ) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getChatMessages() {
+    try {
+      const messages = JSON.stringify(
+        await this.proxy
+          .send<any>({ cmd: MsChatPatterns.GET_ALL_MESSAGES }, null)
+          .toPromise(),
+      );
+
+      await redis.publish(`${SocketActions.CHAT_MESSAGES}`, messages);
+    } catch (err) {
+      // TODO Logging
+    }
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post()

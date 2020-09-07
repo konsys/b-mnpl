@@ -51,6 +51,10 @@ export class RoomsMsController {
       .toPromise();
 
     const creator = players.find((v) => v.userId === room.creatorId);
+    if (!creator || !Array.isArray(players)) {
+      throw new RpcException({ code: ErrorCode.UserDoesntExists });
+    }
+
     if (
       !creator.vip &&
       room.roomType !== IRoomType.REGULAR &&
@@ -59,6 +63,7 @@ export class RoomsMsController {
       throw new RpcException({ code: ErrorCode.NotVip });
     }
 
+    room.creatorId = creator.userId;
     room.players = players;
     // TODO uncomment
     // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
@@ -113,18 +118,16 @@ export class RoomsMsController {
     let rooms = await this.get(Rooms.ALL);
 
     const roomIndex = await this.findRoomIndex(rooms, remove.roomId);
-    console.log(2222, roomIndex);
+
     const room = rooms[roomIndex];
+
     const playerIndex = room.players.findIndex(
       (v) => v.userId === remove.userId,
     );
 
-    // TODO add check for me in room
-    const player = await this.proxy
-      .send<any>({ cmd: MsUsersPatterns.GET_USER }, remove.userId)
-      .toPromise();
+    room.players.splice(playerIndex, 1);
 
-    rooms[roomIndex].players = room.players.splice(playerIndex, playerIndex); // push(player);
+    rooms[roomIndex].players = room.players; // push(player);
 
     await this.set(Rooms.ALL, rooms);
 
@@ -141,7 +144,6 @@ export class RoomsMsController {
     if (roomIndex < 0) {
       throw new RpcException({ code: ErrorCode.RoomDoesntExist });
     }
-
     return roomIndex;
   }
 
@@ -153,8 +155,17 @@ export class RoomsMsController {
 
   private async get(name: string): Promise<IRoomState[]> {
     try {
-      const rooms = JSON.parse(await roomsRedis.get(name));
-      return Array.isArray(rooms) ? rooms : [];
+      let rooms = JSON.parse(await roomsRedis.get(name));
+
+      if (!Array.isArray(rooms)) {
+        rooms = [];
+      } else {
+        rooms = rooms.filter((v) => v.players.length > 0);
+      }
+
+      await this.set(Rooms.ALL, rooms);
+
+      return rooms;
     } catch (err) {
       return [];
     }

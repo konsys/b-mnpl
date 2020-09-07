@@ -16,4 +16,5 @@ export enum ErrorCode {
   'RoomDoesntExist' = 115,
   'RoomMaxPlayersReached' = 116,
   'NotVip' = 117,
+  'UserDoesntExists' = 118,
 }

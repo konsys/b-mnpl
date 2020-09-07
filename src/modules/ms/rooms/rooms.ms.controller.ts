@@ -40,7 +40,7 @@ export class RoomsMsController {
   @MessagePattern({ cmd: MsRoomsPatterns.CREATE_ROOM })
   async createRoom({ room }: { room: IRoomState }): Promise<IRoomResponce> {
     // TODO remove line
-    await roomsRedis.del(Rooms.ALL);
+    // await roomsRedis.del(Rooms.ALL);
 
     let rooms = await this.get(Rooms.ALL);
 

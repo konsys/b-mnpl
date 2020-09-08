@@ -14,6 +14,11 @@ export interface IGameSocketMessage {
   chatMessages: IChatMessage[];
 }
 
+export interface IResponceCode {
+  code: number;
+  message?: string;
+}
+
 export interface IChatMessage {
   fromUser: IPlayer;
   replies: any[];

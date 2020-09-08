@@ -12,6 +12,7 @@ import {
   IRoomResponce,
   IRoomType,
   SocketActions,
+  IResponceCode,
 } from 'src/types/game/game.types';
 import {
   MsRoomsPatterns,
@@ -38,52 +39,59 @@ export class RoomsMsController {
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.CREATE_ROOM })
-  async createRoom({ room }: { room: IRoomState }): Promise<IRoomResponce> {
-    // TODO remove line
-    // await roomsRedis.del(Rooms.ALL);
+  async createRoom({ room }: { room: IRoomState }): Promise<IResponceCode> {
+    try {
+      // TODO remove line
+      // await roomsRedis.del(Rooms.ALL);
 
-    let rooms = await this.get(Rooms.ALL);
+      let rooms = await this.get(Rooms.ALL);
 
-    const players: IPlayer[] = await this.proxy
-      .send<any>(
-        { cmd: MsUsersPatterns.GET_USERS_BY_IDS },
-        room.players.map((v) => v.userId),
-      )
-      .toPromise();
+      const players: IPlayer[] = await this.proxy
+        .send<any>(
+          { cmd: MsUsersPatterns.GET_USERS_BY_IDS },
+          room.players.map((v) => v.userId),
+        )
+        .toPromise();
 
-    const creator = players.find((v) => v.userId === room.creatorId);
-    if (!creator || !Array.isArray(players)) {
-      throw new RpcException({ code: ErrorCode.UserDoesntExists });
+      const creator = players.find((v) => v.userId === room.creatorId);
+      if (!creator || !Array.isArray(players)) {
+        throw new RpcException({ code: ErrorCode.UserDoesntExists });
+      }
+
+      if (
+        !creator.vip &&
+        room.roomType !== IRoomType.REGULAR &&
+        room.roomType !== IRoomType.SHUFFLE
+      ) {
+        throw new RpcException({ code: ErrorCode.NotVip });
+      }
+
+      room.creatorId = creator.userId;
+      room.players = players;
+      // TODO uncomment
+      // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
+
+      // if (isGame) {
+      //   throw new RpcException({ code: ErrorCode.RoomExists });
+      // }
+
+      rooms.push(room);
+
+      await this.set(Rooms.ALL, rooms);
+      rooms = await this.get(Rooms.ALL);
+
+      const resp = {
+        rooms,
+        playersInRooms: this.calcPlayers(rooms),
+      };
+      await redis.publish(
+        `${SocketActions.ROOMS_MESSAGE}`,
+        JSON.stringify(resp),
+      );
+      return { code: 0 };
+    } catch (er) {
+      return { code: 1 };
     }
-
-    if (
-      !creator.vip &&
-      room.roomType !== IRoomType.REGULAR &&
-      room.roomType !== IRoomType.SHUFFLE
-    ) {
-      throw new RpcException({ code: ErrorCode.NotVip });
-    }
-
-    room.creatorId = creator.userId;
-    room.players = players;
-    // TODO uncomment
-    // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
-
-    // if (isGame) {
-    //   throw new RpcException({ code: ErrorCode.RoomExists });
-    // }
-
-    rooms.push(room);
-
-    await this.set(Rooms.ALL, rooms);
-    rooms = await this.get(Rooms.ALL);
-
-    const resp = {
-      rooms,
-      playersInRooms: this.calcPlayers(rooms),
-    };
-    await redis.publish(`${SocketActions.ROOMS_MESSAGE}`, JSON.stringify(resp));
-    return resp;
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.ADD_PLAYER })
@@ -91,30 +99,37 @@ export class RoomsMsController {
     add,
   }: {
     add: IAddPlayerToRoom;
-  }): Promise<IRoomResponce> {
-    let rooms = await this.get(Rooms.ALL);
-    const roomIndex = await this.findRoomIndex(rooms, add.roomId);
+  }): Promise<IResponceCode> {
+    try {
+      let rooms = await this.get(Rooms.ALL);
+      const roomIndex = await this.findRoomIndex(rooms, add.roomId);
 
-    if (rooms[roomIndex].players.length >= rooms[roomIndex].playersNumber) {
-      throw new RpcException({ code: ErrorCode.RoomMaxPlayersReached });
+      if (rooms[roomIndex].players.length >= rooms[roomIndex].playersNumber) {
+        throw new RpcException({ code: ErrorCode.RoomMaxPlayersReached });
+      }
+
+      // TODO add check for me in room
+      const player = await this.proxy
+        .send<any>({ cmd: MsUsersPatterns.GET_USER }, add.userId)
+        .toPromise();
+
+      rooms[roomIndex].players.push(player);
+
+      await this.set(Rooms.ALL, rooms);
+
+      rooms = await this.get(Rooms.ALL);
+      const resp = {
+        rooms,
+        playersInRooms: this.calcPlayers(rooms),
+      };
+      await redis.publish(
+        `${SocketActions.ROOMS_MESSAGE}`,
+        JSON.stringify(resp),
+      );
+      return { code: 0 };
+    } catch (er) {
+      return { code: 1 };
     }
-
-    // TODO add check for me in room
-    const player = await this.proxy
-      .send<any>({ cmd: MsUsersPatterns.GET_USER }, add.userId)
-      .toPromise();
-
-    rooms[roomIndex].players.push(player);
-
-    await this.set(Rooms.ALL, rooms);
-
-    rooms = await this.get(Rooms.ALL);
-    const resp = {
-      rooms,
-      playersInRooms: this.calcPlayers(rooms),
-    };
-    await redis.publish(`${SocketActions.ROOMS_MESSAGE}`, JSON.stringify(resp));
-    return resp;
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.REMOVE_PLAYER })
@@ -122,31 +137,38 @@ export class RoomsMsController {
     remove,
   }: {
     remove: IAddPlayerToRoom;
-  }): Promise<IRoomResponce> {
-    let rooms = await this.get(Rooms.ALL);
+  }): Promise<IResponceCode> {
+    try {
+      let rooms = await this.get(Rooms.ALL);
 
-    const roomIndex = await this.findRoomIndex(rooms, remove.roomId);
+      const roomIndex = await this.findRoomIndex(rooms, remove.roomId);
 
-    const room = rooms[roomIndex];
+      const room = rooms[roomIndex];
 
-    const playerIndex = room.players.findIndex(
-      (v) => v.userId === remove.userId,
-    );
+      const playerIndex = room.players.findIndex(
+        (v) => v.userId === remove.userId,
+      );
 
-    room.players.splice(playerIndex, 1);
+      room.players.splice(playerIndex, 1);
 
-    rooms[roomIndex].players = room.players; // push(player);
+      rooms[roomIndex].players = room.players; // push(player);
 
-    await this.set(Rooms.ALL, rooms);
+      await this.set(Rooms.ALL, rooms);
 
-    rooms = await this.get(Rooms.ALL);
+      rooms = await this.get(Rooms.ALL);
 
-    const resp = {
-      rooms,
-      playersInRooms: this.calcPlayers(rooms),
-    };
-    await redis.publish(`${SocketActions.ROOMS_MESSAGE}`, JSON.stringify(resp));
-    return resp;
+      const resp = {
+        rooms,
+        playersInRooms: this.calcPlayers(rooms),
+      };
+      await redis.publish(
+        `${SocketActions.ROOMS_MESSAGE}`,
+        JSON.stringify(resp),
+      );
+      return { code: 0 };
+    } catch (er) {
+      return { code: 1 };
+    }
   }
 
   private async findRoomIndex(rooms: IRoomState[], roomId: string) {

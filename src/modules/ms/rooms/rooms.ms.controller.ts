@@ -70,7 +70,10 @@ export class RoomsMsController {
       room.creatorId = creator.userId;
       room.players = players;
       room.roomStatus = RoomStatus.PENDING;
-      //   throw new RpcException({ code: ErrorCode.RoomExists }); // if (isGame) { // const isGame = rooms.find((v) => v.creatorId === room.creatorId); // TODO uncomment
+      //   throw new RpcException({ code: ErrorCode.RoomExists });
+      // if (isGame) {
+      // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
+      // TODO uncomment
       // }
 
       rooms.push(room);
@@ -102,7 +105,9 @@ export class RoomsMsController {
       let rooms = await this.get(Rooms.ALL);
       const roomIndex = await this.findRoomIndex(rooms, add.roomId);
 
-      if (rooms[roomIndex].players.length >= rooms[roomIndex].playersNumber) {
+      const room = rooms[roomIndex];
+
+      if (room.players.length >= room.playersNumber) {
         throw new RpcException({ code: ErrorCode.RoomMaxPlayersReached });
       }
 
@@ -112,6 +117,10 @@ export class RoomsMsController {
         .toPromise();
 
       rooms[roomIndex].players.push(player);
+
+      if (rooms[roomIndex].players.length === room.playersNumber) {
+        rooms[roomIndex].roomStatus = RoomStatus.STARTED;
+      }
 
       await this.set(Rooms.ALL, rooms);
 

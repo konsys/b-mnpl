@@ -42,21 +42,31 @@ export interface IRoomState {
   creatorId: number;
   players: IPlayer[];
   createTime: Date;
-  roomType: IRoomType;
+  roomType: RoomType;
   playersNumber: number;
   autostart: boolean;
   privateRoom: boolean;
   restarts: boolean;
   portalType: RoomPortalFieldType;
+  roomStatus: RoomStatus;
 }
 
-export enum IRoomType {
+export enum RoomType {
   REGULAR = 'regular',
   RETRO = 'retro',
   SHUFFLE = 'shuffle',
   QUICK = 'quick',
   ROULETTE = 'roulette',
 }
+
+export enum RoomStatus {
+  NOT_CREATED = 'notCreated',
+  PENDING = 'pending',
+  DELETED = 'deleted',
+  STARTED = 'started',
+  COMPLETED = 'completed',
+}
+
 export interface IAddPlayerToRoom {
   roomId: string;
   userId: number;

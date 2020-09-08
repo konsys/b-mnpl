@@ -10,9 +10,10 @@ import {
   IRoomState,
   IAddPlayerToRoom,
   IRoomResponce,
-  IRoomType,
+  RoomType,
   SocketActions,
   IResponceCode,
+  RoomStatus,
 } from 'src/types/game/game.types';
 import {
   MsRoomsPatterns,
@@ -60,19 +61,16 @@ export class RoomsMsController {
 
       if (
         !creator.vip &&
-        room.roomType !== IRoomType.REGULAR &&
-        room.roomType !== IRoomType.SHUFFLE
+        room.roomType !== RoomType.REGULAR &&
+        room.roomType !== RoomType.SHUFFLE
       ) {
         throw new RpcException({ code: ErrorCode.NotVip });
       }
 
       room.creatorId = creator.userId;
       room.players = players;
-      // TODO uncomment
-      // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
-
-      // if (isGame) {
-      //   throw new RpcException({ code: ErrorCode.RoomExists });
+      room.roomStatus = RoomStatus.PENDING;
+      //   throw new RpcException({ code: ErrorCode.RoomExists }); // if (isGame) { // const isGame = rooms.find((v) => v.creatorId === room.creatorId); // TODO uncomment
       // }
 
       rooms.push(room);

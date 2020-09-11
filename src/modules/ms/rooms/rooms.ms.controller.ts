@@ -76,7 +76,6 @@ export class RoomsMsController {
       // TODO uncomment
       // }
 
-      console.log(1111, room);
       rooms.push(room);
 
       await this.set(Rooms.ALL, rooms);

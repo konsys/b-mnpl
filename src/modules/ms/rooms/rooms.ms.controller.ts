@@ -22,6 +22,7 @@ import {
 } from 'src/types/ms/ms.types';
 import { roomsRedis, redis } from 'src/main';
 import { IPlayer } from 'src/types/board/board.types';
+import { PlayerRoomStatus, RoomPlayer } from 'src/types/game/game.types';
 
 enum Rooms {
   ALL = 'allRooms',
@@ -43,7 +44,7 @@ export class RoomsMsController {
   async createRoom({ room }: { room: IRoomState }): Promise<IResponceCode> {
     try {
       // TODO remove line
-      // await roomsRedis.del(Rooms.ALL);
+      await roomsRedis.del(Rooms.ALL);
 
       let rooms = await this.get(Rooms.ALL);
 
@@ -68,7 +69,10 @@ export class RoomsMsController {
       }
 
       room.creatorId = creator.userId;
-      room.players = players;
+      room.players = players.map((v) => ({
+        ...v,
+        playerRoomStatus: PlayerRoomStatus.ACITVE,
+      }));
       room.roomStatus = RoomStatus.PENDING;
       //   throw new RpcException({ code: ErrorCode.RoomExists });
       // if (isGame) {
@@ -104,19 +108,20 @@ export class RoomsMsController {
     try {
       let rooms = await this.get(Rooms.ALL);
       const roomIndex = await this.findRoomIndex(rooms, add.roomId);
-
       const room = rooms[roomIndex];
-
       if (room.players.length >= room.playersNumber) {
         throw new RpcException({ code: ErrorCode.RoomMaxPlayersReached });
       }
 
       // TODO add check for me in room
-      const player = await this.proxy
+      const player: RoomPlayer = await this.proxy
         .send<any>({ cmd: MsUsersPatterns.GET_USER }, add.userId)
         .toPromise();
 
-      rooms[roomIndex].players.push(player);
+      rooms[roomIndex].players.push({
+        ...player,
+        playerRoomStatus: PlayerRoomStatus.ACITVE,
+      });
 
       if (rooms[roomIndex].players.length === room.playersNumber) {
         rooms[roomIndex].roomStatus = RoomStatus.STARTED;
@@ -147,23 +152,15 @@ export class RoomsMsController {
   }): Promise<IResponceCode> {
     try {
       let rooms = await this.get(Rooms.ALL);
-
       const roomIndex = await this.findRoomIndex(rooms, remove.roomId);
-
       const room = rooms[roomIndex];
-
       const playerIndex = room.players.findIndex(
         (v) => v.userId === remove.userId,
       );
-
       room.players.splice(playerIndex, 1);
-
       rooms[roomIndex].players = room.players; // push(player);
-
       await this.set(Rooms.ALL, rooms);
-
       rooms = await this.get(Rooms.ALL);
-
       const resp = {
         rooms,
         playersInRooms: this.calcPlayers(rooms),

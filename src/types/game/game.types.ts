@@ -37,10 +37,15 @@ export interface IRoomResponce {
   playersInRooms: number;
   rooms: IRoomState[];
 }
+
+export interface RoomPlayer extends IPlayer {
+  playerRoomStatus: PlayerRoomStatus;
+}
+
 export interface IRoomState {
   roomId: string;
   creatorId: number;
-  players: IPlayer[];
+  players: RoomPlayer[];
   createTime: Date;
   roomType: RoomType;
   playersNumber: number;
@@ -65,6 +70,11 @@ export enum RoomStatus {
   DELETED = 'deleted',
   STARTED = 'started',
   COMPLETED = 'completed',
+}
+
+export enum PlayerRoomStatus {
+  ACITVE = 'active',
+  SURRENDERED = 'surrendered',
 }
 
 export interface IAddPlayerToRoom {

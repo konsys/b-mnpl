@@ -7,6 +7,7 @@ import {
   Request,
   UnprocessableEntityException,
   Get,
+  Delete,
 } from '@nestjs/common';
 import { MsNames, MsRoomsPatterns } from 'src/types/ms/ms.types';
 import {
@@ -23,6 +24,18 @@ export class RoomsController {
     @Inject(MsNames.ROOMS)
     private readonly proxy: ClientProxy,
   ) {}
+
+  @Delete()
+  async deleteRooms(): Promise<IRoomResponce> {
+    try {
+      const rooms = await this.proxy
+        .send<any>({ cmd: MsRoomsPatterns.DELETE_ROOMS }, {})
+        .toPromise();
+      return rooms;
+    } catch (e) {
+      throw new UnprocessableEntityException(e);
+    }
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get()

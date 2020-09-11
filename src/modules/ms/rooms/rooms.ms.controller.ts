@@ -43,9 +43,6 @@ export class RoomsMsController {
   @MessagePattern({ cmd: MsRoomsPatterns.CREATE_ROOM })
   async createRoom({ room }: { room: IRoomState }): Promise<IResponceCode> {
     try {
-      // TODO remove line
-      await roomsRedis.del(Rooms.ALL);
-
       let rooms = await this.get(Rooms.ALL);
 
       const players: IPlayer[] = await this.proxy
@@ -173,6 +170,12 @@ export class RoomsMsController {
     } catch (er) {
       return { code: 1 };
     }
+  }
+
+  @MessagePattern({ cmd: MsRoomsPatterns.DELETE_ROOMS })
+  public async deleteRoooms() {
+    console.log('DELETE ROOMS');
+    return await roomsRedis.del(Rooms.ALL);
   }
 
   private async findRoomIndex(rooms: IRoomState[], roomId: string) {

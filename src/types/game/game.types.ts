@@ -81,3 +81,7 @@ export interface IAddPlayerToRoom {
   roomId: string;
   userId: number;
 }
+
+export interface IBoardParams {
+  players: IPlayer[];
+}

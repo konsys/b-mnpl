@@ -8,6 +8,7 @@ import {
   UnprocessableEntityException,
   Get,
   Delete,
+  Param,
 } from '@nestjs/common';
 import { MsNames, MsRoomsPatterns } from 'src/types/ms/ms.types';
 import {
@@ -30,6 +31,19 @@ export class RoomsController {
     try {
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.DELETE_ROOMS }, {})
+        .toPromise();
+      return rooms;
+    } catch (e) {
+      throw new UnprocessableEntityException(e);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':roomId')
+  async getRoom(@Param() roomId): Promise<IRoomResponce> {
+    try {
+      const rooms = await this.proxy
+        .send<any>({ cmd: MsRoomsPatterns.GET_ROOM }, roomId)
         .toPromise();
       return rooms;
     } catch (e) {

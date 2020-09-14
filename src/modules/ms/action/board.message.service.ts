@@ -136,7 +136,7 @@ export class BoardMessageService {
 
   async initPlayers(gameId: string, players: UsersEntity[]) {
     const resultPlayers = [];
-    if (players.length > 0) {
+    if (players && players.length > 0) {
       // Случайная очередь ходов
       const ids = players.map((v) => v.userId).sort(() => Math.random() - 0.5);
 

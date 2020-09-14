@@ -14,6 +14,7 @@ import {
   SocketActions,
   IResponceCode,
   RoomStatus,
+  IBoardParams,
 } from 'src/types/game/game.types';
 import {
   MsRoomsPatterns,
@@ -33,6 +34,11 @@ export class RoomsMsController {
     @Inject(MsNames.USERS)
     private readonly proxy: ClientProxy,
   ) {}
+
+  @MessagePattern({ cmd: MsRoomsPatterns.GET_ROOM })
+  async getRoom({ roomId }: { roomId: string }): Promise<IBoardParams> {
+    return (await this.get(Rooms.ALL)).find((v) => v.roomId === roomId);
+  }
 
   @MessagePattern({ cmd: MsRoomsPatterns.GET_ROOMS })
   async getRooms(): Promise<IRoomResponce> {

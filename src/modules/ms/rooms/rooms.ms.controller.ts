@@ -62,6 +62,10 @@ export class RoomsMsController {
         throw new RpcException({ code: ErrorCode.UserDoesntExists });
       }
 
+      room.players = players.map((v) => ({
+        ...v,
+        playerRoomStatus: PlayerRoomStatus.ACITVE,
+      }));
       if (
         !creator.vip &&
         room.roomType !== RoomType.REGULAR &&
@@ -199,22 +203,41 @@ export class RoomsMsController {
 
   @MessagePattern({ cmd: MsRoomsPatterns.PLAYER_SURRENDER })
   public async playerSurrender(el: IPlayerRoom) {
-    const room = await this.get(el.roomId);
-    if (room) {
-      const userIndex = room.players.findIndex((v) => v.userId === el.userId);
-      if (userIndex >= 0) {
-        room.players = room.players.splice(userIndex, 1);
-        if (room.players.length === 1) {
-          await this.set(room.roomId, {
-            ...room,
-            roomStatus: RoomStatus.COMPLETED,
-          });
-          return await this.get(room.roomId);
+    try {
+      const room = await this.get(el.roomId);
+      if (room) {
+        const userIndex = room.players.findIndex((v) => v.userId === el.userId);
+        if (userIndex >= 0) {
+          room.players[userIndex] = {
+            ...room.players[userIndex],
+            playerRoomStatus: PlayerRoomStatus.SURRENDERED,
+          };
+          const activePlayers = room.players.filter(
+            (v) => v.playerRoomStatus === PlayerRoomStatus.ACITVE,
+          );
+          if (activePlayers.length === 1) {
+            await this.set(room.roomId, {
+              ...room,
+              roomStatus: RoomStatus.COMPLETED,
+            });
+          }
+
+          const rooms = await this.getAllRooms();
+          const resp = {
+            rooms,
+            playersInRooms: this.calcPlayers(rooms),
+          };
+
+          return await redis.publish(
+            `${SocketActions.ROOMS_MESSAGE}`,
+            JSON.stringify(resp),
+          );
         }
       }
+      return { code: 0 };
+    } catch (er) {
+      return { code: 1 };
     }
-
-    return room;
   }
 
   private async set(id: string, room: IRoomState) {

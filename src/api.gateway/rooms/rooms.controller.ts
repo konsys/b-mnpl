@@ -42,10 +42,10 @@ export class RoomsController {
   @Get(':roomId')
   async getRoom(@Param() roomId): Promise<IRoomResponce> {
     try {
-      const rooms = await this.proxy
+      const room = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.GET_ROOM }, roomId)
         .toPromise();
-      return rooms;
+      return room;
     } catch (e) {
       throw new UnprocessableEntityException(e);
     }

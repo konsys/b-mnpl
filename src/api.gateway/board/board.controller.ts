@@ -12,7 +12,7 @@ import { BoardService } from './board.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { IGameActionRequest } from 'src/types/board/board.types';
 
-@Controller('game')
+@Controller('board')
 export class BoardController {
   constructor(private readonly service: BoardService) {}
 

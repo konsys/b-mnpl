@@ -21,9 +21,7 @@ export class FieldsMsController {
   async saveFields(fields: BoardFieldsEntity[]): Promise<BoardFieldsEntity[]> {
     try {
       await this.fieldsRepository.delete('id > 0');
-    } catch (err) {
-      console.log(fields);
-    }
+    } catch (err) {}
 
     await this.fieldsRepository.save(fields);
     return await this.fieldsRepository.find();

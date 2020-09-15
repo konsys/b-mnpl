@@ -13,6 +13,7 @@ import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { IGameActionRequest } from 'src/types/board/board.types';
 import { MsNames, MsRoomsPatterns } from 'src/types/ms/ms.types';
 import { ClientProxy } from '@nestjs/microservices';
+import { IRoomState } from 'src/types/game/game.types';
 
 @Controller('board')
 export class BoardController {
@@ -42,19 +43,9 @@ export class BoardController {
   @UseGuards(JwtAuthGuard)
   @Post('surrender')
   @Header('Cache-Control', 'none')
-  async surrender(@Body() { roomId, userId }): Promise<boolean> {
-    console.log(roomId, userId);
-    await this.proxy
+  async surrender(@Body() { roomId, userId }): Promise<IRoomState | false> {
+    return await this.proxy
       .send<any>({ cmd: MsRoomsPatterns.PLAYER_SURRENDER }, { roomId, userId })
       .toPromise();
-    // try {
-    //   const room = await this.proxy
-    //     .send<any>({ cmd: MsRoomsPatterns.GET_ROOM }, roomId)
-    //     .toPromise();
-    //   return room;
-    // } catch (e) {
-    //   throw new UnprocessableEntityException(e);
-    // }
-    return true;
   }
 }

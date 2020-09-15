@@ -157,7 +157,10 @@ export class RoomsMsController {
       room.players.splice(playerIndex, 1);
 
       if (room.players.length < 1) {
-        await this.deleteRoom(room.roomId);
+        await this.set(room.roomId, {
+          ...room,
+          roomStatus: RoomStatus.COMPLETED,
+        });
       } else {
         await this.set(remove.roomId, room);
       }
@@ -204,11 +207,14 @@ export class RoomsMsController {
       const userIndex = room.players.findIndex((v) => v.userId === el.userId);
       if (userIndex >= 0) {
         room.players = room.players.splice(userIndex, 1);
-        // return await roomsRedis.del(Rooms.ALL);
+        if (room.players.length === 1) {
+          await this.deleteRoom(room.roomId);
+          return false;
+        }
       }
     }
 
-    return false;
+    return room;
   }
 
   private async set(id: string, room: IRoomState) {

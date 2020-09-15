@@ -74,6 +74,7 @@ export class RoomsController {
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.CREATE_ROOM }, { room })
         .toPromise();
+
       return rooms;
     } catch (e) {
       throw new UnprocessableEntityException(e);

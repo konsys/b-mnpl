@@ -49,16 +49,15 @@ export class RoomsMsController {
   @MessagePattern({ cmd: MsRoomsPatterns.CREATE_ROOM })
   async createRoom({ room }: { room: IRoomState }): Promise<IResponceCode> {
     try {
-      let updateRoom = await this.get(room.roomId);
-
       const players: IPlayer[] = await this.proxy
         .send<any>(
           { cmd: MsUsersPatterns.GET_USERS_BY_IDS },
-          updateRoom.players.map((v) => v.userId),
+          room.players.map((v) => v.userId),
         )
         .toPromise();
 
       const creator = players.find((v) => v.userId === room.creatorId);
+
       if (!creator || !Array.isArray(players)) {
         throw new RpcException({ code: ErrorCode.UserDoesntExists });
       }
@@ -77,13 +76,14 @@ export class RoomsMsController {
         playerRoomStatus: PlayerRoomStatus.ACITVE,
       }));
       room.roomStatus = RoomStatus.PENDING;
+
       //   throw new RpcException({ code: ErrorCode.RoomExists });
       // if (isGame) {
       // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
       // TODO uncomment
       // }
 
-      await this.set(room.roomId, updateRoom);
+      await this.set(room.roomId, room);
 
       const rooms = await this.getAllRooms();
 
@@ -173,7 +173,21 @@ export class RoomsMsController {
 
   @MessagePattern({ cmd: MsRoomsPatterns.DELETE_ROOMS })
   public async deleteRoooms() {
-    return await roomsRedis.del(Rooms.ALL);
+    let rooms = await this.getAllRooms();
+    for (let room of rooms) {
+      await roomsRedis.del(`${Rooms.ALL}-${room.roomId}`);
+    }
+    await roomsRedis.del(Rooms.ALL);
+    rooms = await this.getAllRooms();
+    const resp = {
+      rooms,
+      playersInRooms: this.calcPlayers(rooms),
+    };
+
+    return await redis.publish(
+      `${SocketActions.ROOMS_MESSAGE}`,
+      JSON.stringify(resp),
+    );
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.PLAYER_SURRENDER })
@@ -184,29 +198,25 @@ export class RoomsMsController {
       if (userIndex >= 0) {
         room.players = room.players.splice(userIndex, 1);
         // return await roomsRedis.del(Rooms.ALL);
-        console.log('playerSurrender', userIndex, room);
       }
     }
 
     return false;
   }
 
-  private async findRoomIndex(rooms: IRoomState[], roomId: string) {
-    const roomIndex = rooms.findIndex((v) => v.roomId === roomId);
-
-    if (roomIndex < 0) {
-      throw new RpcException({ code: ErrorCode.RoomDoesntExist });
-    }
-    return roomIndex;
-  }
-
-  private async set(id: string, value: any) {
+  private async set(id: string, room: IRoomState) {
     const redisId = `${Rooms.ALL}-${id}`;
-    await roomsRedis.set(redisId, JSON.stringify(value));
+
+    await roomsRedis.set(redisId, JSON.stringify(room));
+
     await roomsRedis.expire([redisId, 10000]);
 
-    const rooms = await this.getAllRooms();
-    rooms[redisId] = value;
+    let rooms = await this.getAllRooms();
+
+    rooms = !rooms ? [] : rooms;
+
+    const roomIndex = rooms.findIndex((v) => v.roomId === room.roomId);
+    roomIndex < 0 ? rooms.push(room) : (rooms[roomIndex] = room);
     await roomsRedis.set(Rooms.ALL, JSON.stringify(rooms));
     await roomsRedis.expire([Rooms.ALL, 10000]);
     return;
@@ -227,17 +237,19 @@ export class RoomsMsController {
     return null;
   }
 
-  private async getAllRooms(): Promise<any> {
+  private async getAllRooms(): Promise<IRoomState[]> {
     try {
       let rooms = JSON.parse(await roomsRedis.get(Rooms.ALL));
 
-      return rooms;
+      return rooms ? rooms : [];
     } catch (err) {}
 
-    return {};
+    return [];
   }
 
   private calcPlayers(arr: IRoomState[]): number {
-    return arr.reduce((acc, v) => acc + v.players.length, 0);
+    return Array.isArray(arr)
+      ? arr.reduce((acc, v) => acc + v.players.length, 0)
+      : 0;
   }
 }

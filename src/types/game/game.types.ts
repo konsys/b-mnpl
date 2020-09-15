@@ -77,7 +77,7 @@ export enum PlayerRoomStatus {
   SURRENDERED = 'surrendered',
 }
 
-export interface IAddPlayerToRoom {
+export interface IPlayerRoom {
   roomId: string;
   userId: number;
 }

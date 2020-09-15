@@ -13,7 +13,7 @@ import {
 import { MsNames, MsRoomsPatterns } from 'src/types/ms/ms.types';
 import {
   IRoomState,
-  IAddPlayerToRoom,
+  IPlayerRoom,
   IRoomResponce,
 } from 'src/types/game/game.types';
 import { ClientProxy } from '@nestjs/microservices';
@@ -84,7 +84,7 @@ export class RoomsController {
   @Post('addPlayer')
   async addPlayerToRoom(
     @Request() req,
-    @Body('add') add: IAddPlayerToRoom,
+    @Body('add') add: IPlayerRoom,
   ): Promise<IRoomResponce> {
     try {
       const rooms = await this.proxy
@@ -99,7 +99,7 @@ export class RoomsController {
   @UseGuards(JwtAuthGuard)
   @Post('removePlayer')
   async removePlayerFromRoom(
-    @Body('remove') remove: IAddPlayerToRoom,
+    @Body('remove') remove: IPlayerRoom,
   ): Promise<IRoomResponce> {
     try {
       const rooms = await this.proxy

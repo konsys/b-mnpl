@@ -1,11 +1,11 @@
 import { ActionMsModule } from './modules/ms/action/action.ms.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { BoardModule } from './api.gateway/board/board.module';
 import { ChatModule } from './api.gateway/game.chat/chat.module';
 import { ChatMsModule } from './modules/ms/chat/chat.ms.module';
 import { Connection } from 'typeorm';
 import { FieldsModule } from './api.gateway/fields/fields.module';
 import { FieldsMsModule } from './modules/ms/fields/fields.ms.module';
-import { GamesModule } from './api.gateway/games/games.module';
 import { Module } from '@nestjs/common';
 import { RoomsModule } from './api.gateway/rooms/rooms.module';
 import { RoomsMsModule } from './modules/ms/rooms/rooms.ms.module';
@@ -38,7 +38,7 @@ const rootPath = join(__dirname, '../', 'assets/');
     ActionMsModule,
     AuthModule,
     SocketModule,
-    GamesModule,
+    BoardModule,
     FieldsModule,
     RoomsModule,
     RoomsMsModule,

@@ -39,6 +39,21 @@ export class RoomsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('surrender')
+  async surrender(@Body() { roomId, userId }): Promise<boolean> {
+    console.log(roomId, userId);
+    // try {
+    //   const room = await this.proxy
+    //     .send<any>({ cmd: MsRoomsPatterns.GET_ROOM }, roomId)
+    //     .toPromise();
+    //   return room;
+    // } catch (e) {
+    //   throw new UnprocessableEntityException(e);
+    // }
+    return true;
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(':roomId')
   async getRoom(@Param() roomId): Promise<IRoomResponce> {
     try {

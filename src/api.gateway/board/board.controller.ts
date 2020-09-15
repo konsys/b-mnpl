@@ -8,13 +8,13 @@ import {
   Request,
   BadRequestException,
 } from '@nestjs/common';
-import { GamesService } from './games.service';
+import { BoardService } from './board.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { IGameActionRequest } from 'src/types/board/board.types';
 
 @Controller('game')
-export class GamesController {
-  constructor(private readonly service: GamesService) {}
+export class BoardController {
+  constructor(private readonly service: BoardService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('action')

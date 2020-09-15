@@ -1,7 +1,7 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import { GamesController } from './games.controller';
-import { GamesService } from './games.service';
+import { BoardController } from './board.controller';
+import { BoardService } from './board.service';
 import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
 
@@ -14,8 +14,8 @@ import { MsNames } from 'src/types/ms/ms.types';
       },
     ]),
   ],
-  controllers: [GamesController],
-  providers: [GamesService],
-  exports: [GamesService],
+  controllers: [BoardController],
+  providers: [BoardService],
+  exports: [BoardService],
 })
-export class GamesModule {}
+export class BoardModule {}

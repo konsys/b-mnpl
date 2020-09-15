@@ -4,7 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { IGameActionRequest } from 'src/types/board/board.types';
 
 @Injectable()
-export class GamesService {
+export class BoardService {
   constructor(
     @Inject(MsNames.ACTIONS)
     private readonly proxy: ClientProxy,

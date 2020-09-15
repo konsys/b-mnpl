@@ -125,7 +125,7 @@ export class RoomsMsController {
       });
 
       if (room.players.length === room.playersNumber) {
-        room.roomStatus = RoomStatus.STARTED;
+        room.roomStatus = RoomStatus.PLAYING;
       }
 
       await this.set(room.roomId, room);

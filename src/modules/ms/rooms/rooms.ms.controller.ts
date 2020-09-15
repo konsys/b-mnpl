@@ -124,6 +124,7 @@ export class RoomsMsController {
         room.roomStatus = RoomStatus.STARTED;
       }
 
+      await this.set(room.roomId, room);
       const rooms = await this.getAllRooms();
 
       const resp = {
@@ -148,12 +149,19 @@ export class RoomsMsController {
   }): Promise<IResponceCode> {
     try {
       const room = await this.get(remove.roomId);
+
       const playerIndex = room.players.findIndex(
         (v) => v.userId === remove.userId,
       );
+
       room.players.splice(playerIndex, 1);
 
-      await this.set(remove.roomId, room);
+      if (room.players.length < 1) {
+        await this.deleteRoom(room.roomId);
+      } else {
+        await this.set(remove.roomId, room);
+      }
+
       const rooms = await this.getAllRooms();
 
       const resp = {
@@ -175,9 +183,8 @@ export class RoomsMsController {
   public async deleteRoooms() {
     let rooms = await this.getAllRooms();
     for (let room of rooms) {
-      await roomsRedis.del(`${Rooms.ALL}-${room.roomId}`);
+      await this.deleteRoom(room.roomId);
     }
-    await roomsRedis.del(Rooms.ALL);
     rooms = await this.getAllRooms();
     const resp = {
       rooms,
@@ -208,7 +215,6 @@ export class RoomsMsController {
     const redisId = `${Rooms.ALL}-${id}`;
 
     await roomsRedis.set(redisId, JSON.stringify(room));
-
     await roomsRedis.expire([redisId, 10000]);
 
     let rooms = await this.getAllRooms();
@@ -235,6 +241,20 @@ export class RoomsMsController {
     }
 
     return null;
+  }
+
+  private async deleteRoom(roomId: string): Promise<boolean> {
+    try {
+      let rooms = JSON.parse(await roomsRedis.get(Rooms.ALL));
+
+      rooms = rooms.filter((v) => v.roomId !== roomId);
+
+      await roomsRedis.set(Rooms.ALL, JSON.stringify(rooms));
+
+      return true;
+    } catch (err) {}
+
+    return false;
   }
 
   private async getAllRooms(): Promise<IRoomState[]> {

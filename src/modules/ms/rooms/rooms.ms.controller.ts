@@ -157,10 +157,7 @@ export class RoomsMsController {
       room.players.splice(playerIndex, 1);
 
       if (room.players.length < 1) {
-        await this.set(room.roomId, {
-          ...room,
-          roomStatus: RoomStatus.COMPLETED,
-        });
+        await this.deleteRoom(room.roomId);
       } else {
         await this.set(remove.roomId, room);
       }
@@ -208,8 +205,11 @@ export class RoomsMsController {
       if (userIndex >= 0) {
         room.players = room.players.splice(userIndex, 1);
         if (room.players.length === 1) {
-          await this.deleteRoom(room.roomId);
-          return false;
+          await this.set(room.roomId, {
+            ...room,
+            roomStatus: RoomStatus.COMPLETED,
+          });
+          return await this.get(room.roomId);
         }
       }
     }

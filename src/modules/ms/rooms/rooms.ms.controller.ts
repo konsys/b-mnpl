@@ -180,10 +180,18 @@ export class RoomsMsController {
 
   @MessagePattern({ cmd: MsRoomsPatterns.DELETE_ROOMS })
   public async deleteRoooms() {
-    console.log('DELETE ROOMS');
     return await roomsRedis.del(Rooms.ALL);
   }
 
+  @MessagePattern({ cmd: MsRoomsPatterns.PLAYER_SURRENDER })
+  public async playerSurrender({ roomId, userId }) {
+    const rooms = await this.get(Rooms.ALL);
+    const room = rooms.find((v) => v.roomId === roomId);
+    const user = room.players.find((v) => v.userId === userId);
+    // return await roomsRedis.del(Rooms.ALL);
+    console.log('playerSurrender', user, room, userId);
+    return true;
+  }
   private async findRoomIndex(rooms: IRoomState[], roomId: string) {
     const roomIndex = rooms.findIndex((v) => v.roomId === roomId);
 

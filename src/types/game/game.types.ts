@@ -67,7 +67,7 @@ export enum RoomType {
 export enum RoomStatus {
   NOT_CREATED = 'notCreated',
   PENDING = 'pending',
-  STARTED = 'started',
+  PLAYING = 'playing',
   COMPLETED = 'completed',
 }
 

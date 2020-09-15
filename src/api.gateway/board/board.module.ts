@@ -1,7 +1,6 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { BoardController } from './board.controller';
-import { BoardService } from './board.service';
 import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
 
@@ -15,7 +14,7 @@ import { MsNames } from 'src/types/ms/ms.types';
     ]),
   ],
   controllers: [BoardController],
-  providers: [BoardService],
-  exports: [BoardService],
+  providers: [],
+  exports: [],
 })
 export class BoardModule {}

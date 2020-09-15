@@ -35,4 +35,5 @@ export enum MsRoomsPatterns {
   CREATE_ROOM = 'createRoom',
   ADD_PLAYER = 'addPlayer',
   REMOVE_PLAYER = 'removePlayer',
+  PLAYER_SURRENDER = 'playerSurrender',
 }

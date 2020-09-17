@@ -37,7 +37,8 @@ export class RoomsMsController {
 
   @MessagePattern({ cmd: MsRoomsPatterns.GET_ROOM })
   async getRoom({ roomId }: { roomId: string }): Promise<IBoardParams> {
-    return await this.get(roomId);
+    const room = await this.get(roomId);
+    return room;
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.GET_ROOMS })
@@ -48,68 +49,65 @@ export class RoomsMsController {
 
   @MessagePattern({ cmd: MsRoomsPatterns.CREATE_ROOM })
   async createRoom({ room }: { room: IRoomState }): Promise<IResponceCode> {
-    try {
-      const players: IPlayer[] = await this.proxy
-        .send<any>(
-          { cmd: MsUsersPatterns.GET_USERS_BY_IDS },
-          room.players.map((v) => v.userId),
-        )
-        .toPromise();
+    const players: IPlayer[] = await this.proxy
+      .send<any>(
+        { cmd: MsUsersPatterns.GET_USERS_BY_IDS },
+        room.players.map((v) => v.userId),
+      )
+      .toPromise();
 
-      const creator = players.find((v) => v.userId === room.creatorId);
+    const creator = players.find((v) => v.userId === room.creatorId);
 
-      if (!creator || !Array.isArray(players)) {
-        throw new RpcException({ code: ErrorCode.UserDoesntExists });
-      }
-
-      room.players = players.map((v) => ({
-        ...v,
-        playerRoomStatus: PlayerRoomStatus.ACITVE,
-      }));
-      if (
-        !creator.vip &&
-        room.roomType !== RoomType.REGULAR &&
-        room.roomType !== RoomType.SHUFFLE
-      ) {
-        throw new RpcException({ code: ErrorCode.NotVip });
-      }
-
-      room.creatorId = creator.userId;
-      room.players = players.map((v) => ({
-        ...v,
-        playerRoomStatus: PlayerRoomStatus.ACITVE,
-      }));
-      room.roomStatus = RoomStatus.PENDING;
-
-      //   throw new RpcException({ code: ErrorCode.RoomExists });
-      // if (isGame) {
-      // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
-      // TODO uncomment
-      // }
-
-      await this.set(room.roomId, room);
-
-      const rooms = await this.getAllRooms();
-
-      const resp = {
-        rooms,
-        playersInRooms: this.calcPlayers(rooms),
-      };
-
-      await redis.publish(
-        `${SocketActions.ROOMS_MESSAGE}`,
-        JSON.stringify(resp),
-      );
-      return { code: 0 };
-    } catch (er) {
-      return { code: 1 };
+    if (!creator || !Array.isArray(players)) {
+      throw new RpcException({ code: ErrorCode.UserDoesntExists });
     }
+
+    room.players = players.map((v) => ({
+      ...v,
+      playerRoomStatus: PlayerRoomStatus.ACITVE,
+    }));
+    if (
+      !creator.vip &&
+      room.roomType !== RoomType.REGULAR &&
+      room.roomType !== RoomType.SHUFFLE
+    ) {
+      throw new RpcException({ code: ErrorCode.NotVip });
+    }
+
+    room.creatorId = creator.userId;
+    room.players = players.map((v) => ({
+      ...v,
+      playerRoomStatus: PlayerRoomStatus.ACITVE,
+    }));
+    room.roomStatus = RoomStatus.PENDING;
+
+    //   throw new RpcException({ code: ErrorCode.RoomExists });
+    // if (isGame) {
+    // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
+    // TODO uncomment
+    // }
+
+    await this.set(room.roomId, room);
+
+    const rooms = await this.getAllRooms();
+
+    const resp = {
+      rooms,
+      playersInRooms: this.calcPlayers(rooms),
+    };
+
+    await redis.publish(`${SocketActions.ROOMS_MESSAGE}`, JSON.stringify(resp));
+    return { code: 0 };
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.ADD_PLAYER })
   async addPlayerToRoom({ add }: { add: IPlayerRoom }): Promise<IResponceCode> {
     try {
       const room = await this.get(add.roomId);
+      if (!room) {
+        throw new RpcException({ code: ErrorCode.RoomDoesntExist });
+      }
+
       if (room.players.length >= room.playersNumber) {
         throw new RpcException({ code: ErrorCode.RoomMaxPlayersReached });
       }
@@ -141,7 +139,7 @@ export class RoomsMsController {
       );
       return { code: 0 };
     } catch (er) {
-      return { code: 1 };
+      throw new RpcException(er && er.error ? er.error : { code: 1 });
     }
   }
 
@@ -179,7 +177,7 @@ export class RoomsMsController {
       );
       return { code: 0 };
     } catch (er) {
-      return { code: 1 };
+      throw new RpcException(er && er.error ? er.error : { code: 1 });
     }
   }
 
@@ -223,6 +221,7 @@ export class RoomsMsController {
           }
 
           const rooms = await this.getAllRooms();
+
           const resp = {
             rooms,
             playersInRooms: this.calcPlayers(rooms),
@@ -236,7 +235,7 @@ export class RoomsMsController {
       }
       return { code: 0 };
     } catch (er) {
-      return { code: 1 };
+      throw new RpcException(er && er.error ? er.error : { code: 1 });
     }
   }
 

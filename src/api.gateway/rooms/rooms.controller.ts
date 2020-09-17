@@ -71,6 +71,7 @@ export class RoomsController {
     @Body('room') room: IRoomState,
   ): Promise<IRoomResponce> {
     try {
+      room.creatorId = req.user.userId;
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.CREATE_ROOM }, { room })
         .toPromise();
@@ -88,11 +89,13 @@ export class RoomsController {
     @Body('add') add: IPlayerRoom,
   ): Promise<IRoomResponce> {
     try {
+      add.userId = req.user.userId;
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.ADD_PLAYER }, { add })
         .toPromise();
       return rooms;
     } catch (e) {
+      console.log(121212, e);
       throw new UnprocessableEntityException(e);
     }
   }

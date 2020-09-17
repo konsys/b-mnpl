@@ -45,6 +45,7 @@ export interface RoomPlayer extends IPlayer {
 export interface IRoomState {
   roomId: string;
   creatorId: number;
+  winner: RoomPlayer | null;
   players: RoomPlayer[];
   createTime: Date;
   roomType: RoomType;

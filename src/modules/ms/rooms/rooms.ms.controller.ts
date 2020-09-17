@@ -24,6 +24,8 @@ import {
 import { roomsRedis, redis } from 'src/main';
 import { IPlayer } from 'src/types/board/board.types';
 import { PlayerRoomStatus, RoomPlayer } from 'src/types/game/game.types';
+import { first } from 'rxjs/operators';
+import { head } from 'lodash';
 
 enum Rooms {
   ALL = 'allRooms',
@@ -216,6 +218,7 @@ export class RoomsMsController {
           if (activePlayers.length === 1) {
             await this.set(room.roomId, {
               ...room,
+              winner: head(activePlayers),
               roomStatus: RoomStatus.COMPLETED,
             });
           }

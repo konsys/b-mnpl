@@ -95,7 +95,6 @@ export class RoomsController {
         .toPromise();
       return rooms;
     } catch (e) {
-      console.log(121212, e);
       throw new UnprocessableEntityException(e);
     }
   }

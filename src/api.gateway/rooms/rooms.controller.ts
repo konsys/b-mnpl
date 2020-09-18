@@ -18,6 +18,7 @@ import {
 } from 'src/types/game/game.types';
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
+import { ErrorCode } from 'src/utils/error.code';
 
 @Controller('rooms')
 export class RoomsController {
@@ -71,7 +72,14 @@ export class RoomsController {
     @Body('room') room: IRoomState,
   ): Promise<IRoomResponce> {
     try {
-      room.creatorId = req.user.userId;
+      const userId = req.user.userId;
+      if (!userId) {
+        throw new UnprocessableEntityException({
+          code: ErrorCode.UserDoesntExists,
+        });
+      }
+      room.creatorId = userId;
+      console.log(req.user.userId);
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.CREATE_ROOM }, { room })
         .toPromise();
@@ -89,7 +97,13 @@ export class RoomsController {
     @Body('add') add: IPlayerRoom,
   ): Promise<IRoomResponce> {
     try {
-      add.userId = req.user.userId;
+      const userId = req.user.userId;
+      if (!userId) {
+        throw new UnprocessableEntityException({
+          code: ErrorCode.UserDoesntExists,
+        });
+      }
+      add.userId = userId;
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.ADD_PLAYER }, { add })
         .toPromise();

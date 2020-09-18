@@ -225,7 +225,6 @@ export class RoomsMsController {
 
           const rooms = await this.getAllRooms();
 
-          console.log(333333, rooms);
           const resp = {
             rooms,
             playersInRooms: this.calcPlayers(rooms),

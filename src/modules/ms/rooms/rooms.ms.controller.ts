@@ -15,6 +15,7 @@ import {
   IResponceCode,
   RoomStatus,
   IBoardParams,
+  IReturnCode,
 } from 'src/types/game/game.types';
 import {
   MsRoomsPatterns,
@@ -202,7 +203,7 @@ export class RoomsMsController {
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.PLAYER_SURRENDER })
-  public async playerSurrender(el: IPlayerRoom) {
+  public async playerSurrender(el: IPlayerRoom): Promise<IReturnCode> {
     try {
       const room = await this.get(el.roomId);
 
@@ -213,15 +214,18 @@ export class RoomsMsController {
             ...room.players[userIndex],
             playerRoomStatus: PlayerRoomStatus.SURRENDERED,
           };
+
           const activePlayers = room.players.filter(
             (v) => v.playerRoomStatus === PlayerRoomStatus.ACITVE,
           );
+
           if (activePlayers.length === 1) {
-            await this.deleteRoom(room.roomId);
+            const res = await this.deleteRoom(room.roomId);
           }
 
           const rooms = await this.getAllRooms();
 
+          console.log(333333, rooms);
           const resp = {
             rooms,
             playersInRooms: this.calcPlayers(rooms),

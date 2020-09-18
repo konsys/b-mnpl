@@ -6,6 +6,11 @@ export enum SocketActions {
   BOARD_MESSAGE = 'boardMessage',
   ERROR_MESSAGE = 'errorMessage',
 }
+
+export interface IReturnCode {
+  code: number;
+}
+
 export enum IGameMessageType {
   CHAT = 'chat',
 }

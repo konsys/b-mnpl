@@ -216,11 +216,7 @@ export class RoomsMsController {
             (v) => v.playerRoomStatus === PlayerRoomStatus.ACITVE,
           );
           if (activePlayers.length === 1) {
-            await this.set(room.roomId, {
-              ...room,
-              winner: head(activePlayers),
-              roomStatus: RoomStatus.COMPLETED,
-            });
+            await this.deleteRoom(room.roomId);
           }
 
           const rooms = await this.getAllRooms();

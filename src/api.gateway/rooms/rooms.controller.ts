@@ -52,7 +52,7 @@ export class RoomsController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
   async getRooms(): Promise<IRoomResponce> {
     try {

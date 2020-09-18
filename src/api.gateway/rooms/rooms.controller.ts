@@ -79,7 +79,6 @@ export class RoomsController {
         });
       }
       room.creatorId = userId;
-      console.log(req.user.userId);
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.CREATE_ROOM }, { room })
         .toPromise();

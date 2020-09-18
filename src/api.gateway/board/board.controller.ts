@@ -44,6 +44,7 @@ export class BoardController {
   @Post('surrender')
   @Header('Cache-Control', 'none')
   async surrender(@Body() { roomId, userId }): Promise<IRoomState | false> {
+    console.log(234234243, roomId, userId);
     return await this.proxy
       .send<any>({ cmd: MsRoomsPatterns.PLAYER_SURRENDER }, { roomId, userId })
       .toPromise();

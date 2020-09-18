@@ -205,6 +205,7 @@ export class RoomsMsController {
   public async playerSurrender(el: IPlayerRoom) {
     try {
       const room = await this.get(el.roomId);
+
       if (room) {
         const userIndex = room.players.findIndex((v) => v.userId === el.userId);
         if (userIndex >= 0) {

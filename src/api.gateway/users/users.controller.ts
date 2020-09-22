@@ -30,13 +30,10 @@ export class UsersController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req) {
-    // TODO add not authorised exeption
-    return req.user
-      ? new UsersEntity(await this.service.getUser(req.user.userId))
-      : null;
+    return new UsersEntity(await this.service.getUser(req.user.userId));
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

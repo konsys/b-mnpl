@@ -26,7 +26,6 @@ export class ChatController {
     private readonly proxy: ClientProxy,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async getChatMessages() {
     try {
@@ -35,8 +34,6 @@ export class ChatController {
           .send<any>({ cmd: MsChatPatterns.GET_ALL_MESSAGES }, {})
           .toPromise(),
       );
-      // TODO init message only in socket
-      await redis.publish(`${SocketActions.GAME_CHAT_MESSAGE}`, messages);
       return messages;
     } catch (err) {
       // TODO Logging

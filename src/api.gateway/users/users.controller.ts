@@ -15,8 +15,6 @@ import { LocalAuthGuard } from 'src/modules/auth/local-auth.guard';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { BOARD_PARAMS } from 'src/params/board.params';
-import { OutcomeMessageType } from 'src/types/board/board.types';
-import { nanoid } from 'nanoid';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -32,11 +30,13 @@ export class UsersController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req) {
-    const res = await this.service.getUser(req.user.userId);
-    return new UsersEntity(res);
+    // TODO add not authorised exeption
+    return req.user
+      ? new UsersEntity(await this.service.getUser(req.user.userId))
+      : null;
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

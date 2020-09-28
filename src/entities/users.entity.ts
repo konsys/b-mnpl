@@ -47,7 +47,7 @@ export class UsersEntity {
   @Column({ default: false })
   isBlocked?: boolean;
 
-  @Column('simple-json', { default: [] })
+  @Column('simple-json', { default: null })
   fieldIds: number[];
 
   constructor(partial: Partial<UsersEntity>) {

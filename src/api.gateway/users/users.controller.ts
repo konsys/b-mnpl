@@ -48,7 +48,7 @@ export class UsersController {
 
   @Post()
   async post(): Promise<any[]> {
-    // return this.service.saveUsers();
+    return this.service.saveUsers();
     return [];
   }
 }

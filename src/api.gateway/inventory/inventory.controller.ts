@@ -9,10 +9,9 @@ export class InventoryController {
     private readonly proxyInventory: ClientProxy,
   ) {}
 
-  @Get('userId')
-  async getInventory(@Param() userId) {
+  @Get(':userId')
+  async getInventory(@Param() userId: number) {
     try {
-      return '1';
       const messages = JSON.stringify(
         await this.proxyInventory
           .send<any>({ cmd: MsInventoryPatterns.GET_USER_FIELDS }, { userId })

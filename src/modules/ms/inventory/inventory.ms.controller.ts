@@ -1,12 +1,18 @@
-import { Controller, Inject } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-
-import { MsNames } from 'src/types/ms/ms.types';
+import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
+import { MsInventoryPatterns } from 'src/types/ms/ms.types';
+import { Repository } from 'typeorm';
 
 @Controller('rooms.ms')
 export class InventoryMsController {
   constructor(
-    @Inject(MsNames.INVENTORY)
-    private readonly proxy: ClientProxy,
+    private readonly fieldsRepository: Repository<BoardFieldsEntity>,
   ) {}
+
+  @MessagePattern({ cmd: MsInventoryPatterns.GET_USER_FIELDS })
+  async getRoom({ userId }: { userId: number }): Promise<any> {
+    const user = await this.fieldsRepository.findOne(userId);
+    return user;
+  }
 }

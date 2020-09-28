@@ -943,6 +943,7 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: true,
     avatar: '/avatars/konstanstin.png',
+    fieldIds: [],
   },
   {
     name: 'Diman',
@@ -951,6 +952,7 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: false,
     avatar: '/avatars/konstanstin.png',
+    fieldIds: [],
   },
   {
     name: 'Feodr',
@@ -959,6 +961,7 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: false,
     avatar: '/avatars/konstanstin.png',
+    fieldIds: [],
   },
   {
     name: 'Ivan',
@@ -967,6 +970,7 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: false,
     avatar: '/avatars/konstanstin.png',
+    fieldIds: [],
   },
   {
     name: 'Maxim',
@@ -975,5 +979,6 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: true,
     avatar: '/avatars/konstanstin.png',
+    fieldIds: [],
   },
 ];

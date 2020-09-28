@@ -4,12 +4,9 @@ import { App } from 'src/app';
 import { NestFactory } from '@nestjs/core';
 import Redis from 'ioredis';
 import { Transport } from '@nestjs/microservices';
-// import csurf from 'csurf';
 import compression from 'compression';
-import { config } from 'rxjs';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import { settings } from 'cluster';
 
 const redisHost = 'redis://localhost:6379';
 export let redis = null;

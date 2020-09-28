@@ -1,4 +1,5 @@
-import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
 import { Exclude } from 'class-transformer';
 
 @Entity()
@@ -45,6 +46,9 @@ export class UsersEntity {
   @Exclude()
   @Column({ default: false })
   isBlocked?: boolean;
+
+  @Column('simple-json', { default: [] })
+  fieldIds: number[];
 
   constructor(partial: Partial<UsersEntity>) {
     Object.assign(this, partial);

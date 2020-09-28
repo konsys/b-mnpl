@@ -49,6 +49,7 @@ const bank: IPlayer = {
   moveOrder: 0,
   isAlive: false,
   movesLeft: 0,
+  fieldIds: [],
 };
 @Injectable()
 export class BoardMessageService {

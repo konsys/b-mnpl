@@ -1,10 +1,8 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { InventoryMsController } from './inventory.ms.controller';
 import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   controllers: [InventoryMsController],
@@ -14,8 +12,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         name: MsNames.INVENTORY,
         transport: Transport.NATS,
       },
+      {
+        name: MsNames.USERS,
+        transport: Transport.NATS,
+      },
     ]),
-    TypeOrmModule.forFeature([BoardFieldsEntity]),
   ],
 })
 export class InventoryMsModule {}

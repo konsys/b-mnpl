@@ -1,20 +1,24 @@
-import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
-import { Controller } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
-import { MsInventoryPatterns } from 'src/types/ms/ms.types';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Controller, Inject } from '@nestjs/common';
+import { ClientProxy, MessagePattern } from '@nestjs/microservices';
+import {
+  MsInventoryPatterns,
+  MsNames,
+  MsUsersPatterns,
+} from 'src/types/ms/ms.types';
+import { IPlayer } from 'src/types/board/board.types';
 
 @Controller('rooms.ms')
 export class InventoryMsController {
   constructor(
-    @InjectRepository(BoardFieldsEntity)
-    private readonly fieldsRepository: Repository<BoardFieldsEntity>,
+    @Inject(MsNames.USERS)
+    private readonly usersMs: ClientProxy,
   ) {}
 
   @MessagePattern({ cmd: MsInventoryPatterns.GET_USER_FIELDS })
   async getRoom({ userId }: { userId: number }): Promise<any> {
-    const user = await this.fieldsRepository.findOne(userId);
-    return user;
+    const player: IPlayer = await this.usersMs
+      .send<any>({ cmd: MsUsersPatterns.GET_USER }, userId)
+      .toPromise();
+    return player;
   }
 }

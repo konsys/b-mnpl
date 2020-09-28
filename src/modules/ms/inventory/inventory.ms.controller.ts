@@ -15,6 +15,6 @@ export class InventoryMsController {
   @MessagePattern({ cmd: MsInventoryPatterns.GET_USER_FIELDS })
   async getRoom({ userId }: { userId: number }): Promise<any> {
     const user = await this.fieldsRepository.findOne(userId);
-    return 1;
+    return user;
   }
 }

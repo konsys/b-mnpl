@@ -29,7 +29,6 @@ export class UsersMsController {
   @MessagePattern({ cmd: MsUsersPatterns.GET_USER })
   async getUser(userId: number) {
     const user: UsersEntity = await this.users.findOne(userId);
-
     return new UsersEntity(user);
   }
 

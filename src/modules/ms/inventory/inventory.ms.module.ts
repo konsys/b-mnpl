@@ -16,6 +16,10 @@ import { MsNames } from 'src/types/ms/ms.types';
         name: MsNames.USERS,
         transport: Transport.NATS,
       },
+      {
+        name: MsNames.FIELDS,
+        transport: Transport.NATS,
+      },
     ]),
   ],
 })

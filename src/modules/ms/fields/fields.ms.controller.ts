@@ -42,4 +42,10 @@ export class FieldsMsController {
       console.log(`Error while updating ${data.name} ${ex}`);
     }
   }
+
+  @MessagePattern({ cmd: MsFieldsPatterns.GET_FIELDS_BY_IDS })
+  async getFieldsByIds(fieldIds: number[]): Promise<BoardFieldsEntity[]> {
+    const where = fieldIds.map((fieldId) => ({ fieldId }));
+    return await this.fieldsRepository.find({ where });
+  }
 }

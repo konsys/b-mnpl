@@ -10,6 +10,7 @@ export enum MsFieldsPatterns {
   GET_INIT_FIELDS = 'getInitFields',
   SAVE_FIELDS = 'saveFields',
   UPDATE_FIELD = 'updateField',
+  GET_FIELDS_BY_IDS = 'getFieldsByIds',
 }
 
 export enum MsUsersPatterns {

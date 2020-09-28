@@ -3,7 +3,8 @@ export enum MsNames {
   FIELDS = 'fields',
   ACTIONS = 'actions',
   CHAT = 'chat',
-  ROOMS = 'ROOMS',
+  ROOMS = 'rooms',
+  INVENTORY = 'inventory',
 }
 export enum MsFieldsPatterns {
   GET_INIT_FIELDS = 'getInitFields',
@@ -36,4 +37,8 @@ export enum MsRoomsPatterns {
   ADD_PLAYER = 'addPlayer',
   REMOVE_PLAYER = 'removePlayer',
   PLAYER_SURRENDER = 'playerSurrender',
+}
+
+export enum MsInventoryPatterns {
+  GET_USER_FIELDS = 'getUserFields',
 }

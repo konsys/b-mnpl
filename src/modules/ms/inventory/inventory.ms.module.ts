@@ -9,11 +9,7 @@ import { MsNames } from 'src/types/ms/ms.types';
   imports: [
     ClientsModule.register([
       {
-        name: MsNames.USERS,
-        transport: Transport.NATS,
-      },
-      {
-        name: MsNames.FIELDS,
+        name: MsNames.INVENTORY,
         transport: Transport.NATS,
       },
     ]),

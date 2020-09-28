@@ -6,7 +6,7 @@ import { MsNames } from 'src/types/ms/ms.types';
 @Controller('rooms.ms')
 export class InventoryMsController {
   constructor(
-    @Inject(MsNames.USERS)
+    @Inject(MsNames.INVENTORY)
     private readonly proxy: ClientProxy,
   ) {}
 }

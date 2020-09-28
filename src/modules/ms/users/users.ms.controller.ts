@@ -7,7 +7,7 @@ import { MessagePattern } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindManyOptions, In } from 'typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
-import { of, Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { MsUsersPatterns } from 'src/types/ms/ms.types';
 

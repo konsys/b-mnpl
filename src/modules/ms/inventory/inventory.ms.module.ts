@@ -9,13 +9,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   controllers: [InventoryMsController],
   imports: [
-    TypeOrmModule.forFeature([BoardFieldsEntity]),
     ClientsModule.register([
       {
         name: MsNames.INVENTORY,
         transport: Transport.NATS,
       },
     ]),
+    TypeOrmModule.forFeature([BoardFieldsEntity]),
   ],
 })
 export class InventoryMsModule {}

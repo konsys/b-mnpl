@@ -93,3 +93,19 @@ export interface IBoardParams {
 export interface IInventory {
   fields: IField[];
 }
+
+export enum InventoryType {
+  CARDS = 'cards',
+  CASES = 'cases',
+  DICES = 'dices',
+  BADGES = 'badges',
+  STICKERS = 'stickers',
+  OTHERS = 'others',
+}
+
+export interface IInventoryItems {
+  inventoryId: number;
+  inventoryType: InventoryType;
+  gameId: string;
+  date: Date;
+}

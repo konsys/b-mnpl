@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Exclude } from 'class-transformer';
+import { IInventoryItems } from '../types/game/game.types';
 
 @Entity()
 export class UsersEntity {
@@ -48,7 +49,7 @@ export class UsersEntity {
   isBlocked?: boolean;
 
   @Column('simple-json', { default: null })
-  fieldIds: number[];
+  inventory: IInventoryItems[];
 
   constructor(partial: Partial<UsersEntity>) {
     Object.assign(this, partial);

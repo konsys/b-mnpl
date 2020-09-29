@@ -943,7 +943,7 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: true,
     avatar: '/avatars/konstanstin.png',
-    fieldIds: [],
+    inventory: [],
   },
   {
     name: 'Diman',
@@ -952,7 +952,7 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: false,
     avatar: '/avatars/konstanstin.png',
-    fieldIds: [],
+    inventory: [],
   },
   {
     name: 'Feodr',
@@ -961,7 +961,7 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: false,
     avatar: '/avatars/konstanstin.png',
-    fieldIds: [],
+    inventory: [],
   },
   {
     name: 'Ivan',
@@ -970,7 +970,7 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: false,
     avatar: '/avatars/konstanstin.png',
-    fieldIds: [],
+    inventory: [],
   },
   {
     name: 'Maxim',
@@ -979,6 +979,6 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: true,
     avatar: '/avatars/konstanstin.png',
-    fieldIds: [],
+    inventory: [],
   },
 ];

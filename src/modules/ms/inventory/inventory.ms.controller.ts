@@ -12,6 +12,8 @@ import {
 } from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { ErrorCode } from 'src/utils/error.code';
+import { IInventory, InventoryType } from 'src/types/game/game.types';
+import { IField } from 'src/types/board/board.types';
 
 @Controller('rooms.ms')
 export class InventoryMsController {
@@ -23,17 +25,23 @@ export class InventoryMsController {
   ) {}
 
   @MessagePattern({ cmd: MsInventoryPatterns.GET_USER_FIELDS })
-  async getRoom({ userId }: { userId: number }): Promise<any> {
+  async getRoom({ userId }: { userId: number }): Promise<IInventory> {
     try {
       const user: UsersEntity = await this.usersMs
         .send<any>({ cmd: MsUsersPatterns.GET_USER }, userId)
         .toPromise();
 
-      const fields: UsersEntity = await this.fieldsMs
-        .send<any>({ cmd: MsFieldsPatterns.GET_FIELDS_BY_IDS }, user.fieldIds)
+      const fieldsInventory = user.inventory.filter(
+        (v) => v.inventoryType === InventoryType.CARDS,
+      );
+      const fields: IField[] = await this.fieldsMs
+        .send<any>(
+          { cmd: MsFieldsPatterns.GET_FIELDS_BY_IDS },
+          fieldsInventory.map((v) => v.inventoryId),
+        )
         .toPromise();
 
-      return fields;
+      return { fields };
     } catch (err) {
       throw new RpcException(err);
     }

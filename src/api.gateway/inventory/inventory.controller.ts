@@ -20,10 +20,10 @@ export class InventoryController {
   @Get(':userId')
   async getInventory(@Param() userId: number): Promise<IInventory> {
     try {
-      const fields: IField[] = (await this.proxyInventory
+      const inv: IInventory = (await this.proxyInventory
         .send<any>({ cmd: MsInventoryPatterns.GET_USER_FIELDS }, { userId })
-        .toPromise()) as IField[];
-      return { fields };
+        .toPromise()) as IInventory;
+      return inv;
     } catch (err) {
       throw new UnprocessableEntityException(err);
     }

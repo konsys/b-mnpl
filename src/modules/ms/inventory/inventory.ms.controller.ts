@@ -34,6 +34,7 @@ export class InventoryMsController {
       const fieldsInventory = user.inventory.filter(
         (v) => v.inventoryType === InventoryType.CARDS,
       );
+
       const fields: IField[] = await this.fieldsMs
         .send<any>(
           { cmd: MsFieldsPatterns.GET_FIELDS_BY_IDS },

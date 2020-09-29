@@ -108,4 +108,5 @@ export interface IInventoryItems {
   inventoryType: InventoryType;
   gameId: string;
   date: Date;
+  quantity: number;
 }

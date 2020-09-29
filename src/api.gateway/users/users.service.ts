@@ -89,6 +89,7 @@ export class UsersService {
 
   async saveUsers() {
     try {
+      console.log(234234234, users);
       return await this.proxy
         .send<any>({ cmd: MsUsersPatterns.SAVE_USERS }, users)
         .toPromise();

@@ -4,6 +4,11 @@ import {
   FieldGroupName,
   FieldType,
 } from './board.fields.entity';
+import {
+  IInventory,
+  IInventoryItems,
+  InventoryType,
+} from 'src/types/game/game.types';
 
 import { UsersEntity } from './users.entity';
 
@@ -935,6 +940,38 @@ export const fieldsForSave = (): BoardFieldsEntity[] => {
   ];
 };
 
+const createInventory = (): IInventoryItems[] => {
+  return [
+    {
+      date: new Date(),
+      gameId: 'qqq1',
+      inventoryId: 1,
+      inventoryType: InventoryType.CARDS,
+      quantity: 1,
+    },
+    {
+      date: new Date(),
+      gameId: 'qqq2',
+      inventoryId: 2,
+      inventoryType: InventoryType.CARDS,
+      quantity: 1,
+    },
+    {
+      date: new Date(),
+      gameId: 'qqq3',
+      inventoryId: 3,
+      inventoryType: InventoryType.CARDS,
+      quantity: 1,
+    },
+    {
+      date: new Date(),
+      gameId: 'qqq4',
+      inventoryId: 4,
+      inventoryType: InventoryType.CARDS,
+      quantity: 1,
+    },
+  ];
+};
 export const users: UsersEntity[] = [
   {
     name: 'Konstantin',
@@ -952,7 +989,7 @@ export const users: UsersEntity[] = [
     registrationType: 'vk',
     vip: false,
     avatar: '/avatars/konstanstin.png',
-    inventory: [],
+    inventory: createInventory(),
   },
   {
     name: 'Feodr',

@@ -1,4 +1,4 @@
-import { IPlayer, ResponceCode } from '../board/board.types';
+import { IField, IPlayer, ResponceCode } from '../board/board.types';
 
 export enum SocketActions {
   GAME_CHAT_MESSAGE = 'gameChatMessage',
@@ -88,4 +88,8 @@ export interface IPlayerRoom {
 
 export interface IBoardParams {
   players: IPlayer[];
+}
+
+export interface IInventory {
+  fields: IField[];
 }

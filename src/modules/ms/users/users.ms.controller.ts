@@ -3,13 +3,14 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindManyOptions, In } from 'typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { MsUsersPatterns } from 'src/types/ms/ms.types';
+import { ErrorCode } from 'src/utils/error.code';
 
 @Controller()
 export class UsersMsController {
@@ -29,6 +30,9 @@ export class UsersMsController {
   @MessagePattern({ cmd: MsUsersPatterns.GET_USER })
   async getUser(userId: number) {
     const user: UsersEntity = await this.users.findOne(userId);
+    if (!user) {
+      throw new RpcException({ code: ErrorCode.UserDoesntExists });
+    }
     return new UsersEntity(user);
   }
 

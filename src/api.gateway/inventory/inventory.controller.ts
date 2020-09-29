@@ -1,5 +1,13 @@
-import { Controller, Get, Inject, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { IField } from 'src/types/board/board.types';
+import { IInventory } from 'src/types/game/game.types';
 import { MsInventoryPatterns, MsNames } from 'src/types/ms/ms.types';
 
 @Controller('inventory')
@@ -10,16 +18,14 @@ export class InventoryController {
   ) {}
 
   @Get(':userId')
-  async getInventory(@Param() userId: number) {
+  async getInventory(@Param() userId: number): Promise<IInventory> {
     try {
-      const messages = JSON.stringify(
-        await this.proxyInventory
-          .send<any>({ cmd: MsInventoryPatterns.GET_USER_FIELDS }, { userId })
-          .toPromise(),
-      );
-      return messages;
+      const fields: IField[] = (await this.proxyInventory
+        .send<any>({ cmd: MsInventoryPatterns.GET_USER_FIELDS }, { userId })
+        .toPromise()) as IField[];
+      return { fields };
     } catch (err) {
-      // TODO Logging
+      throw new UnprocessableEntityException(err);
     }
   }
 }

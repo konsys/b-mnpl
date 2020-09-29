@@ -4,12 +4,9 @@ import {
   FieldGroupName,
   FieldType,
 } from './board.fields.entity';
-import {
-  IInventory,
-  IInventoryItems,
-  InventoryType,
-} from 'src/types/game/game.types';
+import { IInventoryItems, InventoryType } from 'src/types/game/game.types';
 
+import { InventoryEntity } from './invenory.entity';
 import { UsersEntity } from './users.entity';
 
 // const calcRent = (price: number, stars: number) =>
@@ -1018,4 +1015,14 @@ export const users: UsersEntity[] = [
     avatar: '/avatars/konstanstin.png',
     inventory: [],
   },
+];
+
+export const inventoryData = (): InventoryEntity[] => [
+  // {
+  //   date: new Date(),
+  //   gameId: 'qqq1',
+  //   inventoryId: 1,
+  //   inventoryType: InventoryType.CARDS,
+  //   quantity: 1,
+  // },
 ];

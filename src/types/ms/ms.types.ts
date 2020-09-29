@@ -42,4 +42,5 @@ export enum MsRoomsPatterns {
 
 export enum MsInventoryPatterns {
   GET_USER_FIELDS = 'getUserFields',
+  ADD_INVENTORY = 'addInventory',
 }

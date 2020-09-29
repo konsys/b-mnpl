@@ -25,7 +25,7 @@ export class InventoryMsController {
   ) {}
 
   @MessagePattern({ cmd: MsInventoryPatterns.GET_USER_FIELDS })
-  async getRoom({ userId }: { userId: number }): Promise<IInventory> {
+  async getInventory({ userId }: { userId: number }): Promise<IInventory> {
     try {
       const user: UsersEntity = await this.usersMs
         .send<any>({ cmd: MsUsersPatterns.GET_USER }, userId)
@@ -46,5 +46,11 @@ export class InventoryMsController {
     } catch (err) {
       throw new RpcException(err);
     }
+  }
+
+  @MessagePattern({ cmd: MsInventoryPatterns.ADD_INVENTORY })
+  async addInventory(inventory: any): Promise<any> {
+    console.log(123123, inventory);
+    return inventory;
   }
 }

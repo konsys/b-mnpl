@@ -19,6 +19,6 @@ export class InventoryEntity {
   @Column()
   imgSrc: string;
 
-  @Column()
+  @Column({ type: Date })
   created: Date;
 }

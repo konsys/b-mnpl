@@ -37,7 +37,7 @@ export class InventoryController {
       const inventory = inventoryData();
 
       const inv: IInventory = (await this.proxyInventory
-        .send<any>({ cmd: MsInventoryPatterns.ADD_INVENTORY }, { inventory })
+        .send<any>({ cmd: MsInventoryPatterns.ADD_INVENTORY }, inventory)
         .toPromise()) as IInventory;
       return inv;
     } catch (err) {

@@ -14,6 +14,9 @@ import { UsersEntity } from 'src/entities/users.entity';
 import { ErrorCode } from 'src/utils/error.code';
 import { IInventory, InventoryType } from 'src/types/game/game.types';
 import { IField } from 'src/types/board/board.types';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { InventoryEntity } from 'src/entities/invenory.entity';
 
 @Controller('rooms.ms')
 export class InventoryMsController {
@@ -22,6 +25,8 @@ export class InventoryMsController {
     private readonly usersMs: ClientProxy,
     @Inject(MsNames.FIELDS)
     private readonly fieldsMs: ClientProxy,
+    @InjectRepository(InventoryEntity)
+    private readonly inventoryRepository: Repository<InventoryEntity>,
   ) {}
 
   @MessagePattern({ cmd: MsInventoryPatterns.GET_USER_FIELDS })
@@ -51,6 +56,7 @@ export class InventoryMsController {
   @MessagePattern({ cmd: MsInventoryPatterns.ADD_INVENTORY })
   async addInventory(inventory: any): Promise<any> {
     console.log(123123, inventory);
-    return inventory;
+    await this.inventoryRepository.save(inventory);
+    return this.inventoryRepository.find();
   }
 }

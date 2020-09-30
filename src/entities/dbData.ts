@@ -1018,6 +1018,12 @@ export const users: UsersEntity[] = [
 ];
 
 export const inventoryData = (): InventoryEntity[] => [
+  {
+    created: new Date(),
+    imgSrc: 'https://cdn1.ozone.ru/s3/multimedia-a/wc1200/6005900230.jpg',
+    name: 'Кубики',
+    type: InventoryType.DICES,
+  },
   // {
   //   date: new Date(),
   //   gameId: 'qqq1',

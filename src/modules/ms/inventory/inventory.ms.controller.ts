@@ -55,7 +55,6 @@ export class InventoryMsController {
 
   @MessagePattern({ cmd: MsInventoryPatterns.ADD_INVENTORY })
   async addInventory(inventory: any): Promise<any> {
-    console.log(123123, inventory);
     await this.inventoryRepository.save(inventory);
     return this.inventoryRepository.find();
   }

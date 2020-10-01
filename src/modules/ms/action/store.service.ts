@@ -215,7 +215,7 @@ export class StoreService {
     await redis.expire([userId, BOARD_PARAMS.REDIS_TTL]);
   }
 
-  async emitMessage(gameId: string) {
+  async emitBoardMessage(gameId: string) {
     const data = await this.message.createBoardMessage(gameId);
     await redis.publish(
       `${BOARD_PARAMS.BOARD_MESSAGE_CHANNEL}`,

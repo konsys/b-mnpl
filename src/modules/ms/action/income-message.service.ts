@@ -183,10 +183,10 @@ export class IncomeMessageService {
 
     try {
       await this.actions.rollDicesAction(gameId, userId);
-      await this.store.emitMessage(gameId);
+      await this.store.emitBoardMessage(gameId);
       await this.getNextAction(gameId);
       setTimeout(async () => {
-        await this.store.emitMessage(p.gameId);
+        await this.store.emitBoardMessage(p.gameId);
       }, BOARD_PARAMS.LINE_TRANSITION_TIMEOUT * 3);
     } catch (err) {
       console.log('Error in dicesModal', err);

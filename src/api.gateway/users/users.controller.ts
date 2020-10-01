@@ -14,7 +14,6 @@ import { UsersService } from './users.service';
 import { LocalAuthGuard } from 'src/modules/auth/local-auth.guard';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
-import { BOARD_PARAMS } from 'src/params/board.params';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -37,11 +36,15 @@ export class UsersController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get()
-  async get(@Query('ids') ids): Promise<UsersEntity[]> {
+  @Get('init')
+  async get(
+    @Query('ids') ids,
+    @Query('gameId') gameId: string,
+  ): Promise<UsersEntity[]> {
     let players = await this.service.getUsersByIds(ids);
 
-    players = await this.service.initPlayers('kkk', players);
+    // kkk
+    players = await this.service.initPlayers(gameId, players);
 
     return players;
   }

@@ -220,7 +220,7 @@ export class RoomsMsController {
           );
 
           if (activePlayers.length === 1) {
-            const res = await this.deleteRoom(room.roomId);
+            await this.deleteRoom(room.roomId);
           }
 
           const rooms = await this.getAllRooms();

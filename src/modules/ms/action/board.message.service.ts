@@ -19,7 +19,7 @@ import { nanoid } from 'nanoid';
 import { UsersEntity } from 'src/entities/users.entity';
 import { PlayersUtilsService } from './players.utils.service';
 
-const bank: IPlayer = {
+const bankInit: IPlayer = {
   userId: BOARD_PARAMS.BANK_PLAYER_ID,
   money: 1000000,
   password: 'bank',
@@ -92,8 +92,12 @@ export class BoardMessageService {
     return message;
   }
 
-  async initStores(gameId: string) {
-    await this.store.flushGame(gameId);
+  async initStores(gameId: string): Promise<boolean> {
+    const bankStore = await this.store.getBankStore(gameId);
+    if (bankStore) {
+      // Game initialized;
+      return true;
+    }
     try {
       const fields = await this.fieldsMs
         .send<any>({ cmd: MsFieldsPatterns.GET_INIT_FIELDS }, {})
@@ -110,18 +114,9 @@ export class BoardMessageService {
             mortgaged: 0,
             fieldActions: [IFieldAction.MORTGAGE],
           },
-        // : v.type === FieldType.COMPANY && {
-        //     fieldId: v.fieldId,
-        //     userId: 2,
-        //     branches: 0,
-        //     mortgaged: 0,
-        //     fieldActions: [IFieldAction.MORTGAGE],
-        //   },
       }));
 
       await this.fields.updateAllFields(gameId, r);
-
-      // await this.store.setError(gameId, {})
 
       await this.store.setBoardStore(gameId, {
         isNewRound: false,
@@ -129,9 +124,10 @@ export class BoardMessageService {
         playersTurn: 0,
         playerActions: [],
       });
-      await this.store.setBankStore(gameId, bank);
+      await this.store.setBankStore(gameId, bankInit);
+      return false;
     } catch (err) {
-      console.log('ERROR ERROR', err);
+      console.log('ERROR ', err);
     }
   }
 
@@ -184,7 +180,6 @@ export class BoardMessageService {
 
     await this.players.updateAllPLayers(gameId, resultPlayers);
 
-    const st = await this.store.getPlayersStore(gameId);
-    return st.players;
+    return (await this.store.getPlayersStore(gameId)).players;
   }
 }

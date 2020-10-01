@@ -33,6 +33,7 @@ export class RoomsController {
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.DELETE_ROOMS }, {})
         .toPromise();
+
       return rooms;
     } catch (e) {
       throw new UnprocessableEntityException(e);
@@ -46,6 +47,7 @@ export class RoomsController {
       const room = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.GET_ROOM }, roomId)
         .toPromise();
+
       return room;
     } catch (e) {
       throw new UnprocessableEntityException(e);
@@ -59,6 +61,7 @@ export class RoomsController {
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.GET_ROOMS }, {})
         .toPromise();
+
       return rooms;
     } catch (e) {
       throw new UnprocessableEntityException(e);
@@ -121,6 +124,7 @@ export class RoomsController {
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.REMOVE_PLAYER }, { remove })
         .toPromise();
+
       return rooms;
     } catch (e) {
       throw new UnprocessableEntityException(e);

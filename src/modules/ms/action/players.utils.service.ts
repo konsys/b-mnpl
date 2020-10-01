@@ -117,6 +117,8 @@ export class PlayersUtilsService {
   }
 
   async updateAllPLayers(gameId: string, players: IPlayer[]): Promise<boolean> {
+    const prevPlayers = await this.store.getPlayersStore(gameId);
+
     await this.store.setPlayersStore(gameId, {
       players,
     });

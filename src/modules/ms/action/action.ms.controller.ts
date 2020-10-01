@@ -27,8 +27,14 @@ export class ActionMsController {
     gameId: string;
     players: IPlayer[];
   }) {
-    await this.message.initStores(gameId);
-    const res = await this.message.initPlayers(gameId, players);
+    const isInitialized = await this.message.initStores(gameId);
+
+    let res = [];
+    if (!isInitialized) {
+      res = await this.message.initPlayers(gameId, players);
+    } else {
+      res = (await this.store.getPlayersStore(gameId)).players;
+    }
     await this.store.emitMessage(gameId);
     return res;
   }

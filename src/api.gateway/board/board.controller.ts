@@ -13,7 +13,7 @@ import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { IGameActionRequest } from 'src/types/board/board.types';
 import { MsNames, MsRoomsPatterns } from 'src/types/ms/ms.types';
 import { ClientProxy } from '@nestjs/microservices';
-import { IReturnCode, IRoomState } from 'src/types/game/game.types';
+import { IReturnCode } from 'src/types/game/game.types';
 
 @Controller('board')
 export class BoardController {
@@ -45,6 +45,7 @@ export class BoardController {
     const res = await this.proxy
       .send<any>({ cmd: MsRoomsPatterns.PLAYER_SURRENDER }, { roomId, userId })
       .toPromise();
+
     return res;
   }
 }

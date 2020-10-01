@@ -1,5 +1,10 @@
 import { IPlayer } from 'src/types/board/board.types';
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  Inject,
+  BadRequestException,
+} from '@nestjs/common';
 
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
@@ -64,15 +69,11 @@ export class UsersService {
   }
 
   async initPlayers(gameId: string, players: UsersEntity[]): Promise<any> {
-    try {
-      const res = await this.actionsMs
-        .send<any>({ cmd: MsActionsPatterns.INIT_PLAYERS }, { gameId, players })
-        .toPromise();
+    const res = await this.actionsMs
+      .send<any>({ cmd: MsActionsPatterns.INIT_PLAYERS }, { gameId, players })
+      .toPromise();
 
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    return res;
   }
 
   async getUsersByIds(userIds: number[]): Promise<UsersEntity[]> {

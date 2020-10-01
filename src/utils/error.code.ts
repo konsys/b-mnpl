@@ -18,4 +18,5 @@ export enum ErrorCode {
   'NotVip' = 117,
   'UserDoesntExists' = 118,
   'FieldsNodFound' = 119,
+  'WrongRoomId' = 120,
 }

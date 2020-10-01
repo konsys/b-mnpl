@@ -94,6 +94,7 @@ export class BoardMessageService {
 
   async initStores(gameId: string): Promise<boolean> {
     const bankStore = await this.store.getBankStore(gameId);
+
     if (bankStore) {
       // Game initialized;
       return true;

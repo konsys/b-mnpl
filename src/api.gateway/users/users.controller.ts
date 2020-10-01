@@ -7,6 +7,7 @@ import {
   Query,
   UseInterceptors,
   ClassSerializerInterceptor,
+  BadRequestException,
 } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
@@ -41,12 +42,17 @@ export class UsersController {
     @Query('ids') ids,
     @Query('gameId') gameId: string,
   ): Promise<UsersEntity[]> {
-    let players = await this.service.getUsersByIds(ids);
+    try {
+      let players = await this.service.getUsersByIds(ids);
 
-    // kkk
-    players = await this.service.initPlayers(gameId, players);
+      // kkk
+      players = await this.service.initPlayers(gameId, players);
 
-    return players;
+      console.log(234234234);
+      return players;
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
   }
 
   @Post()

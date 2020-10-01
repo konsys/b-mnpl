@@ -3,11 +3,12 @@ import {
   IPlayer,
   IncomeMessageType,
 } from 'src/types/board/board.types';
+import { MessagePattern, RpcException } from '@nestjs/microservices';
 
 import { BoardMessageService } from './board.message.service';
 import { Controller } from '@nestjs/common';
+import { ErrorCode } from 'src/utils/error.code';
 import { IncomeMessageService } from './income-message.service';
-import { MessagePattern } from '@nestjs/microservices';
 import { MsActionsPatterns } from 'src/types/ms/ms.types';
 import { StoreService } from './store.service';
 
@@ -27,6 +28,11 @@ export class ActionMsController {
     gameId: string;
     players: IPlayer[];
   }) {
+    const splitted = gameId.split('-');
+    if (splitted.length < 2) {
+      throw new RpcException({ code: ErrorCode.WrongRoomId });
+    }
+    console.log();
     const isInitialized = await this.message.initStores(gameId);
 
     let res = [];

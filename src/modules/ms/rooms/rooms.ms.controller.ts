@@ -29,7 +29,7 @@ import { first } from 'rxjs/operators';
 import { head } from 'lodash';
 
 enum Rooms {
-  ALL = 'allRooms',
+  ROOMS_KEY = 'roomsKey',
 }
 @Controller('rooms.ms')
 export class RoomsMsController {
@@ -41,6 +41,7 @@ export class RoomsMsController {
   @MessagePattern({ cmd: MsRoomsPatterns.GET_ROOM })
   async getRoom({ roomId }: { roomId: string }): Promise<IBoardParams> {
     const room = await this.get(roomId);
+
     return room;
   }
 
@@ -243,7 +244,7 @@ export class RoomsMsController {
   }
 
   private async set(id: string, room: IRoomState) {
-    const redisId = `${Rooms.ALL}-${id}`;
+    const redisId = `${Rooms.ROOMS_KEY}-${id}`;
 
     await roomsRedis.set(redisId, JSON.stringify(room));
     await roomsRedis.expire([redisId, 10000]);
@@ -254,13 +255,13 @@ export class RoomsMsController {
 
     const roomIndex = rooms.findIndex((v) => v.roomId === room.roomId);
     roomIndex < 0 ? rooms.push(room) : (rooms[roomIndex] = room);
-    await roomsRedis.set(Rooms.ALL, JSON.stringify(rooms));
-    await roomsRedis.expire([Rooms.ALL, 10000]);
+    await roomsRedis.set(Rooms.ROOMS_KEY, JSON.stringify(rooms));
+    await roomsRedis.expire([Rooms.ROOMS_KEY, 10000]);
     return;
   }
 
   private async get(id: string): Promise<IRoomState | null> {
-    const redisId = `${Rooms.ALL}-${id}`;
+    const redisId = `${Rooms.ROOMS_KEY}-${id}`;
     try {
       let room = JSON.parse(await roomsRedis.get(redisId));
 
@@ -276,11 +277,11 @@ export class RoomsMsController {
 
   private async deleteRoom(roomId: string): Promise<boolean> {
     try {
-      let rooms = JSON.parse(await roomsRedis.get(Rooms.ALL));
+      let rooms = JSON.parse(await roomsRedis.get(Rooms.ROOMS_KEY));
 
       rooms = rooms.filter((v) => v.roomId !== roomId);
 
-      await roomsRedis.set(Rooms.ALL, JSON.stringify(rooms));
+      await roomsRedis.set(Rooms.ROOMS_KEY, JSON.stringify(rooms));
 
       return true;
     } catch (err) {}
@@ -290,7 +291,7 @@ export class RoomsMsController {
 
   private async getAllRooms(): Promise<IRoomState[]> {
     try {
-      let rooms = JSON.parse(await roomsRedis.get(Rooms.ALL));
+      let rooms = JSON.parse(await roomsRedis.get(Rooms.ROOMS_KEY));
 
       return rooms ? rooms : [];
     } catch (err) {}

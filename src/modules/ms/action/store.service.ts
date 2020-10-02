@@ -104,11 +104,12 @@ export class StoreService {
   ) {}
 
   async flushGame(gameId: string) {
-    await this.action.getAction(gameId);
+    await redis.del(gameId);
+    // await this.action.getAction(gameId);
 
-    for (const k of Object.values(storeNames)) {
-      await redis.del(`${gameId}-${k}`);
-    }
+    // for (const k of Object.values(storeNames)) {
+    //   await redis.del(`${gameId}-${k}`);
+    // }
   }
 
   async setBankStore(gameId: string, data: IPlayer) {
@@ -230,15 +231,22 @@ export class StoreService {
   }
 
   private async set(gameId: string | number, serviceName: string, data: any) {
-    await redis.set(`${gameId}-${serviceName}`, JSON.stringify(data));
+    let room = JSON.parse(await redis.get(gameId));
+    room = room ? room : {};
+    room[serviceName] = data;
 
-    await redis.expire([`${gameId}-${serviceName}`, BOARD_PARAMS.REDIS_TTL]);
+    console.log(111111111111111, data);
+
+    await redis.set(gameId, JSON.stringify(room));
+
+    await redis.expire([gameId, BOARD_PARAMS.REDIS_TTL]);
   }
 
   private async get(
     gameId: string | number,
     serviceName: string,
   ): Promise<any> {
-    return JSON.parse(await redis.get(`${gameId}-${serviceName}`));
+    const room = JSON.parse(await redis.get(gameId));
+    return room[serviceName];
   }
 }

@@ -25,11 +25,10 @@ import {
 import { roomsRedis, redis } from 'src/main';
 import { IPlayer } from 'src/types/board/board.types';
 import { PlayerRoomStatus, RoomPlayer } from 'src/types/game/game.types';
-import { first } from 'rxjs/operators';
-import { head } from 'lodash';
 
 enum Rooms {
-  ROOMS_KEY = 'roomsKey',
+  ROOMS_KEY = 'room',
+  ALL_ROOMS = 'allRooms',
 }
 @Controller('rooms.ms')
 export class RoomsMsController {
@@ -108,6 +107,7 @@ export class RoomsMsController {
   async addPlayerToRoom({ add }: { add: IPlayerRoom }): Promise<IResponceCode> {
     try {
       const room = await this.get(add.roomId);
+
       if (!room) {
         throw new RpcException({ code: ErrorCode.RoomDoesntExist });
       }
@@ -186,7 +186,7 @@ export class RoomsMsController {
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.DELETE_ROOMS })
-  public async deleteRoooms() {
+  public async deleteAllRoooms() {
     let rooms = await this.getAllRooms();
     for (let room of rooms) {
       await this.deleteRoom(room.roomId);
@@ -244,57 +244,101 @@ export class RoomsMsController {
   }
 
   private async set(id: string, room: IRoomState) {
-    const redisId = `${Rooms.ROOMS_KEY}-${id}`;
+    try {
+      let prevRoom = await this.get(id);
+      prevRoom = prevRoom ? prevRoom : ({} as IRoomState);
+      const value = { [Rooms.ROOMS_KEY]: { ...prevRoom, ...room } };
 
-    await roomsRedis.set(redisId, JSON.stringify(room));
-    await roomsRedis.expire([redisId, 10000]);
+      await roomsRedis.set(id, JSON.stringify(value));
 
-    let rooms = await this.getAllRooms();
+      await this.addToAllRoomsIds(id);
+      await roomsRedis.expire([Rooms.ALL_ROOMS, 10000]);
+      await roomsRedis.expire([id, 10000]);
+    } catch (err) {
+      // TODO loggin
+      console.log('ERROR SET KEY', err);
+    }
 
-    rooms = !rooms ? [] : rooms;
-
-    const roomIndex = rooms.findIndex((v) => v.roomId === room.roomId);
-    roomIndex < 0 ? rooms.push(room) : (rooms[roomIndex] = room);
-    await roomsRedis.set(Rooms.ROOMS_KEY, JSON.stringify(rooms));
-    await roomsRedis.expire([Rooms.ROOMS_KEY, 10000]);
     return;
   }
 
   private async get(id: string): Promise<IRoomState | null> {
-    const redisId = `${Rooms.ROOMS_KEY}-${id}`;
     try {
-      let room = JSON.parse(await roomsRedis.get(redisId));
+      let room = JSON.parse(await roomsRedis.get(id));
 
-      return room;
+      const res = room[Rooms.ROOMS_KEY];
+
+      return res;
     } catch (err) {
       try {
-        roomsRedis.del(redisId);
+        await this.del(id);
       } catch (err) {}
     }
 
     return null;
   }
 
+  private async del(id: string): Promise<IRoomState | null> {
+    try {
+      roomsRedis.del(id);
+    } catch (err) {}
+
+    return null;
+  }
+
   private async deleteRoom(roomId: string): Promise<boolean> {
     try {
-      let rooms = JSON.parse(await roomsRedis.get(Rooms.ROOMS_KEY));
-
+      let rooms = await this.getAllRooms();
       rooms = rooms.filter((v) => v.roomId !== roomId);
+      await roomsRedis.set(Rooms.ALL_ROOMS, JSON.stringify(rooms));
 
-      await roomsRedis.set(Rooms.ROOMS_KEY, JSON.stringify(rooms));
-
+      await this.del(roomId);
       return true;
     } catch (err) {}
 
     return false;
   }
 
+  private async addToAllRoomsIds(id: string): Promise<any[]> {
+    try {
+      const re = await roomsRedis.get(Rooms.ALL_ROOMS);
+
+      let roomIds = re ? JSON.parse(re) : [];
+      let index = -1;
+      if (re) {
+        roomIds = JSON.parse(re);
+        index = roomIds.findIndex((v) => v === id);
+      }
+
+      index < 0 && roomIds.push(id);
+
+      await roomsRedis.set(Rooms.ALL_ROOMS, JSON.stringify(roomIds));
+
+      return roomIds;
+    } catch (err) {
+      console.log('ERROR', err);
+    }
+
+    return [];
+  }
+
   private async getAllRooms(): Promise<IRoomState[]> {
     try {
-      let rooms = JSON.parse(await roomsRedis.get(Rooms.ROOMS_KEY));
+      const allRooms = [];
+      const roomsIds = JSON.parse(await roomsRedis.get(Rooms.ALL_ROOMS));
+      if (!Array.isArray(roomsIds)) {
+        return [];
+      }
+      for (let roomId of roomsIds) {
+        allRooms.push(
+          JSON.parse(await roomsRedis.get(roomId))[Rooms.ROOMS_KEY],
+        );
+      }
 
-      return rooms ? rooms : [];
-    } catch (err) {}
+      return allRooms;
+    } catch (err) {
+      console.log('ERROR', err);
+    }
 
     return [];
   }

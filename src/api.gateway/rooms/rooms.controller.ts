@@ -78,7 +78,6 @@ export class RoomsController {
     @Request() req,
     @Body('room') room: IRoomState,
   ): Promise<IRoomResponce> {
-    console.log(234234234, room);
     try {
       const userId = req.user.userId;
       if (!userId) {

@@ -9,6 +9,7 @@ import {
   Get,
   Delete,
   Param,
+  NotFoundException,
 } from '@nestjs/common';
 import { MsNames, MsRoomsPatterns } from 'src/types/ms/ms.types';
 import {
@@ -48,6 +49,9 @@ export class RoomsController {
         .send<any>({ cmd: MsRoomsPatterns.GET_ROOM }, roomId)
         .toPromise();
 
+      if (!room) {
+        throw new NotFoundException({ error: ErrorCode.RoomDoesntExist });
+      }
       return room;
     } catch (e) {
       throw new UnprocessableEntityException(e);

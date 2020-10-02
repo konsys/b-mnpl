@@ -48,7 +48,6 @@ export class UsersController {
       // kkk
       players = await this.service.initPlayers(gameId, players);
 
-      console.log(234234234);
       return players;
     } catch (err) {
       throw new BadRequestException(err);

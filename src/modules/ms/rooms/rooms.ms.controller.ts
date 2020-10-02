@@ -289,9 +289,13 @@ export class RoomsMsController {
   private async deleteRoom(roomId: string): Promise<boolean> {
     try {
       let rooms = await this.getAllRooms();
+      const room = await this.get(roomId);
       rooms = rooms.filter((v) => v.roomId !== roomId);
       await roomsRedis.set(Rooms.ALL_ROOMS, JSON.stringify(rooms));
-
+      const players = room.players.map((v) => v.userId);
+      for (const player of players) {
+        await roomsRedis.del(player);
+      }
       await this.del(roomId);
       return true;
     } catch (err) {}

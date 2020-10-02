@@ -235,8 +235,6 @@ export class StoreService {
     room = room ? room : {};
     room[serviceName] = data;
 
-    console.log(111111111111111, data);
-
     await redis.set(gameId, JSON.stringify(room));
 
     await redis.expire([gameId, BOARD_PARAMS.REDIS_TTL]);

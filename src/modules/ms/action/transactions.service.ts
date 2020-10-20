@@ -64,8 +64,7 @@ export class TransactionsService {
     );
   }
 
-  async getStartBonus(userId: number, isStart = false) {
-    const gameId = await this.store.getGameIdByPlayerId(userId);
+  async getStartBonus(gameId: string, userId: number, isStart = false) {
     const transactionId = nanoid(4);
     const sum = isStart
       ? BOARD_PARAMS.START_BONUS

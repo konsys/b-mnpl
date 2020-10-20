@@ -27,10 +27,9 @@ export class ChecksService {
     return f.type === FieldType.TAX;
   }
 
-  async isStartPass(userId: number): Promise<boolean> {
-    const gameId = await this.players.getGameIdByPlayerId(userId);
+  async isStartPass(gameId: string, userId: number): Promise<boolean> {
     const dices = await this.store.getDicesStore(gameId);
-    const player = await this.players.getActingPlayer(gameId);
+    const player = await this.players.getPlayer(gameId, userId);
 
     return dices && dices.sum > 0 && player.meanPosition - dices.sum < 0;
   }
@@ -76,14 +75,16 @@ export class ChecksService {
     return isCompany && f && !f.status;
   }
 
-  async isMyField(userId: number, fieldId: number): Promise<boolean> {
-    const gameId = await this.players.getGameIdByPlayerId(userId);
+  async isMyField(
+    gameId: string,
+    userId: number,
+    fieldId: number,
+  ): Promise<boolean> {
     const field = await this.fields.getField(gameId, fieldId);
     return (
       (await this.isCompany(gameId, fieldId)) &&
       field.status &&
-      field.status.userId ===
-        (await this.players.getActingPlayer(gameId)).userId
+      field.status.userId === userId
     );
   }
 

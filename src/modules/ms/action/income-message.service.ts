@@ -255,29 +255,29 @@ export class IncomeMessageService {
       const f = await this.fields.getFieldByPosition(p.gameId, p.meanPosition);
 
       if (!p.jailed) {
-        if (await this.checks.isStartPass(p.userId)) {
+        if (await this.checks.isStartPass(p.gameId, p.userId)) {
           // Bonus for start passing
           p.meanPosition === 0
-            ? await this.transactions.getStartBonus(p.userId, true)
-            : await this.transactions.getStartBonus(p.userId);
+            ? await this.transactions.getStartBonus(p.gameId, p.userId, true)
+            : await this.transactions.getStartBonus(p.gameId, p.userId);
         }
         if (await this.checks.isStart(p.gameId, f.fieldId)) {
           await this.actions.switchPlayerTurn(gameId, false);
         } else if (await this.checks.noActionField(p.gameId, f.fieldId)) {
           await this.actions.switchPlayerTurn(gameId, false);
-        } else if (await this.checks.isMyField(p.userId, f.fieldId)) {
+        } else if (await this.checks.isMyField(p.gameId, p.userId, f.fieldId)) {
           await this.actions.switchPlayerTurn(gameId, false);
         } else if (await this.checks.isCompanyForSale(p.gameId, f.fieldId)) {
           await this.actions.buyFieldModal(gameId);
         } else if (
           !(await this.checks.isCompanyForSale(p.gameId, f.fieldId)) &&
-          (await this.checks.isMyField(p.userId, f.fieldId))
+          (await this.checks.isMyField(p.gameId, p.userId, f.fieldId))
         ) {
           await this.actions.switchPlayerTurn(gameId, false);
         } else if (
           (await this.checks.isCompany(p.gameId, f.fieldId)) &&
           (await this.checks.whosField(p.gameId, f.fieldId)) &&
-          !(await this.checks.isMyField(p.userId, f.fieldId))
+          !(await this.checks.isMyField(p.gameId, p.userId, f.fieldId))
         ) {
           await this.store.setTransaction(p.gameId, {
             sum: await this.fields.getFieldRent(p.gameId, f),

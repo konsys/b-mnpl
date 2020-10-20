@@ -31,7 +31,9 @@ export class BoardController {
     @Body('data') data: IGameActionRequest,
   ): Promise<string> {
     try {
-      await this.proxy.send<any>({ cmd: data.action }, data).toPromise();
+      await this.proxy
+        .send<any>({ cmd: data.action }, { userId: req.user.userId, ...data })
+        .toPromise();
       //TODO add error handlers
       return JSON.stringify({ code: 0 });
     } catch (err) {

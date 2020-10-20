@@ -168,10 +168,6 @@ export class BoardMessageService {
         resultPlayers.push(players.find((v) => v.userId === id));
       });
 
-      for (const player of players) {
-        await this.store.setPlayerIdToGameId(player.userId, gameId);
-      }
-
       await this.store.setActionStore(gameId, {
         action: OutcomeMessageType.OUTCOME_ROLL_DICES_MODAL,
         userId: resultPlayers.find((v) => v.moveOrder === 0).userId,

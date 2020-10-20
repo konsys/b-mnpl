@@ -207,13 +207,10 @@ export class StoreService {
     return res;
   }
 
-  async getGameIdByPlayerId(userId: number): Promise<string> {
-    return await redis.get(userId);
-  }
-
-  async setPlayerIdToGameId(userId: number, gameId: string) {
-    await redis.set(userId, gameId);
-    await redis.expire([userId, BOARD_PARAMS.REDIS_TTL]);
+  async getGameIdByPlayerId(gameId: string, userId: number): Promise<string> {
+    const players = await this.getPlayersStore(gameId);
+    const isPlayer = players.players.some((v) => v.userId === userId);
+    return isPlayer ? gameId : null;
   }
 
   async emitBoardMessage(gameId: string) {

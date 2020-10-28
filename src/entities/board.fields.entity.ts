@@ -54,7 +54,7 @@ export class BoardFieldsEntity {
   @Column({ default: false })
   isJail?: boolean;
 
-  @Column({ default: null })
+  @Column({ default: 1 })
   level: number;
 
   @Column({ default: null })

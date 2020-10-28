@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { inventoryData } from 'src/entities/dbData';
-import { IField } from 'src/types/board/board.types';
 import { IInventory } from 'src/types/game/game.types';
 import { MsInventoryPatterns, MsNames } from 'src/types/ms/ms.types';
 

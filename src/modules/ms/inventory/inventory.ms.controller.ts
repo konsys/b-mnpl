@@ -46,8 +46,8 @@ export class InventoryMsController {
           fieldsInventory.map((v) => v.inventoryId),
         )
         .toPromise();
-
-      return { fields };
+      // TODO add all types of inventory
+      return { fields, inventoryQuantity: fields.length };
     } catch (err) {
       throw new RpcException(err);
     }

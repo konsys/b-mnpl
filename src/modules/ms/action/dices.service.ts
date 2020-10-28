@@ -3,6 +3,7 @@ import { IDicesStore, StoreService } from './store.service';
 import { BOARD_PARAMS } from 'src/params/board.params';
 import { Injectable } from '@nestjs/common';
 import { PlayersUtilsService } from './players.utils.service';
+import { random } from 'src/utils/common.utils';
 
 @Injectable()
 export class DicesService {
@@ -22,9 +23,10 @@ export class DicesService {
     const player = await this.players.getActingPlayer(gameId);
     const currenPosition = player.meanPosition;
 
-    const dice1 = 3;
-    // const dice2 = random(0, 6);
-    let dice2 = 4;
+    const dice1 = random(0, 6);
+    const dice2 = random(0, 6);
+    // const dice1 = 3;
+    // let dice2 = 4;
     if (player.name === 'Feodr') {
       // dice2 = random(0, 6);
       // dice2 = 5;

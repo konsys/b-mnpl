@@ -92,6 +92,7 @@ export interface IBoardParams {
 
 export interface IInventory {
   fields: IField[];
+  inventoryQuantity: number;
 }
 
 export enum InventoryType {

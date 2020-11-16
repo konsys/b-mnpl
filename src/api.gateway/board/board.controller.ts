@@ -14,7 +14,13 @@ import { IGameActionRequest } from 'src/types/board/board.types';
 import { MsNames, MsRoomsPatterns } from 'src/types/ms/ms.types';
 import { ClientProxy } from '@nestjs/microservices';
 import { IReturnCode } from 'src/types/game/game.types';
+import { Request as ExpressRequest } from 'express';
 
+interface RequestWithUser extends ExpressRequest { 
+user:{
+  userId: number
+}
+}
 @Controller('board')
 export class BoardController {
   constructor(
@@ -27,7 +33,7 @@ export class BoardController {
   @HttpCode(200)
   @Header('Cache-Control', 'none')
   async action(
-    @Request() req,
+    @Request() req: RequestWithUser,
     @Body('data') data: IGameActionRequest,
   ): Promise<string> {
     try {
@@ -43,7 +49,7 @@ export class BoardController {
   @UseGuards(JwtAuthGuard)
   @Post('surrender')
   @Header('Cache-Control', 'none')
-  async surrender(@Body() { roomId, userId }): Promise<IReturnCode> {
+  async surrender(@Body() { roomId, userId }:{roomId:string, userId:number}): Promise<IReturnCode> {
     const res = await this.proxy
       .send<any>({ cmd: MsRoomsPatterns.PLAYER_SURRENDER }, { roomId, userId })
       .toPromise();

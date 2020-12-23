@@ -15,7 +15,7 @@ export class AuthService {
     return user ? user : null;
   }
 
-  async login(user: UsersEntity) {
+  async login(user: UsersEntity | any) {
     const payload = {
       username: user.name,
       sub: user.userId,

@@ -1,5 +1,6 @@
 import { BoardFieldsEntity } from 'src/entities/board.fields.entity';
 import { UsersEntity } from 'src/entities/users.entity';
+import { Request as ExpressRequest } from 'express';
 
 export enum ResponceCode {
   ok = 0,
@@ -290,4 +291,10 @@ export interface IGameActionRequest {
   fieldId?: number;
   userId?: number;
   contract?: any;
+}
+
+export interface RequestWithUser extends ExpressRequest {
+  user: {
+    userId: number;
+  };
 }

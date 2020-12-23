@@ -23,7 +23,7 @@ export class BoardController {
     private readonly proxy: ClientProxy,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('action')
   @HttpCode(200)
   @Header('Cache-Control', 'none')
@@ -41,6 +41,7 @@ export class BoardController {
       throw new BadRequestException(`Action not found ${err}`);
     }
   }
+
   @UseGuards(JwtAuthGuard)
   @Post('surrender')
   @Header('Cache-Control', 'none')

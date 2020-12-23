@@ -15,6 +15,7 @@ export class AuthService {
     return user ? user : null;
   }
 
+  // TODO add types for login
   async login(user: UsersEntity | any) {
     const payload = {
       username: user.name,

@@ -48,7 +48,6 @@ export interface IFieldStatus {
 }
 
 export enum IncomeMessageType {
-  INCOME_TOKEN_TRANSITION_COMPLETED = 'changeTokenPositionCompleted',
   INCOME_AUCTION_START_CLICKED = 'auctionStartClicked',
   INCOME_AUCTION_ACCEPT_CLICKED = 'auctionAcceptClicked',
   INCOME_AUCTION_DECLINE_CLICKED = 'auctionDeclineClicked',

@@ -81,15 +81,15 @@ export class RoomsMsController {
     }));
     room.roomStatus = RoomStatus.PENDING;
 
-    //   throw new RpcException({ code: ErrorCode.RoomExists });
-    // if (isGame) {
-    // const isGame = rooms.find((v) => v.creatorId === room.creatorId);
-    // TODO uncomment
-    // }
+    let rooms = await this.getAllRooms();
+    const isGame = rooms.find((v) => v.creatorId === room.creatorId);
+    if (isGame) {
+      throw new RpcException({ code: ErrorCode.RoomExists });
+    }
 
     await this.set(room.roomId, room);
-
-    const rooms = await this.getAllRooms();
+    // Fetch again after adding room
+    rooms = await this.getAllRooms();
 
     const resp = {
       rooms,
@@ -324,16 +324,21 @@ export class RoomsMsController {
   }
 
   private async getAllRooms(): Promise<IRoomState[]> {
+    const allRooms = [];
     try {
-      const allRooms = [];
       const roomsIds = JSON.parse(await roomsRedis.get(Rooms.ALL_ROOMS));
+
       if (!Array.isArray(roomsIds)) {
         return [];
       }
-      for (const roomId of roomsIds) {
-        allRooms.push(
-          JSON.parse(await roomsRedis.get(roomId))[Rooms.ROOMS_KEY],
-        );
+      for await (const roomId of roomsIds) {
+        if (typeof roomId !== 'string') {
+          continue;
+        }
+        const curRoom = JSON.parse(await roomsRedis.get(roomId))[
+          Rooms.ROOMS_KEY
+        ];
+        allRooms.push(curRoom);
       }
 
       return allRooms;

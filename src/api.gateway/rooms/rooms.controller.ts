@@ -81,7 +81,6 @@ export class RoomsController {
   ): Promise<IRoomResponce> {
     try {
       const userId = req.user.userId;
-      console.log(321312312, userId);
 
       if (!userId) {
         throw new UnprocessableEntityException({
@@ -92,7 +91,7 @@ export class RoomsController {
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.CREATE_ROOM }, { room })
         .toPromise();
-      console.log(12312312313, rooms);
+
       return rooms;
     } catch (e) {
       throw new UnprocessableEntityException(e);

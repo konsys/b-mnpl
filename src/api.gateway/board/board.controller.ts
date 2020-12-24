@@ -23,7 +23,7 @@ export class BoardController {
     private readonly proxy: ClientProxy,
   ) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('action')
   @HttpCode(200)
   @Header('Cache-Control', 'none')

@@ -80,7 +80,6 @@ export class ActionMsController {
 
   @MessagePattern({ cmd: IncomeMessageType.INCOME_AUCTION_ACCEPT_CLICKED })
   async acceptAuction(data: IGameActionRequest): Promise<any> {
-    console.log(111111111, data);
     const gameId = await this.store.getGameIdByPlayerId(
       data.gameId,
       data.userId,

@@ -20,6 +20,7 @@ import {
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { ErrorCode } from 'src/utils/error.code';
+import { RequestWithUser } from 'src/types/board/board.types';
 
 @Controller('rooms')
 export class RoomsController {
@@ -43,7 +44,7 @@ export class RoomsController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':roomId')
-  async getRoom(@Param() roomId): Promise<IRoomResponce> {
+  async getRoom(@Param() roomId: string): Promise<IRoomResponce> {
     try {
       const room = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.GET_ROOM }, roomId)
@@ -75,11 +76,13 @@ export class RoomsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createRoom(
-    @Request() req,
+    @Request() req: RequestWithUser,
     @Body('room') room: IRoomState,
   ): Promise<IRoomResponce> {
     try {
       const userId = req.user.userId;
+      console.log(321312312, userId);
+
       if (!userId) {
         throw new UnprocessableEntityException({
           code: ErrorCode.UserDoesntExists,
@@ -89,7 +92,7 @@ export class RoomsController {
       const rooms = await this.proxy
         .send<any>({ cmd: MsRoomsPatterns.CREATE_ROOM }, { room })
         .toPromise();
-
+      console.log(12312312313, rooms);
       return rooms;
     } catch (e) {
       throw new UnprocessableEntityException(e);
@@ -99,7 +102,7 @@ export class RoomsController {
   @UseGuards(JwtAuthGuard)
   @Post('addPlayer')
   async addPlayerToRoom(
-    @Request() req,
+    @Request() req: RequestWithUser,
     @Body('add') add: IPlayerRoom,
   ): Promise<IRoomResponce> {
     try {

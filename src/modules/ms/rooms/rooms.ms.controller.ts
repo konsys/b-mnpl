@@ -58,13 +58,11 @@ export class RoomsMsController {
         room.players.map((v) => v.userId),
       )
       .toPromise();
-
     const creator = players.find((v) => v.userId === room.creatorId);
 
-    if (!creator || !Array.isArray(players)) {
+    if (!creator || !Array.isArray(players) || !players.length) {
       throw new RpcException({ code: ErrorCode.UserDoesntExists });
     }
-
     room.players = players.map((v) => ({
       ...v,
       playerRoomStatus: PlayerRoomStatus.ACITVE,
@@ -76,7 +74,6 @@ export class RoomsMsController {
     ) {
       throw new RpcException({ code: ErrorCode.NotVip });
     }
-
     room.creatorId = creator.userId;
     room.players = players.map((v) => ({
       ...v,
@@ -186,9 +183,9 @@ export class RoomsMsController {
   }
 
   @MessagePattern({ cmd: MsRoomsPatterns.DELETE_ROOMS })
-  public async deleteAllRoooms() {
+  public async deleteAllRoooms(): Promise<void> {
     let rooms = await this.getAllRooms();
-    for (let room of rooms) {
+    for (const room of rooms) {
       await this.deleteRoom(room.roomId);
     }
     rooms = await this.getAllRooms();
@@ -264,7 +261,7 @@ export class RoomsMsController {
 
   private async get(id: string): Promise<IRoomState | null> {
     try {
-      let room = JSON.parse(await roomsRedis.get(id));
+      const room = JSON.parse(await roomsRedis.get(id));
 
       const res = room[Rooms.ROOMS_KEY];
 
@@ -333,7 +330,7 @@ export class RoomsMsController {
       if (!Array.isArray(roomsIds)) {
         return [];
       }
-      for (let roomId of roomsIds) {
+      for (const roomId of roomsIds) {
         allRooms.push(
           JSON.parse(await roomsRedis.get(roomId))[Rooms.ROOMS_KEY],
         );

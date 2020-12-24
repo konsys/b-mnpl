@@ -103,7 +103,7 @@ export class StoreService {
     private readonly message: BoardMessageService,
   ) {}
 
-  async flushGame(gameId: string) {
+  async flushGame(gameId: string): Promise<void> {
     await redis.del(gameId);
     // await this.action.getAction(gameId);
 
@@ -112,7 +112,7 @@ export class StoreService {
     // }
   }
 
-  async setBankStore(gameId: string, data: IPlayer) {
+  async setBankStore(gameId: string, data: IPlayer): Promise<void> {
     await this.set(gameId, storeNames.bank, data);
   }
 
@@ -120,7 +120,7 @@ export class StoreService {
     return (await this.get(gameId, storeNames.bank)) as IPlayer;
   }
 
-  async setDicesStore(gameId: string, data: IDicesStore) {
+  async setDicesStore(gameId: string, data: IDicesStore): Promise<void> {
     await this.set(gameId, storeNames.dices, data);
   }
 
@@ -128,7 +128,7 @@ export class StoreService {
     return (await this.get(gameId, storeNames.dices)) as IDicesStore;
   }
 
-  async setActionStore(gameId: string, data: ICurrentAction) {
+  async setActionStore(gameId: string, data: ICurrentAction): Promise<void> {
     await this.set(gameId, storeNames.action, data);
   }
 
@@ -136,7 +136,7 @@ export class StoreService {
     return (await this.get(gameId, storeNames.action)) as ICurrentAction;
   }
 
-  async setBoardStore(gameId: string, data: IBoardStore) {
+  async setBoardStore(gameId: string, data: IBoardStore): Promise<void> {
     await this.set(gameId, storeNames.board, data);
   }
 
@@ -144,7 +144,7 @@ export class StoreService {
     return (await this.get(gameId, storeNames.board)) as IBoardStore;
   }
 
-  async setFieldsStore(gameId: string, data: IFieldsStore) {
+  async setFieldsStore(gameId: string, data: IFieldsStore): Promise<void> {
     await this.set(gameId, storeNames.fields, data);
   }
 
@@ -152,7 +152,7 @@ export class StoreService {
     return (await this.get(gameId, storeNames.fields)) as IFieldsStore;
   }
 
-  async setTransaction(gameId: string, data: ITransactionStore) {
+  async setTransaction(gameId: string, data: ITransactionStore): Promise<void> {
     await this.set(gameId, storeNames.transaction, data);
   }
 
@@ -163,11 +163,11 @@ export class StoreService {
     )) as ITransactionStore;
   }
 
-  async resetTransactionsEvent(gameId: string) {
+  async resetTransactionsEvent(gameId: string): Promise<void> {
     await redis.del(`${gameId}-${storeNames.transaction}`);
   }
 
-  async setPlayersStore(gameId: string, data: IPlayersStore) {
+  async setPlayersStore(gameId: string, data: IPlayersStore): Promise<void> {
     await this.set(gameId, storeNames.players, data);
   }
 
@@ -175,7 +175,7 @@ export class StoreService {
     return (await this.get(gameId, storeNames.players)) as IPlayersStore;
   }
 
-  async setAuctionStore(gameId: string, data: IAuctionStore) {
+  async setAuctionStore(gameId: string, data: IAuctionStore): Promise<void> {
     await this.set(gameId, storeNames.auction, data);
   }
 
@@ -183,7 +183,7 @@ export class StoreService {
     return (await this.get(gameId, storeNames.auction)) as IAuctionStore;
   }
 
-  async setContractStore(gameId: string, data: IContract) {
+  async setContractStore(gameId: string, data: IContract): Promise<void> {
     await this.set(gameId, storeNames.contract, data);
   }
 
@@ -191,11 +191,11 @@ export class StoreService {
     return (await this.get(gameId, storeNames.contract)) as IContract;
   }
 
-  async flushAuctionStore(gameId: string) {
+  async flushAuctionStore(gameId: string): Promise<void> {
     return await redis.del(`${gameId}-${storeNames.auction}`);
   }
 
-  async setError(gameId: string, data: IErrorMessage) {
+  async setError(gameId: string, data: IErrorMessage): Promise<void> {
     await this.set(gameId, storeNames.error, data);
     await redis.publish(`${BOARD_PARAMS.ERROR_CHANNEL}`, JSON.stringify(data));
     await this.set(gameId, storeNames.error, data);
@@ -213,7 +213,7 @@ export class StoreService {
     return isPlayer ? gameId : null;
   }
 
-  async emitBoardMessage(gameId: string) {
+  async emitBoardMessage(gameId: string): Promise<void> {
     const data = await this.message.createBoardMessage(gameId);
     await redis.publish(
       `${BOARD_PARAMS.BOARD_MESSAGE_CHANNEL}`,
@@ -223,7 +223,7 @@ export class StoreService {
     await this.set(gameId, storeNames.message, data);
   }
 
-  async resetError(gameId: string) {
+  async resetError(gameId: string): Promise<void> {
     await redis.del(`${gameId}-${storeNames.error}`);
   }
 

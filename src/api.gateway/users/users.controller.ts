@@ -45,9 +45,10 @@ export class UsersController {
         user.userId,
       );
       const accessToken = await this.authService.signJwt(payload);
+
       return { accessToken };
     }
-    return null;
+    return { accessToken: '' };
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

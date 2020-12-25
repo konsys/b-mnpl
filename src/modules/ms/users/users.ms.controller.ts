@@ -7,6 +7,7 @@ import { MessagePattern, RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindManyOptions, In } from 'typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
+import { TokensEntity } from 'src/entities/tokens.entity';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { MsUsersPatterns } from 'src/types/ms/ms.types';
@@ -17,6 +18,8 @@ export class UsersMsController {
   constructor(
     @InjectRepository(UsersEntity)
     private readonly users: Repository<UsersEntity>,
+    @InjectRepository(TokensEntity)
+    private readonly tokens: Repository<TokensEntity>,
   ) {}
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_ALL_USERS })
@@ -63,5 +66,23 @@ export class UsersMsController {
   async saveUsers(users: UsersEntity[]) {
     const allUsers: UsersEntity[] = await this.users.save(users);
     return of(allUsers).pipe(delay(1));
+  }
+
+  @MessagePattern({ cmd: MsUsersPatterns.SAVE_REFRESH_TOKEN })
+  async saveToken(token: TokensEntity) {
+    const res: TokensEntity = await this.tokens.save(token);
+    return of(res).pipe(delay(1));
+  }
+
+  @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })
+  async getToken(userId: number) {
+    const res: TokensEntity = await this.tokens.findOne({ userId });
+    return of(res).pipe(delay(1));
+  }
+
+  @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })
+  async deleteToken(userId: number) {
+    await this.tokens.delete({ userId });
+    return of(true).pipe(delay(1));
   }
 }

@@ -16,13 +16,25 @@ export class AuthService {
   }
 
   // TODO add types for login
-  async login(user: UsersEntity | any) {
+  async login(
+    user: UsersEntity | any,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const payload = {
       username: user.name,
       sub: user.userId,
     };
+    const accessToken = this.jwtService.sign(payload, {
+      secret: 'ergergewrf3w4r5t432tr4t', // unique access secret from environment vars
+      expiresIn: 24 * 60 * 60 * 1000, // unique access expiration from environment vars
+    });
+
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: 'ergergewrf3w4r5t432tr4t', // unique refresh secret from environment vars
+      expiresIn: 24 * 60 * 60 * 1000, // unique refresh expiration from environment vars
+    });
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken,
+      refreshToken,
     };
   }
 }

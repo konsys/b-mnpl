@@ -19,6 +19,9 @@ export enum MsUsersPatterns {
   GET_USERS_BY_IDS = 'getUsersByIds',
   GET_USER_BY_CREDENTIALS = 'getUserByCredentials',
   SAVE_USERS = 'saveUsers',
+  SAVE_REFRESH_TOKEN = 'saveRefreshToken',
+  GET_REFRESH_TOKEN = 'getRefreshToken',
+  DELETE_REFRESH_TOKEN = 'deleteRefreshToken',
 }
 
 export enum MsChatPatterns {

@@ -109,16 +109,12 @@ export class UsersService {
     }
   }
 
-  async saveToken(
-    token: string,
-    userId: number,
-    userName: string,
-  ): Promise<any> {
+  async saveToken(token: string, userId: number, name: string): Promise<any> {
     try {
       const res = await this.proxy
         .send<any>(
           { cmd: MsUsersPatterns.SAVE_REFRESH_TOKEN },
-          { token, userId, userName },
+          { token, userId, name },
         )
         .toPromise();
       return res;

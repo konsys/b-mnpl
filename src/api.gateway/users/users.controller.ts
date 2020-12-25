@@ -39,7 +39,6 @@ export class UsersController {
     @Body() { accessToken }: { accessToken: string },
   ): Promise<{ accessToken: string | null }> {
     const user = await this.service.getToken(accessToken);
-    console.log(1111111111111111, user, accessToken);
     if (user) {
       const payload: IJwtPayload = this.authService.createPayload(
         user.name,

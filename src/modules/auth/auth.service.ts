@@ -38,11 +38,8 @@ export class AuthService {
     const accessToken = await this.signJwt(payload);
     const refreshToken = await this.signJwt(payload, '60000s');
 
-    await this.usersService.saveToken(refreshToken, user.userId);
+    await this.usersService.saveToken(refreshToken, user.userId, user.name);
 
-    const token = await this.usersService.getToken(user.userId);
-
-    console.log(1111111111, token);
     return {
       accessToken,
       refreshToken,

@@ -72,12 +72,15 @@ export class UsersMsController {
   async saveToken({
     token,
     userId,
+    userName,
   }: {
     token: string;
     userId: number;
+    userName: string;
   }): Promise<any> {
     const saveToken: TokensEntity = {
       userId,
+      userName,
       expires: new Date(),
       token,
     };
@@ -86,13 +89,12 @@ export class UsersMsController {
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })
-  async getToken(userId: number): Promise<any> {
-    const res: TokensEntity = await this.tokens.findOne({ userId });
-    console.log(222222222222, res);
+  async getToken(token: string): Promise<any> {
+    const res: TokensEntity = await this.tokens.findOne({ token });
     return of(res).pipe(delay(1));
   }
 
-  @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })
+  @MessagePattern({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN })
   async deleteToken(userId: number): Promise<any> {
     await this.tokens.delete({ userId });
     return of(true).pipe(delay(1));

@@ -88,7 +88,7 @@ export class UsersService {
     }
   }
 
-  async saveUsers() {
+  async saveUsers(): Promise<UsersEntity[]> {
     try {
       return await this.proxy
         .send<any>({ cmd: MsUsersPatterns.SAVE_USERS }, users)
@@ -109,12 +109,16 @@ export class UsersService {
     }
   }
 
-  async saveToken(token: string, userId: number): Promise<any> {
+  async saveToken(
+    token: string,
+    userId: number,
+    userName: string,
+  ): Promise<any> {
     try {
       const res = await this.proxy
         .send<any>(
           { cmd: MsUsersPatterns.SAVE_REFRESH_TOKEN },
-          { token, userId },
+          { token, userId, userName },
         )
         .toPromise();
       return res;

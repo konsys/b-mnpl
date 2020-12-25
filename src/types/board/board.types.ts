@@ -295,5 +295,6 @@ export interface IGameActionRequest {
 export interface RequestWithUser extends ExpressRequest {
   user: {
     userId: number;
+    name: string;
   };
 }

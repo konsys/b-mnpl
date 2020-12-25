@@ -9,6 +9,9 @@ export class TokensEntity {
   userId: number;
 
   @Column()
+  userName: string;
+
+  @Column()
   token: string;
 
   @Column()

@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   BadRequestException,
+  Body,
 } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
@@ -35,9 +36,10 @@ export class UsersController {
 
   @Post('auth/refresh')
   async refresh(
-    @Request() refreshToken: string,
+    @Body() { accessToken }: { accessToken: string },
   ): Promise<{ accessToken: string | null }> {
-    const user = await this.service.getToken(refreshToken);
+    const user = await this.service.getToken(accessToken);
+    console.log(1111111111111111, user, accessToken);
     if (user) {
       const payload: IJwtPayload = this.authService.createPayload(
         user.name,

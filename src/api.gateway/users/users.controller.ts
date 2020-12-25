@@ -42,7 +42,7 @@ export class UsersController {
     console.log(1111111111111111, user, accessToken);
     if (user) {
       const payload: IJwtPayload = this.authService.createPayload(
-        user.userName,
+        user.name,
         user.userId,
       );
       const accessToken = await this.authService.signJwt(payload);

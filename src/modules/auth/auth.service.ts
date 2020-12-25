@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from '../../api.gateway/users/users.service';
-import { jwtConstants } from './jwt.params';
+import { IJwtPayload, jwtConstants } from './jwt.params';
 
 @Injectable()
 export class AuthService {
@@ -16,23 +16,42 @@ export class AuthService {
     return user ? user : null;
   }
 
+  createPayload(username: string, userId: number): IJwtPayload {
+    return {
+      username,
+      sub: userId,
+    };
+  }
+
+  async signJwt(
+    payload: IJwtPayload,
+    secret: string,
+    expiresIn: string,
+  ): Promise<string> {
+    return this.jwtService.sign(payload, {
+      secret,
+      expiresIn,
+    });
+  }
+
   // TODO add types for login
   async login(
     user: UsersEntity | any,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const payload = {
-      username: user.name,
-      sub: user.userId,
-    };
-    const accessToken = this.jwtService.sign(payload, {
-      secret: jwtConstants.secret, // unique access secret from environment vars
-      expiresIn: jwtConstants.expires, // unique access expiration from environment vars
-    });
+    const payload: IJwtPayload = this.createPayload(user.name, user.userId);
 
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: jwtConstants.secret, // unique refresh secret from environment vars
-      expiresIn: jwtConstants.refreshExpires, // unique refresh expiration from environment vars
-    });
+    const accessToken = await this.signJwt(
+      payload,
+      jwtConstants.secret,
+      jwtConstants.expires,
+    );
+
+    const refreshToken = await this.signJwt(
+      payload,
+      jwtConstants.secret,
+      jwtConstants.refreshExpires,
+    );
+
     return {
       accessToken,
       refreshToken,

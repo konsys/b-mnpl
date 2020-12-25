@@ -5,10 +5,11 @@ import { MsNames } from 'src/types/ms/ms.types';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersMsController } from './users.ms.controller';
+import { TokensEntity } from 'src/entities/tokens.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UsersEntity]),
+    TypeOrmModule.forFeature([UsersEntity, TokensEntity]),
     ClientsModule.register([
       {
         name: MsNames.USERS,

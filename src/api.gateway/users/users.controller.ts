@@ -16,6 +16,7 @@ import { LocalAuthGuard } from 'src/modules/auth/local-auth.guard';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RequestWithUser } from '../../types/board/board.types';
+import { IJwtPayload, jwtConstants } from 'src/modules/auth/jwt.params';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -35,8 +36,21 @@ export class UsersController {
   @Post('auth/refresh')
   async refresh(
     @Request() refreshToken: string,
-  ): Promise<{ accessToken: string }> {
-    return await this.service.getToken(refreshToken);
+  ): Promise<{ accessToken: string | null }> {
+    const user = await this.service.getToken(refreshToken);
+    if (user) {
+      const payload: IJwtPayload = this.authService.createPayload(
+        user.name,
+        user.userId,
+      );
+      const accessToken = await this.authService.signJwt(
+        payload,
+        jwtConstants.secret,
+        jwtConstants.expires,
+      );
+      return { accessToken };
+    }
+    return null;
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

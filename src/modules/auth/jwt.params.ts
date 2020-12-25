@@ -4,8 +4,13 @@ export interface IJwtSettings {
   refreshExpires: string;
 }
 
+export interface IJwtPayload {
+  username: string;
+  sub: number;
+}
+
 export const jwtConstants: IJwtSettings = {
   secret: 'secretKey',
-  expires: '60s',
+  expires: '10s',
   refreshExpires: '6000000s',
 };

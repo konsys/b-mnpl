@@ -98,7 +98,7 @@ export class UsersService {
     }
   }
 
-  async getToken(userId: string): Promise<any> {
+  async getToken(userId: string): Promise<UsersEntity | null> {
     try {
       const res = await this.proxy
         .send<any>({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN }, userId)

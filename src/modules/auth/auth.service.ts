@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from '../../api.gateway/users/users.service';
+import { jwtConstants } from './jwt.params';
 
 @Injectable()
 export class AuthService {
@@ -24,13 +25,13 @@ export class AuthService {
       sub: user.userId,
     };
     const accessToken = this.jwtService.sign(payload, {
-      secret: 'ergergewrf3w4r5t432tr4t', // unique access secret from environment vars
-      expiresIn: 24 * 60 * 60 * 1000, // unique access expiration from environment vars
+      secret: jwtConstants.secret, // unique access secret from environment vars
+      expiresIn: jwtConstants.expires, // unique access expiration from environment vars
     });
 
     const refreshToken = this.jwtService.sign(payload, {
-      secret: 'ergergewrf3w4r5t432tr4t', // unique refresh secret from environment vars
-      expiresIn: 24 * 60 * 60 * 1000, // unique refresh expiration from environment vars
+      secret: jwtConstants.secret, // unique refresh secret from environment vars
+      expiresIn: jwtConstants.refreshExpires, // unique refresh expiration from environment vars
     });
     return {
       accessToken,

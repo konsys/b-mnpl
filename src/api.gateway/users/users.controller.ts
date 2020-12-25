@@ -28,8 +28,15 @@ export class UsersController {
   @Post('auth/login')
   async login(
     @Request() req: RequestWithUser,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ accessToken: string }> {
     return await this.authService.login(req.user);
+  }
+
+  @Post('auth/refresh')
+  async refresh(
+    @Request() refreshToken: string,
+  ): Promise<{ accessToken: string }> {
+    return await this.service.getToken(refreshToken);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

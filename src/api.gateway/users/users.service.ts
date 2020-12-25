@@ -97,4 +97,37 @@ export class UsersService {
       this.logger.log(`Error: ${err}`);
     }
   }
+
+  async getToken(userId: string): Promise<any> {
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN }, userId)
+        .toPromise();
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
+  async saveToken(token: string): Promise<any> {
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsUsersPatterns.SAVE_REFRESH_TOKEN }, token)
+        .toPromise();
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
+  async deleteToken(userId: string): Promise<any> {
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN }, userId)
+        .toPromise();
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
 }

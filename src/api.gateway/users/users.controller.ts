@@ -43,11 +43,7 @@ export class UsersController {
         user.name,
         user.userId,
       );
-      const accessToken = await this.authService.signJwt(
-        payload,
-        jwtConstants.secret,
-        jwtConstants.expires,
-      );
+      const accessToken = await this.authService.signJwt(payload);
       return { accessToken };
     }
     return null;

@@ -23,15 +23,8 @@ export class AuthService {
     };
   }
 
-  async signJwt(
-    payload: IJwtPayload,
-    secret: string,
-    expiresIn: string,
-  ): Promise<string> {
-    return this.jwtService.sign(payload, {
-      secret,
-      expiresIn,
-    });
+  async signJwt(payload: IJwtPayload): Promise<string> {
+    return this.jwtService.sign(payload);
   }
 
   // TODO add types for login
@@ -40,17 +33,9 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const payload: IJwtPayload = this.createPayload(user.name, user.userId);
 
-    const accessToken = await this.signJwt(
-      payload,
-      jwtConstants.secret,
-      jwtConstants.expires,
-    );
+    const accessToken = await this.signJwt(payload);
 
-    const refreshToken = await this.signJwt(
-      payload,
-      jwtConstants.secret,
-      jwtConstants.refreshExpires,
-    );
+    const refreshToken = await this.signJwt(payload);
 
     return {
       accessToken,

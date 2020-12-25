@@ -9,7 +9,7 @@ export class TokensEntity {
   userId: number;
 
   @Column()
-  userName: string;
+  name: string;
 
   @Column()
   token: string;

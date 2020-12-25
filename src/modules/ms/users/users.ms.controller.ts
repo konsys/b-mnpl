@@ -72,15 +72,15 @@ export class UsersMsController {
   async saveToken({
     token,
     userId,
-    userName,
+    name,
   }: {
     token: string;
     userId: number;
-    userName: string;
+    name: string;
   }): Promise<any> {
     const saveToken: TokensEntity = {
       userId,
-      userName,
+      name,
       expires: new Date(),
       token,
     };

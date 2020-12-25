@@ -56,32 +56,44 @@ export class UsersMsController {
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS })
-  async verifyUsers(filter: any) {
+  async verifyUsers(filter: any): Promise<any> {
     const user: UsersEntity = await this.users.findOne({ email: filter.email });
 
     return of(user).pipe(delay(1));
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.SAVE_USERS })
-  async saveUsers(users: UsersEntity[]) {
+  async saveUsers(users: UsersEntity[]): Promise<any> {
     const allUsers: UsersEntity[] = await this.users.save(users);
     return of(allUsers).pipe(delay(1));
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.SAVE_REFRESH_TOKEN })
-  async saveToken(token: TokensEntity) {
-    const res: TokensEntity = await this.tokens.save(token);
+  async saveToken({
+    token,
+    userId,
+  }: {
+    token: string;
+    userId: number;
+  }): Promise<any> {
+    const saveToken: TokensEntity = {
+      userId,
+      expires: new Date(),
+      token,
+    };
+    const res: TokensEntity = await this.tokens.save(saveToken);
     return of(res).pipe(delay(1));
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })
-  async getToken(userId: number) {
+  async getToken(userId: number): Promise<any> {
     const res: TokensEntity = await this.tokens.findOne({ userId });
+    console.log(222222222222, res);
     return of(res).pipe(delay(1));
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })
-  async deleteToken(userId: number) {
+  async deleteToken(userId: number): Promise<any> {
     await this.tokens.delete({ userId });
     return of(true).pipe(delay(1));
   }

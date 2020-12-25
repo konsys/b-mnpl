@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersEntity } from 'src/entities/users.entity';
 import { UsersService } from '../../api.gateway/users/users.service';
-import { IJwtPayload, jwtConstants } from './jwt.params';
+import { IJwtPayload } from './jwt.params';
 
 @Injectable()
 export class AuthService {
@@ -23,8 +23,10 @@ export class AuthService {
     };
   }
 
-  async signJwt(payload: IJwtPayload): Promise<string> {
-    return this.jwtService.sign(payload);
+  async signJwt(payload: IJwtPayload, expiresIn?: string): Promise<string> {
+    return expiresIn
+      ? this.jwtService.sign(payload, { expiresIn })
+      : this.jwtService.sign(payload);
   }
 
   // TODO add types for login
@@ -34,9 +36,13 @@ export class AuthService {
     const payload: IJwtPayload = this.createPayload(user.name, user.userId);
 
     const accessToken = await this.signJwt(payload);
+    const refreshToken = await this.signJwt(payload, '60000s');
 
-    const refreshToken = await this.signJwt(payload);
+    await this.usersService.saveToken(refreshToken, user.userId);
 
+    const token = await this.usersService.getToken(user.userId);
+
+    console.log(1111111111, token);
     return {
       accessToken,
       refreshToken,

@@ -1,10 +1,7 @@
-import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
+import { Column, Entity, Index } from 'typeorm';
 
 @Entity()
 export class TokensEntity {
-  @PrimaryGeneratedColumn()
-  tokenId?: number;
-
   @Column()
   userId: number;
 
@@ -12,6 +9,7 @@ export class TokensEntity {
   name: string;
 
   @Column()
+  @Index({ unique: true })
   token: string;
 
   @Column()

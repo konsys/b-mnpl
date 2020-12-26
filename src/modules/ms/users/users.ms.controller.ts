@@ -108,7 +108,12 @@ export class UsersMsController {
 
   @MessagePattern({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN })
   async deleteToken(userId: number): Promise<any> {
-    await this.tokens.delete({ userId });
+    try {
+      await this.tokens.delete({ userId });
+    } catch (err) {
+      console.log(1111111);
+    }
+
     return of(true).pipe(delay(1));
   }
 }

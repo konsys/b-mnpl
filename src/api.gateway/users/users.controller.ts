@@ -48,7 +48,10 @@ export class UsersController {
 
       return { accessToken };
     }
-    await this.service.deleteToken(accessToken);
+    if (token) {
+      await this.service.deleteToken(accessToken);
+    }
+
     return { accessToken: '' };
   }
 

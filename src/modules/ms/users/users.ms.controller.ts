@@ -95,12 +95,6 @@ export class UsersMsController {
   @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })
   async getToken(token: string): Promise<any> {
     const res: TokensEntity = await this.tokens.findOne({ token });
-    if (res) {
-      res.expires.setSeconds(
-        res.expires.getSeconds() + jwtConstants.refreshExpires,
-      );
-      await this.tokens.save(res);
-    }
 
     return of(res).pipe(delay(1));
   }

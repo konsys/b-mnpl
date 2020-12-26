@@ -39,12 +39,18 @@ export class UsersController {
     @Body() { accessToken }: { accessToken: string },
   ): Promise<{ accessToken: string | null }> {
     const token = await this.service.getToken(accessToken);
-    if (token && new Date(token.expires) >= new Date()) {
+    const dt = new Date().getTime();
+    if (token && new Date(token.expires).getTime() >= dt) {
       const payload: IJwtPayload = this.authService.createPayload(
         token.name,
         token.userId,
       );
       const accessToken = await this.authService.signJwt(payload);
+
+      const expires = new Date();
+      expires.setSeconds(expires.getSeconds() + jwtConstants.refreshExpires);
+      token.expires = expires;
+      await this.service.saveToken(token.token, token.userId, token.name);
 
       return { accessToken };
     }

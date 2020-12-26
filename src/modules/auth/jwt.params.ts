@@ -11,6 +11,6 @@ export interface IJwtPayload {
 
 export const jwtConstants: IJwtSettings = {
   secret: 'secretKey',
-  expires: '10s',
-  refreshExpires: 60 * 60, //seconds
+  expires: '5s',
+  refreshExpires: 20, //seconds
 };

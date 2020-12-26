@@ -1,4 +1,4 @@
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class TokensEntity {
@@ -9,6 +9,7 @@ export class TokensEntity {
   name: string;
 
   @Column()
+  @PrimaryColumn()
   @Index({ unique: true })
   token: string;
 

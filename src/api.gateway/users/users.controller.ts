@@ -38,16 +38,17 @@ export class UsersController {
   async refresh(
     @Body() { accessToken }: { accessToken: string },
   ): Promise<{ accessToken: string | null }> {
-    const user = await this.service.getToken(accessToken);
-    if (user) {
+    const token = await this.service.getToken(accessToken);
+    if (token && new Date(token.expires) >= new Date()) {
       const payload: IJwtPayload = this.authService.createPayload(
-        user.name,
-        user.userId,
+        token.name,
+        token.userId,
       );
       const accessToken = await this.authService.signJwt(payload);
 
       return { accessToken };
     }
+    await this.service.deleteToken(accessToken);
     return { accessToken: '' };
   }
 

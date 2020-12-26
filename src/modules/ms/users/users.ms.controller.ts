@@ -12,6 +12,7 @@ import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { MsUsersPatterns } from 'src/types/ms/ms.types';
 import { ErrorCode } from 'src/utils/error.code';
+import { jwtConstants } from 'src/modules/auth/jwt.params';
 
 @Controller()
 export class UsersMsController {
@@ -78,12 +79,16 @@ export class UsersMsController {
     userId: number;
     name: string;
   }): Promise<any> {
+    await this.tokens.delete({ userId });
+    const expires = new Date();
+    expires.setSeconds(expires.getSeconds() + jwtConstants.refreshExpires);
     const saveToken: TokensEntity = {
       userId,
       name,
-      expires: new Date(),
+      expires,
       token,
     };
+
     const res: TokensEntity = await this.tokens.save(saveToken);
     return of(res).pipe(delay(1));
   }
@@ -91,6 +96,13 @@ export class UsersMsController {
   @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })
   async getToken(token: string): Promise<any> {
     const res: TokensEntity = await this.tokens.findOne({ token });
+    if (res) {
+      res.expires.setSeconds(
+        res.expires.getSeconds() + jwtConstants.refreshExpires,
+      );
+      await this.tokens.save(res);
+    }
+
     return of(res).pipe(delay(1));
   }
 

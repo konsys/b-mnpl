@@ -15,6 +15,7 @@ import {
 } from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
 import { users } from 'src/entities/dbData';
+import { TokensEntity } from 'src/entities/tokens.entity';
 
 export interface IPlayersStore {
   players: IPlayer[];
@@ -98,7 +99,7 @@ export class UsersService {
     }
   }
 
-  async getToken(userId: string): Promise<UsersEntity | null> {
+  async getToken(userId: string): Promise<TokensEntity | null> {
     try {
       const res = await this.proxy
         .send<any>({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN }, userId)
@@ -123,10 +124,10 @@ export class UsersService {
     }
   }
 
-  async deleteToken(userId: string): Promise<any> {
+  async deleteToken(token: string): Promise<any> {
     try {
       const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN }, userId)
+        .send<any>({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN }, token)
         .toPromise();
       return res;
     } catch (err) {

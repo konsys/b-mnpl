@@ -79,7 +79,6 @@ export class UsersMsController {
     userId: number;
     name: string;
   }): Promise<any> {
-    await this.tokens.delete({ userId });
     const expires = new Date();
     expires.setSeconds(expires.getSeconds() + jwtConstants.refreshExpires);
     const saveToken: TokensEntity = {

@@ -24,15 +24,15 @@ export class UsersMsController {
   ) {}
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_ALL_USERS })
-  async allUsers(filter: FindManyOptions) {
+  async allUsers(filter: FindManyOptions): Promise<UsersEntity[]> {
     filter = { ...filter, skip: 1 };
     const users: any = await this.users.find(filter);
-    return of(users).pipe(delay(1));
+    return users;
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @MessagePattern({ cmd: MsUsersPatterns.GET_USER })
-  async getUser(userId: number) {
+  async getUser(userId: number): Promise<UsersEntity> {
     const user: UsersEntity = await this.users.findOne(userId);
     if (!user) {
       throw new RpcException({ code: ErrorCode.UserDoesntExists });
@@ -78,7 +78,7 @@ export class UsersMsController {
     token: string;
     userId: number;
     name: string;
-  }): Promise<any> {
+  }): Promise<TokensEntity> {
     const expires = new Date();
     expires.setSeconds(expires.getSeconds() + jwtConstants.refreshExpires);
 
@@ -89,16 +89,14 @@ export class UsersMsController {
       token,
     };
 
-    const isToken = await this.tokens.findOne({ token });
     let res = null;
-    if (isToken) {
-      await this.deleteToken(token);
-      res = await this.tokens.save({ ...isToken, expires });
-    } else {
+    try {
       res = await this.tokens.save(saveToken);
+    } catch (err) {
+      res = await this.tokens.update({ userId }, { expires, token });
     }
 
-    return of(res).pipe(delay(1));
+    return res;
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })

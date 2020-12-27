@@ -20,7 +20,13 @@ export class TokensEntity {
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
+  })
+  createdAt?: string;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP',
   })
-  time?: string;
+  updatedAt?: string;
 }

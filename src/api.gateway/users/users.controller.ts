@@ -77,9 +77,7 @@ export class UsersController {
     @Param() { id }: { id: string },
   ): Promise<UsersEntity> {
     return new UsersEntity(
-      await this.service.getUser(
-        id === 'me' ? req.user.userId : Number.parseInt(id),
-      ),
+      await this.service.getUser(id ? Number.parseInt(id) : req.user.userId),
     );
   }
 

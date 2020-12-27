@@ -73,16 +73,14 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req: RequestWithUser): Promise<UsersEntity> {
-    console.log('getProfile:');
     return new UsersEntity(await this.service.getUser(req.user.userId));
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get('profile/:id')
   async getProfileById(@Param('id') userId: number): Promise<UsersEntity> {
     const res = new UsersEntity(await this.service.getUser(userId));
-    console.log('userId:', userId);
     return res;
   }
 

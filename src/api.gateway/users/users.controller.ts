@@ -94,7 +94,6 @@ export class UsersController {
     try {
       let players = await this.service.getUsersByIds(ids);
 
-      // kkk
       players = await this.service.initPlayers(gameId, players);
 
       return players;

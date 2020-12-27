@@ -72,13 +72,15 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(
-    @Request() req: RequestWithUser,
-    @Param() { id }: { id: string },
-  ): Promise<UsersEntity> {
-    return new UsersEntity(
-      await this.service.getUser(id ? Number.parseInt(id) : req.user.userId),
-    );
+  async getProfile(@Request() req: RequestWithUser): Promise<UsersEntity> {
+    return new UsersEntity(await this.service.getUser(req.user.userId));
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard)
+  @Get('profile/:userId')
+  async getProfileById(@Param('userId') userId: number): Promise<UsersEntity> {
+    return new UsersEntity(await this.service.getUser(userId));
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

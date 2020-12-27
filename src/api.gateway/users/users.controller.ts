@@ -34,6 +34,13 @@ export class UsersController {
     return await this.authService.login(req.user);
   }
 
+  @Post('auth/logout')
+  async logout(
+    @Body() { refreshToken }: { refreshToken: string },
+  ): Promise<boolean> {
+    return await this.service.logout(refreshToken);
+  }
+
   @Post('auth/refresh')
   async refresh(
     @Body() { accessToken }: { accessToken: string },

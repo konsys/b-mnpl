@@ -134,4 +134,16 @@ export class UsersService {
       this.logger.log(`Error: ${err}`);
     }
   }
+
+  async logout(token: string): Promise<boolean> {
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN }, token)
+        .toPromise();
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+      return false;
+    }
+  }
 }

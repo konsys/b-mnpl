@@ -9,6 +9,7 @@ import {
   ClassSerializerInterceptor,
   BadRequestException,
   Body,
+  Param,
 } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
@@ -71,8 +72,15 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Request() req: RequestWithUser): Promise<UsersEntity> {
-    return new UsersEntity(await this.service.getUser(req.user.userId));
+  async getProfile(
+    @Request() req: RequestWithUser,
+    @Param() { id }: { id: string },
+  ): Promise<UsersEntity> {
+    return new UsersEntity(
+      await this.service.getUser(
+        id === 'me' ? req.user.userId : Number.parseInt(id),
+      ),
+    );
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

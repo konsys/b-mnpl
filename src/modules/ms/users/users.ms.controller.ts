@@ -81,6 +81,7 @@ export class UsersMsController {
   }): Promise<any> {
     const expires = new Date();
     expires.setSeconds(expires.getSeconds() + jwtConstants.refreshExpires);
+
     const saveToken: TokensEntity = {
       userId,
       name,
@@ -88,14 +89,21 @@ export class UsersMsController {
       token,
     };
 
-    const res: TokensEntity = await this.tokens.save(saveToken);
+    const isToken = await this.tokens.findOne({ token });
+    let res = null;
+    if (isToken) {
+      await this.deleteToken(token);
+      res = await this.tokens.save({ ...isToken, expires });
+    } else {
+      res = await this.tokens.save(saveToken);
+    }
+
     return of(res).pipe(delay(1));
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })
   async getToken(token: string): Promise<any> {
     const res: TokensEntity = await this.tokens.findOne({ token });
-
     return of(res).pipe(delay(1));
   }
 

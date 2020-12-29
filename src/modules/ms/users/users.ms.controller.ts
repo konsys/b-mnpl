@@ -64,9 +64,20 @@ export class UsersMsController {
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.SAVE_USERS })
-  async saveUsers(users: UsersEntity[]): Promise<any> {
+  async saveUsers(users: UsersEntity[]): Promise<UsersEntity[]> {
     const allUsers: UsersEntity[] = await this.users.save(users);
-    return of(allUsers).pipe(delay(1));
+    return allUsers;
+  }
+
+  @MessagePattern({ cmd: MsUsersPatterns.SAVE_USER })
+  async saveUser(user: UsersEntity): Promise<UsersEntity> {
+    user = new UsersEntity(user);
+    const savedUser = await this.users.save({
+      ...user,
+      vip: !!user.vip,
+    });
+
+    return savedUser;
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.SAVE_REFRESH_TOKEN })

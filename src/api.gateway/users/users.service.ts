@@ -89,6 +89,30 @@ export class UsersService {
     }
   }
 
+  async getUsersByEmail(email: string): Promise<UsersEntity[]> {
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS }, { email })
+        .toPromise();
+
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
+  async saveUser(user: UsersEntity): Promise<UsersEntity> {
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsUsersPatterns.SAVE_USER }, user)
+        .toPromise();
+
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
   async saveUsers(): Promise<UsersEntity[]> {
     try {
       return await this.proxy

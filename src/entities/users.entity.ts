@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Exclude } from 'class-transformer';
 import { IInventoryItems } from '../types/game/game.types';
@@ -20,7 +20,8 @@ export class UsersEntity {
 
   @Exclude()
   @Column()
-  email: string;
+  @Index({ unique: true })
+  email?: string;
 
   @Exclude()
   @Column({ default: 'password' })

@@ -116,4 +116,5 @@ export interface IUserCreds {
   email?: string;
   name?: string;
   password?: string;
+  userId?: number;
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { PassportStrategy } from '@nestjs/passport';
@@ -13,6 +13,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate(_: Request, email: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(email, password);
+    if (!user) {
+      throw new BadRequestException('Wrong credentials');
+    }
     return user ? user : null;
   }
 }

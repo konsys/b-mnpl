@@ -32,7 +32,7 @@ export class UsersService {
     private readonly actionsMs: ClientProxy,
   ) {}
 
-  async getAllUsers(filter?: FindManyOptions) {
+  async getAllUsers(filter?: FindManyOptions): Promise<UsersEntity[]> {
     try {
       const res = await this.proxy
         .send<any>({ cmd: MsUsersPatterns.GET_ALL_USERS }, filter)
@@ -43,21 +43,7 @@ export class UsersService {
     }
   }
 
-  async getUserByCredentials(email: string, password: string) {
-    try {
-      const res = await this.proxy
-        .send<any>(
-          { cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS },
-          { email, password },
-        )
-        .toPromise();
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
-  }
-
-  async getUser(userId: number | null): Promise<any> {
+  async getUser(userId: number | null): Promise<UsersEntity | undefined> {
     try {
       const res = await this.proxy
         .send<any>({ cmd: MsUsersPatterns.GET_USER }, { userId })
@@ -69,7 +55,10 @@ export class UsersService {
     }
   }
 
-  async initPlayers(gameId: string, players: UsersEntity[]): Promise<any> {
+  async initPlayers(
+    gameId: string,
+    players: UsersEntity[],
+  ): Promise<UsersEntity[]> {
     const res = await this.actionsMs
       .send<any>({ cmd: MsActionsPatterns.INIT_PLAYERS }, { gameId, players })
       .toPromise();
@@ -89,10 +78,30 @@ export class UsersService {
     }
   }
 
-  async getUsersByEmail(email: string): Promise<UsersEntity[]> {
+  async getUserByCredentials(
+    email: string,
+    password: string,
+  ): Promise<UsersEntity> {
     try {
       const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS }, { email })
+        .send<any>(
+          { cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS },
+          { email, password },
+        )
+        .toPromise();
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
+  async getUserByEmail(email: string): Promise<UsersEntity> {
+    try {
+      const res = await this.proxy
+        .send<UsersEntity>(
+          { cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS },
+          { email },
+        )
         .toPromise();
 
       return res;
@@ -134,7 +143,11 @@ export class UsersService {
     }
   }
 
-  async saveToken(token: string, userId: number, name: string): Promise<any> {
+  async saveToken(
+    token: string,
+    userId: number,
+    name: string,
+  ): Promise<boolean> {
     try {
       const res = await this.proxy
         .send<any>(
@@ -148,7 +161,7 @@ export class UsersService {
     }
   }
 
-  async deleteToken(token: string): Promise<any> {
+  async deleteToken(token: string): Promise<boolean> {
     try {
       const res = await this.proxy
         .send<any>({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN }, token)

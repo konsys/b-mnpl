@@ -13,7 +13,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<boolean> {
     const user = await this.usersService.getUserByCredentials(email, password);
-    return user ? user : null;
+    return user && user.name ? true : false;
   }
 
   createPayload(username: string, userId: number): IJwtPayload {

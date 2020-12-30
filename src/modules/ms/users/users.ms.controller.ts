@@ -13,6 +13,7 @@ import { delay } from 'rxjs/operators';
 import { MsUsersPatterns } from 'src/types/ms/ms.types';
 import { ErrorCode } from 'src/utils/error.code';
 import { jwtConstants } from 'src/modules/auth/jwt.params';
+import { IUserCreds } from 'src/types/game/game.types';
 
 @Controller()
 export class UsersMsController {
@@ -57,10 +58,9 @@ export class UsersMsController {
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS })
-  async verifyUsers(filter: any): Promise<any> {
-    const user: UsersEntity = await this.users.findOne({ email: filter.email });
-
-    return of(user).pipe(delay(1));
+  async getUserByCredentials(creds: IUserCreds): Promise<UsersEntity> {
+    const user: UsersEntity = await this.users.findOne(creds);
+    return user;
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.SAVE_USERS })

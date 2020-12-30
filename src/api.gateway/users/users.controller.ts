@@ -105,7 +105,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
   async saveUser(@Body() user: UsersEntity): Promise<any> {
-    const emailIsRegistered = await this.service.getUsersByEmail(user.email);
+    const emailIsRegistered = await this.service.getUserByEmail(user.email);
 
     if (emailIsRegistered) {
       throw new BadRequestException('User exists');
@@ -114,10 +114,16 @@ export class UsersController {
     const saveUser: UsersEntity = {
       ...user,
     };
-
     const res = new UsersEntity(await this.service.saveUser(saveUser));
-
     return res;
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Post('email/:email')
+  async getUserByEmail(
+    @Param() email: string,
+  ): Promise<UsersEntity | undefined> {
+    return await this.service.getUserByEmail(email);
   }
 
   @Post()

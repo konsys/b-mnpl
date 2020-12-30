@@ -111,3 +111,9 @@ export interface IInventoryItems {
   date: Date;
   quantity: number;
 }
+
+export interface IUserCreds {
+  email?: string;
+  name?: string;
+  password?: string;
+}

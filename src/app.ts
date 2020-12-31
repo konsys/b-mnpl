@@ -17,6 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './api.gateway/users/users.module';
 import { UsersMsModule } from './modules/ms/users/users.ms.module';
 import { join } from 'path';
+import { MailerModule } from '@nestjs-modules/mailer';
 const rootPath = join(__dirname, '../', 'assets/');
 
 @Module({
@@ -36,7 +37,23 @@ const rootPath = join(__dirname, '../', 'assets/');
       synchronize: true,
       // logging: ['error'],
     }),
-
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.office365.com',
+        port: 587,
+        tls: {
+          ciphers: 'SSLv3',
+        },
+        secure: false, // true for 465, false for other ports
+        auth: {
+          user: process.env.EMAIL_ID, // generated ethereal user
+          pass: process.env.EMAIL_PASS, // generated ethereal password
+        },
+      },
+      defaults: {
+        from: '"nest-modules" <user@outlook.com>', // outgoing email ID
+      },
+    }),
     ActionMsModule,
     AuthModule,
     SocketModule,

@@ -19,12 +19,14 @@ import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RequestWithUser } from '../../types/board/board.types';
 import { IJwtPayload, jwtConstants } from 'src/modules/auth/jwt.params';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Controller(MsNames.USERS)
 export class UsersController {
   constructor(
     private readonly service: UsersService,
     private readonly authService: AuthService,
+    private readonly mailerService: MailerService,
   ) {}
 
   @UseGuards(LocalAuthGuard)
@@ -107,14 +109,23 @@ export class UsersController {
   async saveUser(@Body() user: UsersEntity): Promise<any> {
     const emailIsRegistered = await this.service.getUserByEmail(user.email);
 
-    if (emailIsRegistered) {
-      throw new BadRequestException('User exists');
-    }
+    // if (emailIsRegistered) {
+    //   throw new BadRequestException('User exists');
+    // }
 
     const saveUser: UsersEntity = {
       ...user,
     };
+
     const res = new UsersEntity(await this.service.saveUser(saveUser));
+    const mail = await this.mailerService.sendMail({
+      to: 'harry-run@yandex.ru', // List of receivers email address
+      from: 'harry-run@yandex.ru', // Senders email address
+      subject: 'Testing Nest MailerModule ✔', // Subject line
+      text: 'welcome', // plaintext body
+      html: '<b>welcome</b>', // HTML body content
+    });
+    console.log(111111111111111, mail);
     return res;
   }
 

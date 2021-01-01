@@ -117,16 +117,16 @@ export class UsersController {
       ...user,
     };
 
-    const res = new UsersEntity(await this.service.saveUser(saveUser));
+    // const res = new UsersEntity(await this.service.saveUser(saveUser));
     const mail = await this.mailerService.sendMail({
-      to: 'harry-run@yandex.ru', // List of receivers email address
-      from: 'harry-run@yandex.ru', // Senders email address
+      to: 'CatsPets88@yandex.ru', // List of receivers email address
+      from: 'CatsPets88@yandex.ru', // Senders email address
       subject: 'Testing Nest MailerModule ✔', // Subject line
       text: 'welcome', // plaintext body
       html: '<b>welcome</b>', // HTML body content
     });
     console.log(111111111111111, mail);
-    return res;
+    return null;
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

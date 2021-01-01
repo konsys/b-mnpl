@@ -37,21 +37,16 @@ const rootPath = join(__dirname, '../', 'assets/');
       synchronize: true,
       // logging: ['error'],
     }),
+
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.office365.com',
+        host: 'smtp.yandex.ru',
         port: 587,
-        tls: {
-          ciphers: 'SSLv3',
-        },
         secure: false, // true for 465, false for other ports
         auth: {
-          user: process.env.EMAIL_ID, // generated ethereal user
-          pass: process.env.EMAIL_PASS, // generated ethereal password
+          user: 'CatsPets88@yandex.ru',
+          pass: 'detczeknyhsmhkty',
         },
-      },
-      defaults: {
-        from: '"nest-modules" <user@outlook.com>', // outgoing email ID
       },
     }),
     ActionMsModule,

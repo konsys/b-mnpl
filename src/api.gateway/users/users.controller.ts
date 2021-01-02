@@ -107,7 +107,9 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
-  async saveUser(@Body() user: UsersEntity): Promise<{ email: string | null }> {
+  async saveUser(
+    @Body() user: UsersEntity,
+  ): Promise<{ email: string | null; code: string }> {
     const emailIsRegistered = await this.service.getUserByEmail(user.email);
 
     // if (emailIsRegistered) {
@@ -116,13 +118,13 @@ export class UsersController {
 
     const registrationCode = nanoid();
 
-    await this.mailerService.sendMail({
-      to: 'CatsPets88@yandex.ru', // List of receivers email address
-      from: 'CatsPets88@yandex.ru', // Senders email address
-      subject: 'Testing Nest MailerModule ✔', // Subject line
-      text: registrationCode, // plaintext body
-      html: `<b>${registrationCode}</b>`, // HTML body content
-    });
+    // await this.mailerService.sendMail({
+    //   to: 'CatsPets88@yandex.ru', // List of receivers email address
+    //   from: 'CatsPets88@yandex.ru', // Senders email address
+    //   subject: 'Testing Nest MailerModule ✔', // Subject line
+    //   text: registrationCode, // plaintext body
+    //   html: `<b>${registrationCode}</b>`, // HTML body content
+    // });
 
     const saveUser: UsersEntity = {
       ...user,
@@ -130,7 +132,9 @@ export class UsersController {
     };
 
     const res = new UsersEntity(await this.service.saveUser(saveUser));
-    return { email: res ? user.email : null };
+    return {
+      email: res ? saveUser.email : null,
+    };
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

@@ -107,7 +107,7 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
-  async saveUser(@Body() user: UsersEntity): Promise<any> {
+  async saveUser(@Body() user: UsersEntity): Promise<{ email: string | null }> {
     const emailIsRegistered = await this.service.getUserByEmail(user.email);
 
     // if (emailIsRegistered) {
@@ -130,8 +130,7 @@ export class UsersController {
     };
 
     const res = new UsersEntity(await this.service.saveUser(saveUser));
-    console.log(2342342424, res);
-    return res;
+    return { email: res ? user.email : null };
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

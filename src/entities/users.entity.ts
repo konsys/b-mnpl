@@ -15,6 +15,10 @@ export class UsersEntity {
   @Column({ default: null })
   registrationType?: string;
 
+  @Exclude()
+  @Column({ default: null })
+  registrationCode: string;
+
   @Column()
   name: string;
 
@@ -42,7 +46,7 @@ export class UsersEntity {
   updatedAt?: Date;
 
   @Exclude()
-  @Column({ default: true })
+  @Column({ default: false })
   isActive?: boolean;
 
   @Exclude()

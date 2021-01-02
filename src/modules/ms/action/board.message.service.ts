@@ -25,6 +25,7 @@ const bankInit: IPlayer = {
   password: 'bank',
   vip: true,
   registrationType: 'none',
+  registrationCode: '',
   name: 'BANK',
   email: 'b@b.ru',
   team: null,

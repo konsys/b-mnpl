@@ -69,6 +69,21 @@ export class UsersMsController {
     return allUsers;
   }
 
+  @MessagePattern({ cmd: MsUsersPatterns.ACTIVATE_USER })
+  async activateUsers({
+    registrationCode,
+    email,
+  }: {
+    registrationCode: string;
+    email: string;
+  }): Promise<boolean> {
+    const res = await this.users.update(
+      { registrationCode, email },
+      { isActive: true },
+    );
+    return res && res.affected > 0 ? true : false;
+  }
+
   @MessagePattern({ cmd: MsUsersPatterns.SAVE_USER })
   async saveUser(user: UsersEntity): Promise<UsersEntity> {
     user = new UsersEntity(user);

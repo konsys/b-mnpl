@@ -42,7 +42,11 @@ export class UsersEntity {
   createdAt?: Date;
 
   @Exclude()
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updatedAt?: Date;
 
   @Exclude()

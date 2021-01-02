@@ -122,6 +122,25 @@ export class UsersService {
     }
   }
 
+  async activateUser(
+    registrationCode: string,
+    email: string,
+  ): Promise<UsersEntity> {
+    console.log(111111111, registrationCode, email);
+    try {
+      const res = await this.proxy
+        .send<any>(
+          { cmd: MsUsersPatterns.ACTIVATE_USER },
+          { registrationCode, email },
+        )
+        .toPromise();
+
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
   async saveUsers(): Promise<UsersEntity[]> {
     try {
       return await this.proxy

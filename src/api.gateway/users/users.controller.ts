@@ -20,6 +20,7 @@ import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RequestWithUser } from '../../types/board/board.types';
 import { IJwtPayload, jwtConstants } from 'src/modules/auth/jwt.params';
 import { MailerService } from '@nestjs-modules/mailer';
+import { nanoid } from 'nanoid';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -113,20 +114,31 @@ export class UsersController {
     //   throw new BadRequestException('User exists');
     // }
 
-    const saveUser: UsersEntity = {
-      ...user,
-    };
+    const registrationCode = nanoid();
 
-    // const res = new UsersEntity(await this.service.saveUser(saveUser));
-    const mail = await this.mailerService.sendMail({
+    await this.mailerService.sendMail({
       to: 'CatsPets88@yandex.ru', // List of receivers email address
       from: 'CatsPets88@yandex.ru', // Senders email address
       subject: 'Testing Nest MailerModule ✔', // Subject line
-      text: 'welcome', // plaintext body
-      html: '<b>welcome</b>', // HTML body content
+      text: registrationCode, // plaintext body
+      html: `<b>${registrationCode}</b>`, // HTML body content
     });
-    console.log(111111111111111, mail);
-    return null;
+
+    const saveUser: UsersEntity = {
+      ...user,
+      registrationCode,
+    };
+
+    const res = new UsersEntity(await this.service.saveUser(saveUser));
+    console.log(2342342424, res);
+    return res;
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Post('register/code')
+  async saveCode(@Body() code: string, @Body() email: string): Promise<any> {
+    const res = new UsersEntity(await this.service.activateUser(code, email));
+    return res;
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

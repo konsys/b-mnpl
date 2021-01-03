@@ -107,31 +107,36 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
-  async saveUser(
-    @Body() user: UsersEntity,
-  ): Promise<{ email: string | null; code: string }> {
+  async saveUser(@Body() user: UsersEntity): Promise<{ email: string | null }> {
     const emailIsRegistered = await this.service.getUserByEmail(user.email);
 
-    // if (emailIsRegistered) {
-    //   throw new BadRequestException('User exists');
-    // }
+    const registrationCode = nanoid(4);
 
-    const registrationCode = nanoid();
-
-    // await this.mailerService.sendMail({
-    //   to: 'CatsPets88@yandex.ru', // List of receivers email address
-    //   from: 'CatsPets88@yandex.ru', // Senders email address
-    //   subject: 'Testing Nest MailerModule ✔', // Subject line
-    //   text: registrationCode, // plaintext body
-    //   html: `<b>${registrationCode}</b>`, // HTML body content
-    // });
+    await this.mailerService.sendMail({
+      to: 'CatsPets88@yandex.ru', // List of receivers email address
+      from: 'CatsPets88@yandex.ru', // Senders email address
+      subject: 'Testing Nest MailerModule ✔', // Subject line
+      text: registrationCode, // plaintext body
+      html: `<b>${registrationCode}</b>`, // HTML body content
+    });
 
     const saveUser: UsersEntity = {
       ...user,
       registrationCode,
     };
 
-    const res = new UsersEntity(await this.service.saveUser(saveUser));
+    let res = null;
+    if (emailIsRegistered) {
+      res = new UsersEntity(
+        await this.service.updateUser({
+          ...saveUser,
+          userId: emailIsRegistered.userId,
+        }),
+      );
+    } else {
+      res = new UsersEntity(await this.service.saveUser(saveUser));
+    }
+
     return {
       email: res ? saveUser.email : null,
     };
@@ -139,8 +144,15 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register/code')
-  async saveCode(@Body() code: string, @Body() email: string): Promise<any> {
-    const res = new UsersEntity(await this.service.activateUser(code, email));
+  async saveCode(
+    @Body()
+    { registrationCode, email }: { registrationCode: string; email: string },
+  ): Promise<any> {
+    const res = await this.service.activateUser(registrationCode, email);
+
+    if (!res) {
+      throw new BadRequestException('Code is wrong');
+    }
     return res;
   }
 

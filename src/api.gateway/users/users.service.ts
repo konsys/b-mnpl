@@ -110,6 +110,18 @@ export class UsersService {
     }
   }
 
+  async updateUser(user: UsersEntity): Promise<UsersEntity> {
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsUsersPatterns.UPDATE_USER }, user)
+        .toPromise();
+
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
   async saveUser(user: UsersEntity): Promise<UsersEntity> {
     try {
       const res = await this.proxy
@@ -126,7 +138,6 @@ export class UsersService {
     registrationCode: string,
     email: string,
   ): Promise<UsersEntity> {
-    console.log(111111111, registrationCode, email);
     try {
       const res = await this.proxy
         .send<any>(

@@ -21,6 +21,7 @@ export enum MsUsersPatterns {
   GET_USER_BY_CREDENTIALS = 'getUserByCredentials',
   SAVE_USERS = 'saveUsers',
   SAVE_USER = 'saveUser',
+  UPDATE_USER = 'updateUser',
   ACTIVATE_USER = 'activateUser',
   SAVE_REFRESH_TOKEN = 'saveRefreshToken',
   GET_REFRESH_TOKEN = 'getRefreshToken',

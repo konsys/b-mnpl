@@ -69,21 +69,6 @@ export class UsersMsController {
     return allUsers;
   }
 
-  @MessagePattern({ cmd: MsUsersPatterns.ACTIVATE_USER })
-  async activateUsers({
-    registrationCode,
-    email,
-  }: {
-    registrationCode: string;
-    email: string;
-  }): Promise<boolean> {
-    const res = await this.users.update(
-      { registrationCode, email },
-      { isActive: true },
-    );
-    return res && res.affected > 0 ? true : false;
-  }
-
   @MessagePattern({ cmd: MsUsersPatterns.SAVE_USER })
   async saveUser(user: UsersEntity): Promise<UsersEntity> {
     user = new UsersEntity(user);
@@ -93,6 +78,14 @@ export class UsersMsController {
     });
 
     return savedUser;
+  }
+
+  @MessagePattern({ cmd: MsUsersPatterns.UPDATE_USER })
+  async updateUser(user: UsersEntity): Promise<boolean> {
+    user = new UsersEntity(user);
+    const update = await this.users.update({ userId: user.userId }, user);
+
+    return update && update.affected > 0 ? true : false;
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.SAVE_REFRESH_TOKEN })
@@ -123,6 +116,29 @@ export class UsersMsController {
     }
 
     return res;
+  }
+
+  @MessagePattern({ cmd: MsUsersPatterns.ACTIVATE_USER })
+  async activateUser({
+    registrationCode,
+    email,
+  }: {
+    registrationCode: string;
+    email: string;
+  }): Promise<boolean> {
+    const user: UsersEntity = await this.users.findOne({
+      registrationCode,
+      email,
+    });
+
+    if (!user) {
+    }
+    const res = await this.users.update(
+      { registrationCode, email },
+      { isActive: true },
+    );
+
+    return res && res.affected > 0 ? true : false;
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })

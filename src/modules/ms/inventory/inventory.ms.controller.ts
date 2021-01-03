@@ -11,7 +11,6 @@ import {
   MsUsersPatterns,
 } from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
-import { ErrorCode } from 'src/utils/error.code';
 import { IInventory, InventoryType } from 'src/types/game/game.types';
 import { IField } from 'src/types/board/board.types';
 import { InjectRepository } from '@nestjs/typeorm';

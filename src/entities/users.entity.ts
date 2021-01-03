@@ -28,8 +28,12 @@ export class UsersEntity {
   email?: string;
 
   @Exclude()
-  @Column({ default: 'password' })
+  @Column()
   password: string;
+
+  @Exclude()
+  @Column({ default: null })
+  repeatPassword?: string;
 
   @Column({ default: null })
   team?: string;

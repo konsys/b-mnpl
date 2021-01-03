@@ -109,6 +109,9 @@ export class UsersController {
   @Post('register')
   async saveUser(@Body() user: UsersEntity): Promise<{ email: string | null }> {
     const emailIsRegistered = await this.service.getUserByEmail(user.email);
+    if (emailIsRegistered && !!emailIsRegistered.isActive) {
+      throw new BadRequestException('User is already registered');
+    }
 
     const registrationCode = nanoid(4);
 
@@ -148,6 +151,12 @@ export class UsersController {
     @Body()
     { registrationCode, email }: { registrationCode: string; email: string },
   ): Promise<any> {
+    const emailIsRegistered = await this.service.getUserByEmail(email);
+
+    if (emailIsRegistered && !!emailIsRegistered.isActive) {
+      throw new BadRequestException('User is already registered');
+    }
+
     const res = await this.service.activateUser(registrationCode, email);
 
     if (!res) {

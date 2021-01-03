@@ -59,7 +59,10 @@ export class UsersMsController {
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS })
   async getUserByCredentials(creds: IUserCreds): Promise<UsersEntity> {
-    const user: UsersEntity = await this.users.findOne(creds);
+    const user: UsersEntity = await this.users.findOne({
+      ...creds,
+      isActive: true,
+    });
     return user;
   }
 

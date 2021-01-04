@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 
 const redisHost = 'redis://localhost:6379';
+export let userRedis = null;
 export let redis = null;
 export let errorSubscriber = null;
 export let boardMessageSubscriber = null;
@@ -19,6 +20,7 @@ export let roomsRedis = null;
 
 async function bootstrap() {
   redis = new Redis(redisHost);
+  userRedis = new Redis(redisHost);
   errorSubscriber = new Redis(redisHost);
   boardMessageSubscriber = new Redis(redisHost);
   chatMessageSubscriber = new Redis(redisHost);

@@ -13,7 +13,7 @@ import { delay } from 'rxjs/operators';
 import { MsUsersPatterns } from 'src/types/ms/ms.types';
 import { ErrorCode } from 'src/utils/error.code';
 import { jwtConstants } from 'src/modules/auth/jwt.params';
-import { IUserCreds } from 'src/types/game/game.types';
+import { IRegistrationCodeValid, IUserCreds } from 'src/types/game/game.types';
 
 @Controller()
 export class UsersMsController {
@@ -59,11 +59,13 @@ export class UsersMsController {
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS })
   async getUserByCredentials(creds: IUserCreds): Promise<UsersEntity> {
-    const user: UsersEntity = await this.users.findOne({
-      ...creds,
-      isActive: true,
-    });
+    const user: UsersEntity = await this.users.findOne(creds);
     return user;
+  }
+
+  @MessagePattern({ cmd: MsUsersPatterns.REGISTRATION_CODE_EXPIRATION })
+  async getValideCode(email: string): Promise<IRegistrationCodeValid> {
+    return { code: email, validUntill: 234523 };
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.SAVE_USERS })

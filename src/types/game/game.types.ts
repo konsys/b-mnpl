@@ -118,3 +118,8 @@ export interface IUserCreds {
   password?: string;
   userId?: number;
 }
+
+export interface IRegistrationCodeValid {
+  code: string;
+  validUntill: number;
+}

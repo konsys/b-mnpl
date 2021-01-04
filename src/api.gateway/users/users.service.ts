@@ -1,10 +1,5 @@
 import { IPlayer } from 'src/types/board/board.types';
-import {
-  Injectable,
-  Logger,
-  Inject,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 
 import { ClientProxy } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
@@ -16,6 +11,7 @@ import {
 import { UsersEntity } from 'src/entities/users.entity';
 import { users } from 'src/entities/dbData';
 import { TokensEntity } from 'src/entities/tokens.entity';
+import { IRegistrationCodeValid } from 'src/types/game/game.types';
 
 export interface IPlayersStore {
   players: IPlayer[];
@@ -89,6 +85,21 @@ export class UsersService {
           { email, password },
         )
         .toPromise();
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
+  async getRegistrationCode(email: string): Promise<IRegistrationCodeValid> {
+    try {
+      const res = await this.proxy
+        .send<IRegistrationCodeValid>(
+          { cmd: MsUsersPatterns.REGISTRATION_CODE_EXPIRATION },
+          { email },
+        )
+        .toPromise();
+
       return res;
     } catch (err) {
       this.logger.log(`Error: ${err}`);

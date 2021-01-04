@@ -21,6 +21,9 @@ import { RequestWithUser } from '../../types/board/board.types';
 import { IJwtPayload, jwtConstants } from 'src/modules/auth/jwt.params';
 import { MailerService } from '@nestjs-modules/mailer';
 import { nanoid } from 'nanoid';
+import { userRedis } from 'src/main';
+import { BOARD_PARAMS } from 'src/params/board.params';
+import { GAME_PARAMS } from 'src/params/game.params';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -108,7 +111,19 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
   async saveUser(@Body() user: UsersEntity): Promise<{ email: string | null }> {
+    const isRegistrationCode = await this.getRedis(user.email);
+    if (isRegistrationCode) {
+      console.log(444444444);
+      return {
+        email: user.email ? user.email : '',
+      };
+      // throw new BadRequestException('Registration code email can not be sent');
+    }
+
+    await this.setRedis(user.email, user);
+
     const emailIsRegistered = await this.service.getUserByEmail(user.email);
+
     if (emailIsRegistered && !!emailIsRegistered.isActive) {
       throw new BadRequestException('User is already registered');
     }
@@ -139,7 +154,6 @@ export class UsersController {
     } else {
       res = new UsersEntity(await this.service.saveUser(saveUser));
     }
-
     return {
       email: res ? saveUser.email : null,
     };
@@ -176,5 +190,15 @@ export class UsersController {
   @Post()
   async saveUsers(): Promise<UsersEntity[]> {
     return this.service.saveUsers();
+  }
+
+  private async setRedis(key: string, data: any) {
+    await userRedis.set(key, JSON.stringify(data));
+    await userRedis.expire([key, GAME_PARAMS.REGISTRATION_CODE_TTL]);
+  }
+
+  private async getRedis(key: string): Promise<any> {
+    const data = JSON.parse(await userRedis.get(key));
+    return data;
   }
 }

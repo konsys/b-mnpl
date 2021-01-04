@@ -63,11 +63,6 @@ export class UsersMsController {
     return user;
   }
 
-  @MessagePattern({ cmd: MsUsersPatterns.REGISTRATION_CODE_EXPIRATION })
-  async getValideCode(email: string): Promise<IRegistrationCodeValid> {
-    return { code: email, validUntill: 234523 };
-  }
-
   @MessagePattern({ cmd: MsUsersPatterns.SAVE_USERS })
   async saveUsers(users: UsersEntity[]): Promise<UsersEntity[]> {
     const allUsers: UsersEntity[] = await this.users.save(users);

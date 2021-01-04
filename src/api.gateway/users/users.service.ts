@@ -91,21 +91,6 @@ export class UsersService {
     }
   }
 
-  async getRegistrationCode(email: string): Promise<IRegistrationCodeValid> {
-    try {
-      const res = await this.proxy
-        .send<IRegistrationCodeValid>(
-          { cmd: MsUsersPatterns.REGISTRATION_CODE_EXPIRATION },
-          { email },
-        )
-        .toPromise();
-
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
-  }
-
   async getUserByEmail(email: string): Promise<UsersEntity> {
     try {
       const res = await this.proxy

@@ -111,22 +111,27 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
   async saveUser(@Body() user: UsersEntity): Promise<{ email: string | null }> {
-    const isRegistrationCode = await this.getRedis(user.email);
-    if (isRegistrationCode) {
-      console.log(444444444);
-      return {
-        email: user.email ? user.email : '',
-      };
-      // throw new BadRequestException('Registration code email can not be sent');
-    }
-
-    await this.setRedis(user.email, user);
-
     const emailIsRegistered = await this.service.getUserByEmail(user.email);
 
     if (emailIsRegistered && !!emailIsRegistered.isActive) {
       throw new BadRequestException('User is already registered');
     }
+
+    const isRegistrationCode = await this.getRedis(user.email);
+    if (emailIsRegistered && isRegistrationCode) {
+      console.log(444444444, isRegistrationCode, emailIsRegistered.userId);
+
+      await this.service.updateUser({
+        ...user,
+        userId: emailIsRegistered.userId,
+      });
+
+      return {
+        email: user.email ? user.email : '',
+      };
+    }
+
+    await this.setRedis(user.email, user);
 
     const registrationCode = nanoid(4);
 

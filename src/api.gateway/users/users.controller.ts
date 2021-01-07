@@ -185,7 +185,6 @@ export class UsersController {
 
     if (emailIsRegistered && !emailIsRegistered.isActive) {
       const isEmailPending = await this.getRedis(email);
-      console.log(111111111111111, isEmailPending);
       if (isEmailPending) {
         throw new BadRequestException('Email send period not completed');
       }

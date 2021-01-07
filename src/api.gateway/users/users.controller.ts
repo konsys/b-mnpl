@@ -130,11 +130,9 @@ export class UsersController {
       };
     }
 
-    await this.setRedis(user.email, user);
-
     const registrationCode = nanoid(4);
 
-    await this.sendCodeToEmail(registrationCode);
+    await this.sendCodeToEmail(user.email, registrationCode);
 
     const saveUser: UsersEntity = {
       ...user,
@@ -223,7 +221,8 @@ export class UsersController {
     const data = JSON.parse(await userRedis.get(key));
     return data;
   }
-  private async sendCodeToEmail(code: string) {
+  private async sendCodeToEmail(email: string, code: string) {
+    await this.setRedis(email, code);
     return await this.mailerService.sendMail({
       to: 'CatsPets88@yandex.ru', // List of receivers email address
       from: 'CatsPets88@yandex.ru', // Senders email address

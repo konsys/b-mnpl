@@ -45,7 +45,7 @@ const rootPath = join(__dirname, '../', 'assets/');
         secure: false, // true for 465, false for other ports
         auth: {
           user: 'CatsPets88@yandex.ru',
-          pass: 'detczeknyhsmhkty',
+          pass: 'zkcckjkhgwvjsyor',
         },
       },
     }),

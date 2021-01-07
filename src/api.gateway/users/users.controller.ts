@@ -118,9 +118,8 @@ export class UsersController {
     }
 
     const isRegistrationCode = await this.getRedis(user.email);
+    // Not send email with code (redis TTL)
     if (emailIsRegistered && isRegistrationCode) {
-      console.log(444444444, isRegistrationCode, emailIsRegistered.userId);
-
       await this.service.updateUser({
         ...user,
         userId: emailIsRegistered.userId,
@@ -135,13 +134,7 @@ export class UsersController {
 
     const registrationCode = nanoid(4);
 
-    await this.mailerService.sendMail({
-      to: 'CatsPets88@yandex.ru', // List of receivers email address
-      from: 'CatsPets88@yandex.ru', // Senders email address
-      subject: 'Testing Nest MailerModule ✔', // Subject line
-      text: registrationCode, // plaintext body
-      html: `<b>${registrationCode}</b>`, // HTML body content
-    });
+    await this.sendCodeToEmail(registrationCode);
 
     const saveUser: UsersEntity = {
       ...user,
@@ -185,6 +178,26 @@ export class UsersController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
+  @Post('register/code/resend')
+  async resendCode(
+    @Body()
+    { email }: { email: string },
+  ): Promise<any> {
+    const emailIsRegistered = await this.service.getUserByEmail(email);
+
+    if (emailIsRegistered && !emailIsRegistered.isActive) {
+      const isEmailPending = await this.getRedis(email);
+      console.log(111111111111111, isEmailPending);
+      if (isEmailPending) {
+        throw new BadRequestException('Email send period not completed');
+      }
+      return true;
+    } else {
+      throw new BadRequestException('Email not found');
+    }
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('email/:email')
   async getUserByEmail(
     @Param() email: string,
@@ -205,5 +218,14 @@ export class UsersController {
   private async getRedis(key: string): Promise<any> {
     const data = JSON.parse(await userRedis.get(key));
     return data;
+  }
+  private async sendCodeToEmail(code: string) {
+    return await this.mailerService.sendMail({
+      to: 'CatsPets88@yandex.ru', // List of receivers email address
+      from: 'CatsPets88@yandex.ru', // Senders email address
+      subject: 'Testing Nest MailerModule ✔', // Subject line
+      text: code, // plaintext body
+      html: `<b>${code}</b>`, // HTML body content
+    });
   }
 }

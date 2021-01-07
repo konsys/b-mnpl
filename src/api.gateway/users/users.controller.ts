@@ -211,6 +211,10 @@ export class UsersController {
   }
 
   private async setRedis(key: string, data: any) {
+    const isKey = await this.getRedis(key);
+    if (isKey) {
+      await userRedis.del(key);
+    }
     await userRedis.set(key, JSON.stringify(data));
     await userRedis.expire([key, GAME_PARAMS.REGISTRATION_CODE_TTL]);
   }

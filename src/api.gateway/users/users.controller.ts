@@ -110,7 +110,9 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
-  async saveUser(@Body() user: UsersEntity): Promise<{ email: string | null }> {
+  async saveUser(
+    @Body() user: UsersEntity,
+  ): Promise<{ email: string | null; registrationCode: string | null }> {
     const emailIsRegistered = await this.service.getUserByEmail(user.email);
 
     if (emailIsRegistered && !!emailIsRegistered.isActive) {
@@ -126,6 +128,9 @@ export class UsersController {
       });
       return {
         email: user.email ? user.email : '',
+        registrationCode: emailIsRegistered.isTestUser
+          ? emailIsRegistered.registrationCode
+          : null,
       };
     }
 
@@ -151,6 +156,9 @@ export class UsersController {
     }
     return {
       email: res ? saveUser.email : null,
+      registrationCode: emailIsRegistered.isTestUser
+        ? emailIsRegistered.registrationCode
+        : null,
     };
   }
 

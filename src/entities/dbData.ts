@@ -972,6 +972,7 @@ const createInventory = (): IInventoryItems[] => {
 export const users: UsersEntity[] = [
   {
     name: 'TestUser',
+    isTestUser: true,
     password: 'password',
     email: 'TestUser1@yandex.ru',
     registrationType: 'vk',

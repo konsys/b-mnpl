@@ -124,7 +124,6 @@ export class UsersController {
         ...user,
         userId: emailIsRegistered.userId,
       });
-
       return {
         email: user.email ? user.email : '',
       };

@@ -28,6 +28,10 @@ export class UsersEntity {
   email?: string;
 
   @Exclude()
+  @Column({ default: false })
+  isTestUser: boolean;
+
+  @Exclude()
   @Column()
   password: string;
 

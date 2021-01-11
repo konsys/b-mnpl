@@ -20,6 +20,7 @@ import { UsersEntity } from 'src/entities/users.entity';
 import { PlayersUtilsService } from './players.utils.service';
 
 const bankInit: IPlayer = {
+  isTestUser: false,
   userId: BOARD_PARAMS.BANK_PLAYER_ID,
   money: 1000000,
   password: 'bank',

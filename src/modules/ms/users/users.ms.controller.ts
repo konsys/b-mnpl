@@ -142,18 +142,29 @@ export class UsersMsController {
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN })
-  async getToken(token: string): Promise<any> {
+  async getToken(token: string): Promise<TokensEntity> {
     const res: TokensEntity = await this.tokens.findOne({ token });
-    return of(res).pipe(delay(1));
+    return res;
   }
 
   @MessagePattern({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN })
-  async deleteToken(token: string): Promise<any> {
+  async deleteToken(token: string): Promise<boolean> {
     try {
       const res = await this.tokens.delete({ token });
       return res.affected > 0;
     } catch (err) {
       console.log('Error deleting refresh token', err);
+      return false;
+    }
+  }
+
+  @MessagePattern({ cmd: MsUsersPatterns.DELETE_USER })
+  async deleteUser(userId: number): Promise<boolean> {
+    try {
+      const res = await this.users.delete({ userId, isTestUser: true });
+      return res.affected > 0;
+    } catch (err) {
+      console.log('Error deleting user', err);
       return false;
     }
   }

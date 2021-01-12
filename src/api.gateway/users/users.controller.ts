@@ -10,6 +10,7 @@ import {
   BadRequestException,
   Body,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
 import { UsersEntity } from 'src/entities/users.entity';
@@ -22,7 +23,6 @@ import { IJwtPayload, jwtConstants } from 'src/modules/auth/jwt.params';
 import { MailerService } from '@nestjs-modules/mailer';
 import { nanoid } from 'nanoid';
 import { userRedis } from 'src/main';
-import { BOARD_PARAMS } from 'src/params/board.params';
 import { GAME_PARAMS } from 'src/params/game.params';
 
 @Controller(MsNames.USERS)
@@ -115,6 +115,7 @@ export class UsersController {
   ): Promise<{ email: string | null; registrationCode: string | null }> {
     const emailIsRegistered = await this.service.getUserByEmail(user.email);
 
+    console.log(emailIsRegistered);
     if (emailIsRegistered && !!emailIsRegistered.isActive) {
       throw new BadRequestException('User is already registered');
     }
@@ -128,9 +129,10 @@ export class UsersController {
       });
       return {
         email: user.email ? user.email : '',
-        registrationCode: emailIsRegistered.isTestUser
-          ? emailIsRegistered.registrationCode
-          : null,
+        registrationCode:
+          emailIsRegistered && emailIsRegistered.isTestUser
+            ? emailIsRegistered.registrationCode
+            : null,
       };
     }
 
@@ -167,7 +169,7 @@ export class UsersController {
   async saveCode(
     @Body()
     { registrationCode, email }: { registrationCode: string; email: string },
-  ): Promise<any> {
+  ): Promise<UsersEntity> {
     const emailIsRegistered = await this.service.getUserByEmail(email);
 
     if (emailIsRegistered && !!emailIsRegistered.isActive) {
@@ -182,12 +184,11 @@ export class UsersController {
     return res;
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Post('register/code/resend')
   async resendCode(
     @Body()
     { email }: { email: string },
-  ): Promise<any> {
+  ): Promise<boolean> {
     const emailIsRegistered = await this.service.getUserByEmail(email);
 
     if (emailIsRegistered && !emailIsRegistered.isActive) {
@@ -199,6 +200,15 @@ export class UsersController {
     } else {
       throw new BadRequestException('Email not found');
     }
+  }
+
+  @Delete('/:userId')
+  async deleteUser(
+    @Param()
+    { userId }: { userId: number },
+  ): Promise<any> {
+    const res = await this.service.deleteUser(userId);
+    return res;
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

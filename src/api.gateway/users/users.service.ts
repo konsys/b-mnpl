@@ -209,4 +209,16 @@ export class UsersService {
       return false;
     }
   }
+
+  async deleteUser(userId: number): Promise<boolean> {
+    try {
+      const res = await this.proxy
+        .send<any>({ cmd: MsUsersPatterns.DELETE_USER }, userId)
+        .toPromise();
+      return res;
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+      return false;
+    }
+  }
 }

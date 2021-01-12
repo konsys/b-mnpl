@@ -26,6 +26,7 @@ export enum MsUsersPatterns {
   SAVE_REFRESH_TOKEN = 'saveRefreshToken',
   GET_REFRESH_TOKEN = 'getRefreshToken',
   DELETE_REFRESH_TOKEN = 'deleteRefreshToken',
+  DELETE_USER = 'deleteUser',
 }
 
 export enum MsChatPatterns {

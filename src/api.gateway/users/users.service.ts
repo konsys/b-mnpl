@@ -11,7 +11,6 @@ import {
 import { UsersEntity } from 'src/entities/users.entity';
 import { users } from 'src/entities/dbData';
 import { TokensEntity } from 'src/entities/tokens.entity';
-import { IRegistrationCodeValid } from 'src/types/game/game.types';
 
 export interface IPlayersStore {
   players: IPlayer[];

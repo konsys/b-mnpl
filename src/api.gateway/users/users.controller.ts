@@ -91,6 +91,13 @@ export class UsersController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
+  @Get('creds')
+  async getProfileByEmail(@Query('email') email: string): Promise<UsersEntity> {
+    const res = new UsersEntity(await this.service.getUserByEmail(email));
+    return res;
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard)
   @Get('init')
   async get(
@@ -113,55 +120,47 @@ export class UsersController {
   async saveUser(
     @Body() user: UsersEntity,
   ): Promise<{ email: string | null; registrationCode: string | null }> {
-    const emailIsRegistered = await this.service.getUserByEmail(user.email);
+    const isUser = await this.service.getUserByEmail(user.email);
 
-    console.log(emailIsRegistered);
-    if (emailIsRegistered && !!emailIsRegistered.isActive) {
+    if (isUser && isUser.isActive) {
       throw new BadRequestException('User is already registered');
     }
 
-    const isRegistrationCode = await this.getRedis(user.email);
-    // Not send email with code (redis TTL)
-    if (emailIsRegistered && isRegistrationCode) {
-      await this.service.updateUser({
-        ...user,
-        userId: emailIsRegistered.userId,
-      });
-      return {
-        email: user.email ? user.email : '',
-        registrationCode:
-          emailIsRegistered && emailIsRegistered.isTestUser
-            ? emailIsRegistered.registrationCode
-            : null,
-      };
-    }
-
-    const registrationCode = nanoid(4);
-
-    await this.sendCodeToEmail(user.email, registrationCode);
+    let res = null;
+    const newCode = nanoid(4);
 
     const saveUser: UsersEntity = {
-      ...user,
-      registrationCode,
+      email: user.email,
+      password: user.password,
+      isTestUser: user.isTestUser,
+      name: user.name,
+      registrationCode: newCode,
     };
 
-    let res = null;
-    if (emailIsRegistered) {
-      res = new UsersEntity(
-        await this.service.updateUser({
-          ...saveUser,
-          userId: emailIsRegistered.userId,
-        }),
-      );
-    } else {
+    if (!isUser) {
       res = new UsersEntity(await this.service.saveUser(saveUser));
+
+      await this.sendCodeToEmail(user.email, newCode, saveUser.isTestUser);
+
+      return {
+        email: res ? res.email : null,
+        registrationCode: saveUser.isTestUser ? newCode : null,
+      };
+    } else {
+      await this.service.updateUser({
+        ...isUser,
+        email: user.email,
+        password: user.password,
+        isTestUser: user.isTestUser,
+        name: user.name,
+        userId: isUser.userId,
+      });
+
+      return {
+        email: isUser.email,
+        registrationCode: user.isTestUser ? isUser.registrationCode : null,
+      };
     }
-    return {
-      email: res ? saveUser.email : null,
-      registrationCode: emailIsRegistered.isTestUser
-        ? emailIsRegistered.registrationCode
-        : null,
-    };
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -193,8 +192,15 @@ export class UsersController {
 
     if (emailIsRegistered && !emailIsRegistered.isActive) {
       const isEmailPending = await this.getRedis(email);
+
       if (isEmailPending) {
         throw new BadRequestException('Email send period not completed');
+      } else {
+        await this.sendCodeToEmail(
+          emailIsRegistered.email,
+          emailIsRegistered.registrationCode,
+          emailIsRegistered.isTestUser,
+        );
       }
       return true;
     } else {
@@ -237,14 +243,16 @@ export class UsersController {
     const data = JSON.parse(await userRedis.get(key));
     return data;
   }
-  private async sendCodeToEmail(email: string, code: string) {
+  private async sendCodeToEmail(email: string, code: string, isTest: boolean) {
     await this.setRedis(email, code);
-    return await this.mailerService.sendMail({
-      to: 'CatsPets88@yandex.ru', // List of receivers email address
-      from: 'CatsPets88@yandex.ru', // Senders email address
-      subject: 'Testing Nest MailerModule ✔', // Subject line
-      text: code, // plaintext body
-      html: `<b>${code}</b>`, // HTML body content
-    });
+    return !isTest
+      ? await this.mailerService.sendMail({
+          to: 'CatsPets88@yandex.ru', // List of receivers email address
+          from: 'CatsPets88@yandex.ru', // Senders email address
+          subject: 'Testing Nest MailerModule ✔', // Subject line
+          text: code, // plaintext body
+          html: `<b>${code}</b>`, // HTML body content
+        })
+      : true;
   }
 }

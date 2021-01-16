@@ -32,7 +32,6 @@ export class ActionMsController {
     if (splitted.length < 2) {
       throw new RpcException({ code: ErrorCode.WrongRoomId });
     }
-    console.log();
     const isInitialized = await this.message.initStores(gameId);
 
     let res = [];

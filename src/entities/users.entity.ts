@@ -9,7 +9,7 @@ export class UsersEntity {
   userId?: number;
 
   @Column({ default: false })
-  vip: boolean;
+  vip?: boolean;
 
   @Exclude()
   @Column({ default: null })
@@ -66,7 +66,7 @@ export class UsersEntity {
   isBlocked?: boolean;
 
   @Column('simple-json', { default: null })
-  inventory: IInventoryItems[];
+  inventory?: IInventoryItems[];
 
   constructor(partial: Partial<UsersEntity>) {
     Object.assign(this, partial);

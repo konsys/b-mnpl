@@ -19,7 +19,7 @@ import { LocalAuthGuard } from 'src/modules/auth/local-auth.guard';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { RequestWithUser } from '../../types/board/board.types';
-import { IJwtPayload, jwtConstants } from 'src/modules/auth/jwt.params';
+import { IJwtPayload, jwtConstants } from 'src/config/config';
 import { MailerService } from '@nestjs-modules/mailer';
 import { nanoid } from 'nanoid';
 import { userRedis } from 'src/main';

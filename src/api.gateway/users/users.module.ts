@@ -6,7 +6,7 @@ import { Module } from '@nestjs/common';
 import { MsNames } from 'src/types/ms/ms.types';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { jwtConstants } from 'src/modules/auth/jwt.params';
+import { jwtConstants } from 'src/config/config';
 
 @Module({
   imports: [

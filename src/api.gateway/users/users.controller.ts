@@ -24,6 +24,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { nanoid } from 'nanoid';
 import { userRedis } from 'src/main';
 import { GAME_PARAMS } from 'src/params/game.params';
+import { ErrorCode } from 'src/utils/error.code';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -123,7 +124,7 @@ export class UsersController {
     const isUser = await this.service.getUserByEmail(user.email);
 
     if (isUser && isUser.isActive) {
-      throw new BadRequestException('User is already registered');
+      throw new BadRequestException(ErrorCode.UserExists);
     }
 
     let res = null;
@@ -172,13 +173,13 @@ export class UsersController {
     const emailIsRegistered = await this.service.getUserByEmail(email);
 
     if (emailIsRegistered && !!emailIsRegistered.isActive) {
-      throw new BadRequestException('User is already registered');
+      throw new BadRequestException(ErrorCode.UserExists);
     }
 
     const res = await this.service.activateUser(registrationCode, email);
 
     if (!res) {
-      throw new BadRequestException('Code is wrong');
+      throw new BadRequestException(ErrorCode.RegCodeWrong);
     }
     return res;
   }
@@ -194,7 +195,7 @@ export class UsersController {
       const isEmailPending = await this.getRedis(email);
 
       if (isEmailPending) {
-        throw new BadRequestException('Email send period not completed');
+        throw new BadRequestException(ErrorCode.RegCodePeriodNotCompleted);
       } else {
         await this.sendCodeToEmail(
           emailIsRegistered.email,
@@ -204,7 +205,7 @@ export class UsersController {
       }
       return true;
     } else {
-      throw new BadRequestException('Email not found');
+      throw new BadRequestException(ErrorCode.EmailNotFound);
     }
   }
 

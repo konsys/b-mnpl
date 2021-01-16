@@ -15,6 +15,7 @@ import { MsNames, MsRoomsPatterns } from 'src/types/ms/ms.types';
 import { ClientProxy } from '@nestjs/microservices';
 import { IReturnCode } from 'src/types/game/game.types';
 import { RequestWithUser } from '../../types/board/board.types';
+import { ErrorCode } from 'src/utils/error.code';
 
 @Controller('board')
 export class BoardController {
@@ -38,7 +39,7 @@ export class BoardController {
       //TODO add error handlers
       return JSON.stringify({ code: 0 });
     } catch (err) {
-      throw new BadRequestException(`Action not found ${err}`);
+      throw new BadRequestException(ErrorCode.ActionNotFound);
     }
   }
 

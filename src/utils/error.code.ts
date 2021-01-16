@@ -17,6 +17,12 @@ export enum ErrorCode {
   'RoomMaxPlayersReached' = 116,
   'NotVip' = 117,
   'UserDoesntExists' = 118,
-  'FieldsNodFound' = 119,
+  'FieldsNotFound' = 119,
   'WrongRoomId' = 120,
+  'WrongCreds' = 121,
+  'UserExists' = 122,
+  'RegCodeWrong' = 123,
+  'RegCodePeriodNotCompleted' = 124,
+  'EmailNotFound' = 125,
+  'ActionNotFound' = 126,
 }

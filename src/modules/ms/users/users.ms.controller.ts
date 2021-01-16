@@ -12,8 +12,8 @@ import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { MsUsersPatterns } from 'src/types/ms/ms.types';
 import { ErrorCode } from 'src/utils/error.code';
-import { jwtConstants } from 'src/modules/auth/jwt.params';
 import { IUserCreds } from 'src/types/game/game.types';
+import { jwtConstants } from 'src/config/config';
 
 @Controller()
 export class UsersMsController {

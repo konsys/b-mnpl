@@ -123,3 +123,10 @@ export interface IRegistrationCodeValid {
   code: string;
   validUntill: number;
 }
+
+export interface IVkToken {
+  access_token: string;
+  expires_in: number;
+  user_id: number;
+  email?: string;
+}

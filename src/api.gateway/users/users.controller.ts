@@ -26,7 +26,7 @@ import { userRedis } from 'src/main';
 import { GAME_PARAMS } from 'src/params/game.params';
 import { ErrorCode } from 'src/utils/error.code';
 import fetch from 'node-fetch';
-import { IVkToken } from 'src/types/game/game.types';
+import { IVkToken, IVkUserResponce } from 'src/types/game/game.types';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -196,10 +196,11 @@ export class UsersController {
     const tokenData: IVkToken = JSON.parse(await response.text());
     console.log(11111111111111, tokenData);
 
-    const userGet = `https://api.vk.com/method/users.get?user_ids=${tokenData.user_id}&access_token=${tokenData.access_token}&v=5.126&fields=sex,bdate,photo_100,photo_max_orig`;
+    const userGet = `https://api.vk.com/method/users.get?user_ids=${tokenData.user_id}&access_token=${tokenData.access_token}&v=5.126&fields=sex,bdate,photo_100`;
     console.log(333333333333333333, userGet);
     response = await fetch(userGet);
-    const userData: IVkToken = await response.text();
+    const userData: IVkUserResponce = JSON.parse(await response.text());
+
     console.log(222222222222222, userData);
 
     return code;

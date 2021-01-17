@@ -130,3 +130,11 @@ export interface IVkToken {
   user_id: number;
   email?: string;
 }
+
+export interface IVkUserResponce {
+  sex: number;
+  bdate: string;
+  photo_100: string;
+  last_name: string;
+  first_name: string;
+}

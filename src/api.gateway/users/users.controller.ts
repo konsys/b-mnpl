@@ -190,20 +190,18 @@ export class UsersController {
   async loginVk(
     @Body()
     { code }: { code: string },
-  ): Promise<string> {
+  ): Promise<IVkUserResponce | null> {
     const link = `https://oauth.vk.com/access_token?redirect_uri=http://127.0.0.1:3000/login&client_id=7731384&client_secret=tCN1UAM5eoVrBWtHSMw1&code=${code}&v=5.126`;
     let response = await fetch(link);
     const tokenData: IVkToken = JSON.parse(await response.text());
-    console.log(11111111111111, tokenData);
 
     const userGet = `https://api.vk.com/method/users.get?user_ids=${tokenData.user_id}&access_token=${tokenData.access_token}&v=5.126&fields=sex,bdate,photo_100`;
-    console.log(333333333333333333, userGet);
+
     response = await fetch(userGet);
-    const userData: IVkUserResponce = JSON.parse(await response.text());
+    const usersData: IVkUserResponce[] = JSON.parse(await response.text())
+      .response;
 
-    console.log(222222222222222, userData);
-
-    return code;
+    return usersData && usersData.length ? usersData[0] : null;
   }
 
   @Post('register/code/resend')

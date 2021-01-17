@@ -65,6 +65,18 @@ export class UsersEntity {
   @Column({ default: false })
   isBlocked?: boolean;
 
+  @Exclude()
+  @Column({ default: null })
+  sex?: number;
+
+  @Exclude()
+  @Column({ default: null })
+  vkId?: number;
+
+  @Exclude()
+  @Column({ default: null })
+  vkPhoto?: string;
+
   @Column('simple-json', { default: null })
   inventory?: IInventoryItems[];
 

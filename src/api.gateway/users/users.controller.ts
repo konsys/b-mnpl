@@ -27,6 +27,7 @@ import { GAME_PARAMS } from 'src/params/game.params';
 import { ErrorCode } from 'src/utils/error.code';
 import fetch from 'node-fetch';
 import { IVkToken, IVkUserResponce } from 'src/types/game/game.types';
+import queryString from 'query-string';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -191,16 +192,35 @@ export class UsersController {
     @Body()
     { code }: { code: string },
   ): Promise<IVkUserResponce | null> {
-    const link = `https://oauth.vk.com/access_token?redirect_uri=http://127.0.0.1:3000/login&client_id=7731384&client_secret=tCN1UAM5eoVrBWtHSMw1&code=${code}&v=5.126`;
+    const params = {
+      redirect_uri: 'http://127.0.0.1:3000/login',
+      client_secret: 'tCN1UAM5eoVrBWtHSMw1',
+      client_id: 7731384,
+      code,
+      v: 5.126,
+    };
+    const stringified = queryString.stringify(params);
+
+    const link = `https://oauth.vk.com/access_token?${stringified}`;
     let response = await fetch(link);
     const tokenData: IVkToken = JSON.parse(await response.text());
 
-    const userGet = `https://api.vk.com/method/users.get?user_ids=${tokenData.user_id}&access_token=${tokenData.access_token}&v=5.126&fields=sex,bdate,photo_100`;
+    const userData = {
+      user_ids: tokenData.user_id,
+      access_token: tokenData.access_token,
+      client_id: 7731384,
+      fields: ['sex', 'bdate', 'photo_100'],
+      v: 5.126,
+    };
+    const stringifiedUser = queryString.stringify(userData);
+
+    const userGet = `https://api.vk.com/method/users.get?${stringifiedUser}`;
 
     response = await fetch(userGet);
     const usersData: IVkUserResponce[] = JSON.parse(await response.text())
       .response;
 
+    console.log(111111111111, usersData);
     return usersData && usersData.length ? usersData[0] : null;
   }
 

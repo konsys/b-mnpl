@@ -23,6 +23,14 @@ export class UsersEntity {
   name: string;
 
   @Exclude()
+  @Column({ default: null })
+  lastName?: string;
+
+  @Exclude()
+  @Column({ default: null })
+  firstName?: string;
+
+  @Exclude()
   @Column()
   @Index({ unique: true })
   email?: string;
@@ -72,10 +80,6 @@ export class UsersEntity {
   @Exclude()
   @Column({ default: null })
   vkId?: number;
-
-  @Exclude()
-  @Column({ default: null })
-  vkPhoto?: string;
 
   @Column('simple-json', { default: null })
   inventory?: IInventoryItems[];

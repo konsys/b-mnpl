@@ -132,9 +132,12 @@ export interface IVkToken {
 }
 
 export interface IVkUserResponce {
+  id: number;
   sex: number;
   bdate: string;
   photo_100: string;
   last_name: string;
   first_name: string;
+  can_access_closed: boolean;
+  is_closed: boolean;
 }

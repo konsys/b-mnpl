@@ -211,7 +211,7 @@ export class UsersMsController {
     const isUser = await this.users.findOne({ vkId: user.id });
     let savedUser = null;
     if (user) {
-      if (!isUser && !isUser.userId) {
+      if (!isUser) {
         savedUser = await this.users.save({
           avatar: user.photo_100,
           firstName: user.first_name,

@@ -110,15 +110,11 @@ export class UsersController {
     @Query('ids') ids: Array<number>,
     @Query('gameId') gameId: string,
   ): Promise<UsersEntity[]> {
-    try {
-      let players = await this.service.getUsersByIds(ids);
+    let players = await this.service.getUsersByIds(ids);
 
-      players = await this.service.initPlayers(gameId, players);
+    players = await this.service.initPlayers(gameId, players);
 
-      return players;
-    } catch (err) {
-      throw new BadRequestException(err);
-    }
+    return players;
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

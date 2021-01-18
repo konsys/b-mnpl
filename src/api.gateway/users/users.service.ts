@@ -47,7 +47,7 @@ export class UsersService {
 
   async getUser(userId: number): Promise<UsersEntity | undefined> {
     if (!userId) {
-      throw new BadRequestException({ code: ErrorCode.UserDoesntExists });
+      throw new BadRequestException(ErrorCode.UserDoesntExists);
     }
     const res = await this.proxy
       .send<any>({ cmd: MsUsersPatterns.GET_USER }, userId)

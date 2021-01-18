@@ -33,8 +33,7 @@ export class AuthService {
   async login(
     user: IUserCreds,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const payload: IJwtPayload = this.
-    (user.name, user.userId);
+    const payload: IJwtPayload = this.createPayload(user.name, user.userId);
 
     const accessToken = await this.signJwt(payload);
     const refreshToken = await this.signJwt(payload, '60000s');

@@ -40,7 +40,6 @@ export class UsersMsController {
   @UseInterceptors(ClassSerializerInterceptor)
   @MessagePattern({ cmd: MsUsersPatterns.GET_USER })
   async getUser(userId: number): Promise<UsersEntity> {
-    console.log(1111111111, userId);
     const user: UsersEntity = await this.users.findOne(userId);
 
     if (!user) {

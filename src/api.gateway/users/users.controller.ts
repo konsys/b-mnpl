@@ -26,8 +26,6 @@ import { userRedis } from 'src/main';
 import { GAME_PARAMS } from 'src/params/game.params';
 import { ErrorCode } from 'src/utils/error.code';
 
-import { IVkUserResponce } from 'src/types/game/game.types';
-
 @Controller(MsNames.USERS)
 export class UsersController {
   constructor(

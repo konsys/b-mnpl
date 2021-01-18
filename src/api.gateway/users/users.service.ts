@@ -1,7 +1,12 @@
 import { IPlayer } from 'src/types/board/board.types';
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  Inject,
+  BadRequestException,
+} from '@nestjs/common';
 
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { FindManyOptions } from 'typeorm';
 import {
   MsUsersPatterns,
@@ -12,6 +17,7 @@ import { UsersEntity } from 'src/entities/users.entity';
 import { users } from 'src/entities/dbData';
 import { TokensEntity } from 'src/entities/tokens.entity';
 import { IVkUserResponce } from 'src/types/game/game.types';
+import { ErrorCode } from 'src/utils/error.code';
 
 export interface IPlayersStore {
   players: IPlayer[];
@@ -39,16 +45,15 @@ export class UsersService {
     }
   }
 
-  async getUser(userId: number | null): Promise<UsersEntity | undefined> {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.GET_USER }, userId)
-        .toPromise();
-
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
+  async getUser(userId: number): Promise<UsersEntity | undefined> {
+    if (!userId) {
+      throw new BadRequestException({ code: ErrorCode.UserDoesntExists });
     }
+    const res = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.GET_USER }, userId)
+      .toPromise();
+
+    return res;
   }
 
   async initPlayers(
@@ -63,89 +68,65 @@ export class UsersService {
   }
 
   async getUsersByIds(userIds: number[]): Promise<UsersEntity[]> {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.GET_USERS_BY_IDS }, userIds)
-        .toPromise();
+    const res = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.GET_USERS_BY_IDS }, userIds)
+      .toPromise();
 
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    return res;
   }
 
   async getUserByCredentials(
     email: string,
     password: string,
   ): Promise<UsersEntity> {
-    try {
-      const res = await this.proxy
-        .send<any>(
-          { cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS },
-          { email, password },
-        )
-        .toPromise();
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    const res = await this.proxy
+      .send<any>(
+        { cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS },
+        { email, password },
+      )
+      .toPromise();
+    return res;
   }
 
   async getUserByEmail(email: string): Promise<UsersEntity> {
-    try {
-      const res = await this.proxy
-        .send<UsersEntity>(
-          { cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS },
-          { email },
-        )
-        .toPromise();
+    const res = await this.proxy
+      .send<UsersEntity>(
+        { cmd: MsUsersPatterns.GET_USER_BY_CREDENTIALS },
+        { email },
+      )
+      .toPromise();
 
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    return res;
   }
 
   async updateUser(user: UsersEntity): Promise<UsersEntity> {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.UPDATE_USER }, user)
-        .toPromise();
+    const res = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.UPDATE_USER }, user)
+      .toPromise();
 
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    return res;
   }
 
   async saveUser(user: UsersEntity): Promise<UsersEntity> {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.SAVE_USER }, user)
-        .toPromise();
+    const res = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.SAVE_USER }, user)
+      .toPromise();
 
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    return res;
   }
 
   async activateUser(
     registrationCode: string,
     email: string,
   ): Promise<UsersEntity> {
-    try {
-      const res = await this.proxy
-        .send<any>(
-          { cmd: MsUsersPatterns.ACTIVATE_USER },
-          { registrationCode, email },
-        )
-        .toPromise();
+    const res = await this.proxy
+      .send<any>(
+        { cmd: MsUsersPatterns.ACTIVATE_USER },
+        { registrationCode, email },
+      )
+      .toPromise();
 
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    return res;
   }
 
   async saveUsers(): Promise<UsersEntity[]> {
@@ -159,24 +140,16 @@ export class UsersService {
   }
 
   async loginVK(code: string): Promise<UsersEntity | null> {
-    try {
-      return await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.LOGIN_VK }, code)
-        .toPromise();
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    return await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.LOGIN_VK }, code)
+      .toPromise();
   }
 
   async getToken(userId: string): Promise<TokensEntity | null> {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN }, userId)
-        .toPromise();
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    const res = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.GET_REFRESH_TOKEN }, userId)
+      .toPromise();
+    return res;
   }
 
   async saveToken(
@@ -184,51 +157,33 @@ export class UsersService {
     userId: number,
     name: string,
   ): Promise<boolean> {
-    try {
-      const res = await this.proxy
-        .send<any>(
-          { cmd: MsUsersPatterns.SAVE_REFRESH_TOKEN },
-          { token, userId, name },
-        )
-        .toPromise();
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    const res = await this.proxy
+      .send<any>(
+        { cmd: MsUsersPatterns.SAVE_REFRESH_TOKEN },
+        { token, userId, name },
+      )
+      .toPromise();
+    return res;
   }
 
   async deleteToken(token: string): Promise<boolean> {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN }, token)
-        .toPromise();
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-    }
+    const res = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN }, token)
+      .toPromise();
+    return res;
   }
 
   async logout(token: string): Promise<boolean> {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN }, token)
-        .toPromise();
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-      return false;
-    }
+    const res = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.DELETE_REFRESH_TOKEN }, token)
+      .toPromise();
+    return res;
   }
 
   async deleteUser(userId: number): Promise<boolean> {
-    try {
-      const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.DELETE_USER }, userId)
-        .toPromise();
-      return res;
-    } catch (err) {
-      this.logger.log(`Error: ${err}`);
-      return false;
-    }
+    const res = await this.proxy
+      .send<any>({ cmd: MsUsersPatterns.DELETE_USER }, userId)
+      .toPromise();
+    return res;
   }
 }

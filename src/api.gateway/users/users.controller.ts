@@ -82,6 +82,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req: RequestWithUser): Promise<UsersEntity> {
+    console.log(111111111111, req.user);
     const profile = new UsersEntity(
       await this.service.getUser(req.user.userId),
     );

@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { IUserCreds } from 'src/types/game/game.types';
 import { UsersService } from 'src/api.gateway/users/users.service';
 import { IJwtPayload } from 'src/config/config';
+import { UsersEntity } from 'src/entities/users.entity';
 
 @Injectable()
 export class AuthService {
@@ -11,10 +12,13 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<boolean> {
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<UsersEntity | undefined> {
     const user = await this.usersService.getUserByCredentials(email, password);
 
-    return user && user.name ? true : false;
+    return user && user.name ? user : undefined;
   }
 
   createPayload(username: string, userId: number): IJwtPayload {
@@ -35,6 +39,7 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const payload: IJwtPayload = this.createPayload(user.name, user.userId);
 
+    console.log(222222222222, payload, user);
     const accessToken = await this.signJwt(payload);
     const refreshToken = await this.signJwt(payload, '60000s');
 

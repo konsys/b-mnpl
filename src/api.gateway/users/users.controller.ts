@@ -192,7 +192,6 @@ export class UsersController {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = new UsersEntity(await this.service.loginVK(code));
     const res = await this.authService.login(user);
-    console.log(222222222222, res);
     return res;
   }
 

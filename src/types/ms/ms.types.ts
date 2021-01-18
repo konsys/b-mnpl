@@ -27,6 +27,7 @@ export enum MsUsersPatterns {
   GET_REFRESH_TOKEN = 'getRefreshToken',
   DELETE_REFRESH_TOKEN = 'deleteRefreshToken',
   DELETE_USER = 'deleteUser',
+  LOGIN_VK = 'loginVK',
 }
 
 export enum MsChatPatterns {

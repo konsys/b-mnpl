@@ -40,8 +40,8 @@ export class UsersEntity {
   isTestUser: boolean;
 
   @Exclude()
-  @Column()
-  password: string;
+  @Column({ default: null })
+  password?: string;
 
   @Exclude()
   @Column({ default: null })
@@ -79,6 +79,7 @@ export class UsersEntity {
 
   @Exclude()
   @Column({ default: null })
+  @Index({ unique: true })
   vkId?: number;
 
   @Column('simple-json', { default: null })

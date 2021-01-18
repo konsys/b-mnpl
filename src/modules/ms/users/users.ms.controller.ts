@@ -12,8 +12,14 @@ import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { MsUsersPatterns } from 'src/types/ms/ms.types';
 import { ErrorCode } from 'src/utils/error.code';
-import { IUserCreds } from 'src/types/game/game.types';
+import {
+  IUserCreds,
+  IVkToken,
+  IVkUserResponce,
+} from 'src/types/game/game.types';
 import { jwtConstants } from 'src/config/config';
+import queryString from 'query-string';
+import fetch from 'node-fetch';
 
 @Controller()
 export class UsersMsController {
@@ -167,5 +173,77 @@ export class UsersMsController {
       console.log('Error deleting user', err);
       return false;
     }
+  }
+
+  @MessagePattern({ cmd: MsUsersPatterns.LOGIN_VK })
+  async loginVK(code: string): Promise<UsersEntity | null> {
+    const params = {
+      redirect_uri: 'http://127.0.0.1:3000/login',
+      client_secret: 'tCN1UAM5eoVrBWtHSMw1',
+      client_id: 7731384,
+      code,
+      v: 5.126,
+    };
+    const stringified = queryString.stringify(params);
+
+    const link = `https://oauth.vk.com/access_token?${stringified}`;
+    let response = await fetch(link);
+    const tokenData: IVkToken = JSON.parse(await response.text());
+
+    const userData = {
+      user_ids: tokenData.user_id,
+      access_token: tokenData.access_token,
+      client_id: 7731384,
+      fields: 'sex,bdate,photo_100,email',
+      v: 5.126,
+    };
+    const stringifiedUser = queryString.stringify(userData);
+
+    const userGet = `https://api.vk.com/method/users.get?${stringifiedUser}`;
+
+    response = await fetch(userGet);
+    const usersData: IVkUserResponce[] = JSON.parse(await response.text())
+      .response;
+
+    const user = usersData && usersData.length ? usersData[0] : null;
+
+    const isUser = await this.users.findOne({ vkId: user.id });
+    let savedUser = null;
+    if (user) {
+      if (!isUser && !isUser.userId) {
+        savedUser = await this.users.save({
+          avatar: user.photo_100,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          registrationType: 'vk',
+          name: user.first_name + ' ' + user.last_name,
+          isActive: true,
+          isBlocked: false,
+          sex: user.sex,
+          vip: false,
+          vkId: user.id,
+          email: tokenData.email || null,
+        });
+      } else if (isUser && isUser.userId) {
+        await this.users.update(
+          { vkId: user.id },
+          {
+            avatar: user.photo_100,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            registrationType: 'vk',
+            name: user.first_name + ' ' + user.last_name,
+            isActive: true,
+            isBlocked: false,
+            sex: user.sex,
+            vip: false,
+            email: tokenData.email || null,
+          },
+        );
+        savedUser = await this.users.findOne({ vkId: user.id });
+      }
+    }
+
+    return savedUser;
   }
 }

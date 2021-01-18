@@ -25,9 +25,8 @@ import { nanoid } from 'nanoid';
 import { userRedis } from 'src/main';
 import { GAME_PARAMS } from 'src/params/game.params';
 import { ErrorCode } from 'src/utils/error.code';
-import fetch from 'node-fetch';
-import { IVkToken, IVkUserResponce } from 'src/types/game/game.types';
-import queryString from 'query-string';
+
+import { IVkUserResponce } from 'src/types/game/game.types';
 
 @Controller(MsNames.USERS)
 export class UsersController {
@@ -191,37 +190,10 @@ export class UsersController {
   async loginVk(
     @Body()
     { code }: { code: string },
-  ): Promise<IVkUserResponce | null> {
-    const params = {
-      redirect_uri: 'http://127.0.0.1:3000/login',
-      client_secret: 'tCN1UAM5eoVrBWtHSMw1',
-      client_id: 7731384,
-      code,
-      v: 5.126,
-    };
-    const stringified = queryString.stringify(params);
+  ): Promise<UsersEntity | null> {
+    const regData = new UsersEntity(await this.service.loginVK(code));
 
-    const link = `https://oauth.vk.com/access_token?${stringified}`;
-    let response = await fetch(link);
-    const tokenData: IVkToken = JSON.parse(await response.text());
-
-    const userData = {
-      user_ids: tokenData.user_id,
-      access_token: tokenData.access_token,
-      client_id: 7731384,
-      fields: ['sex', 'bdate', 'photo_100'],
-      v: 5.126,
-    };
-    const stringifiedUser = queryString.stringify(userData);
-
-    const userGet = `https://api.vk.com/method/users.get?${stringifiedUser}`;
-
-    response = await fetch(userGet);
-    const usersData: IVkUserResponce[] = JSON.parse(await response.text())
-      .response;
-
-    console.log(111111111111, usersData);
-    return usersData && usersData.length ? usersData[0] : null;
+    return regData;
   }
 
   @Post('register/code/resend')

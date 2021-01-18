@@ -11,6 +11,7 @@ import {
 import { UsersEntity } from 'src/entities/users.entity';
 import { users } from 'src/entities/dbData';
 import { TokensEntity } from 'src/entities/tokens.entity';
+import { IVkUserResponce } from 'src/types/game/game.types';
 
 export interface IPlayersStore {
   players: IPlayer[];
@@ -151,6 +152,16 @@ export class UsersService {
     try {
       return await this.proxy
         .send<any>({ cmd: MsUsersPatterns.SAVE_USERS }, users)
+        .toPromise();
+    } catch (err) {
+      this.logger.log(`Error: ${err}`);
+    }
+  }
+
+  async loginVK(code: string): Promise<UsersEntity | null> {
+    try {
+      return await this.proxy
+        .send<any>({ cmd: MsUsersPatterns.LOGIN_VK }, code)
         .toPromise();
     } catch (err) {
       this.logger.log(`Error: ${err}`);

@@ -133,6 +133,7 @@ export interface IVkToken {
 
 export interface IVkUserResponce {
   id: number;
+  email?: string;
   sex: number;
   bdate: string;
   photo_100: string;

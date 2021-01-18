@@ -39,7 +39,6 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const payload: IJwtPayload = this.createPayload(user.name, user.userId);
 
-    console.log(222222222222, payload, user);
     const accessToken = await this.signJwt(payload);
     const refreshToken = await this.signJwt(payload, '60000s');
 

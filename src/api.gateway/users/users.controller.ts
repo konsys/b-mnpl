@@ -189,10 +189,11 @@ export class UsersController {
   async loginVk(
     @Body()
     { code }: { code: string },
-  ): Promise<UsersEntity | null> {
-    const regData = new UsersEntity(await this.service.loginVK(code));
-
-    return regData;
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const user = new UsersEntity(await this.service.loginVK(code));
+    const res = await this.authService.login(user);
+    console.log(222222222222, res);
+    return res;
   }
 
   @Post('register/code/resend')

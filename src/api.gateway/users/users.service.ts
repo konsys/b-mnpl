@@ -42,7 +42,7 @@ export class UsersService {
   async getUser(userId: number | null): Promise<UsersEntity | undefined> {
     try {
       const res = await this.proxy
-        .send<any>({ cmd: MsUsersPatterns.GET_USER }, { userId })
+        .send<any>({ cmd: MsUsersPatterns.GET_USER }, userId)
         .toPromise();
 
       return res;

@@ -41,6 +41,7 @@ export class UsersMsController {
   @MessagePattern({ cmd: MsUsersPatterns.GET_USER })
   async getUser(userId: number): Promise<UsersEntity> {
     const user: UsersEntity = await this.users.findOne(userId);
+
     if (!user) {
       throw new RpcException({ code: ErrorCode.UserDoesntExists });
     }

@@ -41,7 +41,9 @@ export class UsersController {
   async login(
     @Request() req: RequestWithUser,
   ): Promise<{ accessToken: string }> {
-    return await this.authService.login(req.user);
+    const login = await this.authService.login(req.user);
+
+    return login;
   }
 
   @Post('auth/logout')
@@ -82,7 +84,10 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req: RequestWithUser): Promise<UsersEntity> {
-    return new UsersEntity(await this.service.getUser(req.user.userId));
+    const profile = new UsersEntity(
+      await this.service.getUser(req.user.userId),
+    );
+    return profile;
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

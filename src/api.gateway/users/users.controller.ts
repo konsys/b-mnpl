@@ -48,6 +48,7 @@ export class UsersController {
   async logout(
     @Body() { refreshToken }: { refreshToken: string },
   ): Promise<boolean> {
+    console.log('logout');
     return await this.service.logout(refreshToken);
   }
 
@@ -93,6 +94,7 @@ export class UsersController {
   @Get('profile/:id')
   async getProfileById(@Param('id') userId: number): Promise<UsersEntity> {
     const res = new UsersEntity(await this.service.getUser(userId));
+
     return res;
   }
 
